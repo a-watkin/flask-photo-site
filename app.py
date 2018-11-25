@@ -10,11 +10,12 @@ app = Flask(__name__)
 app.config['DEBUG'] = True
 
 
-USERNAME = 'admin'
-PASSWORD = 'admin'
+app.config['USERNAME'] = 'admin'
+app.config['PASSWORD'] = 'admin'
 
 SECRET_KEY = 'secret'
 
+print(app.config.keys())
 
 db = Database('eigi-data.db')
 
@@ -30,23 +31,17 @@ $ flask run
 
 @app.route('/', methods=['GET', 'POST'])
 def login():
-    error = None
-    status_code = 200
+
     if request.method == 'POST':
-        try:
-            if request.form['username'] != app.config['USERNAME'] or \
-                    request.form['password'] != app.config['PASSWORD']:
-                error = 'Invalid Credentials. Please try again.'
-                status_code = 401
-            else:
-                session['logged_in'] = True
-                return redirect(url_for('main'))
+        username = request.form.get('username', None)
+        password = request.form.get('password', None)
+        print('\n', username, password)
 
-        except Exception as e:
-            print('error ', e)
+        if username == app.config['USERNAME'] and password == app.config['PASSWORD']:
+            return render_template('main.html')
 
-    # if method is get then this is returned
-    return render_template('login.html', error=error), status_code
+    else:
+        return render_template('login.html')
 
 
 # with app.test_request_context():
