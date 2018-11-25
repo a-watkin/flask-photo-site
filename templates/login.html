@@ -1,0 +1,29 @@
+{% extends "template.html" %}
+{% block content %}
+<div class="login-wrapper">
+
+    <h2>Welcome</h2>
+    <h3>Please log in</h3>
+
+    <form action="" method="POST">
+
+        <div>
+            <label for="name">Username:</label>
+            <input type="text" id="username" value="{{
+                request.form.username
+            }}">
+        </div>
+
+        <div>
+            <label for="password">Password</label>
+            <input type="password" name="password" id="password" value="{{request.form.password}}">
+        </div>
+
+        <div>
+            <button type="submit">Log In</button>
+        </div>
+    </form>
+</div>
+
+
+{% endblock %}
