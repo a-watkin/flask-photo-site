@@ -1,24 +1,23 @@
 from flask import Flask, render_template, request, session, flash, redirect, url_for, g
-
+from flask import json
 from functools import wraps
 
 
 from database_interface import Database
 
 
-app = Flask(__name__)
-app.config['DEBUG'] = True
+app = Flask('app')
+app = Flask(__name__.split('.')[0])
 
-
+# some change with flask?
+# for some reason it accepts secret_key but nothing else
+# without doing this
 app.config['USERNAME'] = 'admin'
 app.config['PASSWORD'] = 'admin'
-
-SECRET_KEY = 'secret'
-
-print(app.config.keys())
+# so secret key is built in from the get go
+app.config['SECRET_KEY'] = 'secret'
 
 db = Database('eigi-data.db')
-
 
 tags = db.get_all_tags()
 
@@ -31,17 +30,21 @@ $ flask run
 
 @app.route('/', methods=['GET', 'POST'])
 def login():
+    error = None
+    status_code = 200
 
     if request.method == 'POST':
         username = request.form.get('username', None)
         password = request.form.get('password', None)
-        print('\n', username, password)
 
         if username == app.config['USERNAME'] and password == app.config['PASSWORD']:
+            flash('you did it, congrats')
             return render_template('main.html')
+        else:
+            status_code = 401
+            flash('Wrong username and/or password', error)
 
-    else:
-        return render_template('login.html')
+    return render_template('login.html')
 
 
 # with app.test_request_context():
