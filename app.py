@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, session, flash, redirect, url_for, g
+from flask import Flask, render_template, request, session, flash, redirect, url_for, g, jsonify
 from flask import json
 from functools import wraps
 
@@ -47,17 +47,32 @@ def login():
     return render_template('login.html')
 
 
+@app.route('/photos')
+def photos():
+    photo_data = db.get_photos_in_range()
+
+    photos_data = {
+        'title': 'blah',
+        'views': 90,
+        'original': 'https://farm2.staticflickr.com/1945/44692598005_c19f3c377b_o.jpg',
+        # they actually do it as: Taken on August 14, 2013
+        'dateTaken': '2018-10-11'
+    }
+
+    return jsonify(photos_data)
+
+
 # with app.test_request_context():
 #     print(url_for('login'))
 
-# @app.route("/")
-# def hello():
+@app.route("/tags")
+def hello():
 
-#     tag_data = {
-#         'tags': tags
-#     }
+    tag_data = {
+        'tags': tags
+    }
 
-#     return jsonify(tag_data)
+    return jsonify(tag_data)
 
 
 if __name__ == '__main__':

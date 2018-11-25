@@ -99,15 +99,46 @@ class Database(object):
             c = connection.cursor()
             return [x[0] for x in c.execute("SELECT tag_name FROM tag")]
 
+    def get_photos_in_range(self, limit=20, offset=0):
+        """
+        Returns the latest 10 photos.
+
+        Offset is where you want to start from, so 0 would be from the most recent.
+        10 from the tenth most recent etc.
+        """
+        q_data = None
+        with sqlite3.connect(self.db_name) as connection:
+            c = connection.cursor()
+
+            c.row_factory = sqlite3.Row
+
+            query_string = (
+                '''select photo_title, images.original from photo
+                join images using(photo_id)
+                order by date_uploaded
+                desc limit {} offset {}'''
+            ).format(limit, offset)
+
+            q_data = c.execute(query_string)
+
+        for row in q_data:
+            print([dict(ix) for ix in q_data])
+
+        return q_data
+
 
 def main():
 
     db = Database()
     db.db_name = 'eigi-data.db'
-    db.delete_database()
-    db.make_db('eigi-data.db')
+    # db.delete_database()
+    # db.make_db('eigi-data.db')
 
-    print(db.db_name)
+    # print(db.db_name)
+
+    print(db.get_photos_in_range())
+
+    # print(db.get_all_users())
 
     """
     Creating and deleteing the database.
@@ -129,12 +160,12 @@ def main():
     Inserting user data.
     """
 
-    db.insert_data(
-        user_id='28035310@N00',
-        username='eigi',
-        hash='test',
-        table='user'
-    )
+    # db.insert_data(
+    #     user_id='28035310@N00',
+    #     username='eigi',
+    #     hash='test',
+    #     table='user'
+    # )
 
     """
     Photo data.
@@ -153,8 +184,8 @@ def main():
     # )
 
     """
-    Images data 
-    
+    Images data
+
     These are essentially the links for download.
     They can then be uploaded as the links for source.
     When a different host is found.
