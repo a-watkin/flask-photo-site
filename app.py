@@ -53,15 +53,18 @@ def login():
 
 @app.route('/api/photos/')
 def photos():
-
     args = request.args.to_dict()
 
     photo_data = None
+    print(args)
 
     if len(args) > 0:
 
         if 'offset' in args.keys() and 'limit' not in args.keys():
-            print(9 * '\n')
+
+            if int(args['offset']) <= 0:
+                args['offset'] = 0
+
             # gotta make this an int
             photo_data = p.get_photos_in_range(20, int(args['offset']))
             json_data = photo_data
@@ -71,19 +74,28 @@ def photos():
             return render_template('photos.html', json_data=json_data), 200
         elif 'offset' not in args.keys() and 'limit' in args.keys():
             print(9 * '\n')
-            photo_data = p.get_photos_in_range(limit)
+            # default offset is 0
+            photo_data = p.get_photos_in_range(int(args['limit']))
             json_data = photo_data
             return render_template('photos.html', json_data=json_data), 200
 
         else:
-            print(9 * '\n', 'why would it even get here?')
-            print(args)
-            photo_data = p.get_photos_in_range()
+            # both offset and limit are present
+            if int(args['offset']) <= 0:
+                args['offset'] = 0
+
+            if int(args['limit']) <= 0:
+                args['offset'] = 0
+
+            photo_data = p.get_photos_in_range(
+                int(int(args['limit']), args['offset'])
+            )
             json_data = photo_data
             return render_template('photos.html', json_data=json_data), 200
 
     else:
         photo_data = p.get_photos_in_range()
+        json_data = photo_data
         return render_template('photos.html', json_data=json_data), 200
 
 
