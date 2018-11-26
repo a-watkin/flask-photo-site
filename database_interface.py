@@ -185,7 +185,7 @@ class Database(object):
                 '''
                 select * from photo join images using(photo_id)
                 where date_posted > {}
-                order by date_posted desc limit 1
+                order by date_posted asc limit 1
                 '''.format(date_posted)
             )
 
@@ -268,10 +268,14 @@ def main():
 
     # print(db.get_previous_photo(30081941117))
 
-    # photo_id: 44692597905
+    # photo_id: 31734290228
+    print('current ', 31734290228)
+    print('next ', db.get_next_photo(31734290228))
+    print('previous ', db.get_previous_photo(31734290228))
 
-    print('next ', db.get_next_photo(44692597905))
-    print('previous ', db.get_previous_photo(44692597905))
+    print(db.get_date_posted(31734290578))
+    print()
+    print(db.get_photo(db.get_next_photo(31734290228)))
 
     # print(db.get_date_posted(44692598005))
 
