@@ -32,6 +32,7 @@ class Database(object):
             print('Database not found')
             return False
 
+    @classmethod
     def get_placeholders(cls, num):
         return ','.join(['?' for x in list(range(num))])
 
@@ -262,20 +263,20 @@ def main():
 
     # print(db.db_name)
 
-    # print(db.get_photos_in_range())
+    print(db.get_photos_in_range())
 
     # print(db.get_photo(30081941117))
 
     # print(db.get_previous_photo(30081941117))
 
     # photo_id: 31734290228
-    print('current ', 31734290228)
-    print('next ', db.get_next_photo(31734290228))
-    print('previous ', db.get_previous_photo(31734290228))
+    # print('current ', 31734290228)
+    # print('next ', db.get_next_photo(31734290228))
+    # print('previous ', db.get_previous_photo(31734290228))
 
-    print(db.get_date_posted(31734290578))
-    print()
-    print(db.get_photo(db.get_next_photo(31734290228)))
+    # print(db.get_date_posted(31734290578))
+    # print()
+    # print(db.get_photo(db.get_next_photo(31734290228)))
 
     # print(db.get_date_posted(44692598005))
 

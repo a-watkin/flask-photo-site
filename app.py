@@ -1,9 +1,12 @@
+import json
+
 from flask import Flask, render_template, request, session, flash, redirect, url_for, g, jsonify
 from flask import json
 from functools import wraps
 
 
 from database_interface import Database
+from photos import Photos
 
 
 app = Flask('app')
@@ -47,32 +50,26 @@ def login():
     return render_template('login.html')
 
 
-@app.route('/get/photos/<int:limit>')
-def photos(limit):
-    print(limit)
-    photo_data = db.get_photos_in_range(limit=limit)
-    return jsonify(photo_data)
+# @app.route('/get/photos/<int:limit>')
+# def photos(limit):
+#     print(limit)
+#     photo_data = db.get_photos_in_range(limit=limit)
+#     return jsonify(photo_data)
 
 
 # 127.0.0.1:5000/api/test?limit=20&offset=10
 @app.route('/api/photos/', methods=['GET'])
 def get_photos():
+    p = Photos()
+    photo_data = p.get_photos_in_range()
+    json_data = photo_data
 
-    print()
-    print('getting here')
-    print()
-    args = request.args.to_dict()
+    # print()
+    # json_data = dict(photo_data['photos'])
 
-    # if args then return the specified number
-    if len(args) > 0:
-        limit = args['limit']
-        offset = args['offset']
-        photo_data = db.get_photos_in_range(limit=limit, offset=offset)
-        return jsonify(photo_data), 200
-    else:
-        # returns the default 20 latest photos
-        photo_data = db.get_photos_in_range()
-        return jsonify(photo_data), 200
+    # print(json_data)
+
+    return render_template('photos.html', json_data=json_data), 200
 
 
 # 43613382810
