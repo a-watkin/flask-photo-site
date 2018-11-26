@@ -113,7 +113,7 @@ class Database(object):
             c.row_factory = sqlite3.Row
 
             query_string = (
-                '''select photo_title, images.original from photo
+                '''select photo_id, views, photo_title, date_uploaded, date_taken, images.original from photo
                 join images using(photo_id)
                 order by date_uploaded
                 desc limit {} offset {}'''
@@ -121,10 +121,80 @@ class Database(object):
 
             q_data = c.execute(query_string)
 
-        for row in q_data:
-            print([dict(ix) for ix in q_data])
+        rtn_dict = {
+            'limit': limit,
+            'offset': offset,
+            'photos': []
+        }
 
-        return q_data
+        """
+        I think it may actually be better to layout what fields you want here.
+
+        And maybe include all sizes.
+        """
+
+        data = [dict(ix) for ix in q_data]
+
+        for d in data:
+            rtn_dict['photos'].append(d)
+
+        return rtn_dict
+
+        # rtn_dict =
+        # count = 0
+        # for row in q_data:
+        #     print(rtn_dict)
+        #     rtn_dict[count] = [dict(ix) for ix in q_data]
+        #     count += 1
+
+        # rtn_dict['limit'] = limit
+        # rtn_dict['offset'] = offset
+
+        # return rtn_dict
+
+    def get_photo(self, photo_id):
+        q_data = None
+        rtn_data = {}
+        with sqlite3.connect(self.db_name) as connection:
+            c = connection.cursor()
+            c.row_factory = sqlite3.Row
+
+            target_string = (
+                "select * from photo join images using(photo_id) where photo_id={}".format(photo_id))
+
+            next_string = (
+                '''
+                select * from photo join images using(photo_id)
+                where date_posted > {}
+                order by date_posted desc limit 1
+                '''.format(photo_id)
+            )
+
+            target_photo = c.execute(target_string)
+            next_photo = c.execute(next_string)
+
+            print([dict(x) for x in target_photo])
+
+            # prev_photo
+
+        # try:
+        #     photo_data = [dict(ix) for ix in q_data][0]
+        #     print(photo_data)
+        #     data = {
+
+        #         'title': photo_data['photo_title'],
+        #         'views': photo_data['views'],
+        #         'original': photo_data['original']
+        #         'next':
+        #         'previous'
+
+        #     }
+
+        #     rtn_data = data
+        # except Exception as e:
+        #     print('problem with query data', e)
+
+        return rtn_data
 
 
 def main():
@@ -136,7 +206,9 @@ def main():
 
     # print(db.db_name)
 
-    print(db.get_photos_in_range())
+    # print(db.get_photos_in_range())
+
+    print(db.get_photo(30081941117))
 
     # print(db.get_all_users())
 

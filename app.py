@@ -47,33 +47,57 @@ def login():
     return render_template('login.html')
 
 
-@app.route('/photos')
-def photos():
-    photo_data = db.get_photos_in_range()
+@app.route('/get/photos/<int:limit>')
+def photos(limit):
+    print(limit)
+    photo_data = db.get_photos_in_range(limit=limit)
+    return jsonify(photo_data)
 
-    photos_data = {
-        'title': 'blah',
-        'views': 90,
-        'original': 'https://farm2.staticflickr.com/1945/44692598005_c19f3c377b_o.jpg',
-        # they actually do it as: Taken on August 14, 2013
-        'dateTaken': '2018-10-11'
-    }
 
-    return jsonify(photos_data)
+# 127.0.0.1:5000/api/test?limit=20&offset=10
+@app.route('/api/photos/', methods=['GET'])
+def get_photos():
+
+    print()
+    print('getting here')
+    print()
+    args = request.args.to_dict()
+
+    # if args then return the specified number
+    if len(args) > 0:
+        limit = args['limit']
+        offset = args['offset']
+        photo_data = db.get_photos_in_range(limit=limit, offset=offset)
+        return jsonify(photo_data), 200
+    else:
+        # returns the default 20 latest photos
+        photo_data = db.get_photos_in_range()
+        return jsonify(photo_data), 200
+
+
+# 43613382810
+@app.route('/api/photos/<int:photo_id>', methods=['GET'])
+def get_photo(photo_id):
+    photo_data = db.get_photo(photo_id)
+    json_data = photo_data
+    print(json_data)
+    return render_template('photo.html', json_data=json_data), 200
+
+
+@app.route('/api/photos/next/<int:photo_id>', methods=['GET'])
+def get_next_photo(photo_id):
+    print('\n\n\n\n', photo_id, '\n\n\n\n')
 
 
 # with app.test_request_context():
 #     print(url_for('login'))
 
-@app.route("/tags")
-def hello():
+# @app.route("/tags")
+# def hello():
 
-    tag_data = {
-        'tags': tags
-    }
-
-    return jsonify(tag_data)
-
-
+#     tag_data = {
+#         'tags': tags
+#     }
+#     return jsonify(tag_data)
 if __name__ == '__main__':
     app.run()
