@@ -1,19 +1,24 @@
 {% extends "template.html" %}
 {% block content %}
 
-<h1>Display a single photo here</h1>
-
 <h2>Title: {{ json_data['title'] }}</h2>
 
-<h3>Views: {{ json_data['views'] }}</h3>
+<div id="image-container" class="col">
+    <div class="row">
+        <img id="image" src="{{json_data['original']}}" alt="">
+    </div>
+</div>
 
-<img src="{{json_data['original']}}" alt="">
 
 {% for key in json_data.items() %}
 {% endfor %}
 <div class="row">
     <div class="col">
         <a href="http://127.0.0.1:5000/api/photos/{{ json_data['next'] }}">Next</a>
+    </div>
+
+    <div class="col">
+        <p>Views: {{ json_data['views'] }}</p>
     </div>
     <div class="col">
         <a href="http://127.0.0.1:5000/api/photos/{{ json_data['previous'] }}">Previous</a>

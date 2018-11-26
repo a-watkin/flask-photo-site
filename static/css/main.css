@@ -1,0 +1,10 @@
+#image-container {
+    min-height: 500px;
+}
+
+
+#image {
+    max-height: 400px;
+    margin-left: auto;
+    margin-right: auto;
+}
