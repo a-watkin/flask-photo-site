@@ -21,6 +21,7 @@ app.config['PASSWORD'] = 'admin'
 app.config['SECRET_KEY'] = 'secret'
 
 db = Database('eigi-data.db')
+p = Photos()
 
 tags = db.get_all_tags()
 
@@ -50,26 +51,54 @@ def login():
     return render_template('login.html')
 
 
-# @app.route('/get/photos/<int:limit>')
-# def photos(limit):
-#     print(limit)
-#     photo_data = db.get_photos_in_range(limit=limit)
-#     return jsonify(photo_data)
+@app.route('/api/photos/')
+def photos():
+
+    args = request.args.to_dict()
+
+    photo_data = None
+
+    if len(args) > 0:
+
+        if 'offset' in args.keys() and 'limit' not in args.keys():
+            print(9 * '\n')
+            # gotta make this an int
+            photo_data = p.get_photos_in_range(20, int(args['offset']))
+            json_data = photo_data
+
+            print('args are ', args)
+
+            return render_template('photos.html', json_data=json_data), 200
+        elif 'offset' not in args.keys() and 'limit' in args.keys():
+            print(9 * '\n')
+            photo_data = p.get_photos_in_range(limit)
+            json_data = photo_data
+            return render_template('photos.html', json_data=json_data), 200
+
+        else:
+            print(9 * '\n', 'why would it even get here?')
+            print(args)
+            photo_data = p.get_photos_in_range()
+            json_data = photo_data
+            return render_template('photos.html', json_data=json_data), 200
+
+    else:
+        photo_data = p.get_photos_in_range()
+        return render_template('photos.html', json_data=json_data), 200
 
 
 # 127.0.0.1:5000/api/test?limit=20&offset=10
-@app.route('/api/photos/', methods=['GET'])
-def get_photos():
-    p = Photos()
-    photo_data = p.get_photos_in_range()
-    json_data = photo_data
+# @app.route('/api/photos/', methods=['GET'])
+# def get_photos():
+#     photo_data = p.get_photos_in_range()
+#     json_data = photo_data
 
-    # print()
-    # json_data = dict(photo_data['photos'])
+#     # print()
+#     # json_data = dict(photo_data['photos'])
 
-    # print(json_data)
+#     # print(json_data)
 
-    return render_template('photos.html', json_data=json_data), 200
+#     return render_template('photos.html', json_data=json_data), 200
 
 
 # 43613382810
@@ -86,15 +115,5 @@ def get_next_photo(photo_id):
     print('\n\n\n\n', photo_id, '\n\n\n\n')
 
 
-# with app.test_request_context():
-#     print(url_for('login'))
-
-# @app.route("/tags")
-# def hello():
-
-#     tag_data = {
-#         'tags': tags
-#     }
-#     return jsonify(tag_data)
 if __name__ == '__main__':
     app.run()

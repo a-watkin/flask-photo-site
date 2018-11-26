@@ -49,7 +49,12 @@ class Photos(object):
             a_dict[count] = d
             count += 1
 
-        return a_dict
+        rtn_dict = {'photos': a_dict}
+
+        rtn_dict['limit'] = limit
+        rtn_dict['offset'] = offset
+
+        return rtn_dict
 
         # for d in data:
         #     rtn_dict['photos'].append(d)

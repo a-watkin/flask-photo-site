@@ -3,11 +3,21 @@
 
 <h1>Photos page</h1>
 
-{% for key, value in json_data.items() %}
+{% for key, value in json_data.photos.items() %}
 
-<a href="/api/photos/{{value['photo_id']}}"><img src="{{value['original']}}" alt=""></a>
+<a href="/api/photos/{{value['photo_id']}}"><img class="img-fluid" src="{{value['original']}}" alt="Responsive image"></a>
 
 {% endfor %}
+
+
+<h1>{{json_data.offset, json_data.offset + 20}}</h1>
+
+<hr>
+<div class="col">
+    <div class="row">
+        <a href="/api/photos?offset={{ json_data.offset + 20 }}">Click</a>
+    </div>
+</div>
 
 
 {% endblock %}
