@@ -12,13 +12,11 @@
 {% for key in json_data.items() %}
 {% endfor %}
 <div class="row">
-
     <div class="col">
-
-        <form action="">
-            <button id="previous">Previous</button>
-            <button id="next" type="submit" formaction="http://127.0.0.1:5000/api/photos/next/30081941117">Next</button>
-        </form>
+        <a href="http://127.0.0.1:5000/api/photos/{{ json_data['next'] }}">Next</a>
+    </div>
+    <div class="col">
+        <a href="http://127.0.0.1:5000/api/photos/{{ json_data['previous'] }}">Previous</a>
     </div>
 </div>
 

@@ -152,47 +152,103 @@ class Database(object):
 
         # return rtn_dict
 
-    def get_photo(self, photo_id):
-        q_data = None
-        rtn_data = {}
+    def get_date_posted(self, photo_id):
+        photo_data = None
         with sqlite3.connect(self.db_name) as connection:
             c = connection.cursor()
-            c.row_factory = sqlite3.Row
 
-            target_string = (
-                "select * from photo join images using(photo_id) where photo_id={}".format(photo_id))
+            query_string = (
+                '''
+                select date_posted from photo
+                where photo_id={}
+                '''.format(photo_id)
+            )
 
-            next_string = (
+            photo_data = [x for x in c.execute(query_string)]
+
+        if len(photo_data) < 1:
+            return None
+        else:
+            return photo_data[0][0]
+
+    def get_next_photo(self, photo_id):
+        """
+        you need the date that the current was uploaded
+        """
+        date_posted = self.get_date_posted(photo_id)
+
+        photo_data = None
+        with sqlite3.connect(self.db_name) as connection:
+            c = connection.cursor()
+
+            query_string = (
                 '''
                 select * from photo join images using(photo_id)
                 where date_posted > {}
                 order by date_posted desc limit 1
-                '''.format(photo_id)
+                '''.format(date_posted)
             )
 
-            target_photo = c.execute(target_string)
-            next_photo = c.execute(next_string)
+            photo_data = [x for x in c.execute(query_string)]
 
-            print([dict(x) for x in target_photo])
+        if len(photo_data) < 1:
+            return None
+        else:
+            # print(photo_data)
+            # the photo_id of the next photo
+            return photo_data[0][0]
 
-            # prev_photo
+    def get_previous_photo(self, photo_id):
 
-        # try:
-        #     photo_data = [dict(ix) for ix in q_data][0]
-        #     print(photo_data)
-        #     data = {
+        date_posted = self.get_date_posted(photo_id)
 
-        #         'title': photo_data['photo_title'],
-        #         'views': photo_data['views'],
-        #         'original': photo_data['original']
-        #         'next':
-        #         'previous'
+        print(date_posted)
 
-        #     }
+        photo_data = None
+        with sqlite3.connect(self.db_name) as connection:
+            c = connection.cursor()
 
-        #     rtn_data = data
-        # except Exception as e:
-        #     print('problem with query data', e)
+            next_string = (
+                '''
+                select * from photo join images using(photo_id)
+                where date_posted < {}
+                order by date_posted desc limit 1
+                '''.format(date_posted)
+            )
+
+            photo_data = [x for x in c.execute(next_string)]
+
+        if len(photo_data) < 1:
+            return None
+        else:
+            return photo_data[0][0]
+
+    def get_photo(self, photo_id):
+        rtn_data = {}
+        photo_data = None
+        with sqlite3.connect(self.db_name) as connection:
+            c = connection.cursor()
+            c.row_factory = sqlite3.Row
+
+            query_string = (
+                "select * from photo join images using(photo_id) where photo_id={}".format(photo_id))
+
+            photo_data = [dict(x) for x in c.execute(query_string)]
+
+        next_photo = self.get_next_photo(photo_id)
+        prev_photo = self.get_previous_photo(photo_id)
+
+        if len(photo_data) > 0:
+            # becasuse it is a list containing a dict
+            photo_data = photo_data[0]
+
+            rtn_data = {
+                'title': photo_data['photo_title'],
+                'views': photo_data['views'],
+                'original': photo_data['original'],
+                'next': next_photo,
+                'previous': prev_photo
+            }
 
         return rtn_data
 
@@ -208,7 +264,16 @@ def main():
 
     # print(db.get_photos_in_range())
 
-    print(db.get_photo(30081941117))
+    # print(db.get_photo(30081941117))
+
+    # print(db.get_previous_photo(30081941117))
+
+    # photo_id: 44692597905
+
+    print('next ', db.get_next_photo(44692597905))
+    print('previous ', db.get_previous_photo(44692597905))
+
+    # print(db.get_date_posted(44692598005))
 
     # print(db.get_all_users())
 
