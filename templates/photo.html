@@ -1,14 +1,12 @@
 {% extends "template.html" %}
 {% block content %}
-
 <h2 class="text-center">{{ json_data['title'] }}</h2>
 
-<div id="photo-image-container text-center" class="col">
-    <div class="row">
+<div id="photo-container" class="row">
+    <div class="col text-center">
         <img id="photo-image" src="{{json_data['original']}}" alt="">
     </div>
 </div>
-
 
 {% for key in json_data.items() %}
 {% endfor %}
