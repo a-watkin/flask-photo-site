@@ -58,10 +58,8 @@ def photos():
     if len(args) > 0:
 
         if 'offset' in args.keys() and 'limit' not in args.keys():
-
             if int(args['offset']) <= 0:
                 args['offset'] = 0
-
             # gotta make this an int
             photo_data = p.get_photos_in_range(20, int(args['offset']))
             json_data = photo_data
@@ -77,7 +75,9 @@ def photos():
             return render_template('photos.html', json_data=json_data), 200
 
         else:
-            # both offset and limit are present
+            """
+            both offset and limit are present
+            """
             if int(args['offset']) <= 0:
                 args['offset'] = 0
 
@@ -87,6 +87,7 @@ def photos():
             photo_data = p.get_photos_in_range(
                 int(args['limit']), int(args['offset'])
             )
+
             json_data = photo_data
             return render_template('photos.html', json_data=json_data), 200
 
