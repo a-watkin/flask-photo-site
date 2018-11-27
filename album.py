@@ -44,9 +44,9 @@ class Album(object):
 
         count = 0
         for album in album_data:
-            print('\n', 'album_id', album['album_id'])
+            # print('\n', 'album_id', album['album_id'])
             album_dover_dict = self.get_album_cover(album['album_id'])
-            album['large_sqaure'] = album_dover_dict[0]['large_square']
+            album['large_square'] = album_dover_dict[0]['large_square']
             rtn_dict[count] = album
             count += 1
 
@@ -56,4 +56,6 @@ class Album(object):
 if __name__ == "__main__":
     a = Album()
     # print(a.get_album_cover('72157650725849398'))
-    print(a.get_albums())
+    blah = a.get_albums()
+
+    print(blah.keys(), blah[0]['large_square'])
