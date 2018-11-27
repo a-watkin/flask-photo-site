@@ -16,30 +16,27 @@
     {% for key, value in json_data.items() %}
 
     <div class="col">
-
-        <div class="card" style="width: 18rem;">
-
-            <div class="card-body">
-                <h5 class="card-title text-center">{{value['title']}}</h5>
-                <img class="card-img-top" src="{{value['large_square']}}" alt="{{ value['title'] }} album">
-                <p class="card-text">{{value['description']}}</p>
-
-                <div class="row">
-                    <div class="col">
-                        <p>
-                            views: {{value['views']}}
-                        </p>
+        <a href="/albums/{{value['album_id']}}">
+            <div class="card" style="width: 18rem;">
+                <div class="card-body">
+                    <h5 class="card-title text-center">{{value['title']}}</h5>
+                    <img class="card-img-top" src="{{value['large_square']}}" alt="{{ value['title'] }} album">
+                    <p class="card-text">{{value['description']}}</p>
+                    <div class="row">
+                        <div class="col">
+                            <p>
+                                views: {{value['views']}}
+                            </p>
+                        </div>
+                        <div class="col">
+                            <p>
+                                photos: {{value['photos']}}
+                            </p>
+                        </div>
                     </div>
-                    <div class="col">
-                        <p>
-                            photos: {{value['photos']}}
-                        </p>
-                    </div>
-
                 </div>
             </div>
-        </div>
-
+        </a>
     </div>
 
     {% endfor %}

@@ -52,10 +52,43 @@ class Album(object):
 
         return rtn_dict
 
+    def get_album_photos(self, album_id):
+        query_string = '''
+                select album.title, album.album_id, 
+                album.description, album.views, album.photos,  
+                images.large_square,
+                images.original,
+                photo.photo_id, photo.date_taken,
+                photo.photo_title, photo.date_uploaded,  photo.views
+                from album
+                join photo_album on(album.album_id=photo_album.album_id)
+                join photo on(photo_album.photo_id=photo.photo_id)
+                join images on(images.photo_id=photo.photo_id)
+                where album.album_id={}
+                order by photo.date_uploaded asc
+                '''.format(album_id)
+
+        album_data = self.db.get_query_as_list(
+            query_string
+        )
+
+        rtn_dict = {
+
+        }
+
+        count = 0
+        for d in album_data:
+            rtn_dict[count] = d
+            count += 1
+
+        return rtn_dict
+
 
 if __name__ == "__main__":
     a = Album()
     # print(a.get_album_cover('72157650725849398'))
-    blah = a.get_albums()
+    # blah = a.get_albums()
 
-    print(blah.keys(), blah[0]['large_square'])
+    # print(blah.keys(), blah[0]['large_square'])
+
+    print(a.get_album_photos('72157650725849398'))

@@ -1,0 +1,22 @@
+{% extends "template.html" %}
+{% block content %}
+
+<div class="row">
+    <div class="col">
+        <h1 class="text-center">Album view</h1>
+    </div>
+</div>
+
+<div class="row">
+    {% for key, value in json_data.items() %}
+
+
+    <div class="col-3">
+        <a id="photostream-page" href="/api/photos/{value['photo_id']}}">
+            <img id="photo-page-image" class="img-fluid" src="{{value['large_square']}}" alt="Responsive image">
+            <!-- <h2>{{value.photo_id}}</h2> -->
+        </a>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}
