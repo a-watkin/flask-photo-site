@@ -253,6 +253,19 @@ class Database(object):
 
         return rtn_data
 
+    def get_query_as_list(self, query_string):
+        q_data = None
+        with sqlite3.connect(self.db_name) as connection:
+            c = connection.cursor()
+
+            c.row_factory = sqlite3.Row
+
+            query_string = (query_string)
+
+            q_data = c.execute(query_string)
+
+        return [dict(ix) for ix in q_data]
+
 
 def main():
 

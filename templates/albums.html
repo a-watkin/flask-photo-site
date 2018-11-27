@@ -1,0 +1,47 @@
+{% extends "template.html" %}
+{% block content %}
+
+<div class="row text-center">
+    <div class="col">
+        <h1>albums page</h1>
+    </div>
+</div>
+
+
+<div class="row">
+
+
+
+
+    {% for key, value in json_data.items() %}
+
+    <div class="col">
+
+        <div class="card" style="width: 18rem;">
+            <img class="card-img-top" src="{{value['large_square']}}" alt="{{ value['title'] }} album">
+            <div class="card-body">
+                <h5 class="card-title">{{value['title']}}</h5>
+                <p class="card-text">{{value['description']}}</p>
+
+                <div class="row">
+                    <div class="col">
+                        <p>
+                            views: {{value['views']}}
+                        </p>
+                    </div>
+                    <div class="col">
+                        <p>
+                            photos: {{value['photos']}}
+                        </p>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    {% endfor %}
+</div>
+
+{% endblock %}

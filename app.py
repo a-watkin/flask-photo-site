@@ -4,6 +4,7 @@ from flask import Flask, render_template, request, session, flash, redirect, url
 from flask import json
 from database_interface import Database
 from photo import Photos
+from album import Album
 
 
 app = Flask('app')
@@ -19,6 +20,7 @@ app.config['SECRET_KEY'] = 'secret'
 
 db = Database('eigi-data.db')
 p = Photos()
+a = Album()
 
 tags = db.get_all_tags()
 
@@ -27,6 +29,14 @@ $ export FLASK_APP=my_application
 $ export FLASK_ENV=development
 $ flask run
 """
+
+
+@app.route('/albums')
+def albums():
+    albums_data = a.get_albums()
+    json_data = albums_data
+    print(json_data)
+    return render_template('albums.html', json_data=json_data), 200
 
 
 @app.route('/', methods=['GET', 'POST'])
