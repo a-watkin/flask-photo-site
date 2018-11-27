@@ -30,7 +30,7 @@ $ export FLASK_ENV=development
 $ flask run
 
 
-lsof -w -n -i tcp:8080
+lsof -w -n -i tcp:5000
 kill -9 processId
 """
 

@@ -156,6 +156,11 @@ class Photos(object):
 
         return rtn_data
 
+    def get_photos_range(self, table_name, start, stop):
+        with sqlite3.connect(self.db.db_name) as connection:
+            c = connection.cursor()
+            return [x for x in c.execute("SELECT * FROM photos ".format(table_name))]
+
 
 if __name__ == "__main__":
     p = Photos()

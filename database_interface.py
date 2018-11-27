@@ -20,6 +20,7 @@ class Database(object):
             print('Databse not created.')
             return False
 
+    @classmethod
     def delete_database(cls):
         if cls.db_name in os.listdir():
             try:
@@ -89,11 +90,6 @@ class Database(object):
             )):
                 return list(row)
             # print(row)
-
-    def get_photos_range(self, table_name, start, stop):
-        with sqlite3.connect(self.db_name) as connection:
-            c = connection.cursor()
-            return [x for x in c.execute("SELECT * FROM photos ".format(table_name))]
 
     def get_all_tags(self):
         with sqlite3.connect(self.db_name) as connection:
