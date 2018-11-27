@@ -1,14 +1,7 @@
 {% extends "template.html" %}
 {% block content %}
 <h1 class="text-center">{{ json_data['title'] }}</h1>
-
-<div id="photo-container" class="row">
-    <div class="col text-center">
-        <img id="photo-image" class="img-fluid" src="{{json_data['original']}}" alt="">
-    </div>
-</div>
-
-
+<hr>
 <div class="row text-center">
     <div class="col">
         <a href="http://127.0.0.1:5000/api/photos/{{ json_data['next'] }}">Next</a>
@@ -21,5 +14,13 @@
         <a href="http://127.0.0.1:5000/api/photos/{{ json_data['previous'] }}">Previous</a>
     </div>
 </div>
+<hr>
+<div id="photo-container" class="row">
+    <div class="col text-center">
+        <img id="photo-image" class="img-fluid" src="{{json_data['original']}}" alt="">
+    </div>
+</div>
+
+
 
 {% endblock %}
