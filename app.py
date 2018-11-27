@@ -28,33 +28,32 @@ tags = db.get_all_tags()
 $ export FLASK_APP=my_application
 $ export FLASK_ENV=development
 $ flask run
+
+
+lsof -w -n -i tcp:8080
+kill -9 processId
 """
 
 
 @app.route('/albums')
-def albums():
+def get_albums():
     albums_data = a.get_albums()
     json_data = albums_data
     # print(json_data[0]['large_square'])
     return render_template('albums.html', json_data=json_data), 200
 
 
-# @app.route('/api/albums/')
-# def view_album():
-#     args = request.args.to_dict()
-#     return args
-
-
 @app.route('/albums/<int:album_id>', methods=['GET'])
-def get_photo(album_id):
+def get_album_photos(album_id):
     photo_data = a.get_album_photos(album_id)
     json_data = photo_data
     # print(json_data)
     return render_template('album.html', json_data=json_data), 200
 
 
-@app.route('/api/photos')
-def photos():
+@app.route('/api/photos/')
+def get_photos():
+    print('\nHello from get_photos\n')
     print(20 * '\n', 'ENTERED')
     args = request.args.to_dict()
 
@@ -108,32 +107,14 @@ def photos():
         return render_template('photos.html', json_data=json_data), 200
 
 
-# 127.0.0.1:5000/api/test?limit=20&offset=10
-@app.route('/api/photos/', methods=['GET'])
-def get_photos():
-    photo_data = p.get_photos_in_range()
+@app.route('/api/photos/<int:photo_id>', methods=['GET'])
+def get_photo(photo_id):
+    print('\nHello from get_photo\n')
+    photo_data = p.get_photo(photo_id)
     json_data = photo_data
-
-    # print()
-    # json_data = dict(photo_data['photos'])
-
-    # print(json_data)
+    # json_data = dict(photo_data['photos'])2
 
     return render_template('photo.html', json_data=json_data), 200
-
-
-# 43613382810
-# @app.route('/api/photos/<int:photo_id>', methods=['GET'])
-# def get_photo(photo_id):
-#     photo_data = db.get_photo(photo_id)
-#     json_data = photo_data
-#     print(json_data)
-#     return render_template('photo.html', json_data=json_data), 200
-
-
-# @app.route('/api/photos/next/<int:photo_id>', methods=['GET'])
-# def get_next_photo(photo_id):
-#     print('\n\n\n\n', photo_id, '\n\n\n\n')
 
 
 @app.route('/', methods=['GET', 'POST'])
