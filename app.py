@@ -35,7 +35,7 @@ $ flask run
 def albums():
     albums_data = a.get_albums()
     json_data = albums_data
-    print(json_data['large_square'])
+    print(json_data[0]['large_square'])
     return render_template('albums.html', json_data=json_data), 200
 
 
