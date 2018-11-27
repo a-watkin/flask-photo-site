@@ -2,11 +2,8 @@ import json
 
 from flask import Flask, render_template, request, session, flash, redirect, url_for, g, jsonify
 from flask import json
-from functools import wraps
-
-
 from database_interface import Database
-from photos import Photos
+from photo import Photos
 
 
 app = Flask('app')
@@ -88,14 +85,16 @@ def photos():
                 args['offset'] = 0
 
             photo_data = p.get_photos_in_range(
-                int(int(args['limit']), args['offset'])
+                int(args['limit']), int(args['offset'])
             )
             json_data = photo_data
             return render_template('photos.html', json_data=json_data), 200
 
     else:
+        print(10 * '\n', 'why you no work')
         photo_data = p.get_photos_in_range()
         json_data = photo_data
+        print(json_data)
         return render_template('photos.html', json_data=json_data), 200
 
 

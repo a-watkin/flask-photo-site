@@ -21,7 +21,7 @@ class Photos(object):
             c.row_factory = sqlite3.Row
 
             query_string = (
-                '''select photo_id, views, photo_title, date_uploaded, date_taken, images.original from photo
+                '''select photo_id, views, photo_title, date_uploaded, date_taken, images.large_square from photo
                 join images using(photo_id)
                 order by date_uploaded
                 desc limit {} offset {}'''

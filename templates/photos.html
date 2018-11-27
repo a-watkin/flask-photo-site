@@ -1,64 +1,35 @@
 {% extends "template.html" %}
 {% block content %}
-
-<h1>Photos page</h1>
-
-
-
-
+<h1 class="text-center">Photos page</h1>
 <hr>
-<div class="row">
-
+<div class="row text-center">
     <div class="col">
         <a href="/api/photos?offset={{ json_data.offset - 20 }}">Previous page</a>
     </div>
-
     <div class="col">
         <a href="/api/photos?offset={{ json_data.offset + 20 }}">Next page</a>
     </div>
 </div>
 <hr>
+<!-- <h1>{{json_data.photos.items()}}</h1> -->
+<div id="photos-page-container" class="row mx-auto">
+    {% for key, value in json_data.photos.items() %}
 
+    <div class="col-3 text-center">
 
+        <!-- <h3>{{key}}</h3> -->
+        <a id="photostream-page" href="/api/photos/{{value['photo_id']}}">
+            <img id="photo-page-image" class="img-fluid" src="{{value['large_square']}}" alt="Responsive image">
+            <!-- <h2>{{value.photo_id}}</h2> -->
+        </a>
 
-<div class="row">
-    <div class="col">
-        {% for key, value in json_data.photos.items() %}
-        {% if key % 5 == 0 %}
-        <!-- closing col -->
     </div>
-    <!-- opening col -->
-    <div class="col">
 
+    {% endfor %}
 
-        {% endif %}
-
-        <a href="/api/photos/{{value['photo_id']}}"><img class="img-fluid" src="{{value['original']}}" alt="Responsive image"></a>
-
-
-        {% if key % 10 == 0 %}
-        <!-- closing col -->
-    </div>
-    <!-- closing row -->
 </div>
-<!-- opening row -->
-<div class="row">
-    <!-- opening col -->
-    <div class="col">
-
-
-        {% endif %}
-
-
-        {% endfor %}
-    </div>
-</div>
-
-<h1>{{json_data.offset, json_data.offset + 20}}</h1>
-
-
 
 <hr>
-
+<h1 class="text-center">{{json_data.offset, json_data.offset + 20}}</h1>
 
 {% endblock %}
