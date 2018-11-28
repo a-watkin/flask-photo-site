@@ -44,26 +44,25 @@ class Tag(object):
         q_data = None
 
         query_string = '''
-            select photo_id, photo_title, views, tag_name, original from photo 
+            select photo_id, photo_title, views, tag_name, large_square from photo 
             join photo_tag using(photo_id)
             join images using(photo_id)
             where tag_name={}
             order by views desc
         '''.format("'" + tag_name + "'")
 
-        data = self.db.get_query_as_list(query_string)
+        tag_data = self.db.get_query_as_list(query_string)
 
-        print(data)
-        # with sqlite3.connect(self.db.db_name) as connection:
-        #     c = connection.cursor()
-        #     q_data = c.execute(query_string)
+        rtn_dict = {
 
-        #     # print(row)
+        }
 
-        # print(q_data)
+        count = 0
+        for t in tag_data:
+            rtn_dict[count] = t
+            count += 1
 
-        # tag_data = self.db.get_query_as_list(query_string)
-        # print(tag_data)
+        return rtn_dict
 
 
 if __name__ == "__main__":

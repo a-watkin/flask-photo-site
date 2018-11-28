@@ -15,7 +15,11 @@
 
         {% for key, value in json_data.items() %}
 
-        <button type="button" class="btn btn-outline-success btn-lg">{{value['tag_name']}}</button>
+        <a href="/tags/{{value['tag_name']}}">
+
+            <button type="button" class="btn btn-outline-success btn-lg">{{value['tag_name']}}</button>
+
+        </a>
 
 
         {% endfor %}
