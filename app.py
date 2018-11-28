@@ -46,7 +46,7 @@ def get_tags():
 @app.route('/tags/<string:tag_name>')
 def photos_by_tag_name(tag_name):
     tag_data = t.get_photos_by_tag(tag_name)
-    return render_template('photo_tag.html', json_data=tag_data)
+    return render_template('tag_photos.html', json_data=tag_data)
 
 
 @app.route('/albums')
