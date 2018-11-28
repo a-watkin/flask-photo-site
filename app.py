@@ -5,6 +5,7 @@ from flask import json
 from database_interface import Database
 from photo import Photos
 from album import Album
+from tag import Tag
 
 
 app = Flask('app')
@@ -21,8 +22,9 @@ app.config['SECRET_KEY'] = 'secret'
 db = Database('eigi-data.db')
 p = Photos()
 a = Album()
+t = Tag()
 
-tags = db.get_all_tags()
+# tags = db.get_all_tags()
 
 """
 $ export FLASK_APP=my_application
@@ -33,6 +35,18 @@ $ flask run
 lsof -w -n -i tcp:5000
 kill -9 processId
 """
+
+
+@app.route('/tags/')
+def get_tags():
+    tag_data = t.get_all_tags()
+    return render_template('tags.html', json_data=tag_data)
+
+
+@app.route('/tags/<string:tag_name>')
+def photos_by_tag_name(tag_name):
+    tag_data = t.get_photos_by_tag(tag_name)
+    return render_template('photo_tag.html', json_data=tag_data)
 
 
 @app.route('/albums')
@@ -137,4 +151,4 @@ def login():
 
 
 if __name__ == '__main__':
-    app.run()
+    app.run(debug=True)

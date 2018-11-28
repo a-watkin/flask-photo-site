@@ -91,11 +91,6 @@ class Database(object):
                 return list(row)
             # print(row)
 
-    def get_all_tags(self):
-        with sqlite3.connect(self.db_name) as connection:
-            c = connection.cursor()
-            return [x[0] for x in c.execute("SELECT tag_name FROM tag")]
-
     def get_query_as_list(self, query_string):
         q_data = None
         with sqlite3.connect(self.db_name) as connection:
