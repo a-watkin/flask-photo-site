@@ -1,6 +1,11 @@
 {% extends "template.html" %}
 {% block content %}
-<h1 class="text-center">Tag photos</h1>
+<h1 class="text-center">
+    Photos for tag:
+    <span class="font-italic">
+        {{json_data[0]['tag_name']}}
+    </span>
+</h1>
 
 <div id="photos-page-container" class="row mx-auto">
 

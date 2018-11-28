@@ -2,10 +2,14 @@ from database_interface import Database
 import sqlite3
 
 
+from tag import Tag
+
+
 class Photos(object):
 
     def __init__(self):
         self.db = Database('eigi-data.db')
+        self.tag = Tag()
 
     def get_photos_in_range(self, limit=20, offset=0):
         """
@@ -142,6 +146,13 @@ class Photos(object):
         next_photo = self.get_next_photo(photo_id)
         prev_photo = self.get_previous_photo(photo_id)
 
+        """
+        Get the tags for the current photo.
+        """
+        tag_data = self.tag.get_photo_tags(photo_id)
+
+        print('tags ', tag_data)
+
         if len(photo_data) > 0:
             # becasuse it is a list containing a dict
             photo_data = photo_data[0]
@@ -149,6 +160,7 @@ class Photos(object):
             rtn_data = {
                 'title': photo_data['photo_title'],
                 'views': photo_data['views'],
+                'tags': tag_data,
                 'original': photo_data['original'],
                 'next': next_photo,
                 'previous': prev_photo
@@ -164,5 +176,7 @@ class Photos(object):
 
 if __name__ == "__main__":
     p = Photos()
-    print(p.get_photos_in_range())
+    # print(p.get_photos_in_range())
     # print(p.db.db_name)
+
+    print(p.get_photo('44692597905'))

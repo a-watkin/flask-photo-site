@@ -1,6 +1,18 @@
 {% extends "template.html" %}
 {% block content %}
 <h1 class="text-center">{{ json_data['title'] }}</h1>
+
+
+<h2>Tags</h2>
+{% for tag in json_data['tags'] %}
+
+<a href="/tags/{{tag['tag_name']}}">
+    <button type="button" class="btn btn-outline-success btn-lg">{{tag['tag_name']}}</button>
+</a>
+
+{% endfor %}
+
+
 <hr>
 <div class="row text-center">
     <div class="col">
@@ -21,6 +33,8 @@
     </div>
 </div>
 
+
+<hr>
 
 
 {% endblock %}

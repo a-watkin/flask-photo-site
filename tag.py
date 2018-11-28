@@ -24,16 +24,24 @@ class Tag(object):
     def get_photo_tags(self, photo_id):
         """
         Get the tags for a single photo.
+
+            select photo.photo_id, photo.photo_title, photo_tag.tag_name from photo
+            join photo_tag on(photo_tag.photo_id=photo.photo_id)
+            where photo.photo_id={}
+
         """
 
         query_string = '''
-            select photo.photo_id, photo.photo_title, photo_tag.tag_name from photo
+            select photo_tag.tag_name from photo
             join photo_tag on(photo_tag.photo_id=photo.photo_id)
             where photo.photo_id={}
         '''.format(photo_id)
 
+        # so an array of tags would be ok
         tag_data = self.db.get_query_as_list(query_string)
-        print(tag_data)
+        # print(tag_data)
+
+        return tag_data
 
     def get_photos_by_tag(self, tag_name):
         """
@@ -68,5 +76,5 @@ class Tag(object):
 if __name__ == "__main__":
     t = Tag()
     # print(t.get_all_tags())
-    print(t.get_photos_by_tag('london'))
-    # print(t.get_photo_tags(5052580779))
+    # print(t.get_photos_by_tag('london'))
+    print(t.get_photo_tags(5052580779))

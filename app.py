@@ -40,7 +40,7 @@ kill -9 processId
 @app.route('/tags/')
 def get_tags():
     tag_data = t.get_all_tags()
-    print(tag_data)
+    # print(tag_data)
     return render_template('tags.html', json_data=tag_data)
 
 
@@ -48,7 +48,7 @@ def get_tags():
 def photos_by_tag_name(tag_name):
     tag_data = t.get_photos_by_tag(tag_name)
     json_data = tag_data
-    # print(json_data)
+    print(json_data)
     return render_template('tag_photos.html', json_data=json_data)
 
 
@@ -130,6 +130,8 @@ def get_photo(photo_id):
     photo_data = p.get_photo(photo_id)
     json_data = photo_data
     # json_data = dict(photo_data['photos'])2
+
+    print(json_data)
 
     return render_template('photo.html', json_data=json_data), 200
 
