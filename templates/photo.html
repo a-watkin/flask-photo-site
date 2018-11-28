@@ -13,6 +13,34 @@
 {% endfor %}
 
 
+
+{% for value in json_data['containing_album'] %}
+
+<div class="col">
+    <a href="/albums/{{value['album_id']}}">
+        <div class="card" style="width: 18rem;">
+            <div class="card-body">
+                <h5 class="card-title text-center">{{value['title']}}</h5>
+                <img class="card-img-top" src="{{value['large_square']}}" alt="{{ value['title'] }} album">
+                <div class="row">
+                    <div class="col">
+                        <p>
+                            views: {{value['views']}}
+                        </p>
+                    </div>
+                    <div class="col">
+                        <p>
+                            photos: {{value['photos']}}
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </a>
+</div>
+
+{% endfor %}
+
 <hr>
 <div class="row text-center">
     <div class="col">

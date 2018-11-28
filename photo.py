@@ -3,6 +3,7 @@ import sqlite3
 
 
 from tag import Tag
+from album import Album
 
 
 class Photos(object):
@@ -10,6 +11,7 @@ class Photos(object):
     def __init__(self):
         self.db = Database('eigi-data.db')
         self.tag = Tag()
+        self.album = Album()
 
     def get_photos_in_range(self, limit=20, offset=0):
         """
@@ -150,8 +152,18 @@ class Photos(object):
         Get the tags for the current photo.
         """
         tag_data = self.tag.get_photo_tags(photo_id)
+        album_data = self.album.get_containing_album(photo_id)
 
-        print('tags ', tag_data)
+        # print('tags ', tag_data)
+
+        if len(album_data) > 0:
+            print('album_id', album_data[0]['album_id'])
+            album_id = album_data[0]['album_id']
+            album_cover = self.album.get_album_cover(album_id)
+            print(album_cover)
+            album_data[0]['large_square'] = album_cover[0]['large_square']
+
+        print('album_data ', album_data)
 
         if len(photo_data) > 0:
             # becasuse it is a list containing a dict
@@ -161,6 +173,7 @@ class Photos(object):
                 'title': photo_data['photo_title'],
                 'views': photo_data['views'],
                 'tags': tag_data,
+                'containing_album': album_data,
                 'original': photo_data['original'],
                 'next': next_photo,
                 'previous': prev_photo

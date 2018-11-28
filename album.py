@@ -7,24 +7,6 @@ class Album(object):
     def __init__(self):
         self.db = Database('eigi-data.db')
 
-    # query string for getting the large_square photo for the album cover
-    def get_album_cover(self, album_id):
-        query_string = '''
-                            select images.large_square from album
-                            join photo_album on(album.album_id=photo_album.album_id)
-                            join photo on(photo_album.photo_id=photo.photo_id)
-                            join images on(images.photo_id=photo.photo_id)
-                            where album.album_id={}
-                            order by photo.date_uploaded asc limit 1
-                        
-                        '''.format(album_id)
-
-        album_cover = self.db.get_query_as_list(query_string)
-
-        # print(album_cover)
-
-        return album_cover
-
     def get_albums(self):
         """
         Returns all albums.
@@ -51,6 +33,41 @@ class Album(object):
             count += 1
 
         return rtn_dict
+
+    def get_containing_album(self, photo_id):
+        query_string = '''
+
+                select album.album_id, album.title, album.views, album.description, album.photos, date_created 
+                from photo_album
+                join album on(photo_album.album_id=album.album_id)
+                where photo_album.photo_id={}
+
+        '''.format(photo_id)
+
+        album_data = self.db.get_query_as_list(
+            query_string
+        )
+
+        return album_data
+
+    # query string for getting the large_square photo for the album cover
+
+    def get_album_cover(self, album_id):
+        query_string = '''
+                            select images.large_square from album
+                            join photo_album on(album.album_id=photo_album.album_id)
+                            join photo on(photo_album.photo_id=photo.photo_id)
+                            join images on(images.photo_id=photo.photo_id)
+                            where album.album_id={}
+                            order by photo.date_uploaded asc limit 1
+                        
+                        '''.format(album_id)
+
+        album_cover = self.db.get_query_as_list(query_string)
+
+        # print(album_cover)
+
+        return album_cover
 
     def get_album_photos(self, album_id):
         query_string = '''
@@ -91,4 +108,6 @@ if __name__ == "__main__":
 
     # print(blah.keys(), blah[0]['large_square'])
 
-    print(a.get_album_photos('72157650725849398'))
+    # print(a.get_album_photos('72157650725849398'))
+
+    print(a.get_containing_album(16748114355))
