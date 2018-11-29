@@ -6,10 +6,10 @@
     </div>
 </div>
 <!-- displays the photo -->
-<div id="photo-container" class="row">
+<div id="photo-container" class="row align-items-center">
 
     <!-- Next -->
-    <div class="col-1 my-auto">
+    <div class="col-1">
         <a href="http://127.0.0.1:5000/api/photos/{{ json_data['next'] }}"><i class="fas fa-angle-left fa-3x"></i></a>
     </div>
 
@@ -18,7 +18,7 @@
     </div>
 
     <!-- Previous -->
-    <div class="col-1 my-auto">
+    <div class="col-1">
         <a href="http://127.0.0.1:5000/api/photos/{{ json_data['previous'] }}"><i class="fas fa-angle-right fa-3x"></i></a>
     </div>
 </div>
