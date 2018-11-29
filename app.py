@@ -2,6 +2,7 @@ import json
 
 from flask import Flask, render_template, request, session, flash, redirect, url_for, g, jsonify
 from flask import json
+from wtforms import Form, BooleanField, StringField, PasswordField, validators
 from database_interface import Database
 from photo import Photos
 from album import Album
@@ -39,9 +40,22 @@ kill -9 processId
 """
 
 
-@app.route('/edit/tag/<string:tag_name>', methods=['GET'])
+@app.route('/edit/tag/<string:tag_name>', methods=['GET', 'POST'])
 def edit_tag(tag_name):
-    return render_template('edit_tag.html'), 200
+    if request.method == 'GET':
+        print('\n get message recieved')
+
+        return render_template('edit_tag.html', tag_name=tag_name), 200
+
+    if request.method == 'POST':
+        new_tag_name = request.form['new_tag_name']
+        # attemp to do database update
+
+        print('POST REQUEST RECIEVED WITH VALUE OF', new_tag_name)
+
+        # flash('tag updated')
+
+        return render_template('edit_tag.html', tag_name=new_tag_name), 200
 
 
 @app.route('/edit/tags')
@@ -54,6 +68,7 @@ def edit_tags():
 def get_tags():
     tag_data = t.get_all_tags()
     # print(tag_data)
+
     return render_template('tags.html', json_data=tag_data)
 
 
@@ -61,7 +76,7 @@ def get_tags():
 def photos_by_tag_name(tag_name):
     tag_data = t.get_photos_by_tag(tag_name)
     json_data = tag_data
-    print(json_data)
+    # print(json_data)
     return render_template('tag_photos.html', json_data=json_data)
 
 

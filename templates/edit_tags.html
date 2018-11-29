@@ -40,7 +40,15 @@
                     <td>
                         <h2>{{value["photos"]}}</h2>
                     </td>
-                    <td> <button class="btn btn-warning btn-block">Edit this tag</button>
+                    <td>
+                        <a href="/edit/tag/{{ value["tag_name"] }}">
+
+                            <button class="btn btn-warning btn-block">Edit this tag</button>
+
+                        </a>
+
+
+
                         <button class="btn btn-danger btn-block">Delete this tag</button></td>
                 </tr>
 

@@ -10,7 +10,7 @@ class Tag(object):
     def get_all_tags(self):
         tag_data = self.db.get_query_as_list("SELECT tag_name FROM tag")
 
-        print(tag_data)
+        # print(tag_data)
 
         rtn_dict = {
             # 'tag_info': {'number_of_photos': self.get_photo_count_by_tag(tag_name)}

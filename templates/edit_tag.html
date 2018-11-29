@@ -1,5 +1,51 @@
 {% extends "template.html" %} {% block content %}
 
-<h1>EDIT TAG PAGE</h1>
+
+<div class="row text-center">
+    <div class="col">
+        <h1>Edit tag: {{tag_name}}</h1>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col">
+        <form method="post">
+            <div class="form-group">
+                <label for="renaming-tag">Make changes to the tag name below</label>
+                <input name="new_tag_name" type="text" class="form-control" value="{{tag_name}}">
+            </div>
+
+            <div class="row">
+
+                <div class="col">
+                    <div class="alert alert-dark" role="alert">
+                        Tags must be unique and not contain any spaces.
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col text-center">
+                    <button type="submit" class="btn btn-primary">Update tag</button>
+
+                </div>
+
+
+
+            </div>
+
+        </form>
+
+    </div>
+</div>
+<hr>
+<div class="row">
+    <div class="col">
+        <a href="/tags/">
+            <button class="btn btn-success"">Go back to tags page</button>
+        </a>
+    </div>
+    
+</div>
 
 {% endblock %}
