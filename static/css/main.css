@@ -54,3 +54,9 @@ img {
 .table>tbody>tr>td {
     vertical-align: middle;
 }
+
+
+/* some margin to provide space between the buttons for the edit button in the view edit_tag.html */
+#tag-edit {
+    margin-bottom: 1em;
+}

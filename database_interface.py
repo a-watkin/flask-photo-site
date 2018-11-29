@@ -103,6 +103,40 @@ class Database(object):
 
         return [dict(ix) for ix in q_data]
 
+    def make_query(self, query_string):
+        with sqlite3.connect(self.db_name) as connection:
+            c = connection.cursor()
+            # print(query_string)
+            return [x for x in c.execute(query_string)]
+
+    def delete_rows_where(self, table_name, name, where):
+        with sqlite3.connect(self.db_name) as connection:
+            c = connection.cursor()
+            query_string = '''
+            delete from {} where {} = '{}'
+            '''.format(table_name, name, where)
+
+            try:
+                print(query_string)
+                c.execute(query_string)
+            except Exception as e:
+                print('Problem removing row ', e, query_string)
+
+    def insert_tag_data(self, table_name, *args):
+        for x in args[0]:
+
+            try:
+                with sqlite3.connect(self.db_name) as connection:
+                    c = connection.cursor()
+                    # INSERT INTO photo_tag VALUES(5052580779, 'london')
+                    insert_string = '''INSERT INTO photo_tag VALUES({}, '{}')'''.format(
+                        int(x[0]), x[1])
+
+                    c.execute(insert_string)
+
+            except Exception as e:
+                print('Problem ', e, x)
+
 
 def main():
 

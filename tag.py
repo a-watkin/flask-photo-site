@@ -88,21 +88,22 @@ class Tag(object):
 
         return rtn_dict
 
-    def update_tag(self, new_name, tag_name):
+    def update_tag(self, new_tag, old_tag):
         update_string = '''
                         update photo_tag
                         set tag_name = '{}'
                         where tag_name = '{}' 
-                        '''.format(new_name, tag_name)
+                        '''.format(new_tag, old_tag)
 
-        # print(update_string)
+        # Check if the tag is already in the database
+        resp = self.db.make_query(
+            '''
+            select tag_name from tag where tag_name = '{}'
+            '''.format(new_tag)
+        )
 
-        # Check if new tag name already exists
-        tag_data = self.db.get_rows('tag')
-        all_tags = [x[0] for x in tag_data]
-
-        if new_name in all_tags:
-            print('TAG ALREADY EXISTS')
+        if len(resp) > 0:
+            print('new name value alread exists in tags')
             """
             get the data relating to the old tag name and save it
 
@@ -115,20 +116,42 @@ class Tag(object):
             Delete both from the database
 
             Reenter the data with the corrected tag
+
+            Maybe use a transaction?
             """
-            #
 
-        # print(all_tags.values())
+            # All the data relating to the old tag name from photo_data
+            photo_tag_query = '''
+                            select * from photo_tag
+                            where tag_name = '{}' 
+                            '''.format(old_tag)
 
-        # for t in all_tags:
-        #     print('\n', all_tags[t])
+            photo_tag_data = self.db.make_query(photo_tag_query)
 
-        # if new_name in all_tags:
-        #     return True
+            # prepare data for insert back, change the values that you need to change
 
-        # photo_count = self.db.get_query_as_list(query_string)
+            new_photo_tag_data = []
+
+            # you actually only need to up date photo_tag right?
+            # just gotta delete the old tag name from tag
+            for v in photo_tag_data:
+                new_photo_tag_data.append((v[0], new_tag))
+
+            print(new_photo_tag_data)
+
+            self.db.insert_tag_data('photo_tag', new_photo_tag_data)
+
+            # at this point you can just delete the old tag from the tag table
+            # THIS DOESN'T WORK, it does NOT cascade on delete
+            self.db.delete_rows_where('tag', 'tag_name', old_tag)
+
+            self.db.delete_rows_where('photo_tag', 'tag_name', old_tag)
 
 
+            # print()
+            # print(photo_tag_data)
+            # print()
+            # print(tag_data)
 if __name__ == "__main__":
     t = Tag()
     # print(t.get_all_tags())
