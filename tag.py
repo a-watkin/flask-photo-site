@@ -43,6 +43,16 @@ class Tag(object):
 
         return tag_data
 
+    def count_pictures_by_tag(self, tag_name):
+        query_string = '''select count(photo_id) from photo
+        join photo_tag using(photo_id)
+        where tag_name = '{}'  '''.format(tag_name)
+
+        photo_count = self.db.get_query_as_list(query_string)
+
+        if len(photo_count) > 0:
+            return photo_count[0]['count(photo_id)']
+
     def get_photos_by_tag(self, tag_name):
         """
         Get all the photos that are associated with a particular tag.
@@ -77,4 +87,6 @@ if __name__ == "__main__":
     t = Tag()
     # print(t.get_all_tags())
     # print(t.get_photos_by_tag('london'))
-    print(t.get_photo_tags(5052580779))
+    # print(t.get_photo_tags(5052580779))
+
+    print(t.count_pictures_by_tag('apples'))

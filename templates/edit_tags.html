@@ -1,0 +1,35 @@
+{% extends "template.html" %} {% block content %}
+
+<h1>Edit tags page</h1>
+
+<hr />
+
+<div class="row">
+    <div class="col text-center">
+        {% for key, value in json_data.items() %}
+
+        <div class="row align-items-center">
+            <div class="col">
+                <a href="/tags/{{value['tag_name']}}">
+                    <button type="button" class="btn btn-outline-success btn-lg">
+                        {{ value["tag_name"] }}
+                    </button>
+                </a>
+            </div>
+
+            <div class="col">
+                <h2>number of pictures with this tag</h2>
+            </div>
+
+            <div class="col">
+                <button class="btn btn-warning btn-block">Edit this tag</button>
+                <button class="btn btn-danger btn-block">Delete this tag</button>
+            </div>
+        </div>
+        <hr />
+
+        {% endfor %}
+    </div>
+</div>
+
+{% endblock %}

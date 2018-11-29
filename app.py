@@ -27,14 +27,21 @@ t = Tag()
 # tags = db.get_all_tags()
 
 """
-$ export FLASK_APP=my_application
+$ export FLASK_APP=app.py
 $ export FLASK_ENV=development
+$ export FLASK_DEBUG=1
 $ flask run
 
 
 lsof -w -n -i tcp:5000
 kill -9 processId
 """
+
+
+@app.route('/edit/tags')
+def edit_tags():
+    tag_data = t.get_all_tags()
+    return render_template('edit_tags.html', json_data=tag_data), 200
 
 
 @app.route('/tags/')
