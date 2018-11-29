@@ -29,6 +29,7 @@ t = Tag()
 """
 $ export FLASK_APP=app.py
 $ export FLASK_ENV=development
+Make it reload on changes:
 $ export FLASK_DEBUG=1
 $ flask run
 
