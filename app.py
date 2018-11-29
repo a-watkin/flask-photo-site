@@ -39,6 +39,11 @@ kill -9 processId
 """
 
 
+@app.route('/edit/tag/<string:tag_name>', methods=['GET'])
+def edit_tag(tag_name):
+    return render_template('edit_tag.html'), 200
+
+
 @app.route('/edit/tags')
 def edit_tags():
     tag_data = t.get_all_tags()
