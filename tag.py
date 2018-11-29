@@ -88,10 +88,54 @@ class Tag(object):
 
         return rtn_dict
 
+    def update_tag(self, new_name, tag_name):
+        update_string = '''
+                        update photo_tag
+                        set tag_name = '{}'
+                        where tag_name = '{}' 
+                        '''.format(new_name, tag_name)
+
+        # print(update_string)
+
+        # Check if new tag name already exists
+        tag_data = self.db.get_rows('tag')
+        all_tags = [x[0] for x in tag_data]
+
+        if new_name in all_tags:
+            print('TAG ALREADY EXISTS')
+            """
+            get the data relating to the old tag name and save it
+
+            Get data from photo_tag
+
+            Get data from tag
+
+            Save the above
+
+            Delete both from the database
+
+            Reenter the data with the corrected tag
+            """
+            #
+
+        # print(all_tags.values())
+
+        # for t in all_tags:
+        #     print('\n', all_tags[t])
+
+        # if new_name in all_tags:
+        #     return True
+
+        # photo_count = self.db.get_query_as_list(query_string)
+
 
 if __name__ == "__main__":
     t = Tag()
-    print(t.get_all_tags())
+    # print(t.get_all_tags())
+
+    # This is actually a special case as the new_name is for an existing tag
+    print(t.update_tag('people', 'peope'))
+
     # print(t.get_photos_by_tag('apples'))
     # print(t.get_photo_tags(5052580779))
 
