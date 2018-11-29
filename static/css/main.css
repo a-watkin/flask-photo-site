@@ -49,3 +49,8 @@ img {
 #photo-info {
     margin-top: 2em;
 }
+
+
+.table>tbody>tr>td {
+    vertical-align: middle;
+}

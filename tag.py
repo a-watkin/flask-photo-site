@@ -13,7 +13,7 @@ class Tag(object):
         print(tag_data)
 
         rtn_dict = {
-
+            # 'tag_info': {'number_of_photos': self.get_photo_count_by_tag(tag_name)}
         }
 
         count = 0
@@ -91,8 +91,8 @@ class Tag(object):
 
 if __name__ == "__main__":
     t = Tag()
-    # print(t.get_all_tags())
-    print(t.get_photos_by_tag('apples'))
+    print(t.get_all_tags())
+    # print(t.get_photos_by_tag('apples'))
     # print(t.get_photo_tags(5052580779))
 
     # print(t.get_photo_count_by_tag('apples'))
