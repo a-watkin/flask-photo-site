@@ -136,24 +136,31 @@ def get_photo(photo_id):
     return render_template('photo.html', json_data=json_data), 200
 
 
-@app.route('/', methods=['GET', 'POST'])
-def login():
-    error = None
-    status_code = 200
+@app.route('/', methods=['GET'])
+def home():
+    photo_data = p.get_photos_in_range()
+    json_data = photo_data
+    # print(json_data)
+    return render_template('photos.html', json_data=json_data), 200
 
-    if request.method == 'POST':
-        username = request.form.get('username', None)
-        password = request.form.get('password', None)
 
-        if username == app.config['USERNAME'] and password == app.config['PASSWORD']:
-            flash('you did it, congrats')
-            return render_template('main.html')
-        else:
-            status_code = 401
-            flash('Wrong username and/or password', error)
+# @app.route('/', methods=['GET', 'POST'])
+# def login():
+#     error = None
+#     status_code = 200
 
-    return render_template('login.html')
+#     if request.method == 'POST':
+#         username = request.form.get('username', None)
+#         password = request.form.get('password', None)
 
+#         if username == app.config['USERNAME'] and password == app.config['PASSWORD']:
+#             flash('you did it, congrats')
+#             return render_template('main.html')
+#         else:
+#             status_code = 401
+#             flash('Wrong username and/or password', error)
+
+#     return render_template('login.html')
 
 if __name__ == '__main__':
     app.run(debug=True)

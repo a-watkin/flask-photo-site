@@ -148,6 +148,15 @@ class Photos(object):
         next_photo = self.get_next_photo(photo_id)
         prev_photo = self.get_previous_photo(photo_id)
 
+        # print('PHOTO DATA\n', photo_data[0]['photo_id'])
+
+        # prevent None being retunred when the last pictures are reached
+        if next_photo is None:
+            next_photo = photo_data[0]['photo_id']
+
+        if prev_photo is None:
+            prev_photo = photo_data[0]['photo_id']
+
         """
         Get the tags for the current photo.
         """
@@ -157,13 +166,13 @@ class Photos(object):
         # print('tags ', tag_data)
 
         if len(album_data) > 0:
-            print('album_id', album_data[0]['album_id'])
+            # print('album_id', album_data[0]['album_id'])
             album_id = album_data[0]['album_id']
             album_cover = self.album.get_album_cover(album_id)
-            print(album_cover)
+            # print(album_cover)
             album_data[0]['large_square'] = album_cover[0]['large_square']
 
-        print('album_data ', album_data)
+        # print('album_data ', album_data)
 
         if len(photo_data) > 0:
             # becasuse it is a list containing a dict

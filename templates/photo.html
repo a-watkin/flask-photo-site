@@ -1,68 +1,68 @@
-{% extends "template.html" %}
-{% block content %}
-<h1 class="text-center">{{ json_data['title'] }}</h1>
+{% extends "template.html" %} {% block content %}
 
-
-<h2>Tags</h2>
-{% for tag in json_data['tags'] %}
-
-<a href="/tags/{{tag['tag_name']}}">
-    <button type="button" class="btn btn-outline-success btn-lg">{{tag['tag_name']}}</button>
-</a>
-
-{% endfor %}
-
-
-
-{% for value in json_data['containing_album'] %}
-
-<div class="col">
-    <a href="/albums/{{value['album_id']}}">
-        <div class="card" style="width: 18rem;">
-            <div class="card-body">
-                <h5 class="card-title text-center">{{value['title']}}</h5>
-                <img class="card-img-top" src="{{value['large_square']}}" alt="{{ value['title'] }} album">
-                <div class="row">
-                    <div class="col">
-                        <p>
-                            views: {{value['views']}}
-                        </p>
-                    </div>
-                    <div class="col">
-                        <p>
-                            photos: {{value['photos']}}
-                        </p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </a>
-</div>
-
-{% endfor %}
-
-<hr>
 <div class="row text-center">
     <div class="col">
-        <a href="http://127.0.0.1:5000/api/photos/{{ json_data['next'] }}">Next</a>
-    </div>
-
-    <div class="col">
-        <p>Views: {{ json_data['views'] }}</p>
-    </div>
-    <div class="col">
-        <a href="http://127.0.0.1:5000/api/photos/{{ json_data['previous'] }}">Previous</a>
+        <h1 class="text-center">{{ json_data["title"] }}</h1>
     </div>
 </div>
-<hr>
+<!-- displays the photo -->
 <div id="photo-container" class="row">
-    <div class="col text-center">
-        <img id="photo-image" class="img-fluid" src="{{json_data['original']}}" alt="">
+
+    <!-- Next -->
+    <div class="col-1 my-auto">
+        <a href="http://127.0.0.1:5000/api/photos/{{ json_data['next'] }}"><i class="fas fa-angle-left fa-3x"></i></a>
+    </div>
+
+    <div class="col-10 text-center">
+        <img id="photo" class="img-fluid" src="{{json_data['original']}}" alt="" />
+    </div>
+
+    <!-- Previous -->
+    <div class="col-1 my-auto">
+        <a href="http://127.0.0.1:5000/api/photos/{{ json_data['previous'] }}"><i class="fas fa-angle-right fa-3x"></i></a>
     </div>
 </div>
 
+<div id="photo-info" class="row">
+    <div class="col-5">
+        <h2>Tags</h2>
+        {% for tag in json_data['tags'] %}
 
-<hr>
+        <a href="/tags/{{tag['tag_name']}}">
+            <button type="button" class="btn btn-outline-success btn-lg">
+                {{ tag["tag_name"] }}
+            </button>
+        </a>
+        {% endfor %}
+    </div>
 
+    <div class="col-2">
+        <p>Views: {{ json_data["views"] }}</p>
+    </div>
+
+    <div class="col-5">
+        {% for value in json_data['containing_album'] %}
+        <div class="col-5">
+            <a href="/albums/{{value['album_id']}}">
+                <div class="card" style="width: 18rem;">
+                    <div class="card-body">
+                        <h5 class="card-title text-center">{{ value["title"] }}</h5>
+                        <img class="card-img-top" src="{{value['large_square']}}" alt="{{ value['title'] }} album" />
+                        <div class="row">
+                            <div class="col">
+                                <p>views: {{ value["views"] }}</p>
+                            </div>
+                            <div class="col">
+                                <p>photos: {{ value["photos"] }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+        {% endfor %}
+    </div>
+</div>
 
 {% endblock %}

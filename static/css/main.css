@@ -12,27 +12,33 @@
     min-width: 100%;
 }
 
-
-/* single photo page */
-
-#photo-image {
-    /* border: solid black 2px; */
-    display: block;
-    margin-left: auto;
-    margin-right: auto;
+#test {
+    color: red;
+    padding-top: 50px;
+    margin-bottom: auto;
+    border: solid black 2px;
 }
+
+
+img {
+    max-height: 700px;
+}
+
 
 #photo-container {
     margin-left: auto;
     margin-right: auto;
-    /* border: solid black 2px; */
-    min-height: 800px;
+    border: solid black 2px;
+
+    padding-top: 2%;
+    padding-bottom: 2%;
+    vertical-align: baseline;
 }
 
-.foo {
+/* .foo {
     border: solid red 10px;
     max-height: 640px;
-}
+} */
 
 .card {
     margin-bottom: 2em;
@@ -40,6 +46,6 @@
     min-height: 500px; */
 }
 
-/* #tag-title {
-    text
-} */
+#photo-info {
+    margin-top: 2em;
+}
