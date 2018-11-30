@@ -100,6 +100,15 @@ class Tag(object):
 
         return rtn_dict
 
+    def get_tag(self, tag_name):
+        tag_data = self.db.make_query(
+            '''
+            select tag_name from tag where tag_name = '{}'
+            '''.format(tag_name)
+        )
+
+        return tag_data
+
     def update_tag(self, new_tag, old_tag):
         # Check if the tag is already in the database
         check = self.db.make_query(
@@ -143,13 +152,21 @@ class Tag(object):
         # delete the old tag from photo_tag
         self.db.delete_rows_where('photo_tag', 'tag_name', old_tag)
 
+        # confirm that the new tag is present and the old tag is not
+        if self.get_tag(new_tag) and not self.get_tag(old_tag):
+            return True
+        else:
+            return False
+
 
 if __name__ == "__main__":
     t = Tag()
-    print(t.get_all_tags())
+    # print(t.get_all_tags())
 
     # This is actually a special case as the new_name is for an existing tag
-    # print(t.update_tag('test', 'caffee'))
+
+    # new then old
+    print(t.update_tag('cafe shop', 'cafe'))
 
     # print(t.get_photos_by_tag('apples'))
     # print(t.get_photo_tags(5052580779))

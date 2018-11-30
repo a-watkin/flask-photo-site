@@ -51,11 +51,26 @@ def edit_tag(tag_name):
         new_tag_name = request.form['new_tag_name']
         # attemp to do database update
 
-        print('POST REQUEST RECIEVED WITH VALUE OF', new_tag_name)
+        print('POST REQUEST RECIEVED WITH VALUE OF', new_tag_name, tag_name)
 
-        # flash('tag updated')
+        update_response = t.update_tag(new_tag_name, tag_name)
 
-        return render_template('edit_tag.html', tag_name=new_tag_name), 200
+        print('UPDATE RESPONSE', update_response)
+
+        # if the tag is updated then redirect to the edit page for the new tag
+        if update_response:
+
+            redirect_url = "/edit/tag/{}".format(new_tag_name)
+
+            print('INFO ', redirect_url, new_tag_name, tag_name)
+
+            # http://127.0.0.1:5000/edit/tag/17191909
+            # you need to return with the photo also
+            return redirect(redirect_url, code=302)
+
+        else:
+            # flash('tag updated')
+            return render_template('edit_tag.html', tag_name=new_tag_name), 200
 
 
 @app.route('/edit/tags')
