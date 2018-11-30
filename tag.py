@@ -8,21 +8,33 @@ class Tag(object):
         self.db = Database('eigi-data.db')
 
     def get_all_tags(self):
+        # as a list of dict values
         tag_data = self.db.get_query_as_list("SELECT tag_name FROM tag")
-
         # print(tag_data)
 
+        # as a lis of tuples
+        # test = self.db.make_query("SELECT tag_name FROM tag")
+
+        # print(test)
+
+        # # print(tag_data)
+
+        # rtn_dict = {
+        #     'tag_info': {'number_of_photos': self.get_photo_count_by_tag(tag_name)}
+        # }
+
         rtn_dict = {
-            # 'tag_info': {'number_of_photos': self.get_photo_count_by_tag(tag_name)}
+
         }
 
         count = 0
-        for t in tag_data:
-            rtn_dict[count] = t
-            tag_name = t['tag_name']
+        for tag in tag_data:
+            rtn_dict[count] = tag
+            tag_name = tag['tag_name']
             # adding the number of photos with the tag
+            # it's slow here because each tag means a query to the db
             rtn_dict[count]['photos'] = self.get_photo_count_by_tag(
-                t['tag_name'])
+                tag['tag_name'])
             count += 1
 
         return rtn_dict
@@ -134,10 +146,10 @@ class Tag(object):
 
 if __name__ == "__main__":
     t = Tag()
-    # print(t.get_all_tags())
+    print(t.get_all_tags())
 
     # This is actually a special case as the new_name is for an existing tag
-    print(t.update_tag('test', 'caffee'))
+    # print(t.update_tag('test', 'caffee'))
 
     # print(t.get_photos_by_tag('apples'))
     # print(t.get_photo_tags(5052580779))
