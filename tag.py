@@ -89,86 +89,47 @@ class Tag(object):
         return rtn_dict
 
     def update_tag(self, new_tag, old_tag):
-        """
-        get the rows with the old tag from photo_tag
-
-        check if the new tag is in the tag table
-
-            if it is then don't add anything, just alter the photo_tag table
-
-            save the current data then alter the tag_name and insert it back
-
-
-
-        """
-
-        update_string = '''
-                        update photo_tag
-                        set tag_name = '{}'
-                        where tag_name = '{}' 
-                        '''.format(new_tag, old_tag)
-
         # Check if the tag is already in the database
-        resp = self.db.make_query(
+        check = self.db.make_query(
             '''
             select tag_name from tag where tag_name = '{}'
             '''.format(new_tag)
         )
 
-        # All the data relating to the old tag name from photo_data
+        # Save the data to be updated from photo_data
         photo_tag_query = '''
                         select * from photo_tag
                         where tag_name = '{}' 
                         '''.format(old_tag)
 
+        # get the old tags photo_tag data
         photo_tag_data = self.db.make_query(photo_tag_query)
 
         # prepare data for insert back, change the values that you need to change
         new_photo_tag_data = []
-
-        # up date photo_tag and delete the old tag name from tag
+        # update photo_tag and delete the old tag name from tag
         for v in photo_tag_data:
             new_photo_tag_data.append((v[0], new_tag))
 
-        if len(resp) > 0:
+        # if the new tag is not in the table tag then add it
+        if len(check) == 0:
+            print('tag is not in the table tag, so adding it')
+            self.db.insert_data({
+                'table': 'tag',
+                'tag_name': new_tag,
+                'user_id': '28035310@N00'
+            })
 
-            # insert new tag into photo_tag
-            self.db.insert_tag_data('photo_tag', new_photo_tag_data)
+        # otherwise the new_tag is in the tag table and doesn't need to be added
 
-            # it doesn't cascade on delete so delete the old tag
-            self.db.delete_rows_where('tag', 'tag_name', old_tag)
+        # insert new tag into photo_tag
+        self.db.insert_tag_data('photo_tag', new_photo_tag_data)
 
-            # delete the old tag from photo_tag
-            self.db.delete_rows_where('photo_tag', 'tag_name', old_tag)
+        # it doesn't cascade on delete so delete the old tag
+        self.db.delete_rows_where('tag', 'tag_name', old_tag)
 
-        else:
-            # the only difference is that you need to add it to tag table first
-
-            self.db.insert_data()
-
-            # save the old tag data
-            photo_tag_query = '''
-                            select * from photo_tag
-                            where tag_name = '{}' 
-                            '''.format(old_tag)
-
-            photo_tag_data = self.db.make_query(photo_tag_query)
-
-            # prepare data for insert back, change the values that you need to change
-            new_photo_tag_data = []
-
-            # up date photo_tag and delete the old tag name from tag
-            for v in photo_tag_data:
-                new_photo_tag_data.append((v[0], new_tag))
-
-            # insert new tag into photo_tag
-            self.db.insert_tag_data('photo_tag', new_photo_tag_data)
-
-            # it doesn't cascade on delete so delete the old tag
-            self.db.delete_rows_where('tag', 'tag_name', old_tag)
-
-            # delete the old tag from photo_tag
-            self.db.delete_rows_where('photo_tag', 'tag_name', old_tag)
+        # delete the old tag from photo_tag
+        self.db.delete_rows_where('photo_tag', 'tag_name', old_tag)
 
 
 if __name__ == "__main__":
