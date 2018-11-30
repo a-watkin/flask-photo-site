@@ -114,11 +114,11 @@ class Tag(object):
         # if the new tag is not in the table tag then add it
         if len(check) == 0:
             print('tag is not in the table tag, so adding it')
-            self.db.insert_data({
-                'table': 'tag',
-                'tag_name': new_tag,
-                'user_id': '28035310@N00'
-            })
+            self.db.insert_data(
+                table='tag',
+                tag_name=new_tag,
+                user_id='28035310@N00'
+            )
 
         # otherwise the new_tag is in the tag table and doesn't need to be added
 
@@ -137,7 +137,7 @@ if __name__ == "__main__":
     # print(t.get_all_tags())
 
     # This is actually a special case as the new_name is for an existing tag
-    print(t.update_tag('people', 'peope'))
+    print(t.update_tag('test', 'caffee'))
 
     # print(t.get_photos_by_tag('apples'))
     # print(t.get_photo_tags(5052580779))

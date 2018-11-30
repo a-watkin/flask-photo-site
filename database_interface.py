@@ -38,6 +38,17 @@ class Database(object):
         return ','.join(['?' for x in list(range(num))])
 
     def insert_data(self, **kwargs):
+        """
+        Expects any number of named arguments but must include a table name.
+
+        db.insert_data(
+        table='tag',
+        tag_name=new_tag,
+        user_id='28035310@N00'
+        )
+
+        """
+
         table_name = kwargs['table']
         del kwargs['table']
 
@@ -142,12 +153,21 @@ def main():
 
     db = Database()
     db.db_name = 'eigi-data.db'
+
+    new_tag = 'test'
+
+    db.insert_data(
+        table='tag',
+        tag_name=new_tag,
+        user_id='28035310@N00'
+    )
+
     # db.delete_database()
     # db.make_db('eigi-data.db')
 
     # print(db.db_name)
 
-    print(db.get_photos_in_range())
+    # print(db.get_photos_in_range())
 
     # print(db.get_photo(30081941117))
 
