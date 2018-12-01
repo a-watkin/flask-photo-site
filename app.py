@@ -111,6 +111,24 @@ def photos_by_tag_name(tag_name):
     return render_template('tag_photos.html', json_data=json_data)
 
 
+@app.route('/add/tag/', methods=['GET', 'POST'])
+def add_tag():
+    args = request.args.to_dict()
+
+    if request.method == 'GET':
+        photo_data = p.get_photo(args['photo_id'])
+        return render_template('add_tag.html', json_data=photo_data), 200
+
+    print('why', request.method)
+    if request.method == 'POST':
+        print(args)
+        data = request.form['new_tag_name']
+        # it's a string
+        photo_data = p.get_photo(args['photo_id'])
+        print('data?', data.split(','))
+        return render_template('photo.html', json_data=photo_data), 200
+
+
 @app.route('/albums')
 def get_albums():
     albums_data = a.get_albums()

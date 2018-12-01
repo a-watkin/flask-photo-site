@@ -180,6 +180,9 @@ class Tag(object):
         else:
             return False
 
+    def add_tags_to_photo(self, a_list):
+        pass
+
 
 if __name__ == "__main__":
     t = Tag()

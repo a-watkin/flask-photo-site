@@ -1,0 +1,59 @@
+{% extends "template.html" %} {% block content %}
+
+<div class="row text-center">
+    <div class="col">
+        <h1>{{json_data}}</h1>
+        <h1>Add tag to: {{json_data['title']}}</h1>
+    </div>
+</div>
+
+<div class="row">
+
+    <div class="col text-center">
+
+        <img src="{{json_data['original']}}" alt="{{json_data['title']}}">
+
+    </div>
+</div>
+
+<hr>
+
+<div class="row">
+    <div class="col">
+        <h3>{{ json_data['photo_id'] }}</h3>
+        <form method="post" action="{{ url_for('add_tag', photo_id=json_data['photo_id']) }}">
+            <div class="form-group">
+                <label for="renaming-tag">Make changes to the tag name below</label>
+                <input name="new_tag_name" type="text" class="form-control" value="{{tag_name}}">
+            </div>
+
+            <div class="row">
+
+
+                <div class="col">
+                    <div class="alert alert-dark" role="alert">
+                        You can enter multiple tags, seperating them by commas. Tags should be unique.
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col text-center">
+                    <button type="submit" class="btn btn-primary">Add tag</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<hr>
+<div class="row">
+    <div class="col">
+        <a href="/api/photos/{{json_data['photo_id']}}">
+            <button class="btn btn-success"">Go back to the photo</button>
+        </a>
+    </div>
+</div>
+
+<hr>
+
+{% endblock %}

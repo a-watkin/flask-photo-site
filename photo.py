@@ -179,6 +179,7 @@ class Photos(object):
             photo_data = photo_data[0]
 
             rtn_data = {
+                'photo_id': photo_data['photo_id'],
                 'title': photo_data['photo_title'],
                 'views': photo_data['views'],
                 'tags': tag_data,
