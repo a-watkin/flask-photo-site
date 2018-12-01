@@ -180,12 +180,50 @@ class Tag(object):
         else:
             return False
 
-    def add_tags_to_photo(self, a_list):
-        pass
+    def add_tags_to_photo(self, photo_id, tag_list):
+        # iterate over the list of tags
+
+        # for each tag
+        # check if the tag is in the database already
+        # if it is not then add it to the tag table
+        for tag in tag_list:
+
+            # will return None if the tag is not in the tag table
+            # tag_name is the column name
+            data = self.db.get_row('tag', 'tag_name', tag)
+
+            if data is None:
+
+                print(tag)
+                print('that value is not in the db')
+
+                self.db.insert_data(
+                    table='tag',
+                    tag_name=tag,
+                    user_id='28035310@N00'
+                )
+
+                print('should be added now...\n')
+
+                if self.db.get_row('tag', 'tag_name', tag):
+                    print('added tag, ', tag)
+
+            # so now the tag should be in the table tag
+            # already present or added
+
+            # add the tag to the table photo_tag
+            self.db.insert_data(
+                table='photo_tag',
+                photo_id=photo_id,
+                tag_name=tag
+            )
 
 
 if __name__ == "__main__":
     t = Tag()
+
+    t.add_tags_to_photo('38995841301', ['test tag name'])
+
     # print(t.get_all_tags())
 
     # This is actually a special case as the new_name is for an existing tag
@@ -195,7 +233,7 @@ if __name__ == "__main__":
 
     # print(t.delete_tag('test'))
 
-    print(t.check_photo_tag('test'))
+    # print(t.check_photo_tag('test'))
 
     # print(t.get_photos_by_tag('apples'))
     # print(t.get_photo_tags(5052580779))

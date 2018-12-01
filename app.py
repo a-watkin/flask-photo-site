@@ -119,13 +119,17 @@ def add_tag():
         photo_data = p.get_photo(args['photo_id'])
         return render_template('add_tag.html', json_data=photo_data), 200
 
-    print('why', request.method)
     if request.method == 'POST':
-        print(args)
-        data = request.form['new_tag_name']
-        # it's a string
+        # get the photo_id
+        photo_id = args['photo_id']
+        # get the new tags from the form
+        tag_data = request.form['new_tag_name']
+        # This is a string of values
+        tag_data = tag_data.split(',')
+        # add tags to the tag table if needed and associated them with the photo
+        t.add_tags_to_photo(photo_id, tag_data)
+        # data on the photo to render the view
         photo_data = p.get_photo(args['photo_id'])
-        print('data?', data.split(','))
         return render_template('photo.html', json_data=photo_data), 200
 
 
