@@ -158,6 +158,28 @@ class Tag(object):
         else:
             return False
 
+    def check_photo_tag(self, tag_name):
+        data = self.db.make_query(
+            '''select * from photo_tag where tag_name = '{}' '''
+            .format(tag_name))
+
+        print(data)
+
+        if len(data) > 0:
+            return True
+        return False
+
+    def delete_tag(self, tag_name):
+        # you have to remove the tag from the tag table
+        self.db.delete_rows_where('tag', 'tag_name', tag_name)
+        # and also in photo_tag
+        self.db.delete_rows_where('photo_tag', 'tag_name', tag_name)
+
+        if not self.get_tag(tag_name) and not self.check_photo_tag(tag_name):
+            return True
+        else:
+            return False
+
 
 if __name__ == "__main__":
     t = Tag()
@@ -166,7 +188,11 @@ if __name__ == "__main__":
     # This is actually a special case as the new_name is for an existing tag
 
     # new then old
-    print(t.update_tag('cafe shop', 'cafe'))
+    # print(t.update_tag('cafe shop', 'cafe'))
+
+    # print(t.delete_tag('test'))
+
+    print(t.check_photo_tag('test'))
 
     # print(t.get_photos_by_tag('apples'))
     # print(t.get_photo_tags(5052580779))

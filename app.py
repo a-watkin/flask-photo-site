@@ -73,9 +73,20 @@ def edit_tag(tag_name):
             return render_template('edit_tag.html', tag_name=new_tag_name), 200
 
 
-@app.route('/delete/<string:tag_name>')
+@app.route('/delete/<string:tag_name>', methods=['GET', 'POST'])
 def delete_tag(tag_name):
-    return render_template('delete_tag.html', tag_name=tag_name), 200
+
+    if request.method == 'GET':
+        return render_template('delete_tag.html', tag_name=tag_name), 200
+
+    if request.method == 'POST':
+        print('DELETE THE THING', tag_name)
+        deleted_tag = tag_name
+
+        if t.delete_tag(tag_name):
+            print('no more cucumbers')
+
+            return render_template('deleted_tag.html', deleted_tag=deleted_tag), 200
 
 
 @app.route('/edit/tags')

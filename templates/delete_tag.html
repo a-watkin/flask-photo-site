@@ -7,7 +7,7 @@
         <h1>Are you sure you want to delete the tag:
             <button type="button" class="btn btn-outline-success btn-lg">
                 {{tag_name}}
-            </button>
+            </button> ?
         </h1>
 
     </div>
@@ -32,13 +32,11 @@
         <button type="button" class="btn btn-success btn-lg">Return to edit tags without deleting</button>
     </div>
 
-    <div class="clo">
-
-
-        <button type="button" class="btn btn-danger btn-lg">Delete the tag</button>
-
-    </div>
-
+    <form method="post">
+        <div class="col">
+            <button type="submit" type="button" class="btn btn-danger btn-lg">Delete the tag</button>
+        </div>
+    </form>
 
 </div>
 
