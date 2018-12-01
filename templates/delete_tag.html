@@ -1,0 +1,48 @@
+{% extends "template.html" %} {% block content %}
+
+<div class="row">
+
+    <div class="col">
+
+        <h1>Are you sure you want to delete the tag:
+            <button type="button" class="btn btn-outline-success btn-lg">
+                {{tag_name}}
+            </button>
+        </h1>
+
+    </div>
+</div>
+
+<hr>
+<div class="row">
+    <div class="col">
+
+        <div class="alert alert-danger text-center" role="alert">
+            Deleting a tag cannot be undone.
+        </div>
+
+    </div>
+</div>
+
+
+<hr>
+<div class="row">
+    <div class="col">
+
+        <button type="button" class="btn btn-success btn-lg">Return to edit tags without deleting</button>
+    </div>
+
+    <div class="clo">
+
+
+        <button type="button" class="btn btn-danger btn-lg">Delete the tag</button>
+
+    </div>
+
+
+</div>
+
+
+
+
+{% endblock %}

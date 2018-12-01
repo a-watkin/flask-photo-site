@@ -69,8 +69,13 @@ def edit_tag(tag_name):
             return redirect(redirect_url, code=302)
 
         else:
-            # flash('tag updated')
+            flash('There was a problem updating the tag, please contact support.')
             return render_template('edit_tag.html', tag_name=new_tag_name), 200
+
+
+@app.route('/delete/<string:tag_name>')
+def delete_tag(tag_name):
+    return render_template('delete_tag.html', tag_name=tag_name), 200
 
 
 @app.route('/edit/tags')
