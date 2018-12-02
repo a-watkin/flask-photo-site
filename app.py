@@ -183,10 +183,19 @@ def edit_albums():
     return render_template('edit_albums.html', json_data=albums_data), 200
 
 
-@app.route('/edit/album/<int:album_id>')
+@app.route('/edit/album/<int:album_id>', methods=['GET', 'POST'])
 def edit_album(album_id):
-    json_data = a.get_album(album_id)
-    return render_template('edit_album.html', json_data=json_data), 200
+    if request.method == 'GET':
+        json_data = a.get_album(album_id)
+        return render_template('edit_album.html', json_data=json_data), 200
+
+    if request.method == 'POST':
+        album_name = request.form['name']
+        album_description = request.form['description']
+        # add the data to the database
+
+        print('test', album_id, album_name, album_description)
+        return 'test'
 
 
 @app.route('/api/photos/')
