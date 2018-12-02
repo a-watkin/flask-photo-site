@@ -64,5 +64,6 @@ img {
 /* edit albums */
 #edit-albums-container {
     max-width: 50px;
-    border: solid black 2px;
+    /* max-height: 4px; */
+    /* border: solid black 2px; */
 }

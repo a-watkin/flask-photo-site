@@ -100,6 +100,51 @@ class Album(object):
 
         return rtn_dict
 
+    def get_album(self, album_id):
+        query = '''
+        delete from album where album_id = {}
+        '''.format(album_id)
+
+        album_data = self.db.make_query(query)
+
+        return album_data
+
+    def get_photo_album(self, album_id):
+        query = '''
+        delete from photo_album where album_id = {}
+        '''.format(album_id)
+
+        photo_album_data = self.db.make_query(query)
+
+        return photo_album_data
+
+    def delete_album(self, album_id):
+        # you have to delete from photo_album first
+        # then from album, this is due to database constraints
+
+        delete_from_photo_album = '''
+        delete from photo_album where album_id = {}
+        '''.format(album_id)
+
+        resp = self.db.make_query(delete_from_photo_album)
+        print(resp)
+
+        delete_from_album = '''
+        delete from album where album_id = {}
+        '''.format(album_id)
+
+        self.db.make_query(delete_from_album)
+
+        # print()
+        # print(self.get_album(album_id))
+        # print(self.get_photo_album(album_id))
+        # print()
+
+        if not self.get_album(album_id) and not self.get_photo_album(album_id):
+            return True
+
+        return False
+
 
 if __name__ == "__main__":
     a = Album()
@@ -110,4 +155,6 @@ if __name__ == "__main__":
 
     # print(a.get_album_photos('72157650725849398'))
 
-    print(a.get_containing_album(16748114355))
+    print(a.delete_album(72157686904109646))
+
+    # print(a.get_containing_album(16748114355))
