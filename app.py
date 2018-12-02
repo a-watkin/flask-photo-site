@@ -149,6 +149,13 @@ def get_album_photos(album_id):
     return render_template('album.html', json_data=json_data), 200
 
 
+@app.route('/edit/albums')
+def edit_albums():
+    albums_data = a.get_albums()
+    print(albums_data)
+    return render_template('edit_albums.html', json_data=albums_data), 200
+
+
 @app.route('/api/photos/')
 def get_photos():
     print('\nHello from get_photos\n')

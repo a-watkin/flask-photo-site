@@ -1,0 +1,81 @@
+{% extends "template.html" %} {% block content %}
+
+<div class="row text-center">
+
+    <div class="col">
+
+        <h1>Edit albums page</h1>
+
+    </div>
+</div>
+
+
+<div class="row">
+    <div class="col text-center">
+
+        <table class="table">
+            <thead>
+                <tr>
+                    <th class="text-left" scope="col">Album name</th>
+                    <th scope="col">Photos in album</th>
+                    <th scope="col">Edit album</th>
+                </tr>
+            </thead>
+            <tbody class="align-items-center">
+
+
+                {% for key, value in json_data.items() %}
+
+                <tr>
+                    <td id="edit-albums-container" class="text-left">
+
+                        <a href="/albums/{{value['album_id']}}">
+                            <div class="card" style="width: 18rem;">
+                                <div class="card-body">
+                                    <h5 class="card-title text-center">{{value['title']}}</h5>
+                                    <img class="card-img-top" src="{{value['large_square']}}" alt="{{ value['title'] }} album">
+                                    <p class="card-text">{{value['description']}}</p>
+                                    <div class="row">
+                                        <div class="col">
+                                            <p>
+                                                views: {{value['views']}}
+                                            </p>
+                                        </div>
+                                        <div class="col">
+                                            <p>
+                                                photos: {{value['photos']}}
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+
+                    </td>
+
+                    <td>
+                        <h2>{{value["photos"]}}</h2>
+                    </td>
+                    <td>
+                        <a href="/edit/tag/{{ value["tag_name"] }}">
+
+                            <button id="tag-edit" class="btn btn-warning btn-block">Edit this album</button>
+
+                        </a>
+
+
+                        <a href="/delete/{{ value["tag_name"] }}">
+                            <button class="btn btn-danger btn-block">Delete this album</button></td>
+
+                    </a>
+                </tr>
+
+
+                {% endfor %}
+
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{% endblock %}

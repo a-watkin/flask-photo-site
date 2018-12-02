@@ -60,3 +60,9 @@ img {
 #tag-edit {
     margin-bottom: 1em;
 }
+
+/* edit albums */
+#edit-albums-container {
+    max-width: 50px;
+    border: solid black 2px;
+}
