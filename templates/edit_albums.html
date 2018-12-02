@@ -63,8 +63,8 @@
 
                         </a>
 
-
-                        <a href="/delete/{{ value["tag_name"] }}">
+                        <!-- "/delete/{{ value["album_id"] }}" -->
+                        <a href="{{url_for('delete_album', album_id=value["album_id"])}}">
                             <button class="btn btn-danger btn-block">Delete this album</button></td>
 
                     </a>

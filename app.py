@@ -89,6 +89,15 @@ def delete_tag(tag_name):
             return render_template('deleted_tag.html', deleted_tag=deleted_tag), 200
 
 
+@app.route('/delete/album/<string:album_id>', methods=['GET', 'POST'])
+def delete_album(album_id):
+    if request.method == 'GET':
+        # get data for that album
+        album_data = a.get_album(album_id)
+        print(album_data)
+        return render_template('delete_album.html', json_data=album_data)
+
+
 @app.route('/edit/tags')
 def edit_tags():
     tag_data = t.get_all_tags()

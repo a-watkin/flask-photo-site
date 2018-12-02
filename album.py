@@ -102,16 +102,17 @@ class Album(object):
 
     def get_album(self, album_id):
         query = '''
-        delete from album where album_id = {}
+        select * from album where album_id = {}
         '''.format(album_id)
 
+        print(query)
         album_data = self.db.make_query(query)
 
         return album_data
 
     def get_photo_album(self, album_id):
         query = '''
-        delete from photo_album where album_id = {}
+        select * from photo_album where album_id = {}
         '''.format(album_id)
 
         photo_album_data = self.db.make_query(query)
@@ -155,6 +156,8 @@ if __name__ == "__main__":
 
     # print(a.get_album_photos('72157650725849398'))
 
-    print(a.delete_album(72157686904109646))
+    # print(a.delete_album(72157671546432768))
+
+    print(a.get_album('72157692049927304'))
 
     # print(a.get_containing_album(16748114355))

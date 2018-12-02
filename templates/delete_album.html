@@ -1,0 +1,53 @@
+{% extends "template.html" %}
+{% block content %}
+
+<div class="row">
+
+    <div class="col">
+        <h1>{{json_data}}</h1>
+        <h1>Are you sure you want to delete the album:
+            <button type="button" class="btn btn-outline-success btn-lg">
+                {{title}}
+            </button> ?
+        </h1>
+
+    </div>
+</div>
+
+<hr>
+<div class="row">
+    <div class="col">
+
+        <div class="alert alert-danger text-center" role="alert">
+            Deleting a tag cannot be undone.
+        </div>
+
+    </div>
+</div>
+
+
+<hr>
+<div class="row">
+    <div class="col">
+
+        <a href="/edit/tags">
+            <button type="button" class="btn btn-success btn-lg">
+                Return to edit tags without deleting
+            </button>
+        </a>
+
+
+    </div>
+
+    <form method="post">
+        <div class="col">
+            <button type="submit" type="button" class="btn btn-danger btn-lg">Delete the tag</button>
+        </div>
+    </form>
+
+</div>
+
+
+
+
+{% endblock %}
