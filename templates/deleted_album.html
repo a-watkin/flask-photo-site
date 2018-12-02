@@ -1,0 +1,49 @@
+{% extends "template.html" %} {% block content %}
+
+<div class="row text-center">
+
+    <div class="col">
+
+        <h1>The album
+
+            <span class="font-italic">
+
+                {{ deleted_album }}
+
+            </span>
+
+            has been removed.</h1>
+
+    </div>
+</div>
+
+<hr>
+
+<div class="row text-center">
+
+    <div class="col">
+
+        <a href="{{url_for('edit_albums')}}">
+            <button class="btn btn-primary btn-lg">
+                Go back to edit albums
+            </button>
+        </a>
+
+    </div>
+
+
+    <div class="col">
+        <a href="{{url_for('get_photos')}}">
+
+            <button class="btn btn-primary btn-lg">
+
+                Go to photos
+
+            </button>
+        </a>
+
+    </div>
+</div>
+
+
+{% endblock %}

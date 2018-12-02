@@ -77,6 +77,20 @@ img {
 }
 
 
-#edit-albums-container {
+/* #edit-albums-container {
     border: solid black 5px;
+    margin-left: auto;
+    margin-right: auto;
+} */
+
+
+#problem-div {
+    border: solid pink 5px;
+    padding: auto;
+
+    -webkit-box-align: center;
+    -webkit-box-pack: center;
+    display: -webkit-box;
+
+    padding-top: 2rem;
 }

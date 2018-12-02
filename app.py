@@ -97,6 +97,23 @@ def delete_album(album_id):
         print(album_data)
         return render_template('delete_album.html', json_data=album_data)
 
+    if request.method == 'POST':
+        print('DELETE THE THING', album_id)
+        # deleted_tag = tag_name
+
+        album_data = a.get_album(album_id)
+        album_title = album_data['title']
+
+        a.delete_album(album_id)
+
+        print(album_title)
+        if a.delete_album(album_id):
+            print('no more album')
+
+            return render_template('deleted_album.html', deleted_album=album_title), 200
+
+        #     return render_template('deleted_tag.html', deleted_tag=deleted_tag), 200
+
 
 @app.route('/edit/tags')
 def edit_tags():
