@@ -105,10 +105,14 @@ class Album(object):
         select * from album where album_id = {}
         '''.format(album_id)
 
-        print(query)
-        album_data = self.db.make_query(query)
+        album_data = self.db.get_query_as_list(query)
 
-        return album_data
+        if len(album_data) > 0:
+            album_data[0]['large_square'] = self.get_album_cover(
+                album_data[0]['album_id'])[0]['large_square']
+
+            print(album_data)
+            return album_data[0]
 
     def get_photo_album(self, album_id):
         query = '''
@@ -158,6 +162,6 @@ if __name__ == "__main__":
 
     # print(a.delete_album(72157671546432768))
 
-    print(a.get_album('72157692049927304'))
+    print(a.get_album('72157664116903126'))
 
     # print(a.get_containing_album(16748114355))

@@ -145,6 +145,7 @@ def add_tag():
 @app.route('/albums')
 def get_albums():
     albums_data = a.get_albums()
+    # print(albums_data)
     json_data = albums_data
     # print(json_data[0]['large_square'])
     return render_template('albums.html', json_data=json_data), 200

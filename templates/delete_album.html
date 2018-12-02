@@ -2,24 +2,48 @@
 {% block content %}
 
 <div class="row">
-
     <div class="col">
-        <h1>{{json_data}}</h1>
         <h1>Are you sure you want to delete the album:
-            <button type="button" class="btn btn-outline-success btn-lg">
-                {{title}}
-            </button> ?
         </h1>
-
     </div>
 </div>
+
+<!--  id="edit-albums-container" -->
+<div class="row text-center row justify-content-md-center">
+    <div class="col w-100">
+        <a href="/albums/{{json_data['album_id']}}">
+            <div class="card" style="width: 18rem;">
+                <div class="card-body">
+                    <h5 class="card-title text-center">{{json_data['title']}}</h5>
+                    <img class="card-img-top" src="{{json_data['large_square']}}" alt="{{ json_data['title'] }} album">
+                    <p class="card-text">{{json_data['description']}}</p>
+                    <div class="row">
+                        <div class="col">
+                            <p>
+                                views: {{json_data['views']}}
+                            </p>
+                        </div>
+                        <div class="col">
+                            <p>
+                                photos: {{json_data['photos']}}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </a>
+    </div>
+</div>
+
+
+
 
 <hr>
 <div class="row">
     <div class="col">
 
         <div class="alert alert-danger text-center" role="alert">
-            Deleting a tag cannot be undone.
+            Deleting an album cannot be undone.
         </div>
 
     </div>
@@ -30,9 +54,11 @@
 <div class="row">
     <div class="col">
 
-        <a href="/edit/tags">
+        <a href="{{url_for('edit_albums')}}">
             <button type="button" class="btn btn-success btn-lg">
-                Return to edit tags without deleting
+                Return to edit albums page without deleting
+
+
             </button>
         </a>
 
@@ -41,7 +67,7 @@
 
     <form method="post">
         <div class="col">
-            <button type="submit" type="button" class="btn btn-danger btn-lg">Delete the tag</button>
+            <button type="submit" type="button" class="btn btn-danger btn-lg">Delete the album</button>
         </div>
     </form>
 
