@@ -1,13 +1,74 @@
 {% extends "template.html" %} {% block content %}
 
 <div class="row text-center">
+    <div class="col">
+        <h1>Make changes to the album name and description</h1>
+    </div>
+</div>
+
+<hr>
+
+
+<div class="row text-center">
+
+    <div id="problem-div" class="col">
+        <a href="/albums/{{json_data['album_id']}}">
+            <div class="card" style="width: 18rem;">
+                <div class="card-body">
+                    <h5 class="card-title text-center">{{json_data['title']}}</h5>
+                    <img class="card-img-top" src="{{json_data['large_square']}}" alt="{{ json_data['title'] }} album">
+                    <p class="card-text">{{json_data['description']}}</p>
+                    <div class="row">
+                        <div class="col">
+                            <p>
+                                views: {{json_data['views']}}
+                            </p>
+                        </div>
+                        <div class="col">
+                            <p>
+                                photos: {{json_data['photos']}}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </a>
+    </div>
+
+
+</div>
+<hr>
+
+<div class="row">
 
     <div class="col">
 
-        <h1>Edit album page</h1>
+        <p>
+            Current album title and description is shown below.
 
+            When you are happy with the changes you have made press the make changes button to save them.
+        </p>
 
     </div>
 </div>
+
+
+<div class="row">
+    <div class="col">
+        <form>
+            <div class="form-group">
+                <label for="name">Album name</label>
+                <input type="text" class="form-control" value="{{json_data['title']}}">
+            </div>
+            <div class="form-group">
+                <label for="description">Album description</label>
+                <input type="text" class="form-control" value="{{json_data['description']}}">
+            </div>
+            <button type="submit" class="btn btn-primary">Make changes</button>
+        </form>
+    </div>
+</div>
+
+<hr>
 
 {% endblock %}

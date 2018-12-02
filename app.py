@@ -185,7 +185,8 @@ def edit_albums():
 
 @app.route('/edit/album/<int:album_id>')
 def edit_album(album_id):
-    return render_template('edit_album.html'), 200
+    json_data = a.get_album(album_id)
+    return render_template('edit_album.html', json_data=json_data), 200
 
 
 @app.route('/api/photos/')

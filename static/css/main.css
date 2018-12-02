@@ -85,7 +85,7 @@ img {
 
 
 #problem-div {
-    border: solid pink 5px;
+    /* border: solid pink 5px; */
     padding: auto;
 
     -webkit-box-align: center;
