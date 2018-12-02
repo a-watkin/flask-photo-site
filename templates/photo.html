@@ -26,7 +26,7 @@
 <div id="photo-info" class="row">
     <div class="col-5">
         <h2>Tags</h2>
-        <a href="{{ url_for( 'add_tag', photo_id = '38995841301' ) }}">
+        <a href="{{ url_for( 'add_tag', photo_id = json_data['photo_id'] ) }}">
             <button class="btn btn-warning btn-lg">
                 Add a tag
             </button>
