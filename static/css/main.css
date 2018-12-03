@@ -93,4 +93,6 @@ img {
     display: -webkit-box;
 
     padding-top: 2rem;
+
+    /* max-height: 20%; */
 }

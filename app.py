@@ -194,8 +194,11 @@ def edit_album(album_id):
         album_description = request.form['description']
         # add the data to the database
 
+        a.update_album(album_id, album_name, album_description)
+
         print('test', album_id, album_name, album_description)
-        return 'test'
+        json_data = a.get_album(album_id)
+        return render_template('edit_album.html', json_data=json_data), 200
 
 
 @app.route('/api/photos/')

@@ -150,11 +150,23 @@ class Album(object):
 
         return False
 
+    def update_album(self, album_id, new_title, new_description):
+        # you already know that it exists because otherwise the user wouldn't see it
+        self.db.make_query('''
+            update album
+            set title = '{}', description = '{}'
+            where album_id = '{}'
+        '''.format(new_title, new_description, album_id)
+        )
+
 
 if __name__ == "__main__":
     a = Album()
     # print(a.get_album_cover('72157650725849398'))
     # blah = a.get_albums()
+
+    print(a.update_album('72157678080171871',
+                         'new album name', 'some album description'))
 
     # print(blah.keys(), blah[0]['large_square'])
 
@@ -162,6 +174,6 @@ if __name__ == "__main__":
 
     # print(a.delete_album(72157671546432768))
 
-    print(a.get_album('72157664116903126'))
+    # print(a.get_album('72157664116903126'))
 
     # print(a.get_containing_album(16748114355))
