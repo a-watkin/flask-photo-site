@@ -274,6 +274,30 @@ def get_photos():
         return render_template('photos.html', json_data=json_data), 200
 
 
+@app.route('/api/getphotos')
+def get_photos_json():
+    args = request.args.to_dict()
+    if len(args) > 0:
+
+        if 'offset' in args.keys() and 'limit' not in args.keys():
+            if int(args['offset']) <= 0:
+                args['offset'] = 0
+            # gotta make this an int
+            photo_data = p.get_photos_in_range(20, int(args['offset']))
+            json_data = photo_data
+
+            print('args are ', args)
+
+            json_data = photo_data
+            return jsonify(json_data)
+
+    else:
+        args['offset'] = 0
+        photo_data = p.get_photos_in_range(20, int(args['offset']))
+        json_data = photo_data
+        return jsonify(json_data)
+
+
 @app.route('/api/photos/<int:photo_id>', methods=['GET'])
 def get_photo(photo_id):
     print('\nHello from get_photo\n')
