@@ -57,7 +57,7 @@ img {
 
 
 /* some margin to provide space between the buttons for the edit button in the view edit_tag.html */
-#tag-edit {
+#edit-buttons {
     margin-bottom: 1em;
 }
 

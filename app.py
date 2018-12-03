@@ -201,6 +201,23 @@ def edit_album(album_id):
         return render_template('edit_album.html', json_data=json_data), 200
 
 
+@app.route('/edit/album/<int:album_id>/photos')
+def add_album_photos(album_id):
+    album_data = a.get_album(album_id)
+
+    # i need recent photos too
+    args = request.args.to_dict()
+    args['offset'] = 0
+    photo_data = p.get_photos_in_range(20, int(args['offset']))
+
+    photo_data['album_data'] = album_data
+
+    print(photo_data)
+    # print(album_data)
+
+    return render_template('add_album_photos.html', json_data=photo_data), 200
+
+
 @app.route('/api/photos/')
 def get_photos():
     print('\nHello from get_photos\n')

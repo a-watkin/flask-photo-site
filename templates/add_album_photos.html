@@ -2,7 +2,8 @@
 
 <div class="row text-center">
     <div class="col">
-        <h1>Make changes to the album name and description</h1>
+        <h1>Adding photos to the album</h1>
+        <h1>{{json_data['album_data']}}</h1>
     </div>
 </div>
 
@@ -12,11 +13,11 @@
 <div class="row text-center">
 
     <div id="problem-div" class="col">
-        <a href="/albums/{{json_data['album_id']}}">
+        <a href="/albums/{{json_data['album_data']['album_id']}}">
             <div class="card" style="width: 18rem;">
                 <div class="card-body">
-                    <h5 class="card-title text-center">{{json_data['title']}}</h5>
-                    <img class="card-img-top" src="{{json_data['large_square']}}" alt="{{ json_data['title'] }} album">
+                    <h5 class="card-title text-center">{{json_data['album_data']['title']}}</h5>
+                    <img class="card-img-top" src="{{json_data['album_data']['large_square']}}" alt="{{ json_data['title'] }} album">
                     <p class="card-text">{{json_data['description']}}</p>
                     <div class="row">
                         <div class="col">
@@ -26,7 +27,7 @@
                         </div>
                         <div class="col">
                             <p>
-                                photos: {{json_data['photos']}}
+                                photos: {{json_data['album_data']['photos']}}
                             </p>
                         </div>
                     </div>
@@ -39,6 +40,27 @@
 </div>
 <hr>
 
+<div class="row">
+
+
+    {% for key, value in json_data.photos.items() %}
+
+    <div class="col-3 text-center">
+
+        <!-- <h3>{{key}}</h3> -->
+        <a id="photostream-page" href="/api/photos/{{ value['photo_id'] }}">
+            <img id="photo-page-image" class="img-fluid" src="{{value['large_square']}}" alt="Responsive image">
+            <!-- <h2>{{value.photo_id}}</h2> -->
+        </a>
+
+    </div>
+
+    {% endfor %}
+
+</div>
+
+
+<hr>
 <div class="row">
 
     <div class="col">
@@ -68,21 +90,14 @@
 
 
             <div class="row ">
-
-
-
                 <div class="col text-left">
-
                     <a href="{{url_for('edit_albums')}}">
                         <button class="btn btn-success">Return to edit albums without making changes</button>
                     </a>
-
                 </div>
 
                 <div class="col text-right">
-
-                    <button type="submit" class="btn btn-warning">Save changes</button>
-
+                    <button type="submit" class="btn btn-warning">Add photos</button>
                 </div>
             </div>
         </form>

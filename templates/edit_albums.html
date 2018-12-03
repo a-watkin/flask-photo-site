@@ -57,15 +57,28 @@
                         <h2>{{value["photos"]}}</h2>
                     </td>
                     <td>
+
+
+
+                        <a href="{{url_for('add_album_photos', album_id=value['album_id'])}}">
+                            <button id="edit-buttons" class="btn btn-success btn-block">Add photos</button>
+                        </a>
+
+
+
+
+
+
                         <a href="{{url_for('edit_album', album_id=value['album_id'])}}">
 
-                            <button id="tag-edit" class="btn btn-warning btn-block">Edit this album</button>
+                            <button id="edit-buttons" class="btn btn-warning btn-block">Edit this album</button>
 
                         </a>
 
                         <!-- "/delete/{{ value["album_id"] }}" -->
                         <a href="{{url_for('delete_album', album_id=value['album_id'])}}">
-                            <button class="btn btn-danger btn-block">Delete this album</button></td>
+                            <button class="btn btn-danger btn-block">Delete this album</button>
+                    </td>
 
                     </a>
                 </tr>
