@@ -96,3 +96,11 @@ img {
 
     /* max-height: 20%; */
 }
+
+#photo-select:hover {
+    background-color: darkgrey;
+}
+
+#photo-select-title {
+    padding-top: 1em;
+}

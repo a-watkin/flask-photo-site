@@ -2,8 +2,8 @@
 
 <div class="row text-center">
     <div class="col">
-        <h1>Adding photos to the album</h1>
-        <h1>{{json_data['album_data']}}</h1>
+        <h1>Add photos to the album</h1>
+        <!-- <h1>{{json_data['album_data']}}</h1> -->
     </div>
 </div>
 
@@ -47,11 +47,29 @@
 
     <div class="col-3 text-center">
 
-        <!-- <h3>{{key}}</h3> -->
-        <a id="photostream-page" href="/api/photos/{{ value['photo_id'] }}">
-            <img id="photo-page-image" class="img-fluid" src="{{value['large_square']}}" alt="Responsive image">
-            <!-- <h2>{{value.photo_id}}</h2> -->
-        </a>
+
+        <div id="photo-select" class="card" style="width: 18rem;">
+
+            <h5 id="photo-select-title" class="card-title my-auto">
+                {{value['photo_title']}}
+            </h5>
+
+
+            <div class="card-body">
+                <!-- <h3>{{key}}</h3> -->
+                <a id="photostream-page" href="/api/photos/{{ value['photo_id'] }}">
+                    <img id="photo-page-image" class="img-fluid" src="{{value['large_square']}}" alt="Responsive image">
+                    <!-- <h2>{{value.photo_id}}</h2> -->
+                </a>
+
+                <div class="form-check">
+                    <input class="form-check-input position-static" type="checkbox" id="photo-checkbox" value="{{value['photo_id']}}">
+                </div>
+
+            </div>
+        </div>
+
+
 
     </div>
 
@@ -61,43 +79,24 @@
 
 
 <hr>
-<div class="row">
 
-    <div class="col">
-
-        <p>
-            Current album title and description is shown below.
-
-            When you are happy with the changes you have made press the save changes button.
-        </p>
-
-    </div>
-</div>
 
 
 <div class="row">
     <div class="col">
         <form method="POST">
-            <div class="form-group">
-                <label for="name">Album name</label>
-                <input type="text" name="name" class="form-control" value="{{json_data['title']}}">
-            </div>
-            <div class="form-group">
-                <label for="description">Album description</label>
-                <textarea type="text" class="form-control" name="description">{{json_data['description']}}</textarea>
-                <h3></h3>
-            </div>
+
 
 
             <div class="row ">
                 <div class="col text-left">
                     <a href="{{url_for('edit_albums')}}">
-                        <button class="btn btn-success">Return to edit albums without making changes</button>
+                        <button class="btn btn-success btn-lg">Return to edit albums without making changes</button>
                     </a>
                 </div>
 
                 <div class="col text-right">
-                    <button type="submit" class="btn btn-warning">Add photos</button>
+                    <button type="submit" class="btn btn-warning btn-lg">Add photos</button>
                 </div>
             </div>
         </form>
