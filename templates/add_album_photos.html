@@ -3,6 +3,7 @@
 <div class="row text-center">
     <div class="col">
         <h1>Add photos to the album</h1>
+        <!-- <h2>{{json_data}}</h2> -->
     </div>
 </div>
 
@@ -16,11 +17,11 @@
                 <div class="card-body">
                     <h5 class="card-title text-center">{{json_data['album_data']['title']}}</h5>
                     <img class="card-img-top" src="{{json_data['album_data']['large_square']}}" alt="{{ json_data['title'] }} album">
-                    <p class="card-text">{{json_data['description']}}</p>
+                    <p class="card-text">{{json_data['album_data']['description']}}</p>
                     <div class="row">
                         <div class="col">
                             <p>
-                                views: {{json_data['views']}}
+                                views: {{json_data['album_data']['views']}}
                             </p>
                         </div>
                         <div class="col">
@@ -43,75 +44,10 @@
 <hr>
 
 
-<h2>Put photos here</h2>
 
 
 
-<hr>
 
-<div class="row">
-
-
-    {% for key, value in json_data.photos.items() %}
-
-    <div class="col-3 text-center">
-
-        <div id="photo-select" class="card" style="width: 18rem;">
-
-            <h5 id="photo-select-title" class="card-title my-auto">
-                {{value['photo_title']}}
-            </h5>
-
-
-            <div class="card-body">
-                <!-- <h3>{{key}}</h3> -->
-                <a id="photostream-page" href="/api/photos/{{ value['photo_id'] }}">
-                    <img id="photo-page-image" class="img-fluid" src="{{value['large_square']}}" alt="Responsive image">
-                    <!-- <h2>{{value.photo_id}}</h2> -->
-                </a>
-
-                <div class="form-check">
-                    <input class="form-check-input position-static" type="checkbox" id="photo-checkbox" value="{{value['photo_id']}}">
-                </div>
-
-            </div>
-        </div>
-    </div>
-
-    {% endfor %}
-
-</div>
-
-
-<hr>
-
-
-<div class="row">
-    <div class="col">
-        <form method="POST">
-
-            <div class="row ">
-                <div class="col text-left">
-                    <a href="{{url_for('edit_albums')}}">
-                        <button class="btn btn-success btn-lg">Return to edit albums without making changes</button>
-                    </a>
-                </div>
-
-                <div class="col text-right">
-                    <button type="submit" class="btn btn-warning btn-lg">Add photos</button>
-                </div>
-            </div>
-        </form>
-    </div>
-</div>
-
-<hr>
-
-
-<div class="custom-control custom-checkbox">
-    <input type="checkbox" class="custom-control-input" id="customCheck1">
-    <label class="custom-control-label" for="customCheck1">Check this custom checkbox</label>
-</div>
 
 
 <!-- Scripts for React -->

@@ -208,6 +208,22 @@ class PhotosData extends React.Component {
           <hr />
 
           <div className="row"> {test} </div>
+
+          <div className="row">
+            <div className="col text-left">
+              <a href="/edit/albums">
+                <button class="btn btn-success btn-lg">
+                  Return to edit albums without making changes
+                </button>
+              </a>
+            </div>
+
+            <div className="col text-right">
+              <button type="submit" class="btn btn-warning btn-lg">
+                Add photos
+              </button>
+            </div>
+          </div>
         </div>
       );
     }
