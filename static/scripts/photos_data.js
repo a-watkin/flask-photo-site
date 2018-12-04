@@ -100,9 +100,7 @@ class PhotosData extends React.Component {
 
   render() {
     let cardStyle = {
-      maxWidth: "16rem",
-      paddingLeft: "2em",
-      paddingRight: "auto"
+      width: "18rem"
     };
 
     let large_square = "";
@@ -115,15 +113,17 @@ class PhotosData extends React.Component {
         // console.log();
         return (
           <div key={index} style={cardStyle} className="card">
-            <div className="card-body">
+            <div className="card-header">
               <h5 className="card-title text-center">
                 {photos[key]["photo_title"]}
               </h5>
+            </div>
 
+            <div className="card-body">
               <img
                 src={photos[key]["large_square"]}
                 alt="Responsive image"
-                className="img-fluid my-auto"
+                className="card-img-top"
               />
             </div>
           </div>
@@ -134,8 +134,6 @@ class PhotosData extends React.Component {
 
       return (
         <div>
-          <h1 className="text-center">naming things is hard</h1>
-
           <div className="row text-center">
             <div className="col">
               <button
@@ -155,8 +153,11 @@ class PhotosData extends React.Component {
             </div>
           </div>
 
-          <img src={large_square} alt="" />
-          {test}
+          <hr />
+
+          <div className="row">
+            <div className="col">{test}</div>
+          </div>
         </div>
       );
     }
@@ -167,9 +168,7 @@ class PhotosData extends React.Component {
 
     return (
       <div className="row">
-        <div className="col">
-          <img src={large_square} alt="" />
-        </div>
+        <img src={large_square} alt="" />
       </div>
     );
   }
