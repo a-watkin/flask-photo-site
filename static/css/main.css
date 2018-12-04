@@ -112,3 +112,7 @@ img {
 card:hover {
     background-color: darkgrey;
 }
+
+#selected-photo {
+    background-color: green;
+}

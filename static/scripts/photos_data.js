@@ -110,6 +110,8 @@ class PhotosData extends React.Component {
     }
 
     console.log("state of selectedPhotos ", this.state.selectedPhotos);
+    // also not ideal but good enough for now
+    this.forceUpdate();
   }
 
   render() {
@@ -123,6 +125,18 @@ class PhotosData extends React.Component {
       // display: "-webkit-box"
     };
 
+    let selectedCard = {
+      width: "18rem",
+      margin: "0 auto",
+      float: "none",
+      marginBottom: "10px",
+      backgroundColor: "green"
+      // webkitBoxAlign: "center",
+      // webkitBoxPack: "center",
+      // display: "-webkit-box"
+    };
+
+    let selectedPhotos = this.state.selectedPhotos;
     let large_square = "";
     // it doesn't seemt to be able to get this reference
     // without delaring it here from the Objct.keys reurn statment
@@ -135,19 +149,21 @@ class PhotosData extends React.Component {
 
       console.log(this.state.items[0]["large_square"]);
       let test = Object.keys(photos).map(function(key, index) {
-        if (index % 5 === 0) {
-          console.log("eh");
-          // conditionally add columns?
-        }
-        // console.log();
         return (
-          <div
-            key={photos[key]["photo_id"]}
-            className="col text-right"
-            // not ideal right here...but it works
-            onClick={() => photoClick(photos[key]["photo_id"])}
-          >
-            <div id="photo-select" style={cardStyle} className="card">
+          <div key={photos[key]["photo_id"]} className="col text-right">
+            <div
+              id="photo-select"
+              className="card"
+              // not ideal right here...but it works
+              onClick={function(event) {
+                photoClick(photos[key]["photo_id"]);
+              }}
+              style={
+                selectedPhotos.includes(photos[key]["photo_id"])
+                  ? selectedCard
+                  : cardStyle
+              }
+            >
               <div className="card-header">
                 <h5 className="card-title text-center">
                   {photos[key]["photo_title"]}
@@ -166,7 +182,7 @@ class PhotosData extends React.Component {
         );
       });
 
-      console.log(test);
+      console.log("what is?", selectedPhotos);
 
       return (
         <div>
