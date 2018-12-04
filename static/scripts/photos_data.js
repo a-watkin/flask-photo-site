@@ -11,6 +11,8 @@ class PhotosData extends React.Component {
       currentOffset: 20,
       selectedPhotos: []
     };
+
+    this.photoClick = this.photoClick.bind(this);
   }
 
   componentWillMount() {
@@ -101,6 +103,13 @@ class PhotosData extends React.Component {
 
   photoClick(photo_id) {
     console.log("Greetings from photoClick the photo_id is ", photo_id);
+
+    // only add the photo_id if it's not in the array
+    if (!this.state.selectedPhotos.includes(photo_id)) {
+      this.state.selectedPhotos.push(photo_id);
+    }
+
+    console.log("state of selectedPhotos ", this.state.selectedPhotos);
   }
 
   render() {
