@@ -100,7 +100,13 @@ class PhotosData extends React.Component {
 
   render() {
     let cardStyle = {
-      width: "18rem"
+      width: "18rem",
+      margin: "0 auto",
+      float: "none",
+      marginBottom: "10px"
+      // webkitBoxAlign: "center",
+      // webkitBoxPack: "center",
+      // display: "-webkit-box"
     };
 
     let large_square = "";
@@ -116,8 +122,13 @@ class PhotosData extends React.Component {
         }
         // console.log();
         return (
-          <div className="col">
-            <div key={index} style={cardStyle} className="card">
+          <div className="col text-right">
+            <div
+              id="photo-select"
+              key={index}
+              style={cardStyle}
+              className="card"
+            >
               <div className="card-header">
                 <h5 className="card-title text-center">
                   {photos[key]["photo_title"]}
@@ -161,7 +172,7 @@ class PhotosData extends React.Component {
 
           <hr />
 
-          <div className="row">{test}</div>
+          <div className="row"> {test} </div>
         </div>
       );
     }

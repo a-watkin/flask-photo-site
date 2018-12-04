@@ -107,3 +107,8 @@ img {
 #photo-select-title {
     padding-top: 1em;
 }
+
+
+card:hover {
+    background-color: darkgrey;
+}
