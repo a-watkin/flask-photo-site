@@ -183,5 +183,5 @@ class PhotosData extends React.Component {
   }
 }
 
-const domContainer = document.querySelector("#like_button_container");
+const domContainer = document.querySelector("#photos-selector");
 ReactDOM.render(e(PhotosData), domContainer);

@@ -3,12 +3,10 @@
 <div class="row text-center">
     <div class="col">
         <h1>Add photos to the album</h1>
-        <!-- <h1>{{json_data['album_data']}}</h1> -->
     </div>
 </div>
 
 <hr>
-
 
 <div class="row text-center">
 
@@ -36,16 +34,11 @@
         </a>
     </div>
 
-
 </div>
 <hr>
 
-
-
-
-<div id="like_button_container"></div>
-
-
+<!-- entry point for React components to select photos to add to the album -->
+<div id="photos-selector" class="row"></div>
 
 <hr>
 
@@ -54,10 +47,7 @@
 
 
 
-
-
 <hr>
-
 
 <div class="row">
 
@@ -87,9 +77,6 @@
 
             </div>
         </div>
-
-
-
     </div>
 
     {% endfor %}
@@ -100,12 +87,9 @@
 <hr>
 
 
-
 <div class="row">
     <div class="col">
         <form method="POST">
-
-
 
             <div class="row ">
                 <div class="col text-left">
@@ -124,15 +108,11 @@
 
 <hr>
 
-<script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
 
+<!-- Scripts for React -->
+<script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
 <script src="https://unpkg.com/react@16/umd/react.development.js" crossorigin></script>
 <script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js" crossorigin></script>
-
-
-
 <script type="text/babel" src="{{ url_for('static', filename='scripts/photos_data.js') }}"></script>
-
-
 
 {% endblock %}
