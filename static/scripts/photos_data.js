@@ -8,7 +8,8 @@ class PhotosData extends React.Component {
     this.state = {
       isLoaded: false,
       items: null,
-      currentOffset: 20
+      currentOffset: 20,
+      selectedPhotos: []
     };
   }
 
@@ -98,6 +99,10 @@ class PhotosData extends React.Component {
       );
   }
 
+  photoClick(photo_id) {
+    console.log("Greetings from photoClick the photo_id is ", photo_id);
+  }
+
   render() {
     let cardStyle = {
       width: "18rem",
@@ -110,6 +115,11 @@ class PhotosData extends React.Component {
     };
 
     let large_square = "";
+    // it doesn't seemt to be able to get this reference
+    // without delaring it here from the Objct.keys reurn statment
+    // also passing it and invoking leads to it being executed twice?
+    let photoClick = this.photoClick;
+
     if (this.state.items) {
       large_square = this.state.items[0]["large_square"];
       const photos = this.state.items;
@@ -122,13 +132,13 @@ class PhotosData extends React.Component {
         }
         // console.log();
         return (
-          <div className="col text-right">
-            <div
-              id="photo-select"
-              key={index}
-              style={cardStyle}
-              className="card"
-            >
+          <div
+            key={photos[key]["photo_id"]}
+            className="col text-right"
+            // not ideal right here...but it works
+            onClick={() => photoClick(photos[key]["photo_id"])}
+          >
+            <div id="photo-select" style={cardStyle} className="card">
               <div className="card-header">
                 <h5 className="card-title text-center">
                   {photos[key]["photo_title"]}
