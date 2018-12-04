@@ -84,8 +84,10 @@ img {
 } */
 
 
-#problem-div {
-    /* border: solid pink 5px; */
+/* Selected album in Add photos to the album */
+/* centeres the album in the page */
+#selected-album {
+    border: solid pink 5px;
     padding: auto;
 
     -webkit-box-align: center;
@@ -101,6 +103,7 @@ img {
     background-color: darkgrey;
 }
 
+/* pushes the title down a little */
 #photo-select-title {
     padding-top: 1em;
 }

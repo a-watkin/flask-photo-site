@@ -161,22 +161,15 @@ class PhotosData extends React.Component {
 
           <hr />
 
-          <div className="row">
-            <div className="col" />
-            {test}
-          </div>
+          <div className="row">{test}</div>
         </div>
       );
-    }
-
-    if (this.state.items) {
-      photo_id = this.state.items[0]["photo_id"];
     }
 
     return (
       <div className="row">
         <div className="col">
-          <img src={large_square} alt="" />
+          <h1>Some problem with getting the data.</h1>
         </div>
       </div>
     );

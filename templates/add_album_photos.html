@@ -10,7 +10,7 @@
 
 <div class="row text-center">
 
-    <div id="problem-div" class="col">
+    <div id="selected-album" class="col">
         <a href="/albums/{{json_data['album_data']['album_id']}}">
             <div class="card" style="width: 18rem;">
                 <div class="card-body">
@@ -38,7 +38,7 @@
 <hr>
 
 <!-- entry point for React components to select photos to add to the album -->
-<div id="photos-selector" class="row"></div>
+<div id="photos-selector"></div>
 
 <hr>
 
@@ -55,7 +55,6 @@
     {% for key, value in json_data.photos.items() %}
 
     <div class="col-3 text-center">
-
 
         <div id="photo-select" class="card" style="width: 18rem;">
 
