@@ -110,21 +110,27 @@ class PhotosData extends React.Component {
 
       console.log(this.state.items[0]["large_square"]);
       let test = Object.keys(photos).map(function(key, index) {
+        if (index % 5 === 0) {
+          console.log("eh");
+          // conditionally add columns?
+        }
         // console.log();
         return (
-          <div key={index} style={cardStyle} className="card">
-            <div className="card-header">
-              <h5 className="card-title text-center">
-                {photos[key]["photo_title"]}
-              </h5>
-            </div>
+          <div className="col">
+            <div key={index} style={cardStyle} className="card">
+              <div className="card-header">
+                <h5 className="card-title text-center">
+                  {photos[key]["photo_title"]}
+                </h5>
+              </div>
 
-            <div className="card-body">
-              <img
-                src={photos[key]["large_square"]}
-                alt="Responsive image"
-                className="card-img-top"
-              />
+              <div className="card-body">
+                <img
+                  src={photos[key]["large_square"]}
+                  alt="Responsive image"
+                  className="card-img-top"
+                />
+              </div>
             </div>
           </div>
         );
@@ -156,7 +162,8 @@ class PhotosData extends React.Component {
           <hr />
 
           <div className="row">
-            <div className="col">{test}</div>
+            <div className="col" />
+            {test}
           </div>
         </div>
       );
@@ -168,7 +175,9 @@ class PhotosData extends React.Component {
 
     return (
       <div className="row">
-        <img src={large_square} alt="" />
+        <div className="col">
+          <img src={large_square} alt="" />
+        </div>
       </div>
     );
   }
