@@ -99,6 +99,12 @@ class PhotosData extends React.Component {
   }
 
   render() {
+    let cardStyle = {
+      maxWidth: "16rem",
+      paddingLeft: "2em",
+      paddingRight: "auto"
+    };
+
     let large_square = "";
     if (this.state.items) {
       large_square = this.state.items[0]["large_square"];
@@ -108,8 +114,18 @@ class PhotosData extends React.Component {
       let test = Object.keys(photos).map(function(key, index) {
         // console.log();
         return (
-          <div key={index}>
-            <h5>{photos[key]["photo_title"]}</h5>
+          <div key={index} style={cardStyle} className="card">
+            <div className="card-body">
+              <h5 className="card-title text-center">
+                {photos[key]["photo_title"]}
+              </h5>
+
+              <img
+                src={photos[key]["large_square"]}
+                alt="Responsive image"
+                className="img-fluid my-auto"
+              />
+            </div>
           </div>
         );
       });
@@ -118,7 +134,7 @@ class PhotosData extends React.Component {
 
       return (
         <div>
-          <h1 className="text-center">FUCK YOU BITCHES</h1>
+          <h1 className="text-center">naming things is hard</h1>
 
           <div className="row text-center">
             <div className="col">
