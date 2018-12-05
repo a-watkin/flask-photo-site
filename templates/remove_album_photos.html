@@ -1,0 +1,52 @@
+{% extends "template.html" %} {% block content %}
+
+<div class="row text-center">
+    <div class="col">
+        <h1>Remove photos from the album</h1>
+        <!-- <h2>{{json_data}}</h2> -->
+    </div>
+</div>
+
+<hr>
+
+<div class="row text-center">
+
+    <div id="selected-album" class="col">
+        <a href="/albums/{{json_data['album_data']['album_id']}}">
+            <div class="card" style="width: 18rem;">
+                <div class="card-body">
+                    <h5 class="card-title text-center">{{json_data['album_data']['title']}}</h5>
+                    <img class="card-img-top" src="{{json_data['album_data']['large_square']}}" alt="{{ json_data['title'] }} album">
+                    <p class="card-text">{{json_data['album_data']['description']}}</p>
+                    <div class="row">
+                        <div class="col">
+                            <p>
+                                views: {{json_data['album_data']['views']}}
+                            </p>
+                        </div>
+                        <div class="col">
+                            <p>
+                                photos: {{json_data['album_data']['photos']}}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </a>
+    </div>
+
+</div>
+<hr>
+
+<!-- entry point for React components to select photos to add to the album -->
+<div id="photos-selector"></div>
+
+<hr>
+
+<!-- Scripts for React -->
+<script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+<script src="https://unpkg.com/react@16/umd/react.development.js" crossorigin></script>
+<script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js" crossorigin></script>
+<script type="text/babel" src="{{ url_for('static', filename='scripts/photos_data.js') }}"></script>
+
+{% endblock %}

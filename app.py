@@ -178,6 +178,9 @@ def get_album_photos(album_id):
 
 @app.route('/edit/albums')
 def edit_albums():
+    """
+    Lists all the albums.
+    """
     albums_data = a.get_albums()
     print(albums_data)
     return render_template('edit_albums.html', json_data=albums_data), 200
@@ -185,6 +188,9 @@ def edit_albums():
 
 @app.route('/edit/album/<int:album_id>', methods=['GET', 'POST'])
 def edit_album(album_id):
+    """
+    Updates the name and description of an album.
+    """
     if request.method == 'GET':
         json_data = a.get_album(album_id)
         return render_template('edit_album.html', json_data=json_data), 200
@@ -199,6 +205,46 @@ def edit_album(album_id):
         print('test', album_id, album_name, album_description)
         json_data = a.get_album(album_id)
         return render_template('edit_album.html', json_data=json_data), 200
+
+
+@app.route('/api/albumphotos', methods=['GET', 'POST'])
+def get_album_photos_json():
+    args = request.args.to_dict()
+
+    print(args)
+    if request.method == 'GET':
+        if len(args) > 0:
+
+            if 'offset' in args.keys() and 'limit' not in args.keys():
+                if int(args['offset']) <= 0:
+                    args['offset'] = 0
+                # gotta make this an int
+                photo_data = a.get_album_photos_in_range(
+                    args['album_id'],
+                    20, int(args['offset']))
+                json_data = photo_data
+
+                print('args are ', args)
+
+                json_data = photo_data
+                return jsonify(json_data)
+
+        else:
+            args['offset'] = 0
+            photo_data = a.get_album_photos_in_range(
+                args['album_id'],
+                20, int(args['offset']))
+            json_data = photo_data
+            return jsonify(json_data)
+
+    # if request.method == 'POST':
+
+    #     print('test', request.get_json())
+
+    #     data = request.get_json()
+    #     a.add_photos_to_album(data['albumId'], data['photos'])
+
+    #     return redirect("/albums/{}".format(data['albumId']), code=302)
 
 
 @app.route('/edit/album/<int:album_id>/photos')
