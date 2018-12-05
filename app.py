@@ -307,7 +307,7 @@ def get_photos_json():
         data = request.get_json()
         a.add_photos_to_album(data['albumId'], data['photos'])
 
-        return render_template('added_album_photos.html'), 200
+        return redirect("/albums/{}".format(data['albumId']), code=302)
 
 
 @app.route('/api/photos/<int:photo_id>', methods=['GET'])
