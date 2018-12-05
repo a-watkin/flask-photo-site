@@ -261,6 +261,25 @@ class Album(object):
 
             self.db.make_query(query_string)
 
+        # get the number of photos in the album after adding them
+        query_string = '''
+        SELECT COUNT(photo_id)
+        FROM photo_album
+        WHERE album_id='{}';
+        '''.format(album_id)
+        # update the count in album
+        photo_count = self.db.make_query(query_string)[0][0]
+        print(photo_count)
+
+        # update the count in album
+        query_string = '''
+        UPDATE album
+        SET photos = {}
+        WHERE album_id='{}';
+
+        '''.format(int(photo_count), album_id)
+        self.db.make_query(query_string)
+
 
 if __name__ == "__main__":
     a = Album()
@@ -269,7 +288,7 @@ if __name__ == "__main__":
 
     # print(a.get_album_photos_in_range('72157678080171871'))
 
-    # print(a.remove_photos_from_album('72157678080171871', ['44692598005']))
+    print(a.remove_photos_from_album('72157678080171871', ['44692598005']))
 
     # print(a.update_album('72157678080171871',
     #                      'new album name', 'some album description'))
