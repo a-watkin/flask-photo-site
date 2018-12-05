@@ -122,7 +122,7 @@ class PhotosData extends React.Component {
         photos: this.state.selectedPhotos
       })
     }).then(() => {
-      console.log("testicles");
+      // redirect after successful post
       window.location.assign(
         `http://127.0.0.1:5000/albums/${this.state.albumId}`
       );
@@ -158,9 +158,6 @@ class PhotosData extends React.Component {
       margin: "0 auto",
       float: "none",
       marginBottom: "10px"
-      // webkitBoxAlign: "center",
-      // webkitBoxPack: "center",
-      // display: "-webkit-box"
     };
 
     let selectedCard = {
@@ -168,10 +165,7 @@ class PhotosData extends React.Component {
       margin: "0 auto",
       float: "none",
       marginBottom: "10px",
-      backgroundColor: "green"
-      // webkitBoxAlign: "center",
-      // webkitBoxPack: "center",
-      // display: "-webkit-box"
+      backgroundColor: "#28a745"
     };
 
     let selectedPhotos = this.state.selectedPhotos;

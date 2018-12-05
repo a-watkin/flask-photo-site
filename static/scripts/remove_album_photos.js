@@ -10,7 +10,8 @@ class SelectPhotos extends React.Component {
       items: null,
       currentOffset: 20,
       selectedPhotos: [],
-      albumId: null
+      albumId: null,
+      photoLimit: null
     };
 
     this.photoClick = this.photoClick.bind(this);
@@ -22,7 +23,9 @@ class SelectPhotos extends React.Component {
     let splitUrl = currentUrl.split("/");
     const albumId = splitUrl[5];
 
-    fetch("http://127.0.0.1:5000/api/getphotos")
+    console.log(`http://127.0.0.1:5000/api/albumphotos?album_id=${albumId}`);
+
+    fetch(`http://127.0.0.1:5000/api/albumphotos?album_id=${albumId}`)
       .then(res => res.json())
       .then(
         result => {
@@ -49,19 +52,34 @@ class SelectPhotos extends React.Component {
   getNextPhotos() {
     console.log("next called ", this.state.currentOffset);
 
+    const albumId = this.state.albumId;
+
+    // had a problem here with the nubmer being treated as a string
+    // so to safe gaurd against coercion
+    let currentOffset = Number(this.state.currentOffset);
+
+    console.log(`http://127.0.0.1:5000/api/albumphotos?album_id=${albumId}&offset=${20 +
+      currentOffset}
+        `);
+
     fetch(
-      `http://127.0.0.1:5000/api/getphotos?offset=${this.state.currentOffset +
-        20}`
+      `http://127.0.0.1:5000/api/albumphotos?album_id=${albumId}&offset=${currentOffset +
+        20}
+        `
     )
       .then(res => res.json())
       .then(
         result => {
           console.log("result", result);
-          this.setState({
-            isLoaded: true,
-            items: result.photos,
-            currentOffset: result.offset
-          });
+          console.log(result.photos, Object.keys(result.photos).length);
+
+          if ((result.photos, Object.keys(result.photos).length > 0)) {
+            this.setState({
+              isLoaded: true,
+              items: result.photos,
+              currentOffset: result.offset
+            });
+          }
         },
         // Note: it's important to handle errors here
         // instead of a catch() block so that we don't swallow
@@ -76,15 +94,15 @@ class SelectPhotos extends React.Component {
   }
 
   getPreviousPhotos() {
-    console.log("previous called ", this.state.currentOffset);
+    const albumId = this.state.albumId;
 
     if (this.state.currentOffset <= 0) {
       return false;
     }
 
     fetch(
-      `http://127.0.0.1:5000/api/getphotos?offset=${this.state.currentOffset -
-        20}`
+      `http://127.0.0.1:5000/api/albumphotos?album_id=${albumId}&offset=${this
+        .state.currentOffset - 20}`
     )
       .then(res => res.json())
       .then(
@@ -122,7 +140,7 @@ class SelectPhotos extends React.Component {
         photos: this.state.selectedPhotos
       })
     }).then(() => {
-      console.log("testicles");
+      // redirect after successful post
       window.location.assign(
         `http://127.0.0.1:5000/albums/${this.state.albumId}`
       );
@@ -158,9 +176,6 @@ class SelectPhotos extends React.Component {
       margin: "0 auto",
       float: "none",
       marginBottom: "10px"
-      // webkitBoxAlign: "center",
-      // webkitBoxPack: "center",
-      // display: "-webkit-box"
     };
 
     let selectedCard = {
@@ -168,10 +183,7 @@ class SelectPhotos extends React.Component {
       margin: "0 auto",
       float: "none",
       marginBottom: "10px",
-      backgroundColor: "green"
-      // webkitBoxAlign: "center",
-      // webkitBoxPack: "center",
-      // display: "-webkit-box"
+      backgroundColor: "#dc3545"
     };
 
     let selectedPhotos = this.state.selectedPhotos;
@@ -262,7 +274,7 @@ class SelectPhotos extends React.Component {
                 className="btn btn-warning btn-lg"
                 onClick={() => this.sendData()}
               >
-                Add photos
+                Remove photos
               </button>
             </div>
           </div>
