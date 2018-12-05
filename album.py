@@ -159,14 +159,54 @@ class Album(object):
         '''.format(new_title, new_description, album_id)
         )
 
+    def add_photos_to_album(self, album_id, photos):
+        # db.insert_data(
+        #     table='tag',
+        #     tag_name=new_tag,
+        #     user_id='28035310@N00'
+        # )
+
+        for photo in photos:
+
+            self.db.insert_data(
+                table='photo_album',
+                photo_id=photo,
+                album_id=album_id
+            )
+            # i need to update the photo count in album
+
+        # get the number of photos in the album after adding them
+        query_string = '''
+        SELECT COUNT(photo_id)
+        FROM photo_album
+        WHERE album_id='{}';
+        '''.format(album_id)
+        # update the count in album
+        photo_count = self.db.make_query(query_string)[0][0]
+        print(photo_count)
+
+        # update the count in album
+        query_string = '''
+        UPDATE album
+        SET photos = {}
+        WHERE album_id='{}';
+
+        '''.format(int(photo_count), album_id)
+        self.db.make_query(query_string)
+
 
 if __name__ == "__main__":
     a = Album()
     # print(a.get_album_cover('72157650725849398'))
     # blah = a.get_albums()
 
-    print(a.update_album('72157678080171871',
-                         'new album name', 'some album description'))
+    # print(a.update_album('72157678080171871',
+    #                      'new album name', 'some album description'))
+
+    print(a.add_photos_to_album('72157677661532872',
+                                [
+                                    '31758038024', '45541535182', '31083915568'
+                                ]))
 
     # print(blah.keys(), blah[0]['large_square'])
 
