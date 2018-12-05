@@ -130,6 +130,16 @@ class PhotosData extends React.Component {
     // only add the photo_id if it's not in the array
     if (!this.state.selectedPhotos.includes(photo_id)) {
       this.state.selectedPhotos.push(photo_id);
+    } else {
+      // remove the photo from the array
+      let tempAray = [...this.state.selectedPhotos];
+      let index = tempAray.indexOf(photo_id);
+      if (index !== -1) {
+        tempAray.splice(index, 1);
+        this.setState({
+          selectedPhotos: tempAray
+        });
+      }
     }
 
     console.log("state of selectedPhotos ", this.state.selectedPhotos);
