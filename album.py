@@ -251,13 +251,25 @@ class Album(object):
 
         return rtn_dict
 
+    def remove_photos_from_album(self, album_id, photos):
+        for photo_id in photos:
+            query_string = '''
+                delete from photo_album 
+                where(photo_id='{}' 
+                and album_id='{}')
+                '''.format(photo_id, album_id)
+
+            self.db.make_query(query_string)
+
 
 if __name__ == "__main__":
     a = Album()
     # print(a.get_album_cover('72157650725849398'))
     # blah = a.get_albums()
 
-    print(a.get_album_photos_in_range('72157678080171871'))
+    # print(a.get_album_photos_in_range('72157678080171871'))
+
+    # print(a.remove_photos_from_album('72157678080171871', ['44692598005']))
 
     # print(a.update_album('72157678080171871',
     #                      'new album name', 'some album description'))

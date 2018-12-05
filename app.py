@@ -236,14 +236,18 @@ def get_album_photos_json():
         #     json_data = photo_data
         #     return jsonify(json_data)
 
-    # if request.method == 'POST':
+    if request.method == 'POST':
 
-    #     print('test', request.get_json())
+        print('test', request.get_json())
+        data = request.get_json()
 
-    #     data = request.get_json()
-    #     a.add_photos_to_album(data['albumId'], data['photos'])
+        a.remove_photos_from_album(data['albumId'], data['photos'])
 
-    #     return redirect("/albums/{}".format(data['albumId']), code=302)
+        return redirect("/albums/{}".format(data['albumId']), code=302)
+
+        # a.add_photos_to_album(data['albumId'], data['photos'])
+
+        # return redirect("/albums/{}".format(data['albumId']), code=302)
 
 
 @app.route('/edit/album/<int:album_id>/remove/photos', methods=['GET', 'POST'])
