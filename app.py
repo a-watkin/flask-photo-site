@@ -210,8 +210,7 @@ def edit_album(album_id):
 @app.route('/api/albumphotos', methods=['GET', 'POST'])
 def get_album_photos_json():
     args = request.args.to_dict()
-
-    print(args)
+    # print(args)
     if request.method == 'GET':
         if len(args) > 0:
 
@@ -245,6 +244,14 @@ def get_album_photos_json():
     #     a.add_photos_to_album(data['albumId'], data['photos'])
 
     #     return redirect("/albums/{}".format(data['albumId']), code=302)
+
+
+@app.route('/edit/album/<int:album_id>/remove/photos', methods=['GET', 'POST'])
+def remove_album_photos(album_id):
+    album_data = a.get_album(album_id)
+    photo_data = a.get_album_photos_in_range(album_id)
+    photo_data['album_data'] = album_data
+    return render_template('remove_album_photos.html', json_data=photo_data), 200
 
 
 @app.route('/edit/album/<int:album_id>/photos')
