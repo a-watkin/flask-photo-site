@@ -9,7 +9,8 @@ class PhotosData extends React.Component {
       isLoaded: false,
       items: null,
       currentOffset: 20,
-      selectedPhotos: []
+      selectedPhotos: [],
+      albumId: null
     };
 
     this.photoClick = this.photoClick.bind(this);
@@ -108,7 +109,7 @@ class PhotosData extends React.Component {
   }
 
   sendData() {
-    console.log("getting here?");
+    console.log("getting here?", this.state.albumId, this.state.selectedPhotos);
     // /api/getphotos
     fetch("http://127.0.0.1:5000/api/getphotos", {
       method: "POST",

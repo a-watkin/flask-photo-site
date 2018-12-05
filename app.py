@@ -301,7 +301,8 @@ def get_photos_json():
             return jsonify(json_data)
 
     if request.method == 'POST':
-        print('test')
+
+        print('test', request.get_json())
 
 
 @app.route('/api/photos/<int:photo_id>', methods=['GET'])
