@@ -2,15 +2,13 @@
 
 <div class="row text-center">
     <div class="col">
-        <h1>Make changes to the album name and description</h1>
+        <h1>Make changes to the album {{json_data['title']}} and its description</h1>
     </div>
 </div>
 
 <hr>
-
-
-<div class="row text-center">
-
+<!-- album link and information -->
+<div class="row">
     <div id="problem-div" class="col">
         <a href="/albums/{{json_data['album_id']}}">
             <div class="card" style="width: 18rem;">
@@ -57,7 +55,7 @@
     <div class="col">
         <form method="POST">
             <div class="form-group">
-                <label for="name">Album name</label>
+                <label for="name">json_data['album_title']</label>
                 <input type="text" name="name" class="form-control" value="{{json_data['title']}}">
             </div>
             <div class="form-group">

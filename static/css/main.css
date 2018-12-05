@@ -77,6 +77,7 @@ img {
 }
 
 
+/* on the edit albums views */
 /* #edit-albums-container {
     border: solid black 5px;
     margin-left: auto;
@@ -84,19 +85,16 @@ img {
 } */
 
 
+
 /* Selected album in Add photos to the album */
 /* centeres the album in the page */
-#selected-album {
-    border: solid pink 5px;
+#selected-album,
+#problem-div {
     padding: auto;
-
     -webkit-box-align: center;
     -webkit-box-pack: center;
     display: -webkit-box;
-
     padding-top: 2rem;
-
-    /* max-height: 20%; */
 }
 
 #photo-select:hover {
