@@ -16,6 +16,11 @@ class PhotosData extends React.Component {
   }
 
   componentWillMount() {
+    // getting the album id from the URL
+    let currentUrl = window.location.href;
+    let splitUrl = currentUrl.split("/");
+    const albumId = splitUrl[5];
+
     fetch("http://127.0.0.1:5000/api/getphotos")
       .then(res => res.json())
       .then(
@@ -24,7 +29,8 @@ class PhotosData extends React.Component {
           this.setState({
             isLoaded: true,
             items: result.photos,
-            currentOffset: result.offset
+            currentOffset: result.offset,
+            albumId: albumId
           });
         },
         // Note: it's important to handle errors here
@@ -101,6 +107,22 @@ class PhotosData extends React.Component {
       );
   }
 
+  sendData() {
+    console.log("getting here?");
+    // /api/getphotos
+    fetch("http://127.0.0.1:5000/api/getphotos", {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        albumId: this.state.albumId,
+        photos: this.state.selectedPhotos
+      })
+    });
+  }
+
   photoClick(photo_id) {
     console.log("Greetings from photoClick the photo_id is ", photo_id);
 
@@ -147,7 +169,7 @@ class PhotosData extends React.Component {
       large_square = this.state.items[0]["large_square"];
       const photos = this.state.items;
 
-      console.log(this.state.items[0]["large_square"]);
+      // console.log(this.state.items[0]["large_square"]);
       let test = Object.keys(photos).map(function(key, index) {
         return (
           <div key={photos[key]["photo_id"]} className="col text-right">
@@ -212,14 +234,18 @@ class PhotosData extends React.Component {
           <div className="row">
             <div className="col text-left">
               <a href="/edit/albums">
-                <button class="btn btn-success btn-lg">
+                <button className="btn btn-success btn-lg">
                   Return to edit albums without making changes
                 </button>
               </a>
             </div>
 
             <div className="col text-right">
-              <button type="submit" class="btn btn-warning btn-lg">
+              <button
+                type="submit"
+                className="btn btn-warning btn-lg"
+                onClick={() => this.sendData()}
+              >
                 Add photos
               </button>
             </div>
