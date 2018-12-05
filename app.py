@@ -215,27 +215,27 @@ def get_album_photos_json():
     if request.method == 'GET':
         if len(args) > 0:
 
-            if 'offset' in args.keys() and 'limit' not in args.keys():
-                if int(args['offset']) <= 0:
-                    args['offset'] = 0
-                # gotta make this an int
-                photo_data = a.get_album_photos_in_range(
-                    args['album_id'],
-                    20, int(args['offset']))
-                json_data = photo_data
+            if 'limit' not in args.keys():
+                args['limit'] = 20
 
-                print('args are ', args)
+            if 'offset' not in args.keys():
+                args['offset'] = 0
 
-                json_data = photo_data
-                return jsonify(json_data)
-
-        else:
-            args['offset'] = 0
-            photo_data = a.get_album_photos_in_range(
+            album_data = a.get_album_photos_in_range(
                 args['album_id'],
-                20, int(args['offset']))
-            json_data = photo_data
+                args['limit'],
+                args['offset']
+            )
+            json_data = album_data
             return jsonify(json_data)
+
+        # else:
+        #     args['offset'] = 0
+        #     photo_data = a.get_album_photos_in_range(
+        #         args['album_id'],
+        #         20, int(args['offset']))
+        #     json_data = photo_data
+        #     return jsonify(json_data)
 
     # if request.method == 'POST':
 
