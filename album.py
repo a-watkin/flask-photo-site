@@ -30,18 +30,42 @@ class Album(object):
 
         count = 0
         for album in album_data:
-            # print('\n', 'album_id', album['album_id'])
-            album_dover_dict = self.get_album_cover(album['album_id'])
-            album['large_square'] = album_dover_dict[0]['large_square']
+            print('\n', 'album_id', album['album_id'])
+            album_cover_dict = self.get_album_cover(album['album_id'])
+
+            print(album_cover_dict)
+            # a new album may not have this yet so check that there is a value first
+            if len(album_cover_dict) > 0:
+                album['large_square'] = album_cover_dict[0]['large_square']
+
             rtn_dict[count] = album
             count += 1
 
         return rtn_dict
 
+    def get_album(self, album_id):
+        query = '''
+        select * from album where album_id = {}
+        '''.format(album_id)
+
+        album_data = self.db.get_query_as_list(query)
+
+        print(album_data)
+
+        if len(album_data) > 0 and album_data[0]['photos'] > 0:
+            album_data[0]['large_square'] = self.get_album_cover(
+                album_data[0]['album_id'])[0]['large_square']
+
+            print(album_data)
+            return album_data[0]
+
+        else:
+            return album_data
+
     def get_containing_album(self, photo_id):
         query_string = '''
 
-                select album.album_id, album.title, album.views, album.description, album.photos, date_created 
+                select album.album_id, album.title, album.views, album.description, album.photos, date_created
                 from photo_album
                 join album on(photo_album.album_id=album.album_id)
                 where photo_album.photo_id={}
@@ -64,7 +88,7 @@ class Album(object):
                             join images on(images.photo_id=photo.photo_id)
                             where album.album_id={}
                             order by photo.date_uploaded asc limit 1
-                        
+
                         '''.format(album_id)
 
         album_cover = self.db.get_query_as_list(query_string)
@@ -75,8 +99,8 @@ class Album(object):
 
     def get_album_photos(self, album_id):
         query_string = '''
-                select album.title, album.album_id, 
-                album.description, album.views, album.photos,  
+                select album.title, album.album_id,
+                album.description, album.views, album.photos,
                 images.large_square,
                 images.original,
                 photo.photo_id, photo.date_taken,
@@ -103,20 +127,6 @@ class Album(object):
             count += 1
 
         return rtn_dict
-
-    def get_album(self, album_id):
-        query = '''
-        select * from album where album_id = {}
-        '''.format(album_id)
-
-        album_data = self.db.get_query_as_list(query)
-
-        if len(album_data) > 0:
-            album_data[0]['large_square'] = self.get_album_cover(
-                album_data[0]['album_id'])[0]['large_square']
-
-            print(album_data)
-            return album_data[0]
 
     def get_photo_album(self, album_id):
         query = '''
@@ -213,7 +223,7 @@ class Album(object):
 
             query_string = (
                 '''
-                select photo.photo_title, photo.photo_id, album.album_id, 
+                select photo.photo_title, photo.photo_id, album.album_id,
                 album.title, photo.views, photo.date_uploaded, photo.date_taken,
                 images.original, images.large_square
                 from photo_album
@@ -258,8 +268,8 @@ class Album(object):
     def remove_photos_from_album(self, album_id, photos):
         for photo_id in photos:
             query_string = '''
-                delete from photo_album 
-                where(photo_id='{}' 
+                delete from photo_album
+                where(photo_id='{}'
                 and album_id='{}')
                 '''.format(photo_id, album_id)
 
@@ -300,10 +310,12 @@ class Album(object):
             description=description,
             photos=0,
             date_created=(str(created)),
-            date_updated=None
+            date_updated=(str(created))
         )
 
         print('album created with identifier ', identifier)
+
+        return identifier
 
 
 if __name__ == "__main__":
@@ -311,7 +323,11 @@ if __name__ == "__main__":
     # print(a.get_album_cover('72157650725849398'))
     # blah = a.get_albums()
 
-    print(a.create_album('28035310@N00', 'test', 'a test of creating an album'))
+    # print(a.create_album('28035310@N00', 'test', 'a test of creating an album'))
+
+    # print(a.get_albums())
+
+    a.get_album('2302407010')
 
     # print(a.get_album_photos_in_range('72157678080171871'))
 

@@ -183,7 +183,41 @@ def create_album():
     if request.method == 'POST':
         album_title = request.form['title']
         album_description = request.form['description']
-        print('Hello from create_album', album_title, album_description)
+
+        album_id = a.create_album(
+            '28035310@N00', album_title, album_description)
+        print('Hello from create_album', album_title,
+              album_description, album_id)
+
+        album_data = a.get_album(album_id)
+
+        return redirect('/edit/album/{}/photos'.format(album_id)), 302
+
+
+@app.route('/edit/album/<int:album_id>/photos')
+def add_album_photos(album_id):
+    # ok it seems to get the album id just fine
+    # print('why you no album_id?', album_id)
+
+    album_data = a.get_album(album_id)
+    # print()
+    # print('album_data ', album_data)
+    # print()
+
+    # i need recent photos too
+    # args = request.args.to_dict()
+    # print('\n', args)
+    # args['offset'] = 0
+    # photo_data = p.get_photos_in_range(20, int(args['offset']))
+    photo_data = p.get_photos_in_range(20, 0)
+
+    photo_data['album_data'] = album_data
+
+    print()
+    print('Hello from add_album_photos ', photo_data)
+    # print(album_data)
+
+    return render_template('add_album_photos.html', json_data=photo_data), 200
 
 
 @app.route('/edit/album/<int:album_id>', methods=['GET', 'POST'])
@@ -260,29 +294,12 @@ def get_album_photos_json():
         # return redirect("/albums/{}".format(data['albumId']), code=302)
 
 
-@app.route('/edit/album/<int:album_id>/remove/photos', methods=['GET', 'POST'])
+@app.route('/edit/album/<int:album_id>/remove/photos', methods=['GET'])
 def remove_album_photos(album_id):
     album_data = a.get_album(album_id)
     photo_data = a.get_album_photos_in_range(album_id)
     photo_data['album_data'] = album_data
     return render_template('remove_album_photos.html', json_data=photo_data), 200
-
-
-@app.route('/edit/album/<int:album_id>/photos')
-def add_album_photos(album_id):
-    album_data = a.get_album(album_id)
-
-    # i need recent photos too
-    args = request.args.to_dict()
-    args['offset'] = 0
-    photo_data = p.get_photos_in_range(20, int(args['offset']))
-
-    photo_data['album_data'] = album_data
-
-    print(photo_data)
-    # print(album_data)
-
-    return render_template('add_album_photos.html', json_data=photo_data), 200
 
 
 @app.route('/api/photos/')
