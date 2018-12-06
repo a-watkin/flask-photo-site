@@ -3,17 +3,34 @@
 
 <div class="row text-center">
     <div class="col">
-        <h1>albums page</h1>
+        <h1>Albums</h1>
+    </div>
+
+</div>
+
+<hr>
+
+<div class="row">
+
+    <div class="col text-center">
+        <a href="">
+            <button class="btn btn btn-primary btn-lg">
+                Create a new album
+            </button>
+        </a>
     </div>
 </div>
+
+<hr>
+
 
 
 <div class="row">
     {% for key, value in json_data.items() %}
 
     <div class="col">
-        <a href="/albums/{{value['album_id']}}">
-            <div class="card" style="width: 18rem;">
+        <div class="card" style="width: 18rem;">
+            <a href="/albums/{{value['album_id']}}">
                 <div class="card-body">
                     <h5 class="card-title text-center">{{value['title']}}</h5>
                     <img class="card-img-top" src="{{value['large_square']}}" alt="{{ value['title'] }} album">
@@ -29,13 +46,13 @@
                                 photos: {{value['photos']}}
                             </p>
                         </div>
-                    </div>
-                </div>
-            </div>
-        </a>
+            </a>
+        </div>
     </div>
+</div>
+</div>
 
-    {% endfor %}
+{% endfor %}
 </div>
 
 {% endblock %}
