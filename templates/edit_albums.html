@@ -27,7 +27,11 @@
                             <div class="card" style="width: 18rem;">
                                 <div class="card-body">
                                     <h5 class="card-title text-center">{{value['title']}}</h5>
-                                    <img class="card-img-top" src="{{value['large_square']}}" alt="{{ value['title'] }} album">
+                                    <img class="card-img-top" src={% if value['large_square'] %}
+                                        {{
+value['large_square']
+}} {% else %} '/static/images/logo.jpg' {% endif %}
+                                        alt="{{ value['title'] }} album">
                                     <p class="card-text">{{value['description']}}</p>
                                     <div class="row">
                                         <div class="col">
