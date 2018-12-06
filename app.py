@@ -172,7 +172,9 @@ def get_albums():
 def get_album_photos(album_id):
     photo_data = a.get_album_photos(album_id)
     json_data = photo_data
-    # print(json_data)
+    print()
+    print(json_data)
+    print()
     return render_template('album.html', json_data=json_data), 200
 
 
@@ -210,13 +212,9 @@ def add_album_photos(album_id):
     # args['offset'] = 0
     # photo_data = p.get_photos_in_range(20, int(args['offset']))
     photo_data = p.get_photos_in_range(20, 0)
-
     photo_data['album_data'] = album_data
 
-    print()
     print('Hello from add_album_photos ', photo_data)
-    # print(album_data)
-
     return render_template('add_album_photos.html', json_data=photo_data), 200
 
 

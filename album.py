@@ -60,7 +60,7 @@ class Album(object):
             return album_data[0]
 
         else:
-            return album_data
+            return album_data[0]
 
     def get_containing_album(self, photo_id):
         query_string = '''
@@ -125,6 +125,19 @@ class Album(object):
         for d in album_data:
             rtn_dict[count] = d
             count += 1
+
+        print()
+        print('here be dragons')
+        print('\n', rtn_dict)
+
+        if not rtn_dict:
+            print(10 * '\nnope')
+            album_data = self.get_album(album_id)
+            print(album_data)
+            rtn_dict = {
+                0: album_data
+            }
+            return rtn_dict
 
         return rtn_dict
 

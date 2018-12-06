@@ -14,7 +14,10 @@
             <div class="card" style="width: 18rem;">
                 <div class="card-body">
                     <h5 class="card-title text-center">{{json_data['title']}}</h5>
-                    <img class="card-img-top" src="{{json_data['large_square']}}" alt="{{ json_data['title'] }} album">
+                    <img class="card-img-top" src={% if json_data['large_square'] %} {{
+json_data['large_square']
+}} {%
+                        else %} '/static/images/logo.jpg' {% endif %} alt="{{ json_data['title'] }} album">
                     <p class="card-text">{{json_data['description']}}</p>
                     <div class="row">
                         <div class="col">
