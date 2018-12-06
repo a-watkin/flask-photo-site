@@ -16,7 +16,7 @@ class Album(object):
         Returns all albums.
         """
         album_data = self.db.get_query_as_list(
-            "select * from album;"
+            "select * from album order by date_created desc;"
         )
 
         # get the album id
