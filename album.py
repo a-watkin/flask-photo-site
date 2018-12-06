@@ -287,14 +287,23 @@ class Album(object):
     def create_album(self, user_id, title, description):
         # one of the current ids, a ten digit number
         # 5053198694
-        album_id = str(int(uuid.uuid4()))[0:10]
-        user_id = '28035310@N00'
-        views = 0
-        title = title
         created = datetime.datetime.now()
 
-        print(album_id,
-              created)
+        identifier = str(int(uuid.uuid4()))[0:10]
+
+        self.db.insert_data(
+            table='album',
+            album_id=identifier,
+            user_id='28035310@N00',
+            views=0,
+            title=title,
+            description=description,
+            photos=0,
+            date_created=(str(created)),
+            date_updated=None
+        )
+
+        print('album created with identifier ', identifier)
 
 
 if __name__ == "__main__":
@@ -302,7 +311,7 @@ if __name__ == "__main__":
     # print(a.get_album_cover('72157650725849398'))
     # blah = a.get_albums()
 
-    print(a.create_album())
+    print(a.create_album('28035310@N00', 'test', 'a test of creating an album'))
 
     # print(a.get_album_photos_in_range('72157678080171871'))
 
