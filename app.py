@@ -176,14 +176,14 @@ def get_album_photos(album_id):
     return render_template('album.html', json_data=json_data), 200
 
 
-@app.route('/edit/albums')
-def edit_albums():
-    """
-    Lists all the albums.
-    """
-    albums_data = a.get_albums()
-    print(albums_data)
-    return render_template('edit_albums.html', json_data=albums_data), 200
+@app.route('/add/album', methods=['GET', 'POST'])
+def create_album():
+    if request.method == 'GET':
+        return render_template('create_album.html'), 200
+    if request.method == 'POST':
+        album_title = request.form['title']
+        album_description = request.form['description']
+        print('Hello from create_album', album_title, album_description)
 
 
 @app.route('/edit/album/<int:album_id>', methods=['GET', 'POST'])
@@ -205,6 +205,16 @@ def edit_album(album_id):
         print('test', album_id, album_name, album_description)
         json_data = a.get_album(album_id)
         return render_template('edit_album.html', json_data=json_data), 200
+
+
+@app.route('/edit/albums')
+def edit_albums():
+    """
+    Lists all the albums.
+    """
+    albums_data = a.get_albums()
+    print(albums_data)
+    return render_template('edit_albums.html', json_data=albums_data), 200
 
 
 @app.route('/api/albumphotos', methods=['GET', 'POST'])
