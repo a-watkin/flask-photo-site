@@ -1,28 +1,39 @@
 from PIL import Image, ImageOps
+"""
+700x467
+500x334
+240x160
+75x75
+100x66
+500x334
+
+large_square
+150x150
+
+original
+700x467
+"""
 
 
-def preserve_ratio(filename):
-    # width that the image is resized to
-    basewidth = 700
-
-    img = Image.open('IMG_4032.JPG')
-
+def resize_photo(infile, outfile, base_size):
+    """
+    Preserves ratio
+    """
+    # i need some way to check for portraits and switch this
+    basewidth = base_size
+    img = Image.open(infile)
     wpercent = (basewidth/float(img.size[0]))
-
     hsize = int((float(img.size[1])*float(wpercent)))
-
     img = img.resize((basewidth, hsize), Image.ANTIALIAS)
+    img.save(outfile)
 
-    img.save('sompic3.jpg')
 
-
-def square_thumbnail(filename, size):
-    img = Image.open('IMG_4164.JPG')
-    # print(img.size)
-    # # width, height
-    # test = img.resize((300, 300), Image.ANTIALIAS)
-
-    # test.save('test2.jpg')
-    size = (300, 300)
+def square_thumbnail(infile, outfile, base_size):
+    img = Image.open(infile)
+    size = (base_size, base_size)
     thumb = ImageOps.fit(img, size, Image.ANTIALIAS)
-    thumb.save('test.jpg')
+    thumb.save(outfile)
+
+
+resize_photo('test_landscape.jpg', 'test_landscape_resized.jpg', 700)
+resize_photo('test_portrait.jpg', 'test_portrait_resized.jpg', 700)
