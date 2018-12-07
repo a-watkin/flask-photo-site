@@ -196,10 +196,22 @@ class Photos(object):
             c = connection.cursor()
             return [x for x in c.execute("SELECT * FROM photos ".format(table_name))]
 
+    def update_title(self, photo_id, new_title):
+        resp = self.db.make_query('''
+        update photo 
+        set photo_title = '{}'
+        where photo_id = '{}'
+        '''.format(new_title, photo_id)
+        )
+
+        # print(resp)
+
 
 if __name__ == "__main__":
     p = Photos()
     # print(p.get_photos_in_range())
     # print(p.db.db_name)
 
-    print(p.get_photo('44692597905'))
+    p.update_title('30081941117', 'tenticles title')
+
+    # print(p.get_photo('44692597905'))

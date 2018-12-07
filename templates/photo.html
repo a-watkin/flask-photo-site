@@ -2,8 +2,17 @@
 
 <div class="row text-center">
     <div class="col">
-        <h1 class="text-center">{{ json_data["title"] }}</h1>
+        <h1 class="text-center">{{ json_data["title"] }}
     </div>
+
+    <div class="col">
+        <a href="{{url_for('edit_photo', photo_id=json_data['photo_id'])}}">
+
+            <button class="btn btn-warning btn-lg">Edit this title</button></h1>
+
+        </a>
+    </div>
+
 </div>
 <!-- displays the photo -->
 <div id="photo-container" class="row align-items-center">

@@ -89,6 +89,22 @@ def delete_tag(tag_name):
             return render_template('deleted_tag.html', deleted_tag=deleted_tag), 200
 
 
+@app.route('/edit/photo<int:photo_id>', methods=['GET', 'POST'])
+def edit_photo(photo_id):
+
+    if request.method == 'GET':
+        photo_data = p.get_photo(photo_id)
+        return render_template('edit_photo.html', json_data=photo_data), 200
+    if request.method == 'POST':
+        # get the value from the form
+        new_title = request.form['new_photo_name']
+        print(new_title)
+        # update the name in the database
+        p.update_title(photo_id, new_title)
+        photo_data = p.get_photo(photo_id)
+        return render_template('edit_photo.html', json_data=photo_data), 200
+
+
 @app.route('/delete/album/<string:album_id>', methods=['GET', 'POST'])
 def delete_album(album_id):
     if request.method == 'GET':
