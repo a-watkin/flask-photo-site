@@ -154,7 +154,6 @@ def home():
 
 @app.route('/edit/photo<int:photo_id>', methods=['GET', 'POST'])
 def edit_photo(photo_id):
-
     if request.method == 'GET':
         photo_data = p.get_photo(photo_id)
         return render_template('edit_photo.html', json_data=photo_data), 200
@@ -166,6 +165,18 @@ def edit_photo(photo_id):
         p.update_title(photo_id, new_title)
         photo_data = p.get_photo(photo_id)
         return render_template('edit_photo.html', json_data=photo_data), 200
+
+
+@app.route('/delete/photo<int:photo_id>', methods=['GET', 'POST'])
+def delete_photo(photo_id):
+    if request.method == 'GET':
+        photo_data = p.get_photo(photo_id)
+        return render_template('delete_photo.html', json_data=photo_data), 200
+    if request.method == 'POST':
+        photo_data = p.get_photo(photo_id)
+        # delete the photo
+        p.delete_photo(photo_id)
+        return render_template('deleted_photo.html', json_data=photo_data), 200
 
 
 @app.route('/tags/<string:tag_name>')

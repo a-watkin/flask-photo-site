@@ -206,12 +206,23 @@ class Photos(object):
 
         # print(resp)
 
+    def delete_photo(self, photo_id):
+        resp = self.db.make_query(
+            '''
+        delete from photo where photo_id = '{}'
+        '''.format(photo_id)
+        )
+
+        print(resp)
+
 
 if __name__ == "__main__":
     p = Photos()
     # print(p.get_photos_in_range())
     # print(p.db.db_name)
 
-    p.update_title('30081941117', 'tenticles title')
+    # p.update_title('30081941117', 'tenticles title')
+
+    p.delete_photo('30081941117')
 
     # print(p.get_photo('44692597905'))
