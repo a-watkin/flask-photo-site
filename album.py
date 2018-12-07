@@ -59,8 +59,10 @@ class Album(object):
             print(album_data)
             return album_data[0]
 
-        else:
+        elif len(album_data) > 0:
             return album_data[0]
+        else:
+            return album_data
 
     def get_containing_album(self, photo_id):
         query_string = '''
