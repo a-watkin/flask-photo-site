@@ -1,5 +1,6 @@
 from PIL import Image, ImageOps
 """
+sizes that flickr used:
 700x467
 500x334
 240x160
@@ -7,6 +8,7 @@ from PIL import Image, ImageOps
 100x66
 500x334
 
+# actually useful
 large_square
 150x150
 
@@ -17,14 +19,27 @@ original
 
 def resize_photo(infile, outfile, base_size):
     """
-    Preserves ratio
+    Preserves ratio, working for 700x467 and 467x700
+
+    It does this by determining what percentage 300 pixels is of the original width
     """
     # i need some way to check for portraits and switch this
     basewidth = base_size
     img = Image.open(infile)
-    wpercent = (basewidth/float(img.size[0]))
-    hsize = int((float(img.size[1])*float(wpercent)))
-    img = img.resize((basewidth, hsize), Image.ANTIALIAS)
+
+    current_width = img.size[0]
+    current_height = img.size[1]
+
+    if current_height > current_width:
+        # what percentage is the new height of the old
+        height_percent = (float(img.size[1])/base_size)
+        width_size = round(float(img.size[0])/float(height_percent))
+        img = img.resize((width_size, basewidth), Image.ANTIALIAS)
+    else:
+        wpercent = (basewidth/float(img.size[0]))
+        hsize = round((float(img.size[1])*float(wpercent)))
+        img = img.resize((basewidth, hsize), Image.ANTIALIAS)
+
     img.save(outfile)
 
 
@@ -35,5 +50,8 @@ def square_thumbnail(infile, outfile, base_size):
     thumb.save(outfile)
 
 
-resize_photo('test_landscape.jpg', 'test_landscape_resized.jpg', 700)
-resize_photo('test_portrait.jpg', 'test_portrait_resized.jpg', 700)
+# resize_photo('test_landscape.jpg', 'test_landscape_resized.jpg', 700)
+# resize_photo('test_portrait.jpg', 'test_portrait_resized.jpg', 700)
+
+square_thumbnail('test_landscape.jpg', 'test_landscape_resized.jpg', 300)
+square_thumbnail('test_portrait.jpg', 'test_portrait_resized.jpg', 300)
