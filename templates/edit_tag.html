@@ -3,7 +3,13 @@
 
 <div class="row text-center">
     <div class="col">
-        <h1>Edit tag: {{tag_name}}</h1>
+        <h1>Edit tag:
+
+            <button type="button" class="btn btn-outline-success btn-lg">
+
+                {{tag_name}}
+
+            </button></h1>
     </div>
 </div>
 
@@ -24,28 +30,23 @@
                 </div>
             </div>
 
+            <hr>
             <div class="row">
-                <div class="col text-center">
-                    <button type="submit" class="btn btn-primary">Update tag</button>
-
+                <div class="col text-left">
+                    <button type="submit" class="btn btn-primary btn-lg">Update tag</button>
                 </div>
 
-
+                <div class="col text-right">
+                    <a href="/edit/tags">
+                        <button type="button" class="btn btn-success btn-lg">Go back to tags page</button>
+                    </a>
+                </div>
 
             </div>
 
         </form>
 
     </div>
-</div>
-<hr>
-<div class="row">
-    <div class="col">
-        <a href="/edit/tags">
-            <button class="btn btn-success"">Go back to tags page</button>
-        </a>
-    </div>
-    
 </div>
 
 {% endblock %}
