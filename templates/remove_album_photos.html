@@ -16,7 +16,11 @@
             <div class="card" style="width: 18rem;">
                 <div class="card-body">
                     <h5 class="card-title text-center">{{json_data['album_data']['title']}}</h5>
-                    <img class="card-img-top" src="{{json_data['album_data']['large_square']}}" alt="{{ json_data['title'] }} album">
+                    <img class="card-img-top" src={% if json_data['album_data']['large_square'] %}
+                        {{
+                        json_data['album_data']['large_square']
+                    }} {%
+                        else %} '/static/images/logo.jpg' {% endif %} alt="{{ json_data['title'] }} album">
                     <p class="card-text">{{json_data['album_data']['description']}}</p>
                     <div class="row">
                         <div class="col">
@@ -38,6 +42,9 @@
 </div>
 <hr>
 
+{% if json_data['album_data']['photos'] > 0 %}
+
+
 <!-- entry point for React components to select photos to add to the album -->
 <div id="photos-selector"></div>
 
@@ -48,5 +55,33 @@
 <script src="https://unpkg.com/react@16/umd/react.development.js" crossorigin></script>
 <script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js" crossorigin></script>
 <script type="text/babel" src="{{ url_for('static', filename='scripts/remove_album_photos.js') }}"></script>
+
+
+{% else %}
+
+<div class="row text-center">
+    <div class="col">
+        <div class="alert alert-warning" role="alert">
+            There are no photos to remove.
+        </div>
+    </div>
+</div>
+
+<hr>
+
+<div class="row text-center">
+
+    <div class="col">
+
+        <a href="{{url_for('edit_albums')}}">
+            <button type="button" class="btn btn-success">Return to edit albums</button>
+        </a>
+
+    </div>
+</div>
+
+
+{% endif %}
+
 
 {% endblock %}
