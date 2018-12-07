@@ -9,7 +9,7 @@
 <div id="photo-container" class="row align-items-center">
 
     <!-- Next -->
-    <div class="col-1">
+    <div class="col-1 text-center nav-arrows">
         <a href="http://127.0.0.1:5000/api/photos/{{ json_data['next'] }}"><i class="fas fa-angle-left fa-3x"></i></a>
     </div>
 
@@ -18,7 +18,7 @@
     </div>
 
     <!-- Previous -->
-    <div class="col-1">
+    <div class="col-1 text-center nav-arrows">
         <a href="http://127.0.0.1:5000/api/photos/{{ json_data['previous'] }}"><i class="fas fa-angle-right fa-3x"></i></a>
     </div>
 </div>
@@ -26,11 +26,6 @@
 <div id="photo-info" class="row">
     <div class="col-5">
         <h2>Tags</h2>
-        <a href="{{ url_for( 'add_tag', photo_id = json_data['photo_id'] ) }}">
-            <button class="btn btn-warning btn-lg">
-                Add a tag
-            </button>
-        </a>
         {% for tag in json_data['tags'] %}
         <a href="/tags/{{tag['tag_name']}}">
             <button type="button" class="btn btn-outline-success btn-lg">
@@ -38,6 +33,20 @@
             </button>
         </a>
         {% endfor %}
+
+        <hr>
+        <div class="row">
+
+            <div class="col">
+
+                <a href="{{ url_for( 'add_tag', photo_id = json_data['photo_id'] ) }}">
+                    <button class="btn btn-warning btn-lg">
+                        Add a tag
+                    </button>
+                </a>
+
+            </div>
+        </div>
     </div>
 
     <div class="col-2">

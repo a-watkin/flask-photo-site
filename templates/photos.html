@@ -4,10 +4,19 @@
 <hr>
 <div class="row text-center">
     <div class="col">
-        <a href="/api/photos?offset={{ json_data.offset - 20 }}">Previous page</a>
+        <a href="/api/photos?offset={{ json_data.offset - 20 }}">
+
+            <button type="button" class="btn btn-secondary btn-lg">Previous page</button>
+
+        </a>
     </div>
     <div class="col">
-        <a href="/api/photos?offset={{ json_data.offset + 20 }}">Next page</a>
+        <a href="/api/photos?offset={{ json_data.offset + 20 }}">
+
+            <button type="button" class="btn btn-secondary btn-lg">Next page
+
+            </button>
+        </a>
     </div>
 </div>
 <hr>
