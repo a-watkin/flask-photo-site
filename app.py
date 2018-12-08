@@ -1,16 +1,25 @@
 import json
+import os
+import datetime
 
 from flask import Flask, render_template, request, session, flash, redirect, url_for, g, jsonify
 from flask import json
-from wtforms import Form, BooleanField, StringField, PasswordField, validators
+from werkzeug.utils import secure_filename
+# from wtforms import Form, BooleanField, StringField, PasswordField, validators
+
+# my modules
 from database_interface import Database
 from photo import Photos
 from album import Album
 from tag import Tag
 
 
+UPLOAD_FOLDER = os.getcwd() + '/static/images'
+ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg', 'gif'])
+
 app = Flask('app')
 app = Flask(__name__.split('.')[0])
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 # some change with flask?
 # for some reason it accepts secret_key but nothing else
@@ -38,6 +47,73 @@ $ flask run
 lsof -w -n -i tcp:5000
 kill -9 processId
 """
+
+
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+
+@app.route('/', methods=['GET', 'POST'])
+def upload_file():
+    if request.method == 'POST':
+        print()
+        print('\n what', len(request.files), request.files)
+        print('\n', request.files.values())
+        # <FileStorage: 'test_portrait_resized.jpg' ('image/jpeg')>
+        print()
+
+        # print(request.files['file']['Filestorage'])
+
+        print(type(request.files))
+        print(dir(request.files))
+        files = request.files.getlist('file')
+
+        if len(files) > 1:
+            print('MULTIPLE FILES')
+            return 'MULTIPLE FILES'
+
+        # for file in wtf:
+        #     print(x.filename)
+        #     x.save(os.path.join(app.config['UPLOAD_FOLDER'], x.filename))
+
+        # print(file)
+
+        # check if the post request has the file part
+        if 'file' not in request.files:
+            flash('No file part')
+            return redirect(request.url)
+
+        # THIS DOESN'T WORK
+        # NameError: name 'file' is not defined
+        # if user does not select file, browser also
+        # submit an empty part without filename
+        # if file.filename == '':
+        #     flash('No selected file')
+        #     return redirect(request.url)
+
+        # if len(request.files) > 1:
+        #     print('eh')
+        #     return 'so this does not work'
+
+        # if file and allowed_file(file.filename):
+
+        #     print('hello from upload files\n', file)
+        #     filename = secure_filename(file.filename)
+        #     file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+        #     return redirect(url_for('upload_file',
+        #                             filename=filename))
+    # return '''
+    # <!doctype html>
+    # <title>Upload new File</title>
+    # <h1>Upload new File</h1>
+    # <form method=post enctype=multipart/form-data>
+    #   <input type=file name=file multiple>
+    #   <input type=submit value=Upload>
+    # </form>
+    # '''
+
+    return render_template('upload.html'), 200
 
 
 @app.route('/api/photos/')
