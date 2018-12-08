@@ -86,14 +86,12 @@ def upload_file():
                     # Get all files in the directory
                     file_in_dir = os.listdir(save_directory)
                     if file.filename in file_in_dir:
-
-                        epoch = datetime.datetime.utcfromtimestamp(0)
-                        temp = file.filename.split('.')
+                        temp = filename.split('.')
                         identifier = str(uuid.uuid1()).split('-')[0]
-                        print(file_in_dir)
-                        print(created)
-                        print(temp[0] + '_' + identifier)
-                    # if file.filename in
+
+                        temp[0] = temp[0] + "_" + identifier
+
+                        file.filename = '.'.join(temp)
 
                     # save the file
                     file.save(os.path.join(
@@ -102,10 +100,7 @@ def upload_file():
                     flash('Incorrect file type.')
                     return redirect(request.url)
 
-            # load page to do stuff with these images
-            # how to store them?
-            # I need the path to the file and the date created
-            # return 'MULTIPLE FILES'
+            # write to temp table, return page where things can be editied
             return redirect(url_for('upload_file',
                                     filename=filename))
 
