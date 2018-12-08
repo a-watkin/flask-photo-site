@@ -57,62 +57,47 @@ def allowed_file(filename):
 @app.route('/', methods=['GET', 'POST'])
 def upload_file():
     if request.method == 'POST':
-        print()
-        print('\n what', len(request.files), request.files)
-        print('\n', request.files.values())
-        # <FileStorage: 'test_portrait_resized.jpg' ('image/jpeg')>
-        print()
-
-        # print(request.files['file']['Filestorage'])
-
-        print(type(request.files))
-        print(dir(request.files))
         files = request.files.getlist('file')
 
-        if len(files) > 1:
-            print('MULTIPLE FILES')
-            return 'MULTIPLE FILES'
-
-        # for file in wtf:
-        #     print(x.filename)
-        #     x.save(os.path.join(app.config['UPLOAD_FOLDER'], x.filename))
-
-        # print(file)
-
-        # check if the post request has the file part
+        # No files selected
         if 'file' not in request.files:
             flash('No file selected')
             return redirect(request.url)
 
-        # THIS DOESN'T WORK
-        # NameError: name 'file' is not defined
-        # if user does not select file, browser also
-        # submit an empty part without filename
-        # if file.filename == '':
-        #     flash('No selected file')
-        #     return redirect(request.url)
+        # Single or multiple files selected
+        elif len(files) >= 1:
+            created = datetime.datetime.now()
+            print('MULTIPLE FILES')
+            for file in files:
+                print(file.filename)
+                if allowed_file(file.filename):
+                    print(file.filename)
+                    filename = secure_filename(file.filename)
 
-        # if len(request.files) > 1:
-        #     print('eh')
-        #     return 'so this does not work'
+                    # where the file will be saved
+                    save_directory = UPLOAD_FOLDER + \
+                        '/{}/{}'.format(created.year, created.month)
+                    # check if directory exists if not create it
+                    if not os.path.exists(save_directory):
+                        os.makedirs(save_directory)
 
-        # if file and allowed_file(file.filename):
+                    file_in_dir = os.listdir(save_directory)
 
-        #     print('hello from upload files\n', file)
-        #     filename = secure_filename(file.filename)
-        #     file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-        #     return redirect(url_for('upload_file',
-        #                             filename=filename))
-    # return '''
-    # <!doctype html>
-    # <title>Upload new File</title>
-    # <h1>Upload new File</h1>
-    # <form method=post enctype=multipart/form-data>
-    #   <input type=file name=file multiple>
-    #   <input type=submit value=Upload>
-    # </form>
-    # '''
+                    # save the file
+                    file.save(os.path.join(
+                        save_directory, file.filename))
+                else:
+                    flash('Incorrect file type.')
+                    return redirect(request.url)
 
+            # load page to do stuff with these images
+            # how to store them?
+            # I need the path to the file and the date created
+            # return 'MULTIPLE FILES'
+            return redirect(url_for('upload_file',
+                                    filename=filename))
+
+    # Get request and initial loading of the upload page
     return render_template('upload.html'), 200
 
 
