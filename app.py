@@ -1,6 +1,7 @@
 import json
 import os
 import datetime
+import uuid
 
 from flask import Flask, render_template, request, session, flash, redirect, url_for, g, jsonify
 from flask import json
@@ -69,9 +70,10 @@ def upload_file():
             created = datetime.datetime.now()
             print('MULTIPLE FILES')
             for file in files:
-                print(file.filename)
                 if allowed_file(file.filename):
+                    print()
                     print(file.filename)
+                    print()
                     filename = secure_filename(file.filename)
 
                     # where the file will be saved
@@ -81,7 +83,17 @@ def upload_file():
                     if not os.path.exists(save_directory):
                         os.makedirs(save_directory)
 
+                    # Get all files in the directory
                     file_in_dir = os.listdir(save_directory)
+                    if file.filename in file_in_dir:
+
+                        epoch = datetime.datetime.utcfromtimestamp(0)
+                        temp = file.filename.split('.')
+                        identifier = str(uuid.uuid1()).split('-')[0]
+                        print(file_in_dir)
+                        print(created)
+                        print(temp[0] + '_' + identifier)
+                    # if file.filename in
 
                     # save the file
                     file.save(os.path.join(
