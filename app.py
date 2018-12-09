@@ -135,16 +135,15 @@ def upload_file():
                     )
                     print()
 
-                    UploadedPhotos.save_photo(
-                        photo_id, created, original_path, large_square_path)
-
-                    # save to database
-                    # UploadedPhotos.save_photo(
-                    #     identifier,
-                    #     created,
-                    #     original_path,
-                    #     large_square_path
-                    # )
+                    # getting a missing arg error
+                    # it expects 4 args and i'm passing 4
+                    # was using the class name instead of the instance name...:(
+                    up.save_photo(
+                        photo_id,
+                        str(created),
+                        original_path,
+                        large_square_path
+                    )
 
                 else:
                     flash('Incorrect file type.')
@@ -155,8 +154,8 @@ def upload_file():
             #                         filename=filename))
 
             # Return all the data about the uloaded photos
-
-            return render_template('uploaded_photos.html', ), 200
+            json_data = up.get_uploaded_photos()
+            return render_template('uploaded_photos.html', json_data=json_data), 200
 
     # Get request and initial loading of the upload page
     return render_template('upload.html'), 200

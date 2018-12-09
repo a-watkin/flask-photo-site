@@ -1,3 +1,5 @@
+import sqlite3
+
 from database_interface import Database
 
 
@@ -15,7 +17,6 @@ class UploadedPhotos(object):
         self.user_id = '28035310@N00'
 
     def save_photo(self, photo_id, date_uploaded, original, large_square):
-        print(10 * '\n', photo_id, date_uploaded, original, large_square)
         print(photo_id, self.user_id)
         # write to the uploaded_photo table
         query_string = '''
@@ -94,7 +95,7 @@ class UploadedPhotos(object):
 
         return rtn_dict
 
-    def get_uploaded_photos(self, photo_id):
+    def get_uploaded_photos(self):
         # photo_id
         # from image the original size
         q_data = None
@@ -108,11 +109,22 @@ class UploadedPhotos(object):
                 select * from upload_photo
                 join photo on(photo.photo_id=upload_photo.photo_id)
                 join images on(images.photo_id=upload_photo.photo_id)
-                where upload_photo.photo_id={}
                 '''
-            ).format(photo_id)
+            )
 
             q_data = c.execute(query_string)
+
+        data = [dict(ix) for ix in q_data]
+
+        a_dict = {}
+        count = 0
+        for d in data:
+            a_dict[count] = d
+            count += 1
+
+        rtn_dict = {'photos': a_dict}
+
+        return rtn_dict
 
 
 def main():
@@ -123,9 +135,11 @@ def main():
     #     '2018-12-09 03:52:57.905416',
     #     '/home/a/projects/flask-photo-site/static/images/2018/12/test_portrait_resized.jpg')
 
-    up.save_photo(
-        2429676854, '2018-12-09 21:16:43.708922', '/2018/12/test_landscape_ba5f22cc.jpg', '/2018/12/test_landscape_ba5f22cc_lg_sqaure.jpg'
-    )
+    # up.save_photo(
+    #     2429676854, '2018-12-09 21:16:43.708922', '/2018/12/test_landscape_ba5f22cc.jpg', '/2018/12/test_landscape_ba5f22cc_lg_sqaure.jpg'
+    # )
+
+    print(up.get_uploaded_photos())
 
 
 if __name__ == "__main__":
