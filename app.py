@@ -100,6 +100,7 @@ def upload_file():
                     # save path to the photo
                     file_path = save_directory + '/' + filename
                     photo_id = str(int(uuid.uuid4()))[0:10]
+                    print(file_path)
 
                 else:
                     flash('Incorrect file type.')

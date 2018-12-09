@@ -17,3 +17,6 @@ print(future_directory)
 
 if not os.path.exists(future_directory):
     os.makedirs(future_directory)
+
+
+print(created)
