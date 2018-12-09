@@ -59,8 +59,13 @@ def read_exif(infile):
     print(dir(img))
     print(img._getexif())
 
+    rtn_dict = {}
+
     for (k, v) in img._getexif().items():
         print('%s = %s' % (TAGS.get(k), v))
+        rtn_dict[TAGS.get(k)] = v
+
+    print(rtn_dict)
 
 # resize_photo('test_landscape.jpg', 'test_landscape_resized.jpg', 700)
 # resize_photo('test_portrait.jpg', 'test_portrait_resized.jpg', 700)
@@ -70,3 +75,18 @@ def read_exif(infile):
 
 
 read_exif('test_portrait.jpg')
+
+
+def test_exifread(fn):
+    import exifread
+    print('\n<< Test of exifread >>\n')
+
+    with open(fn, 'rb') as f:
+        exif = exifread.process_file(f)
+
+    for k in sorted(exif.keys()):
+        if k not in ['JPEGThumbnail', 'TIFFThumbnail', 'Filename', 'EXIF MakerNote']:
+            print('%s = %s' % (k, exif[k]))
+
+
+test_exifread('test_portrait.jpg')

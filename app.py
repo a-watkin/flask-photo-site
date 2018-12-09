@@ -86,6 +86,9 @@ def upload_file():
 
                     # Get all files in the directory
                     file_in_dir = os.listdir(save_directory)
+                    # this guards against multiple files having the same name
+                    # a problem here is that it also allows the same file to be uploaded
+                    # multiple times
                     if file.filename in file_in_dir:
                         temp = filename.split('.')
                         identifier = str(uuid.uuid1()).split('-')[0]
@@ -107,6 +110,7 @@ def upload_file():
                     thumbnail_name = filename.split('.')
                     thumbnail_name[0] = thumbnail_name[0] + '_lg_sqaure'
 
+                    # construct path to save thumbnail to
                     save_path = save_directory + '/'
                     print('.'.join(
                         thumbnail_name))
@@ -121,6 +125,9 @@ def upload_file():
             # write to temp table, return page where things can be editied
             # return redirect(url_for('upload_file',
             #                         filename=filename))
+
+            # Return all the data about the uloaded photos
+
             return render_template('uploaded_photos.html', ), 200
 
     # Get request and initial loading of the upload page
