@@ -42,6 +42,11 @@ class UploadedPhotos(object):
             '''.format(int(photo_id), original)
         )
 
+    def get_uploaded_photos(self):
+        # photo_id
+        # from image the original size
+        pass
+
 
 def main():
     up = UploadedPhotos()

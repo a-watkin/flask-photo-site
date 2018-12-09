@@ -107,8 +107,9 @@ def upload_file():
                     return redirect(request.url)
 
             # write to temp table, return page where things can be editied
-            return redirect(url_for('upload_file',
-                                    filename=filename))
+            # return redirect(url_for('upload_file',
+            #                         filename=filename))
+            return render_template('uploaded_photos.html', ), 200
 
     # Get request and initial loading of the upload page
     return render_template('upload.html'), 200
