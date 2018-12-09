@@ -1,3 +1,4 @@
+import os
 import sqlite3
 
 from database_interface import Database
@@ -116,11 +117,14 @@ class UploadedPhotos(object):
 
         data = [dict(ix) for ix in q_data]
 
+        cur_dir = os.getcwd()
+
         a_dict = {}
         count = 0
         for d in data:
             a_dict[count] = d
             count += 1
+            d['original'] = cur_dir + d['original']
 
         rtn_dict = {'photos': a_dict}
 
