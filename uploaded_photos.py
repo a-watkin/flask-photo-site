@@ -15,6 +15,7 @@ class UploadedPhotos(object):
         self.user_id = '28035310@N00'
 
     def save_photo(self, photo_id, date_uploaded, original, large_square):
+        print(10 * '\n', photo_id, date_uploaded, original, large_square)
         print(photo_id, self.user_id)
         # write to the uploaded_photo table
         query_string = '''
@@ -121,6 +122,10 @@ def main():
     #     '0001',
     #     '2018-12-09 03:52:57.905416',
     #     '/home/a/projects/flask-photo-site/static/images/2018/12/test_portrait_resized.jpg')
+
+    up.save_photo(
+        2429676854, '2018-12-09 21:16:43.708922', '/2018/12/test_landscape_ba5f22cc.jpg', '/2018/12/test_landscape_ba5f22cc_lg_sqaure.jpg'
+    )
 
 
 if __name__ == "__main__":

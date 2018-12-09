@@ -126,9 +126,24 @@ def upload_file():
                     print('\n TEST OF PATHS', original_path,
                           large_square_path, '\nTEST OF PATHS')
 
+                    print()
+                    print(
+                        photo_id,
+                        str(created),
+                        original_path,
+                        large_square_path
+                    )
+                    print()
+
+                    UploadedPhotos.save_photo(
+                        photo_id, created, original_path, large_square_path)
+
                     # save to database
                     # UploadedPhotos.save_photo(
-                    #     identifier, created, images_path,
+                    #     identifier,
+                    #     created,
+                    #     original_path,
+                    #     large_square_path
                     # )
 
                 else:
