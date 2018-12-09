@@ -13,6 +13,7 @@ from database_interface import Database
 from photo import Photos
 from album import Album
 from tag import Tag
+from resize_photo import square_thumbnail
 
 
 UPLOAD_FOLDER = os.getcwd() + '/static/images'
@@ -101,6 +102,17 @@ def upload_file():
                     file_path = save_directory + '/' + filename
                     photo_id = str(int(uuid.uuid4()))[0:10]
                     print(file_path)
+
+                    # save a thumbnail of the photo
+                    thumbnail_name = filename.split('.')
+                    thumbnail_name[0] = thumbnail_name[0] + '_lg_sqaure'
+
+                    save_path = save_directory + '/'
+                    print('.'.join(
+                        thumbnail_name))
+                    print(save_path)
+                    square_thumbnail(filename, '.'.join(
+                        thumbnail_name), save_path)
 
                 else:
                     flash('Incorrect file type.')

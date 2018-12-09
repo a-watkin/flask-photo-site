@@ -45,13 +45,13 @@ def resize_photo(infile, outfile, base_size):
     img.save(outfile)
 
 
-def square_thumbnail(infile, outfile, base_size):
+def square_thumbnail(infile, outfile, save_path, base_size=150):
+    print(save_path)
     img = Image.open(infile)
     size = (base_size, base_size)
     thumb = ImageOps.fit(img, size, Image.ANTIALIAS)
     # save current dir
     start_path = os.getcwd()
-    save_path = '/home/a/projects/flask-photo-site/static/images/'
     os.chdir(save_path)
     thumb.save(outfile)
     # back to the start path
@@ -63,4 +63,6 @@ def square_thumbnail(infile, outfile, base_size):
 # resize_photo('test_portrait.jpg', 'test_portrait_resized.jpg', 700)
 
 # square_thumbnail('test_landscape.jpg', 'test_landscape_resized.jpg', 150)
-square_thumbnail('test_portrait.jpg', 'test_portrait_resized.jpg', 300)
+square_thumbnail('test_portrait.jpg', 'test_portrait_resized.jpg',
+                 '/home/a/projects/flask-photo-site/static/images/2018/12/',
+                 300)

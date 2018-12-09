@@ -103,10 +103,12 @@ class UploadedPhotos(object):
             c.row_factory = sqlite3.Row
 
             query_string = (
-                '''select photo_id, views, photo_title, date_uploaded, date_taken, images.original, images.large_square from photo
+                '''
+                select photo_id, views, photo_title, date_uploaded, date_taken, images.original, images.large_square from photo
                 join images using(photo_id)
                 order by date_uploaded
-                desc limit {} offset {}'''
+                desc limit {} offset {}
+                '''
             ).format(limit, offset)
 
             q_data = c.execute(query_string)
