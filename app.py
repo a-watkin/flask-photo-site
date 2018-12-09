@@ -93,9 +93,14 @@ def upload_file():
 
                         file.filename = '.'.join(temp)
 
-                    # save the file
+                    # save the file path
                     file.save(os.path.join(
                         save_directory, file.filename))
+
+                    # save path to the photo
+                    file_path = save_directory + '/' + filename
+                    photo_id = str(int(uuid.uuid4()))[0:10]
+
                 else:
                     flash('Incorrect file type.')
                     return redirect(request.url)
