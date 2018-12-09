@@ -59,11 +59,8 @@ def read_exif(infile):
     print(dir(img))
     print(img._getexif())
 
-    exif = {
-        PIL.ExifTags.TAGS[k]: v
-        for k, v in img._getexif().items()
-        if k in PIL.ExifTags.TAGS
-    }
+    for (k, v) in img._getexif().items():
+        print('%s = %s' % (TAGS.get(k), v))
 
 # resize_photo('test_landscape.jpg', 'test_landscape_resized.jpg', 700)
 # resize_photo('test_portrait.jpg', 'test_portrait_resized.jpg', 700)
