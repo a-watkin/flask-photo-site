@@ -14,7 +14,7 @@ class UploadedPhotos(object):
         self.db = Database('eigi-data.db')
         self.user_id = '28035310@N00'
 
-    def save_photo(self, photo_id, date_uploaded, original):
+    def save_photo(self, photo_id, date_uploaded, original, large_square):
         print(photo_id, self.user_id)
         # write to the uploaded_photo table
         query_string = '''
@@ -37,9 +37,9 @@ class UploadedPhotos(object):
         # write to images
         self.db.make_query(
             '''
-            insert into images(photo_id, original)
-            values({},'{}')
-            '''.format(int(photo_id), original)
+            insert into images(photo_id, original, large_square)
+            values({},'{}','{}')
+            '''.format(int(photo_id), original, large_square)
         )
 
         # should probably get and store exif data
@@ -93,7 +93,7 @@ class UploadedPhotos(object):
 
         return rtn_dict
 
-    def get_uploaded_photos(self):
+    def get_uploaded_photos(self, photo_id):
         # photo_id
         # from image the original size
         q_data = None
@@ -104,12 +104,12 @@ class UploadedPhotos(object):
 
             query_string = (
                 '''
-                select photo_id, views, photo_title, date_uploaded, date_taken, images.original, images.large_square from photo
-                join images using(photo_id)
-                order by date_uploaded
-                desc limit {} offset {}
+                select * from upload_photo
+                join photo on(photo.photo_id=upload_photo.photo_id)
+                join images on(images.photo_id=upload_photo.photo_id)
+                where upload_photo.photo_id={}
                 '''
-            ).format(limit, offset)
+            ).format(photo_id)
 
             q_data = c.execute(query_string)
 
@@ -117,10 +117,10 @@ class UploadedPhotos(object):
 def main():
     up = UploadedPhotos()
     # up.save_photo('1234', '2018-12-09 03:52:57.905416')
-    up.save_photo(
-        '0001',
-        '2018-12-09 03:52:57.905416',
-        '/home/a/projects/flask-photo-site/static/images/2018/12/test_portrait_resized.jpg')
+    # up.save_photo(
+    #     '0001',
+    #     '2018-12-09 03:52:57.905416',
+    #     '/home/a/projects/flask-photo-site/static/images/2018/12/test_portrait_resized.jpg')
 
 
 if __name__ == "__main__":

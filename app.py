@@ -13,6 +13,7 @@ from database_interface import Database
 from photo import Photos
 from album import Album
 from tag import Tag
+from uploaded_photos import UploadedPhotos
 from resize_photo import square_thumbnail
 
 
@@ -35,6 +36,7 @@ db = Database('eigi-data.db')
 p = Photos()
 a = Album()
 t = Tag()
+up = UploadedPhotos()
 
 # tags = db.get_all_tags()
 
@@ -89,15 +91,15 @@ def upload_file():
                     # this guards against multiple files having the same name
                     # a problem here is that it also allows the same file to be uploaded
                     # multiple times
+                    identifier = str(uuid.uuid1()).split('-')[0]
                     if file.filename in file_in_dir:
                         temp = filename.split('.')
-                        identifier = str(uuid.uuid1()).split('-')[0]
 
                         temp[0] = temp[0] + "_" + identifier
 
                         file.filename = '.'.join(temp)
 
-                    # save the file path
+                    # save the file in the path
                     file.save(os.path.join(
                         save_directory, file.filename))
 
@@ -106,17 +108,29 @@ def upload_file():
                     photo_id = str(int(uuid.uuid4()))[0:10]
                     print(file_path)
 
-                    # save a thumbnail of the photo
+                    # add idenfitying name to file
                     thumbnail_name = filename.split('.')
                     thumbnail_name[0] = thumbnail_name[0] + '_lg_sqaure'
 
-                    # construct path to save thumbnail to
+                    thumbnail_filename = '.'.join(thumbnail_name)
+
+                    # construct path to save thumbnail file to
                     save_path = save_directory + '/'
-                    print('.'.join(
-                        thumbnail_name))
-                    print(save_path)
-                    square_thumbnail(filename, '.'.join(
-                        thumbnail_name), save_path)
+                    square_thumbnail(filename, thumbnail_filename, save_path)
+
+                    # path for the database
+                    original_path = '/{}/{}/{}'.format(
+                        created.year, created.month, file.filename)
+                    large_square_path = '/{}/{}/{}'.format(
+                        created.year, created.month, thumbnail_filename)
+
+                    print('\n TEST OF PATHS', original_path,
+                          large_square_path, '\nTEST OF PATHS')
+
+                    # save to database
+                    # UploadedPhotos.save_photo(
+                    #     identifier, created, images_path,
+                    # )
 
                 else:
                     flash('Incorrect file type.')
