@@ -74,34 +74,29 @@ def upload_file():
             print('MULTIPLE FILES')
             for file in files:
                 if allowed_file(file.filename):
-                    print()
-                    print(file.filename)
-                    print()
                     filename = secure_filename(file.filename)
-
                     # where the file will be saved
                     save_directory = UPLOAD_FOLDER + \
                         '/{}/{}'.format(created.year, created.month)
                     # check if directory exists if not create it
                     if not os.path.exists(save_directory):
                         os.makedirs(save_directory)
-
-                    # Get all files in the directory
+                    # Get all files in the save_directory
                     file_in_dir = os.listdir(save_directory)
                     # this guards against multiple files having the same name
                     # a problem here is that it also allows the same file to be uploaded
                     # multiple times
                     identifier = str(uuid.uuid1()).split('-')[0]
-                    if file.filename in file_in_dir:
+                    if filename in file_in_dir:
                         temp = filename.split('.')
 
                         temp[0] = temp[0] + "_" + identifier
 
-                        file.filename = '.'.join(temp)
+                        filename = '.'.join(temp)
 
                     # save the file in the path
                     file.save(os.path.join(
-                        save_directory, file.filename))
+                        save_directory, filename))
 
                     # save path to the photo
                     file_path = save_directory + '/' + filename
@@ -116,11 +111,15 @@ def upload_file():
 
                     # construct path to save thumbnail file to
                     save_path = save_directory + '/'
+                    print(os.listdir(save_path), filename,
+                          filename in os.listdir(save_path), '\n',
+                          save_path)
+
                     square_thumbnail(filename, thumbnail_filename, save_path)
 
                     # path for the database
                     original_path = '/{}/{}/{}'.format(
-                        created.year, created.month, file.filename)
+                        created.year, created.month, filename)
                     large_square_path = '/{}/{}/{}'.format(
                         created.year, created.month, thumbnail_filename)
 
