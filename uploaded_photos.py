@@ -153,7 +153,24 @@ class UploadedPhotos(object):
                 photos_on_disk.append(current_path + image)
                 # print(image)
 
-        print(photos_on_disk)
+        # get just the filenames?
+        # print(photos_on_disk)
+
+        split the path to the file
+        split_path = photos_on_disk[0].split('/')
+        path_without_file = split_path[0:len(split_path) - 1]
+        print(path_without_file)
+        containing_dir = '/'.join(path_without_file)
+        print(containing_dir)
+
+        # print(os.listdir(containing_dir))
+
+        for photo in photos_on_disk:
+            os.remove(photo)
+
+        # os.chdir(current_path + '/static/images')
+
+        # switch to the path where the images are stored
 
         # remove photo from table photo
 
