@@ -131,9 +131,44 @@ class UploadedPhotos(object):
 
         return rtn_dict
 
+    def discard_photo(self, photo_id):
+        # delete the files from the disk, you need to know the path to do this
+        # which you should get from images
+        images_data = self.db.make_query(
+            '''
+            select * from images where photo_id = {}
+            '''.format(photo_id)
+        )
+
+        print(images_data[0][0:len(images_data[0]) - 1])
+
+        current_path = os.getcwd()
+
+        photos_on_disk = []
+        # the last returned element is the photo_id so to avoid that
+        # I took the slice of everything up to that
+        for image in images_data[0][0:len(images_data[0]) - 1]:
+            if image is not None:
+                print(image)
+                photos_on_disk.append(current_path + image)
+                # print(image)
+
+        print(photos_on_disk)
+
+        # remove photo from table photo
+
+        # images should cascade delete, but check
+
+        # remove from upload_photo table
+
+        # remove from tags?
+
 
 def main():
     up = UploadedPhotos()
+
+    up.discard_photo(1326226897)
+
     # up.save_photo('1234', '2018-12-09 03:52:57.905416')
     # up.save_photo(
     #     '0001',
@@ -144,7 +179,7 @@ def main():
     #     2429676854, '2018-12-09 21:16:43.708922', '/2018/12/test_landscape_ba5f22cc.jpg', '/2018/12/test_landscape_ba5f22cc_lg_sqaure.jpg'
     # )
 
-    print(up.get_uploaded_photos())
+    # print(up.get_uploaded_photos())
 
 
 if __name__ == "__main__":
