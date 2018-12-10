@@ -85,7 +85,8 @@ class PhotosData extends React.Component {
                 />
               </div>
               <div className="col text-center">
-                <h5>Where title will go</h5>
+                <h5>Enter a title</h5>
+                <input type="text" value={photos[key]["title"]} />
                 <h6>{photos[key]["photo_id"]}</h6>
               </div>
             </div>
