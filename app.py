@@ -154,11 +154,17 @@ def upload_file():
             #                         filename=filename))
 
             # Return all the data about the uloaded photos
-            json_data = up.get_uploaded_photos()
-            return render_template('uploaded_photos.html', json_data=json_data), 200
+            # json_data = up.get_uploaded_photos()
+            return render_template('uploaded_photos.html'), 200
 
     # Get request and initial loading of the upload page
     return render_template('upload.html'), 200
+
+
+@app.route('/api/uploaded/')
+def get_uploaded_photos():
+    json_data = up.get_uploaded_photos()
+    return jsonify(json_data)
 
 
 @app.route('/api/photos/')
