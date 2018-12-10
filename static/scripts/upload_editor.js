@@ -14,6 +14,7 @@ class PhotosData extends React.Component {
     };
 
     // this.photoClick = this.photoClick.bind(this);
+    this.DiscardPhoto = this.DiscardPhoto.bind(this);
   }
 
   componentWillMount() {
@@ -65,18 +66,24 @@ class PhotosData extends React.Component {
     });
   }
 
+  DiscardPhoto(photo_id) {
+    console.log("clicked discard", photo_id);
+  }
+
   render() {
     let photo = null;
+    let DiscardPhoto = this.DiscardPhoto;
+
     if (this.state.items) {
       let photos = this.state.items;
       console.log(photos);
       let photo = Object.keys(photos).map(function(key, index) {
         let photo_url = photos[key]["original"];
+        let photo_id = photos[key]["photo_id"];
         console.log(photo_url);
         return (
-          <div>
-            <hr />
-            <div key={photos[key]["photo_id"]} className="row">
+          <div key={photos[key]["photo_id"]}>
+            <div className="row">
               <div className="col">
                 <img
                   src={photos[key]["original"]}
@@ -84,19 +91,53 @@ class PhotosData extends React.Component {
                   className="img-fluid"
                 />
               </div>
-              <div className="col text-center">
+              <div className="col text-center my-auto">
                 <h5>Enter a title</h5>
-                <input type="text" value={photos[key]["title"]} />
+                <input
+                  className="input-group input-group-text"
+                  type="text"
+                  value={photos[key]["title"]}
+                />
                 <h6>{photos[key]["photo_id"]}</h6>
+                <hr />
+                <h5>Enter tags below</h5>
+                <p>
+                  You can enter multiple tags seperating them with commas. Tags
+                  may contain spaces.
+                </p>
+                <input className="input-group input-group-text" type="text" />
+                <hr />
+                <button
+                  className="btn btn-danger btn-lg"
+                  onClick={() => DiscardPhoto(photo_id)}
+                >
+                  Discard photo
+                </button>
               </div>
             </div>
+            <hr />
           </div>
         );
       });
 
       return (
         <div>
-          <h1> Hi form other React </h1> {photo}
+          {photo}
+
+          <div className="row">
+            <div className="col text-left">
+              <button className="btn btn-warning btn-lg">
+                Add to a new album
+              </button>
+            </div>
+
+            <div className="col text-right">
+              <button className="btn btn-success btn-lg">
+                Add to existing album
+              </button>
+            </div>
+          </div>
+          <hr />
         </div>
       );
     }
