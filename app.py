@@ -162,6 +162,13 @@ def upload_file():
     return render_template('upload.html'), 200
 
 
+@app.route('/api/discard', methods=['GET', 'POST'])
+def discard_photo():
+    photo_id = request.get_json()
+    print(photo_id)
+    return json.dumps({'success': True}), 200, {'ContentType': 'application/json'}
+
+
 @app.route('/uploaded/')
 def uploaded_photos_page():
     return render_template('uploaded_photos.html'), 200

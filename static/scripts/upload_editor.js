@@ -68,6 +68,25 @@ class PhotosData extends React.Component {
 
   DiscardPhoto(photo_id) {
     console.log("clicked discard", photo_id);
+
+    let test = JSON.stringify({
+      photoId: photo_id
+    });
+
+    console.log(test);
+
+    fetch("http://127.0.0.1:5000/api/discard", {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        photoId: photo_id
+      })
+    }).then(Response => {
+      console.log("Response", Response);
+    });
   }
 
   render() {
@@ -76,11 +95,11 @@ class PhotosData extends React.Component {
 
     if (this.state.items) {
       let photos = this.state.items;
-      console.log(photos);
+      // console.log(photos);
       let photo = Object.keys(photos).map(function(key, index) {
         let photo_url = photos[key]["original"];
         let photo_id = photos[key]["photo_id"];
-        console.log(photo_url);
+        // console.log(photo_url);
         return (
           <div key={photos[key]["photo_id"]}>
             <div className="row">
