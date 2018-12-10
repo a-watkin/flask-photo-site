@@ -165,10 +165,10 @@ def upload_file():
 @app.route('/api/discard', methods=['GET', 'POST'])
 def discard_photo():
     photo_id = request.get_json()
-    print(photo_id)
+    # print(photo_id)
 
     result = up.discard_photo(photo_id['photoId'])
-    print(result)
+    # print(result)
 
     if up.discard_photo(photo_id['photoId']):
         return json.dumps({'success': True}), 200, {'ContentType': 'application/json'}

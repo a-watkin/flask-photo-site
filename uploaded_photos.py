@@ -183,11 +183,11 @@ class UploadedPhotos(object):
         )
 
         upload_photos = self.get_uploaded_photos()
-        print(upload_photos['photos'])
+        # print(upload_photos['photos'])
 
         for photo in upload_photos['photos']:
-            print()
-            print(upload_photos['photos'][photo])
+            # print()
+            # print(upload_photos['photos'][photo])
 
             if photo_id in upload_photos['photos'][photo]:
                 print('PROBLEM?')
