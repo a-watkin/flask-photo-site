@@ -73,6 +73,7 @@ def upload_file():
             created = datetime.datetime.now()
             print('MULTIPLE FILES')
             for file in files:
+                photo_id = str(int(uuid.uuid4()))[0:10]
                 if allowed_file(file.filename):
                     filename = secure_filename(file.filename)
                     # where the file will be saved
@@ -86,11 +87,11 @@ def upload_file():
                     # this guards against multiple files having the same name
                     # a problem here is that it also allows the same file to be uploaded
                     # multiple times
-                    identifier = str(uuid.uuid1()).split('-')[0]
+                    # identifier = str(uuid.uuid1()).split('-')[0]
                     if filename in file_in_dir:
                         temp = filename.split('.')
 
-                        temp[0] = temp[0] + "_" + identifier
+                        temp[0] = temp[0] + "_" + photo_id
 
                         filename = '.'.join(temp)
 
@@ -100,7 +101,7 @@ def upload_file():
 
                     # save path to the photo
                     file_path = save_directory + '/' + filename
-                    photo_id = str(int(uuid.uuid4()))[0:10]
+
                     print(file_path)
 
                     # add idenfitying name to file

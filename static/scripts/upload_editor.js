@@ -26,12 +26,10 @@ class PhotosData extends React.Component {
       .then(res => res.json())
       .then(
         result => {
-          console.log("result", result);
+          // console.log("result", result);
           this.setState({
             isLoaded: true,
-            items: result.photos,
-            currentOffset: result.offset,
-            albumId: albumId
+            items: result.photos
           });
         },
         // Note: it's important to handle errors here
@@ -68,9 +66,45 @@ class PhotosData extends React.Component {
   }
 
   render() {
+    let photo = null;
+    if (this.state.items) {
+      let photos = this.state.items;
+      console.log(photos);
+      let photo = Object.keys(photos).map(function(key, index) {
+        let photo_url = photos[key]["original"];
+        console.log(photo_url);
+        return (
+          <div>
+            <hr />
+            <div key={photos[key]["photo_id"]} className="row">
+              <div className="col">
+                <img
+                  src={photos[key]["original"]}
+                  alt="Uploaded photo"
+                  className="img-fluid"
+                />
+              </div>
+              <div className="col text-center">
+                <h5>Where title will go</h5>
+                <h6>{photos[key]["photo_id"]}</h6>
+              </div>
+            </div>
+          </div>
+        );
+      });
+
+      return (
+        <div>
+          <h1> Hi form other React </h1> {photo}
+        </div>
+      );
+    }
+
     return (
       <div>
         <h1>Hi from React</h1>
+
+        {photo}
       </div>
     );
   }
