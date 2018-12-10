@@ -118,9 +118,9 @@ def upload_file():
                     square_thumbnail(filename, thumbnail_filename, save_path)
 
                     # path for the database
-                    original_path = 'static/images/{}/{}/{}'.format(
+                    original_path = '/static/images/{}/{}/{}'.format(
                         created.year, created.month, filename)
-                    large_square_path = 'static/images/{}/{}/{}'.format(
+                    large_square_path = '/static/images/{}/{}/{}'.format(
                         created.year, created.month, thumbnail_filename)
 
                     print('\n TEST OF PATHS', original_path,

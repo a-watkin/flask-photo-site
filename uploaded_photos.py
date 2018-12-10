@@ -125,6 +125,7 @@ class UploadedPhotos(object):
             a_dict[count] = d
             count += 1
             d['original'] = cur_dir + d['original']
+            d['large_square'] = cur_dir + d['large_square']
 
         rtn_dict = {'photos': a_dict}
 
