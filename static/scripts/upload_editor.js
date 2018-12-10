@@ -22,11 +22,11 @@ class PhotosData extends React.Component {
     let splitUrl = currentUrl.split("/");
     const albumId = splitUrl[5];
 
-    fetch("http://127.0.0.1:5000/api/getphotos")
+    fetch("http://127.0.0.1:5000/api/uploaded")
       .then(res => res.json())
       .then(
         result => {
-          // console.log("result", result);
+          console.log("result", result);
           this.setState({
             isLoaded: true,
             items: result.photos,

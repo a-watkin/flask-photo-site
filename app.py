@@ -161,6 +161,11 @@ def upload_file():
     return render_template('upload.html'), 200
 
 
+@app.route('/uploaded/')
+def uploaded_photos_page():
+    return render_template('uploaded_photos.html'), 200
+
+
 @app.route('/api/uploaded/')
 def get_uploaded_photos():
     json_data = up.get_uploaded_photos()
