@@ -132,6 +132,12 @@ class UploadedPhotos(object):
         return rtn_dict
 
     def discard_photo(self, photo_id):
+        """
+        Removes the specified photo from photo, upload_photo tables.
+        Also deletes the files from the disk.
+
+        Returns True if the photo is not in the upload_photo table.
+        """
         # delete the files from the disk, you need to know the path to do this
         # which you should get from images
         images_data = self.db.make_query(
@@ -140,51 +146,65 @@ class UploadedPhotos(object):
             '''.format(photo_id)
         )
 
-        print(images_data[0][0:len(images_data[0]) - 1])
+        if len(images_data) > 0:
+            print(images_data[0][0:len(images_data[0]) - 1])
 
-        current_path = os.getcwd()
+            current_path = os.getcwd()
+            photos_on_disk = []
+            # the last returned element is the photo_id so to avoid that
+            # I took the slice of everything up to that
+            for image in images_data[0][0:len(images_data[0]) - 1]:
+                if image is not None:
+                    photos_on_disk.append(current_path + image)
 
-        photos_on_disk = []
-        # the last returned element is the photo_id so to avoid that
-        # I took the slice of everything up to that
-        for image in images_data[0][0:len(images_data[0]) - 1]:
-            if image is not None:
-                print(image)
-                photos_on_disk.append(current_path + image)
-                # print(image)
-
-        # get just the filenames?
-        # print(photos_on_disk)
-
-        split the path to the file
-        split_path = photos_on_disk[0].split('/')
-        path_without_file = split_path[0:len(split_path) - 1]
-        print(path_without_file)
-        containing_dir = '/'.join(path_without_file)
-        print(containing_dir)
-
-        # print(os.listdir(containing_dir))
-
-        for photo in photos_on_disk:
-            os.remove(photo)
-
-        # os.chdir(current_path + '/static/images')
-
-        # switch to the path where the images are stored
+            for photo in photos_on_disk:
+                try:
+                    os.remove(photo)
+                except Exception as e:
+                    print('Problem removing file ', e)
+        else:
+            print('no data')
 
         # remove photo from table photo
+        self.db.make_query(
+            '''
+            delete from photo where photo_id = {}
+            '''.format(photo_id)
+        )
 
         # images should cascade delete, but check
+        # Seems so
 
         # remove from upload_photo table
+        self.db.make_query(
+            '''
+            delete from upload_photo where photo_id = {}
+            '''.format(photo_id)
+        )
 
-        # remove from tags?
+        upload_photos = self.get_uploaded_photos()
+        print(upload_photos['photos'])
+
+        for photo in upload_photos['photos']:
+            print()
+            print(upload_photos['photos'][photo])
+
+            if photo_id in upload_photos['photos'][photo]:
+                print('PROBLEM?')
+                return False
+
+        return True
+
+        # IMPORTANT!
+        # you should test this later after implementing adding tags to uploaded photos
+        # remove from tags? i don't think you need to? you can have orphaned tags
 
 
 def main():
     up = UploadedPhotos()
 
-    up.discard_photo(1326226897)
+    # 1326226897
+    print(up.discard_photo(1326226897))
 
     # up.save_photo('1234', '2018-12-09 03:52:57.905416')
     # up.save_photo(
