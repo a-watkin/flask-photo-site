@@ -254,13 +254,17 @@ class UploadedPhotos(object):
             '''.format(photo_id)
         )
 
-        print(data)
+        if len(data) > 0:
+            if data[0][3] == new_title:
+                return True
+
+        return False
 
 
 def main():
     up = UploadedPhotos()
 
-    up.update_title(1269676143, 'test title')
+    print(up.update_title(1269676143, 'test title'))
 
     # 1326226897
     # print(up.discard_photo(1326226897))

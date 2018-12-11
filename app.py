@@ -178,9 +178,12 @@ def discard_photo():
 
 @app.route('/api/uploaded/title', methods=['GET', 'POST'])
 def update_title():
-    title = request.get_json()
-    print(title)
-    return json.dumps({'success': True}), 200, {'ContentType': 'application/json'}
+    d = request.get_json()
+    print(d)
+    if up.update_title(d['photoId'], d['title']):
+        return json.dumps({'success': True}), 200, {'ContentType': 'application/json'}
+    else:
+        return json.dumps({'success': False}), 500, {'ContentType': 'application/json'}
 
 
 @app.route('/uploaded/')
