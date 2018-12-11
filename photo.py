@@ -94,12 +94,17 @@ class Photos(object):
             query_string = (
                 '''
                 select * from photo join images using(photo_id)
-                where date_posted > {}
+                where date_posted > '{}'
                 order by date_posted asc limit 1
                 '''.format(date_posted)
             )
 
-            photo_data = [x for x in c.execute(query_string)]
+            try:
+                photo_data = [x for x in c.execute(query_string)]
+            except Exception as e:
+                print('Problem in getting next photo, ', e)
+
+        # print(photo_data)
 
         if len(photo_data) < 1:
             return None
@@ -118,10 +123,11 @@ class Photos(object):
         with sqlite3.connect(self.db.db_name) as connection:
             c = connection.cursor()
 
+            # Problem here was that it was treating datetime as something other than a string
             next_string = (
                 '''
                 select * from photo join images using(photo_id)
-                where date_posted < {}
+                where date_posted < '{}'
                 order by date_posted desc limit 1
                 '''.format(date_posted)
             )
@@ -218,6 +224,11 @@ class Photos(object):
 
 if __name__ == "__main__":
     p = Photos()
+    # next photo is working
+    print(p.get_next_photo(44692597905))
+    # it can't get that photo
+    print(p.get_photo(1125251958))
+
     # print(p.get_photos_in_range())
     # print(p.db.db_name)
 
@@ -225,4 +236,4 @@ if __name__ == "__main__":
 
     # p.delete_photo('30081941117')
 
-    print(p.get_photo(1125251958))
+    # print(p.get_photo(1125251958))
