@@ -280,6 +280,16 @@ class UploadedPhotos(object):
             date_posted = datetime.datetime.now()
             # get the photo_id
             print(photo['photo_id'], date_posted)
+
+            if photo['photo_title'] is None:
+                self.db.make_query(
+                    '''
+                    update photo
+                    set photo_title = ''
+                    where photo_id = {}
+                    '''.format(photo['photo_id'])
+                )
+
             # update the date_posted column in the table photo
             self.db.make_query(
                 '''

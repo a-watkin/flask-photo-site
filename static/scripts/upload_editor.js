@@ -280,20 +280,12 @@ class PhotosData extends React.Component {
           {photo}
 
           <div className="row">
-            <div className="col text-left">
+            <div className="col text-center">
               <button className="btn btn-warning btn-lg">
                 Add to a new album
               </button>
             </div>
 
-            <div className="col text-right">
-              <button className="btn btn-success btn-lg">
-                Add to existing album
-              </button>
-            </div>
-          </div>
-          <hr />
-          <div className="row">
             <div className="col text-center">
               <button
                 className="btn btn-success btn-lg"
@@ -302,8 +294,13 @@ class PhotosData extends React.Component {
                 Add to photostream only
               </button>
             </div>
-          </div>
 
+            <div className="col text-center">
+              <button className="btn btn-success btn-lg">
+                Add to existing album
+              </button>
+            </div>
+          </div>
           <hr />
         </div>
       );
