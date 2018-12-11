@@ -2,6 +2,7 @@ import os
 import sqlite3
 
 from database_interface import Database
+from tag import Tag
 
 
 class UploadedPhotos(object):
@@ -16,6 +17,7 @@ class UploadedPhotos(object):
     def __init__(self):
         self.db = Database('eigi-data.db')
         self.user_id = '28035310@N00'
+        self.tag = Tag()
 
     def save_photo(self, photo_id, date_uploaded, original, large_square):
         print(photo_id, self.user_id)
@@ -117,12 +119,19 @@ class UploadedPhotos(object):
 
         data = [dict(ix) for ix in q_data]
 
+        # a list of objects
+        # print(data)
+        # for photo in data:
+        #     print()
+        #     print(self.tag.get_photo_tags(photo['photo_id']))
+
         cur_dir = os.getcwd()
 
         a_dict = {}
         count = 0
         for d in data:
             a_dict[count] = d
+            a_dict['tags'] = self.tag.get_photo_tags(d['photo_id'])
             count += 1
             # d['original'] = cur_dir + d['original']
             # d['large_square'] = cur_dir + d['large_square']
@@ -264,7 +273,9 @@ class UploadedPhotos(object):
 def main():
     up = UploadedPhotos()
 
-    print(up.update_title(1269676143, 'test title'))
+    # print(up.update_title(1269676143, 'test title'))
+
+    print(up.get_uploaded_photos())
 
     # 1326226897
     # print(up.discard_photo(1326226897))

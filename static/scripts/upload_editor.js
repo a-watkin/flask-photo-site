@@ -140,10 +140,15 @@ class PhotosData extends React.Component {
     });
   }
 
+  addTags(e, photo_id, key) {
+    console.log("hello from addTags");
+  }
+
   render() {
     let photo = null;
     let discardPhoto = this.discardPhoto;
     let updateTitle = this.updateTitle;
+    let addTags = this.addTags;
 
     if (this.state.items) {
       let photos = this.state.items;
@@ -181,7 +186,11 @@ class PhotosData extends React.Component {
                   You can enter multiple tags seperating them with commas. Tags
                   may contain spaces.
                 </p>
-                <input className="input-group input-group-text" type="text" />
+                <input
+                  className="input-group input-group-text"
+                  type="text"
+                  onBlur={e => addTags(e, photo_id, key)}
+                />
                 <hr />
                 <button
                   className="btn btn-danger btn-lg"

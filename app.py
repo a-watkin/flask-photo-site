@@ -179,7 +179,7 @@ def discard_photo():
 @app.route('/api/uploaded/title', methods=['GET', 'POST'])
 def update_title():
     d = request.get_json()
-    print(d)
+    # print(d)
     if up.update_title(d['photoId'], d['title']):
         return json.dumps({'success': True}), 200, {'ContentType': 'application/json'}
     else:
@@ -188,6 +188,9 @@ def update_title():
 
 @app.route('/uploaded/')
 def uploaded_photos_page():
+    """
+    React gets the data for this.
+    """
     return render_template('uploaded_photos.html'), 200
 
 
