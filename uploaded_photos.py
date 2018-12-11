@@ -4,7 +4,7 @@ import datetime
 
 from database_interface import Database
 from tag import Tag
-from exif_util import ExifUtil
+# from exif_util import ExifUtil
 
 
 class UploadedPhotos(object):
@@ -275,13 +275,44 @@ class UploadedPhotos(object):
 
     def add_to_photostream(self, data):
         # get the photo_id for eatch photo
-        # set the date_posted to the current datetime
-        date_posted = datetime.datetime.now()
-        print(data)
+        for photo in data.values():
+            # set the date_posted to the current datetime
+            date_posted = datetime.datetime.now()
+            # get the photo_id
+            print(photo['photo_id'], date_posted)
+            # update the date_posted column in the table photo
+            self.db.make_query(
+                '''
+                update photo
+                set date_posted = '{}'
+                where photo_id = {}
+                '''.format(date_posted, photo['photo_id'])
+            )
+
+            test_data = self.db.make_query(
+                '''
+                select date_posted from photo
+                where photo_id = {}
+                '''.format(photo['photo_id'])
+            )
+
+            if test_data:
+                # remove the photo from the table upload_photo
+                self.db.make_query(
+                    '''
+                    delete from upload_photo
+                    where photo_id = {}
+                    '''.format(photo['photo_id'])
+                )
 
 
 def main():
     up = UploadedPhotos()
+
+    up.add_to_photostream(
+        {'0': {'date_posted': None, 'date_taken': None, 'date_updated': None, 'date_uploaded': '2018-12-11 08:21:10.870694', 'images_id': None, 'large': None, 'large_square': '/static/images/2018/12/test_landscape_1125251958_lg_sqaure.jpg', 'medium': None, 'medium_640': None,
+               'original': '/static/images/2018/12/test_landscape_1125251958.jpg', 'photo_id': 1125251958, 'photo_title': None, 'small': None, 'small_320': None, 'square': None, 'tags': ['twat', 'slut'], 'thumbnail': None, 'user_id': '28035310@N00', 'views': 0}}
+    )
 
     # print(up.update_title(1269676143, 'test title'))
 
@@ -296,9 +327,9 @@ def main():
     #     '2018-12-09 03:52:57.905416',
     #     '/home/a/projects/flask-photo-site/static/images/2018/12/test_portrait_resized.jpg')
 
-    up.save_photo(
-        2429676854, '2018-12-09 21:16:43.708922', '/2018/12/test_landscape_3400128875_lg_sqaure.jpg', '/2018/12/test_landscape_3400128875_lg_sqaure.jpg'
-    )
+    # up.save_photo(
+    #     2429676854, '2018-12-09 21:16:43.708922', '/2018/12/test_landscape_3400128875_lg_sqaure.jpg', '/2018/12/test_landscape_3400128875_lg_sqaure.jpg'
+    # )
 
     # print(up.get_uploaded_photos_test())
 
