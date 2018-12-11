@@ -3,6 +3,7 @@ import sqlite3
 
 from database_interface import Database
 from tag import Tag
+from exif_util import get_datetime_taken
 
 
 class UploadedPhotos(object):
@@ -20,6 +21,8 @@ class UploadedPhotos(object):
         self.tag = Tag()
 
     def save_photo(self, photo_id, date_uploaded, original, large_square):
+        print(original)
+        get_datetime_taken(os.getcwd() + original)
         print(photo_id, self.user_id)
         # write to the uploaded_photo table
         query_string = '''
@@ -275,7 +278,7 @@ def main():
 
     # print(up.update_title(1269676143, 'test title'))
 
-    print(up.get_uploaded_photos())
+    # print(up.get_uploaded_photos())
 
     # 1326226897
     # print(up.discard_photo(1326226897))
@@ -286,9 +289,9 @@ def main():
     #     '2018-12-09 03:52:57.905416',
     #     '/home/a/projects/flask-photo-site/static/images/2018/12/test_portrait_resized.jpg')
 
-    # up.save_photo(
-    #     2429676854, '2018-12-09 21:16:43.708922', '/2018/12/test_landscape_ba5f22cc.jpg', '/2018/12/test_landscape_ba5f22cc_lg_sqaure.jpg'
-    # )
+    up.save_photo(
+        2429676854, '2018-12-09 21:16:43.708922', '/2018/12/test_landscape_3400128875_lg_sqaure.jpg', '/2018/12/test_landscape_3400128875_lg_sqaure.jpg'
+    )
 
     # print(up.get_uploaded_photos_test())
 

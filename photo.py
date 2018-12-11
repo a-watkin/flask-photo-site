@@ -27,9 +27,9 @@ class Photos(object):
             c.row_factory = sqlite3.Row
 
             query_string = (
-                '''select photo_id, views, photo_title, date_uploaded, date_taken, images.original, images.large_square from photo
+                '''select photo_id, views, photo_title, date_posted, date_taken, images.original, images.large_square from photo
                 join images using(photo_id)
-                order by date_uploaded
+                order by date_posted
                 desc limit {} offset {}'''
             ).format(limit, offset)
 
@@ -218,11 +218,11 @@ class Photos(object):
 
 if __name__ == "__main__":
     p = Photos()
-    print(p.get_photos_in_range())
+    # print(p.get_photos_in_range())
     # print(p.db.db_name)
 
     # p.update_title('30081941117', 'tenticles title')
 
     # p.delete_photo('30081941117')
 
-    # print(p.get_photo('44692597905'))
+    print(p.get_photo(1125251958))

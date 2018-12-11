@@ -99,8 +99,8 @@ def get_datetime_taken(fn):
 
     for k in sorted(exif.keys()):
         if k not in ['JPEGThumbnail', 'TIFFThumbnail', 'Filename', 'EXIF MakerNote']:
-            print(k)
-            print('%s = %s' % (k, exif[k]))
+            # print(k)
+            # print('%s = %s' % (k, exif[k]))
 
             if k == 'Image DateTime':
                 return exif[k]

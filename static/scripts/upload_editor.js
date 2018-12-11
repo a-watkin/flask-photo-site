@@ -262,6 +262,12 @@ class PhotosData extends React.Component {
               </button>
             </div>
 
+            <div className="col text-center">
+              <button className="btn btn-success btn-lg">
+                Add to photostream
+              </button>
+            </div>
+
             <div className="col text-right">
               <button className="btn btn-success btn-lg">
                 Add to existing album
