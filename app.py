@@ -216,7 +216,22 @@ def to_photostream():
 @app.route('/api/create/album', methods=['GET', 'POST'])
 def to_new_album():
     print('hello from to_new_album')
-    return render_template('upload_new_album.html'), 200
+    if request.method == 'GET':
+        return render_template('upload_new_album.html'), 200
+
+    if request.method == 'POST':
+        album_title = request.form['title']
+        album_description = request.form['description']
+
+        album_id = a.create_album(
+            '28035310@N00', album_title, album_description)
+
+        # use album_id to add all uploaded photos to the album
+        up.add_all_to_album(album_id)
+
+        album_data = a.get_album(album_id)
+
+        return redirect('/albums/{}'.format(album_id)), 302
 
 
 @app.route('/uploaded')

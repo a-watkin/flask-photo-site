@@ -315,14 +315,68 @@ class UploadedPhotos(object):
                     '''.format(photo['photo_id'])
                 )
 
+    def add_all_to_album(self, album_id):
+        # get all uploaded photos
+        uploaded_photos = self.db.make_query(
+            '''
+            select * from upload_photo
+            '''
+        )
+
+        print(uploaded_photos)
+
+        for photo in uploaded_photos:
+            photo_id = photo[0]
+
+            print(photo_id)
+            # db.insert_data(
+            #     table='tag',
+            #     tag_name=new_tag,
+            #     user_id='28035310@N00'
+            # )
+
+            self.db.make_query(
+                '''
+                insert into photo_album (photo_id, album_id)
+                values ('{}', '{}')
+                '''.format(photo_id, album_id)
+            )
+
+            # get photo count for album
+            photo_count = self.db.make_query(
+                '''
+                select photos from album where album_id = '{}'
+                '''.format(album_id)
+            )
+
+            print(photo_count)
+            photo_count = int(photo_count[0][0]) + 1
+
+            self.db.make_query(
+                '''
+                update album
+                set photos = {}
+                where album_id = '{}'
+                '''.format(photo_count, album_id)
+            )
+
+        # DANGER!
+        self.db.make_query(
+            '''
+            delete from upload_photo
+            '''
+        )
+
 
 def main():
     up = UploadedPhotos()
 
-    up.add_to_photostream(
-        {'0': {'date_posted': None, 'date_taken': None, 'date_updated': None, 'date_uploaded': '2018-12-11 08:21:10.870694', 'images_id': None, 'large': None, 'large_square': '/static/images/2018/12/test_landscape_1125251958_lg_sqaure.jpg', 'medium': None, 'medium_640': None,
-               'original': '/static/images/2018/12/test_landscape_1125251958.jpg', 'photo_id': 1125251958, 'photo_title': None, 'small': None, 'small_320': None, 'square': None, 'tags': ['twat', 'slut'], 'thumbnail': None, 'user_id': '28035310@N00', 'views': 0}}
-    )
+    # print(up.add_all_to_album('eh'))
+
+    # up.add_to_photostream(
+    #     {'0': {'date_posted': None, 'date_taken': None, 'date_updated': None, 'date_uploaded': '2018-12-11 08:21:10.870694', 'images_id': None, 'large': None, 'large_square': '/static/images/2018/12/test_landscape_1125251958_lg_sqaure.jpg', 'medium': None, 'medium_640': None,
+    #            'original': '/static/images/2018/12/test_landscape_1125251958.jpg', 'photo_id': 1125251958, 'photo_title': None, 'small': None, 'small_320': None, 'square': None, 'tags': ['twat', 'slut'], 'thumbnail': None, 'user_id': '28035310@N00', 'views': 0}}
+    # )
 
     # print(up.update_title(1269676143, 'test title'))
 
