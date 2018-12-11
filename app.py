@@ -184,6 +184,7 @@ def uploaded_photos_page():
 @app.route('/api/uploaded/')
 def get_uploaded_photos():
     json_data = up.get_uploaded_photos()
+    print(json_data)
     return jsonify(json_data)
 
 

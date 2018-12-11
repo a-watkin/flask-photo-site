@@ -66,7 +66,7 @@ class PhotosData extends React.Component {
     });
   }
 
-  DiscardPhoto(photo_id) {
+  DiscardPhoto(photo_id, key) {
     console.log("clicked discard", photo_id);
 
     let test = JSON.stringify({
@@ -85,7 +85,14 @@ class PhotosData extends React.Component {
         photoId: photo_id
       })
     }).then(Response => {
-      console.log("Response", Response);
+      console.log("Response", Response.status);
+
+      if (Response.status === 200) {
+        let objectCopy = this.state.items;
+        console.log("getting here ok");
+        console.log(this.state.items);
+        console.log(this.state.items[key]);
+      }
     });
   }
 
@@ -128,7 +135,7 @@ class PhotosData extends React.Component {
                 <hr />
                 <button
                   className="btn btn-danger btn-lg"
-                  onClick={() => DiscardPhoto(photo_id)}
+                  onClick={() => DiscardPhoto(photo_id, key)}
                 >
                   Discard photo
                 </button>

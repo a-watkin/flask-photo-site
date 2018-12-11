@@ -131,6 +131,45 @@ class UploadedPhotos(object):
 
         return rtn_dict
 
+    def get_uploaded_photos_test(self):
+        # photo_id
+        # from image the original size
+        q_data = None
+        with sqlite3.connect(self.db.db_name) as connection:
+            c = connection.cursor()
+
+            c.row_factory = sqlite3.Row
+
+            query_string = (
+                '''
+                select * from upload_photo
+                join photo on(photo.photo_id=upload_photo.photo_id)
+                join images on(images.photo_id=upload_photo.photo_id)
+                '''
+            )
+
+            q_data = c.execute(query_string)
+
+        data = [dict(ix) for ix in q_data]
+
+        print(data)
+
+        return {'photos': data}
+
+        # cur_dir = os.getcwd()
+
+        # a_dict = {}
+        # count = 0
+        # for d in data:
+        #     a_dict[count] = d
+        #     count += 1
+        #     # d['original'] = cur_dir + d['original']
+        #     # d['large_square'] = cur_dir + d['large_square']
+
+        # rtn_dict = {'photos': a_dict}
+
+        # return rtn_dict
+
     def discard_photo(self, photo_id):
         """
         Removes the specified photo from photo, upload_photo tables.
@@ -204,7 +243,7 @@ def main():
     up = UploadedPhotos()
 
     # 1326226897
-    print(up.discard_photo(1326226897))
+    # print(up.discard_photo(1326226897))
 
     # up.save_photo('1234', '2018-12-09 03:52:57.905416')
     # up.save_photo(
@@ -216,7 +255,7 @@ def main():
     #     2429676854, '2018-12-09 21:16:43.708922', '/2018/12/test_landscape_ba5f22cc.jpg', '/2018/12/test_landscape_ba5f22cc_lg_sqaure.jpg'
     # )
 
-    # print(up.get_uploaded_photos())
+    print(up.get_uploaded_photos_test())
 
 
 if __name__ == "__main__":
