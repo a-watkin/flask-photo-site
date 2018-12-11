@@ -213,7 +213,13 @@ def to_photostream():
     return json.dumps({'success': False}), 500, {'ContentType': 'application/json'}
 
 
-@app.route('/uploaded/')
+@app.route('/api/create/album', methods=['GET', 'POST'])
+def to_new_album():
+    print('hello from to_new_album')
+    return render_template('upload_new_album.html'), 200
+
+
+@app.route('/uploaded')
 def uploaded_photos_page():
     """
     React gets the data for this.

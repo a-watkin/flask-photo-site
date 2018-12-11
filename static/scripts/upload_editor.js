@@ -201,9 +201,15 @@ class PhotosData extends React.Component {
 
       if (Response.status === 200) {
         // redirect to the photostream on success
-        window.location.assign(`127.0.0.1:5000/api/photos/`);
+        window.location.assign(`/api/photos/`);
       }
     });
+  }
+
+  addToNewAlbum() {
+    console.log("hello from addToNewAlbum");
+    // it just needs to direct to a new page
+    window.location.assign(`/api/create/album`);
   }
 
   render() {
@@ -212,6 +218,7 @@ class PhotosData extends React.Component {
     let updateTitle = this.updateTitle;
     let addTags = this.addTags;
     let addToPhotoStream = this.addToPhotoStream;
+    let addToNewAlbum = this.addToNewAlbum;
 
     if (this.state.items) {
       let photos = this.state.items;
@@ -281,7 +288,10 @@ class PhotosData extends React.Component {
 
           <div className="row">
             <div className="col text-center">
-              <button className="btn btn-warning btn-lg">
+              <button
+                className="btn btn-warning btn-lg"
+                onClick={() => addToNewAlbum()}
+              >
                 Add to a new album
               </button>
             </div>
