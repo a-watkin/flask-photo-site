@@ -119,17 +119,12 @@ class UploadedPhotos(object):
 
         data = [dict(ix) for ix in q_data]
 
-        # a list of objects
-        # print(data)
+        # fix this later so that it doesn't suck
         for photo in data:
-            # print()
-            # print(self.tag.get_photo_tags(photo['photo_id']))
-            photo['tags'] = self.tag.get_photo_tags(photo['photo_id'])
-            # photo['tags'] = ['london', 'cunts']
-
-        # for photo in data:
-        #     print()
-        #     print(photo)
+            photo['tags'] = []
+            for tag in self.tag.get_photo_tags(photo['photo_id']):
+                for t in tag.values():
+                    photo['tags'].append(t)
 
         cur_dir = os.getcwd()
 

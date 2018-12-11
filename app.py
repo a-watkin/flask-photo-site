@@ -186,6 +186,20 @@ def update_title():
         return json.dumps({'success': False}), 500, {'ContentType': 'application/json'}
 
 
+@app.route('/api/add/tags', methods=['GET', 'POST'])
+def add_uploaded_tags():
+    tag_data = request.get_json()
+    print()
+    # tags are a string when they come in here,
+    # they need to be split
+    tags = tag_data['tagValues'].split(',')
+
+    print('tag_data', tag_data)
+    resp = t.add_tags_to_photo(tag_data['photoId'], tags)
+    print(resp)
+    return json.dumps({'success': True}), 200, {'ContentType': 'application/json'}
+
+
 @app.route('/uploaded/')
 def uploaded_photos_page():
     """

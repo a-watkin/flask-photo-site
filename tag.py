@@ -181,6 +181,8 @@ class Tag(object):
             return False
 
     def add_tags_to_photo(self, photo_id, tag_list):
+        print('add_tags_to_photo', tag_list)
+
         # iterate over the list of tags
 
         # for each tag
@@ -218,11 +220,23 @@ class Tag(object):
                 tag_name=tag
             )
 
+        data = self.db.make_query(
+            '''
+            select * from photo_tag where photo_id = {}
+            '''.format(photo_id)
+        )
+
+        tags_in_data = []
+        if len(data) > 0:
+            tags_in_data.append(data[1])
+
 
 if __name__ == "__main__":
     t = Tag()
 
-    t.add_tags_to_photo('38995841301', ['test tag name'])
+    t.add_tags_to_photo('3400128875', ['test tag name', 'test tag two'])
+
+    # print(t.get_photo_tags('3400128875'))
 
     # print(t.get_all_tags())
 

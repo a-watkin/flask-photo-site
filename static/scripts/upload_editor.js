@@ -140,13 +140,47 @@ class PhotosData extends React.Component {
     });
   }
 
-  getTags(photo_id, key) {
-    // console.log("getTags called");
-    return "";
-  }
-
   addTags(e, photo_id, key) {
     console.log("hello from addTags");
+    console.log(e.target.value);
+
+    if (e.target.value) {
+      let test = JSON.stringify({
+        photoId: photo_id,
+        tagValues: e.target.value
+      });
+
+      console.log(test);
+
+      fetch("http://127.0.0.1:5000/api/add/tags", {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          photoId: photo_id,
+          tagValues: e.target.value
+        })
+      }).then(Response => {
+        console.log("Response", Response.status);
+
+        if (Response.status === 200) {
+          console.log(Response);
+          let objectCopy = this.state.items;
+          console.log("wtf");
+
+          console.log(objectCopy);
+
+          // let test = [e.target.value, ...objectCopy[key]["tags"]];
+          // console.log("test", test);
+          //   objectCopy[key]["tags"] = e.target.value;
+
+          //   this.setState({
+          //     items: objectCopy
+        }
+      });
+    }
   }
 
   render() {
@@ -154,7 +188,6 @@ class PhotosData extends React.Component {
     let discardPhoto = this.discardPhoto;
     let updateTitle = this.updateTitle;
     let addTags = this.addTags;
-    let getTags = this.getTags;
 
     if (this.state.items) {
       let photos = this.state.items;
@@ -183,6 +216,11 @@ class PhotosData extends React.Component {
                       ? ""
                       : photos[key]["photo_title"]
                   }
+                  defaultValue={
+                    photos[key]["photo_title"] === null
+                      ? ""
+                      : photos[key]["photo_title"]
+                  }
                   onBlur={e => updateTitle(e, photo_id, key)}
                 />
                 <h6>{photos[key]["photo_id"]}</h6>
@@ -197,6 +235,7 @@ class PhotosData extends React.Component {
                   type="text"
                   onBlur={e => addTags(e, photo_id, key)}
                   placeholder={photos[key]["tags"]}
+                  defaultValue={photos[key]["tags"]}
                 />
                 <hr />
                 <button
