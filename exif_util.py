@@ -1,8 +1,11 @@
-from PIL import Image, ImageOps
 import os
 import sys
+
+
+from PIL import Image, ImageOps
 from PIL import Image
 from PIL.ExifTags import TAGS
+import exifread
 """
 sizes that flickr used:
 700x467
@@ -89,4 +92,18 @@ def test_exifread(fn):
             print('%s = %s' % (k, exif[k]))
 
 
-test_exifread('test_portrait.jpg')
+# Image DateTime
+def get_datetime_taken(fn):
+    with open(fn, 'rb') as f:
+        exif = exifread.process_file(f)
+
+    for k in sorted(exif.keys()):
+        if k not in ['JPEGThumbnail', 'TIFFThumbnail', 'Filename', 'EXIF MakerNote']:
+            print(k)
+            print('%s = %s' % (k, exif[k]))
+
+            if k == 'Image DateTime':
+                return exif[k]
+
+
+# print(get_datetime_taken('test_portrait.jpg'))

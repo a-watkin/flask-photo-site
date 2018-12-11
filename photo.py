@@ -218,11 +218,11 @@ class Photos(object):
 
 if __name__ == "__main__":
     p = Photos()
-    # print(p.get_photos_in_range())
+    print(p.get_photos_in_range())
     # print(p.db.db_name)
 
     # p.update_title('30081941117', 'tenticles title')
 
-    p.delete_photo('30081941117')
+    # p.delete_photo('30081941117')
 
     # print(p.get_photo('44692597905'))
