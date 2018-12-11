@@ -102,7 +102,7 @@ def upload_file():
                     # save path to the photo
                     file_path = save_directory + '/' + filename
 
-                    print(file_path)
+                    # print(file_path)
 
                     # add idenfitying name to file
                     thumbnail_name = filename.split('.')
@@ -112,9 +112,9 @@ def upload_file():
 
                     # construct path to save thumbnail file to
                     save_path = save_directory + '/'
-                    print(os.listdir(save_path), filename,
-                          filename in os.listdir(save_path), '\n',
-                          save_path)
+                    # print(os.listdir(save_path), filename,
+                    #       filename in os.listdir(save_path), '\n',
+                    #       save_path)
 
                     square_thumbnail(filename, thumbnail_filename, save_path)
 
@@ -124,17 +124,17 @@ def upload_file():
                     large_square_path = '/static/images/{}/{}/{}'.format(
                         created.year, created.month, thumbnail_filename)
 
-                    print('\n TEST OF PATHS', original_path,
-                          large_square_path, '\nTEST OF PATHS')
+                    # print('\n TEST OF PATHS', original_path,
+                    #       large_square_path, '\nTEST OF PATHS')
 
-                    print()
-                    print(
-                        photo_id,
-                        str(created),
-                        original_path,
-                        large_square_path
-                    )
-                    print()
+                    # print()
+                    # print(
+                    #     photo_id,
+                    #     str(created),
+                    #     original_path,
+                    #     large_square_path
+                    # )
+                    # print()
 
                     # getting a missing arg error
                     # it expects 4 args and i'm passing 4
@@ -189,14 +189,14 @@ def update_title():
 @app.route('/api/add/tags', methods=['GET', 'POST'])
 def add_uploaded_tags():
     tag_data = request.get_json()
-    print()
+    # print()
     # tags are a string when they come in here,
     # they need to be split
     tags = tag_data['tagValues'].split(',')
 
-    print('tag_data', tag_data)
+    # print('tag_data', tag_data)
     resp = t.add_tags_to_photo(tag_data['photoId'], tags)
-    print(resp)
+    # print(resp)
     if resp:
         return json.dumps({'success': True}), 200, {'ContentType': 'application/json'}
     else:
@@ -205,17 +205,16 @@ def add_uploaded_tags():
 
 @app.route('/api/upload/photostream', methods=['GET', 'POST'])
 def to_photostream():
-    print('hello from to_photostream')
+    # print('hello from to_photostream')
     data = request.get_json()
-
     up.add_to_photostream(data['photos'])
-    print(data)
+    # print(data)
     return json.dumps({'success': False}), 500, {'ContentType': 'application/json'}
 
 
 @app.route('/api/create/album', methods=['GET', 'POST'])
 def to_new_album():
-    print('hello from to_new_album')
+    # print('hello from to_new_album')
     if request.method == 'GET':
         return render_template('upload_new_album.html'), 200
 
@@ -252,12 +251,12 @@ def get_uploaded_photos():
 
 @app.route('/api/photos/')
 def get_photos():
-    print('\nHello from get_photos\n')
-    print(20 * '\n', 'ENTERED')
+    # print('\nHello from get_photos\n')
+    # print(20 * '\n', 'ENTERED')
     args = request.args.to_dict()
 
     photo_data = None
-    print(args)
+    # print(args)
 
     if len(args) > 0:
 
@@ -268,11 +267,11 @@ def get_photos():
             photo_data = p.get_photos_in_range(20, int(args['offset']))
             json_data = photo_data
 
-            print('args are ', args)
+            # print('args are ', args)
 
             return render_template('photos.html', json_data=json_data), 200
         elif 'offset' not in args.keys() and 'limit' in args.keys():
-            print(9 * '\n')
+            # print(9 * '\n')
             # default offset is 0
             photo_data = p.get_photos_in_range(int(args['limit']))
             json_data = photo_data
@@ -299,7 +298,7 @@ def get_photos():
         """
         No arguments
         """
-        print(10 * '\n', 'why you no work')
+        # print(10 * '\n', 'why you no work')
         photo_data = p.get_photos_in_range()
         json_data = photo_data
         # print(json_data)
@@ -310,7 +309,7 @@ def get_photos():
 def get_photos_json():
     args = request.args.to_dict()
 
-    print(args)
+    # print(args)
     if request.method == 'GET':
         if len(args) > 0:
 
@@ -321,7 +320,7 @@ def get_photos_json():
                 photo_data = p.get_photos_in_range(20, int(args['offset']))
                 json_data = photo_data
 
-                print('args are ', args)
+                # print('args are ', args)
 
                 json_data = photo_data
                 return jsonify(json_data)
@@ -334,7 +333,7 @@ def get_photos_json():
 
     if request.method == 'POST':
 
-        print('test', request.get_json())
+        # print('test', request.get_json())
 
         data = request.get_json()
         a.add_photos_to_album(data['albumId'], data['photos'])
@@ -344,13 +343,11 @@ def get_photos_json():
 
 @app.route('/api/photos/<int:photo_id>', methods=['GET'])
 def get_photo(photo_id):
-    print('\nHello from get_photo\n')
+    # print('\nHello from get_photo\n')
     photo_data = p.get_photo(photo_id)
     json_data = photo_data
     # json_data = dict(photo_data['photos'])2
-
-    print(json_data)
-
+    # print(json_data)
     return render_template('photo.html', json_data=json_data), 200
 
 
@@ -399,17 +396,13 @@ def photos_by_tag_name(tag_name):
 
 @app.route('/delete/<string:tag_name>', methods=['GET', 'POST'])
 def delete_tag(tag_name):
-
     if request.method == 'GET':
         return render_template('delete_tag.html', tag_name=tag_name), 200
-
     if request.method == 'POST':
-        print('DELETE THE THING', tag_name)
+        # print('DELETE THE THING', tag_name)
         deleted_tag = tag_name
-
         if t.delete_tag(tag_name):
-            print('no more cucumbers')
-
+            # print('no more cucumbers')
             return render_template('deleted_tag.html', deleted_tag=deleted_tag), 200
 
 
@@ -429,7 +422,7 @@ def edit_tags():
 @app.route('/edit/tag/<string:tag_name>', methods=['GET', 'POST'])
 def edit_tag(tag_name):
     if request.method == 'GET':
-        print('\n get message recieved')
+        # print('\n get message recieved')
 
         return render_template('edit_tag.html', tag_name=tag_name), 200
 
@@ -437,18 +430,16 @@ def edit_tag(tag_name):
         new_tag_name = request.form['new_tag_name']
         # attemp to do database update
 
-        print('POST REQUEST RECIEVED WITH VALUE OF', new_tag_name, tag_name)
-
+        # print('POST REQUEST RECIEVED WITH VALUE OF', new_tag_name, tag_name)
         update_response = t.update_tag(new_tag_name, tag_name)
-
-        print('UPDATE RESPONSE', update_response)
+        # print('UPDATE RESPONSE', update_response)
 
         # if the tag is updated then redirect to the edit page for the new tag
         if update_response:
 
             redirect_url = "/edit/tag/{}".format(new_tag_name)
 
-            print('INFO ', redirect_url, new_tag_name, tag_name)
+            # print('INFO ', redirect_url, new_tag_name, tag_name)
 
             # http://127.0.0.1:5000/edit/tag/17191909
             # you need to return with the photo also
@@ -495,11 +486,11 @@ def delete_album(album_id):
     if request.method == 'GET':
         # get data for that album
         album_data = a.get_album(album_id)
-        print(album_data)
+        # print(album_data)
         return render_template('delete_album.html', json_data=album_data)
 
     if request.method == 'POST':
-        print('DELETE THE THING', album_id)
+        # print('DELETE THE THING', album_id)
         # deleted_tag = tag_name
 
         album_data = a.get_album(album_id)
@@ -509,20 +500,14 @@ def delete_album(album_id):
 
         print(album_title)
         if a.delete_album(album_id):
-            print('no more album')
-
+            # print('no more album')
             return render_template('deleted_album.html', deleted_album=album_title), 200
-
-        #     return render_template('deleted_tag.html', deleted_tag=deleted_tag), 200
 
 
 @app.route('/albums/<int:album_id>', methods=['GET'])
 def get_album_photos(album_id):
     photo_data = a.get_album_photos(album_id)
     json_data = photo_data
-    # print()
-    # print(json_data)
-    # print()
     return render_template('album.html', json_data=json_data), 200
 
 
@@ -536,8 +521,6 @@ def create_album():
 
         album_id = a.create_album(
             '28035310@N00', album_title, album_description)
-        # print('Hello from create_album', album_title,
-        #       album_description, album_id)
 
         album_data = a.get_album(album_id)
 
@@ -546,23 +529,10 @@ def create_album():
 
 @app.route('/edit/album/<int:album_id>/photos')
 def add_album_photos(album_id):
-    # ok it seems to get the album id just fine
-    # print('why you no album_id?', album_id)
-
     album_data = a.get_album(album_id)
-    # print()
-    # print('album_data ', album_data)
-    # print()
-
-    # i need recent photos too
-    # args = request.args.to_dict()
-    # print('\n', args)
-    # args['offset'] = 0
-    # photo_data = p.get_photos_in_range(20, int(args['offset']))
     photo_data = p.get_photos_in_range(20, 0)
     photo_data['album_data'] = album_data
-
-    print('Hello from add_album_photos ', photo_data)
+    # print('Hello from add_album_photos ', photo_data)
     return render_template('add_album_photos.html', json_data=photo_data), 200
 
 
@@ -581,8 +551,7 @@ def edit_album(album_id):
         # add the data to the database
 
         a.update_album(album_id, album_name, album_description)
-
-        print('test', album_id, album_name, album_description)
+        # print('test', album_id, album_name, album_description)
         json_data = a.get_album(album_id)
         return render_template('edit_album.html', json_data=json_data), 200
 
@@ -621,26 +590,11 @@ def get_album_photos_json():
             json_data = album_data
             return jsonify(json_data)
 
-        # else:
-        #     args['offset'] = 0
-        #     photo_data = a.get_album_photos_in_range(
-        #         args['album_id'],
-        #         20, int(args['offset']))
-        #     json_data = photo_data
-        #     return jsonify(json_data)
-
     if request.method == 'POST':
-
-        print('test', request.get_json())
+        # print('test', request.get_json())
         data = request.get_json()
-
         a.remove_photos_from_album(data['albumId'], data['photos'])
-
         return redirect("/albums/{}".format(data['albumId']), code=302)
-
-        # a.add_photos_to_album(data['albumId'], data['photos'])
-
-        # return redirect("/albums/{}".format(data['albumId']), code=302)
 
 
 @app.route('/edit/album/<int:album_id>/remove/photos', methods=['GET'])

@@ -23,7 +23,7 @@
                 <tr>
                     <td id="edit-albums-container" class="text-left">
 
-                        <a href="/albums/{{value['album_id']}}">
+                        <a href="{{url_for('get_album_photos', album_id=value['album_id'])}}">
                             <div class="card" style="width: 18rem;">
                                 <div class="card-body">
                                     <h5 class="card-title text-center">{{value['title']}}</h5>

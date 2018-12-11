@@ -5,12 +5,12 @@
         <h1>Make changes to the album {{json_data['title']}} and its description</h1>
     </div>
 </div>
-
+<h1>{{json_data}}</h1>
 <hr>
 <!-- album link and information -->
 <div class="row">
     <div id="problem-div" class="col">
-        <a href="/albums/{{json_data['album_id']}}">
+        <a href="{{url_for('get_album_photos', album_id=json_data['album_id'])}}">
             <div class="card" style="width: 18rem;">
                 <div class="card-body">
                     <h5 class="card-title text-center">{{json_data['title']}}</h5>
