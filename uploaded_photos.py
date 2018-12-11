@@ -1,5 +1,6 @@
 import os
 import sqlite3
+import datetime
 
 from database_interface import Database
 from tag import Tag
@@ -271,6 +272,12 @@ class UploadedPhotos(object):
                 return True
 
         return False
+
+    def add_to_photostream(self, data):
+        # get the photo_id for eatch photo
+        # set the date_posted to the current datetime
+        date_posted = datetime.datetime.now()
+        print(data)
 
 
 def main():

@@ -15,6 +15,7 @@ class PhotosData extends React.Component {
 
     // this.photoClick = this.photoClick.bind(this);
     this.discardPhoto = this.discardPhoto.bind(this);
+    this.addToPhotoStream = this.addToPhotoStream.bind(this);
   }
 
   componentWillMount() {
@@ -285,21 +286,24 @@ class PhotosData extends React.Component {
               </button>
             </div>
 
-            <div className="col text-center">
-              <button
-                className="btn btn-success btn-lg"
-                onClick={() => addToPhotoStream()}
-              >
-                Add to photostream
-              </button>
-            </div>
-
             <div className="col text-right">
               <button className="btn btn-success btn-lg">
                 Add to existing album
               </button>
             </div>
           </div>
+          <hr />
+          <div className="row">
+            <div className="col text-center">
+              <button
+                className="btn btn-success btn-lg"
+                onClick={() => addToPhotoStream()}
+              >
+                Add to photostream only
+              </button>
+            </div>
+          </div>
+
           <hr />
         </div>
       );
