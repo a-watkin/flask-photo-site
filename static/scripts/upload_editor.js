@@ -107,14 +107,48 @@ class PhotosData extends React.Component {
     });
   }
 
+  updateTitle(e, photo_id, key) {
+    console.log("updateTitle called", e.target.value, photo_id, key);
+
+    let test = JSON.stringify({
+      photoId: photo_id
+    });
+
+    console.log(test);
+
+    fetch("http://127.0.0.1:5000/api/uploaded/title", {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        photoId: photo_id,
+        title: e.target.value
+      })
+    }).then(Response => {
+      console.log("Response", Response.status);
+
+      if (Response.status === 200) {
+        let objectCopy = this.state.items;
+        objectCopy[key]["photo_title"] = e.target.value;
+
+        this.setState({
+          items: objectCopy
+        });
+      }
+    });
+  }
+
   render() {
     let photo = null;
     let discardPhoto = this.discardPhoto;
+    let updateTitle = this.updateTitle;
 
     if (this.state.items) {
       let photos = this.state.items;
       // console.log(photos);
-      let photo = Object.keys(photos).map(function(key, index) {
+      let photo = Object.keys(photos).map(function(key) {
         let photo_url = photos[key]["original"];
         let photo_id = photos[key]["photo_id"];
         // console.log(photo_url);
@@ -134,6 +168,7 @@ class PhotosData extends React.Component {
                   className="input-group input-group-text"
                   type="text"
                   value={photos[key]["title"]}
+                  onBlur={e => updateTitle(e, photo_id, key)}
                 />
                 <h6>{photos[key]["photo_id"]}</h6>
                 <hr />
