@@ -14,7 +14,7 @@ class PhotosData extends React.Component {
     };
 
     // this.photoClick = this.photoClick.bind(this);
-    this.DiscardPhoto = this.DiscardPhoto.bind(this);
+    this.discardPhoto = this.discardPhoto.bind(this);
   }
 
   componentWillMount() {
@@ -66,7 +66,7 @@ class PhotosData extends React.Component {
     });
   }
 
-  DiscardPhoto(photo_id, key) {
+  discardPhoto(photo_id, key) {
     console.log("clicked discard", photo_id);
 
     let test = JSON.stringify({
@@ -88,17 +88,28 @@ class PhotosData extends React.Component {
       console.log("Response", Response.status);
 
       if (Response.status === 200) {
+        // let tempArray = [...this.state.items];
+        // console.log("tempArray", tempArray);
+        // tempAray.splice(key, 1);
+        // this.setState({
+        //   items: tempArray
+        // });
+        // let index = tempAray.indexOf(photo_id);
         let objectCopy = this.state.items;
+        delete objectCopy[key];
+        this.setState({
+          items: objectCopy
+        });
         console.log("getting here ok");
         console.log(this.state.items);
-        console.log(this.state.items[key]);
+        // console.log(this.state.items[key]);
       }
     });
   }
 
   render() {
     let photo = null;
-    let DiscardPhoto = this.DiscardPhoto;
+    let discardPhoto = this.discardPhoto;
 
     if (this.state.items) {
       let photos = this.state.items;
@@ -135,7 +146,7 @@ class PhotosData extends React.Component {
                 <hr />
                 <button
                   className="btn btn-danger btn-lg"
-                  onClick={() => DiscardPhoto(photo_id, key)}
+                  onClick={() => discardPhoto(photo_id, key)}
                 >
                   Discard photo
                 </button>
