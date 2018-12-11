@@ -167,7 +167,11 @@ class PhotosData extends React.Component {
                 <input
                   className="input-group input-group-text"
                   type="text"
-                  value={photos[key]["title"]}
+                  placeholder={
+                    photos[key]["photo_title"] === null
+                      ? ""
+                      : photos[key]["photo_title"]
+                  }
                   onBlur={e => updateTitle(e, photo_id, key)}
                 />
                 <h6>{photos[key]["photo_id"]}</h6>

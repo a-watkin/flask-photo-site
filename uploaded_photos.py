@@ -238,9 +238,29 @@ class UploadedPhotos(object):
         # you should test this later after implementing adding tags to uploaded photos
         # remove from tags? i don't think you need to? you can have orphaned tags
 
+    def update_title(self, photo_id, new_title):
+        self.db.make_query(
+            '''
+            update photo
+            set photo_title = '{}'
+            where photo_id = {}
+            '''.format(new_title, photo_id)
+        )
+
+        # check title has been updated
+        data = self.db.make_query(
+            '''
+            select * from photo where photo_id = {}
+            '''.format(photo_id)
+        )
+
+        print(data)
+
 
 def main():
     up = UploadedPhotos()
+
+    up.update_title(1269676143, 'test title')
 
     # 1326226897
     # print(up.discard_photo(1326226897))
@@ -255,7 +275,7 @@ def main():
     #     2429676854, '2018-12-09 21:16:43.708922', '/2018/12/test_landscape_ba5f22cc.jpg', '/2018/12/test_landscape_ba5f22cc_lg_sqaure.jpg'
     # )
 
-    print(up.get_uploaded_photos_test())
+    # print(up.get_uploaded_photos_test())
 
 
 if __name__ == "__main__":
