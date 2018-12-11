@@ -228,13 +228,21 @@ class Tag(object):
 
         tags_in_data = []
         if len(data) > 0:
-            tags_in_data.append(data[1])
+            for tag in data:
+                tags_in_data.append(tag[1])
+
+        print(tags_in_data)
+        for tag in tag_list:
+            if tag not in tags_in_data:
+                return False
+
+        return True
 
 
 if __name__ == "__main__":
     t = Tag()
 
-    t.add_tags_to_photo('3400128875', ['test tag name', 'test tag two'])
+    print(t.add_tags_to_photo('3400128875', ['test tag name', 'test tag two']))
 
     # print(t.get_photo_tags('3400128875'))
 

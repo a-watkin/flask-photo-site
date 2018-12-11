@@ -197,7 +197,10 @@ def add_uploaded_tags():
     print('tag_data', tag_data)
     resp = t.add_tags_to_photo(tag_data['photoId'], tags)
     print(resp)
-    return json.dumps({'success': True}), 200, {'ContentType': 'application/json'}
+    if resp:
+        return json.dumps({'success': True}), 200, {'ContentType': 'application/json'}
+    else:
+        return json.dumps({'success': False}), 500, {'ContentType': 'application/json'}
 
 
 @app.route('/uploaded/')
