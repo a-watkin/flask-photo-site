@@ -140,6 +140,11 @@ class PhotosData extends React.Component {
     });
   }
 
+  getTags(photo_id, key) {
+    // console.log("getTags called");
+    return "";
+  }
+
   addTags(e, photo_id, key) {
     console.log("hello from addTags");
   }
@@ -149,6 +154,7 @@ class PhotosData extends React.Component {
     let discardPhoto = this.discardPhoto;
     let updateTitle = this.updateTitle;
     let addTags = this.addTags;
+    let getTags = this.getTags;
 
     if (this.state.items) {
       let photos = this.state.items;
@@ -190,6 +196,7 @@ class PhotosData extends React.Component {
                   className="input-group input-group-text"
                   type="text"
                   onBlur={e => addTags(e, photo_id, key)}
+                  placeholder={photos[key]["tags"]}
                 />
                 <hr />
                 <button

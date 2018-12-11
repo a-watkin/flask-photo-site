@@ -121,9 +121,15 @@ class UploadedPhotos(object):
 
         # a list of objects
         # print(data)
+        for photo in data:
+            # print()
+            # print(self.tag.get_photo_tags(photo['photo_id']))
+            photo['tags'] = self.tag.get_photo_tags(photo['photo_id'])
+            # photo['tags'] = ['london', 'cunts']
+
         # for photo in data:
         #     print()
-        #     print(self.tag.get_photo_tags(photo['photo_id']))
+        #     print(photo)
 
         cur_dir = os.getcwd()
 
@@ -131,7 +137,6 @@ class UploadedPhotos(object):
         count = 0
         for d in data:
             a_dict[count] = d
-            a_dict['tags'] = self.tag.get_photo_tags(d['photo_id'])
             count += 1
             # d['original'] = cur_dir + d['original']
             # d['large_square'] = cur_dir + d['large_square']
