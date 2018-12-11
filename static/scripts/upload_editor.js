@@ -183,11 +183,34 @@ class PhotosData extends React.Component {
     }
   }
 
+  addToPhotoStream() {
+    console.log("hello from addToPhotoStream");
+    // send data to the backend
+    fetch("http://127.0.0.1:5000/api/upload/photostream", {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        photos: this.state.items
+      })
+    }).then(Response => {
+      console.log("Response", Response.status);
+
+      if (Response.status === 200) {
+        // redirect to the photostream on success
+        window.location.assign(`127.0.0.1:5000/api/photos/`);
+      }
+    });
+  }
+
   render() {
     let photo = null;
     let discardPhoto = this.discardPhoto;
     let updateTitle = this.updateTitle;
     let addTags = this.addTags;
+    let addToPhotoStream = this.addToPhotoStream;
 
     if (this.state.items) {
       let photos = this.state.items;
@@ -263,7 +286,10 @@ class PhotosData extends React.Component {
             </div>
 
             <div className="col text-center">
-              <button className="btn btn-success btn-lg">
+              <button
+                className="btn btn-success btn-lg"
+                onClick={() => addToPhotoStream()}
+              >
                 Add to photostream
               </button>
             </div>

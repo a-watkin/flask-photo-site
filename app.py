@@ -203,6 +203,12 @@ def add_uploaded_tags():
         return json.dumps({'success': False}), 500, {'ContentType': 'application/json'}
 
 
+@app.route('/api/upload/photostream', methods=['GET', 'POST'])
+def to_photostream():
+    data = request.get_json()
+    print(data)
+
+
 @app.route('/uploaded/')
 def uploaded_photos_page():
     """

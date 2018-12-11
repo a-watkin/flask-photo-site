@@ -3,7 +3,7 @@ import sqlite3
 
 from database_interface import Database
 from tag import Tag
-from exif_util import get_datetime_taken
+from exif_util import ExifUtil
 
 
 class UploadedPhotos(object):
@@ -21,9 +21,9 @@ class UploadedPhotos(object):
         self.tag = Tag()
 
     def save_photo(self, photo_id, date_uploaded, original, large_square):
-        print(original)
-        get_datetime_taken(os.getcwd() + original)
-        print(photo_id, self.user_id)
+        # print(original)
+        # get_datetime_taken(os.getcwd() + original)
+        # print(photo_id, self.user_id)
         # write to the uploaded_photo table
         query_string = '''
         insert into upload_photo(photo_id, user_id)
