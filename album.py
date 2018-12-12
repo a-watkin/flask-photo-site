@@ -382,6 +382,8 @@ class Album(object):
             if len(album_cover) > 0:
                 # print(album_cover[0]['large_square'])
                 album['large_square'] = album_cover[0]['large_square']
+            # print()
+            # print(album)
 
             # album['large_square'] = self.get_album_cover(album['album_id'])[
             #     0]['large_square']
@@ -394,7 +396,7 @@ class Album(object):
             a_dict[count] = d
             count += 1
 
-        rtn_dict = {'photos': a_dict}
+        rtn_dict = {'albums': a_dict}
 
         rtn_dict['limit'] = limit
         rtn_dict['offset'] = offset

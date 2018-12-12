@@ -324,10 +324,6 @@ def get_albums_json():
                 # gotta make this an int
                 album_data = a.get_albums_in_range(20, int(args['offset']))
                 json_data = album_data
-
-                # print('args are ', args)
-
-                json_data = photo_data
                 return jsonify(json_data)
 
         else:

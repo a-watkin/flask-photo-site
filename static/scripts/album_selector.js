@@ -7,59 +7,30 @@ class AlbumSelector extends React.Component {
     super(props);
     this.state = {
       isLoaded: false,
-      items: null,
+      albums: null,
       currentOffset: 20,
-      selectedPhotos: [],
+      selectedAlbum: [],
       albumId: null
     };
 
-    this.photoClick = this.photoClick.bind(this);
+    this.albumClick = this.albumClick.bind(this);
   }
 
   componentWillMount() {
+    console.log("hello from componentWillMount");
     // getting the album id from the URL
     let currentUrl = window.location.href;
     let splitUrl = currentUrl.split("/");
     const albumId = splitUrl[5];
 
-    fetch("http://127.0.0.1:5000/api/getphotos")
-      .then(res => res.json())
-      .then(
-        result => {
-          // console.log("result", result);
-          this.setState({
-            isLoaded: true,
-            items: result.photos,
-            currentOffset: result.offset,
-            albumId: albumId
-          });
-        },
-        // Note: it's important to handle errors here
-        // instead of a catch() block so that we don't swallow
-        // exceptions from actual bugs in components.
-        error => {
-          this.setState({
-            isLoaded: true,
-            error
-          });
-        }
-      );
-  }
-
-  getNextPhotos() {
-    console.log("next called ", this.state.currentOffset);
-
-    fetch(
-      `http://127.0.0.1:5000/api/getphotos?offset=${this.state.currentOffset +
-        20}`
-    )
+    fetch("http://127.0.0.1:5000/api/getalbums")
       .then(res => res.json())
       .then(
         result => {
           console.log("result", result);
           this.setState({
             isLoaded: true,
-            items: result.photos,
+            albums: result.albums,
             currentOffset: result.offset
           });
         },
@@ -75,15 +46,11 @@ class AlbumSelector extends React.Component {
       );
   }
 
-  getPreviousPhotos() {
-    console.log("previous called ", this.state.currentOffset);
-
-    if (this.state.currentOffset <= 0) {
-      return false;
-    }
+  getNextAlbums() {
+    console.log("next called ", this.state.currentOffset);
 
     fetch(
-      `http://127.0.0.1:5000/api/getphotos?offset=${this.state.currentOffset -
+      `http://127.0.0.1:5000/api/getalbums?offset=${this.state.currentOffset +
         20}`
     )
       .then(res => res.json())
@@ -92,7 +59,40 @@ class AlbumSelector extends React.Component {
           console.log("result", result);
           this.setState({
             isLoaded: true,
-            items: result.photos,
+            albums: result.albums,
+            currentOffset: result.offset
+          });
+        },
+        // Note: it's important to handle errors here
+        // instead of a catch() block so that we don't swallow
+        // exceptions from actual bugs in components.
+        error => {
+          this.setState({
+            isLoaded: true,
+            error
+          });
+        }
+      );
+  }
+
+  getPreviousAlbums() {
+    console.log("previous called ", this.state.currentOffset);
+
+    if (this.state.currentOffset <= 0) {
+      return false;
+    }
+
+    fetch(
+      `http://127.0.0.1:5000/api/getalbums?offset=${this.state.currentOffset -
+        20}`
+    )
+      .then(res => res.json())
+      .then(
+        result => {
+          console.log("result", result);
+          this.setState({
+            isLoaded: true,
+            albums: result.albums,
             currentOffset: result.offset
           });
         },
@@ -109,9 +109,8 @@ class AlbumSelector extends React.Component {
   }
 
   sendData() {
-    console.log("getting here?", this.state.albumId, this.state.selectedPhotos);
-    // /api/getphotos
-    fetch("http://127.0.0.1:5000/api/getphotos", {
+    console.log("getting here?", this.state.albumId, this.state.selectedAlbum);
+    fetch("http://127.0.0.1:5000/api/getalbums", {
       method: "POST",
       headers: {
         Accept: "application/json",
@@ -119,7 +118,7 @@ class AlbumSelector extends React.Component {
       },
       body: JSON.stringify({
         albumId: this.state.albumId,
-        photos: this.state.selectedPhotos
+        albums: this.state.selectedAlbum
       })
     }).then(() => {
       // redirect after successful post
@@ -129,25 +128,17 @@ class AlbumSelector extends React.Component {
     });
   }
 
-  photoClick(photo_id) {
-    console.log("Greetings from photoClick the photo_id is ", photo_id);
+  albumClick(album_id) {
+    console.log("Greetings from albumClick the album_id is ", album_id);
 
-    // only add the photo_id if it's not in the array
-    if (!this.state.selectedPhotos.includes(photo_id)) {
-      this.state.selectedPhotos.push(photo_id);
-    } else {
-      // remove the photo from the array
-      let tempAray = [...this.state.selectedPhotos];
-      let index = tempAray.indexOf(photo_id);
-      if (index !== -1) {
-        tempAray.splice(index, 1);
-        this.setState({
-          selectedPhotos: tempAray
-        });
-      }
-    }
+    let tempArray = [];
+    tempArray.push(album_id);
 
-    console.log("state of selectedPhotos ", this.state.selectedPhotos);
+    // i only wan this to allow one item in the array
+    this.setState({
+      selectedAlbum: tempArray
+    });
+
     // also not ideal but good enough for now
     this.forceUpdate();
   }
@@ -168,30 +159,30 @@ class AlbumSelector extends React.Component {
       backgroundColor: "#28a745"
     };
 
-    let selectedPhotos = this.state.selectedPhotos;
+    let selectedAlbum = this.state.selectedAlbum;
     let large_square = "";
     // it doesn't seemt to be able to get this reference
     // without delaring it here from the Objct.keys reurn statment
     // also passing it and invoking leads to it being executed twice?
-    let photoClick = this.photoClick;
+    let albumClick = this.albumClick;
 
-    if (this.state.items) {
-      large_square = this.state.items[0]["large_square"];
-      const photos = this.state.items;
+    if (this.state.albums) {
+      large_square = this.state.albums[0]["large_square"];
+      const albums = this.state.albums;
 
       // console.log(this.state.items[0]["large_square"]);
-      let test = Object.keys(photos).map(function(key, index) {
+      let test = Object.keys(albums).map(function(key, index) {
         return (
-          <div key={photos[key]["photo_id"]} className="col text-right">
+          <div key={albums[key]["album_id"]} className="col text-right">
             <div
               id="photo-select"
               className="card"
               // not ideal right here...but it works
               onClick={function(event) {
-                photoClick(photos[key]["photo_id"]);
+                albumClick(albums[key]["album_id"]);
               }}
               style={
-                selectedPhotos.includes(photos[key]["photo_id"])
+                selectedAlbum.includes(albums[key]["album_id"])
                   ? selectedCard
                   : cardStyle
               }
@@ -199,12 +190,12 @@ class AlbumSelector extends React.Component {
               <div className="card-header">
                 <h5 className="card-title text-center">
                   {" "}
-                  {photos[key]["photo_title"]}{" "}
+                  {albums[key]["title"]}{" "}
                 </h5>{" "}
               </div>
               <div className="card-body">
                 <img
-                  src={photos[key]["large_square"]}
+                  src={albums[key]["large_square"]}
                   alt="Responsive image"
                   className="card-img-top"
                 />
@@ -214,15 +205,13 @@ class AlbumSelector extends React.Component {
         );
       });
 
-      console.log("what is?", selectedPhotos);
-
       return (
         <div>
           <div className="row text-center">
             <div className="col">
               <button
                 className="btn btn-lg"
-                onClick={() => this.getPreviousPhotos()}
+                onClick={() => this.getPreviousAlbums()}
               >
                 Next{" "}
               </button>{" "}
@@ -230,7 +219,7 @@ class AlbumSelector extends React.Component {
             <div className="col">
               <button
                 className="btn btn-lg"
-                onClick={() => this.getNextPhotos()}
+                onClick={() => this.getNextAlbums()}
               >
                 Previous{" "}
               </button>{" "}
