@@ -31,22 +31,30 @@ jQuery(document).ready(function($) {
 
   // select all #remote-tag elements
 
-  console.log("script working?");
+  // console.log("script working?");
 
-  var remote_tags = [];
+  // var remove_tags = [];
 
-  $(".remove-tags").click(function() {
-    var tagName = $(this)
-      .text()
-      .trim();
-    console.log(tagName);
+  // $(".remove-tags").click(function() {
+  //   console.log("before", remove_tags);
+  //   var tagName = $(this)
+  //     .text()
+  //     .trim();
+  //   console.log(tagName);
 
-    if (this.style.color !== "blue") {
-      this.style.color = "red";
-    } else {
-      this.style.color = "";
-    }
-  });
+  //   console.log(this.style.color);
+  //   if (this.style.color !== "red") {
+  //     this.style.color = "red";
+  //     remove_tags.push(tagName);
+  //   } else {
+  //     this.style.color = "";
 
-  // console.log($("h1").text());
+  //     remove_tags.splice(remove_tags.indexOf(tagName), 1);
+  //   }
+  //   console.log("after", remove_tags);
+  // });
+
+  // // console.log($("h1").text());
+  // var currentUrl = window.location.href;
+  // var photoId = currentUrl.split("=")[1];
 });

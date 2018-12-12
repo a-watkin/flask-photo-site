@@ -540,6 +540,13 @@ def remove_tag():
         return render_template('remove_tags.html', json_data=photo_data), 200
 
 
+@app.route('/api/get/phototags', methods=['GET', 'POST'])
+def get_photo_tag_data():
+    args = request.args.to_dict()
+    photo_data = p.get_photo(args['photo_id'])
+    return jsonify(photo_data)
+
+
 @app.route('/albums')
 def get_albums():
     albums_data = a.get_albums()

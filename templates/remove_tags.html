@@ -35,10 +35,17 @@
 <div class="
                 col text-right">
                 <a href="/api/photos/{{json_data['photo_id']}}">
-                    <button class="btn btn-danger btn-lg">Remove tags</button>
+                    <button id="remove-photo-tags" class="btn btn-danger btn-lg">Remove tags</button>
                 </a>
     </div>
 </div>
 <hr>
 
+<div id="tag-selector"></div>
+
+<!-- Scripts for React -->
+<script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+<script src="https://unpkg.com/react@16/umd/react.development.js" crossorigin></script>
+<script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js" crossorigin></script>
+<script type="text/babel" src="{{ url_for('static', filename='scripts/tag_selector.js') }}"></script>
 {% endblock %}
