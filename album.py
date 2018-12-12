@@ -53,8 +53,12 @@ class Album(object):
         print(album_data)
 
         if len(album_data) > 0 and album_data[0]['photos'] > 0:
-            album_data[0]['large_square'] = self.get_album_cover(
-                album_data[0]['album_id'])[0]['large_square']
+            # list index out of range
+            # setting large square in the return data to the value returned by self.get_album_cover
+
+            if self.get_album_cover(album_data[0]['album_id']):
+                album_data[0]['large_square'] = self.get_album_cover(
+                    album_data[0]['album_id'])[0]['large_square']
 
             print(album_data)
             return album_data[0]
@@ -95,7 +99,7 @@ class Album(object):
 
         album_cover = self.db.get_query_as_list(query_string)
 
-        # print(album_cover)
+        print(album_cover)
 
         return album_cover
 
@@ -342,7 +346,9 @@ if __name__ == "__main__":
 
     # print(a.get_albums())
 
-    a.get_album('2302407010')
+    # a.get_album('1847925474')
+
+    a.get_album_cover('1847925474')
 
     # print(a.get_album_photos_in_range('72157678080171871'))
 

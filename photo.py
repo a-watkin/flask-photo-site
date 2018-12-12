@@ -213,27 +213,61 @@ class Photos(object):
         # print(resp)
 
     def delete_photo(self, photo_id):
-        resp = self.db.make_query(
+        # check if photo is in an album
+        album_check = self.db.make_query(
             '''
-        delete from photo where photo_id = '{}'
-        '''.format(photo_id)
+            select * from photo_album where photo_id = '{}'
+            '''.format(photo_id)
         )
 
-        print(resp)
+        print(album_check)
+
+        # if the photo is in an album decrement the value
+        # decrement the value of the album count
+        if len(album_check) > 0:
+            for album in album_check:
+                print(album[0])
+
+                self.db.make_query(
+                    '''
+                    update album
+                    set photos = photos - 1
+                    where album_id = '{}'
+                    '''.format(album[0])
+                )
+
+        # delete photo from photo_album
+        self.db.make_query(
+            '''
+            delete from photo_album where photo_id = '{}'
+            '''.format(photo_id)
+        )
+
+        self.db.make_query(
+            '''
+            delete from photo where photo_id = '{}'
+            '''.format(photo_id)
+        )
+
+        print(album_check)
 
 
 if __name__ == "__main__":
     p = Photos()
     # next photo is working
-    print(p.get_next_photo(44692597905))
+    # print(p.get_next_photo(44692597905))
     # it can't get that photo
-    print(p.get_photo(1125251958))
+    # print(p.get_photo(1125251958))
 
     # print(p.get_photos_in_range())
     # print(p.db.db_name)
 
     # p.update_title('30081941117', 'tenticles title')
 
-    # p.delete_photo('30081941117')
+    p.delete_photo('44692597905')
+
+    # not in an album
+    # 43917844765
+    # p.delete_photo('43917844765')
 
     # print(p.get_photo(1125251958))
