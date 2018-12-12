@@ -213,6 +213,8 @@ class Photos(object):
         # print(resp)
 
     def delete_photo(self, photo_id):
+        # Update tag count
+
         # check if photo is in an album
         album_check = self.db.make_query(
             '''
@@ -259,12 +261,12 @@ if __name__ == "__main__":
     # it can't get that photo
     # print(p.get_photo(1125251958))
 
-    print(p.get_photos_in_range())
+    # print(p.get_photos_in_range())
     # print(p.db.db_name)
 
     # p.update_title('30081941117', 'tenticles title')
 
-    # p.delete_photo('44692597905')
+    p.delete_photo('5052578527')
 
     # not in an album
     # 43917844765

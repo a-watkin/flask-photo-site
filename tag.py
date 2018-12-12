@@ -6,17 +6,6 @@ class Tag(object):
 
     def __init__(self):
         self.db = Database('eigi-data.db')
-        self.tag_count = self.tag_count_cache()
-
-    def tag_count_cache(self):
-        tag_count = {}
-        tag_data = self.db.get_query_as_list("SELECT tag_name FROM tag")
-
-        for tag in tag_data:
-            tag_count[tag['tag_name']
-                      ] = self.get_photo_count_by_tag(tag['tag_name'])
-
-        return tag_count
 
     def get_all_tags_without_count(self):
         # as a list of dict values
@@ -41,20 +30,6 @@ class Tag(object):
     def get_all_tags(self):
         # as a list of dict values
         tag_data = self.db.get_query_as_list("SELECT tag_name FROM tag")
-        # print(tag_data)
-
-        # as a lis of tuples
-        # test = self.db.make_query("SELECT tag_name FROM tag")
-
-        # print(test)
-
-        # # print(tag_data)
-
-        # rtn_dict = {
-        #     'tag_info': {'number_of_photos': self.get_photo_count_by_tag(tag_name)}
-        # }
-
-        # return tag_data
 
         rtn_dict = {
 
@@ -68,6 +43,7 @@ class Tag(object):
             # it's slow here because each tag means a query to the db
             rtn_dict[count]['photos'] = self.get_photo_count_by_tag(
                 tag['tag_name'])
+
             count += 1
 
         return rtn_dict
@@ -105,11 +81,6 @@ class Tag(object):
 
         if len(photo_count) > 0:
             return photo_count[0]['count(photo_id)']
-
-        if self.tag_count[tag_name] != photo_count[0]['count(photo_id)']:
-            print()
-            print('PROBLEMS WITH TAG COUNT')
-            print()
 
     def get_photos_by_tag(self, tag_name):
         """
@@ -194,10 +165,6 @@ class Tag(object):
 
         # confirm that the new tag is present and the old tag is not
         if self.get_tag(new_tag) and not self.get_tag(old_tag):
-            # Update tag name in tag cache
-            # mydict[new_key] = mydict.pop(old_key)
-            self.tag_count[new_tag] = self.tag_count.pop(old_tag)
-
             return True
         else:
             return False
@@ -206,8 +173,6 @@ class Tag(object):
         data = self.db.make_query(
             '''select * from photo_tag where tag_name = '{}' '''
             .format(tag_name))
-
-        print(data)
 
         if len(data) > 0:
             return True
@@ -218,9 +183,6 @@ class Tag(object):
         self.db.delete_rows_where('tag', 'tag_name', tag_name)
         # and also in photo_tag
         self.db.delete_rows_where('photo_tag', 'tag_name', tag_name)
-
-        # delete from tag cahce
-        del self.tag_count[tag_name]
 
         if not self.get_tag(tag_name) and not self.check_photo_tag(tag_name):
             return True
@@ -257,9 +219,6 @@ class Tag(object):
                 if self.db.get_row('tag', 'tag_name', tag):
                     print('added tag, ', tag)
 
-                # Add to tag cache
-                self.tag_count[tag] = 1
-
             # so now the tag should be in the table tag
             # already present or added
 
@@ -269,9 +228,6 @@ class Tag(object):
                 photo_id=photo_id,
                 tag_name=tag
             )
-
-            # increment tag cache
-            self.tag_count[tag] += 1
 
         data = self.db.make_query(
             '''
@@ -297,8 +253,6 @@ class Tag(object):
             delete from tag where tag_name = '{}'
             '''.format(tag_name)
         )
-        # remove from tag cache
-        del self.tag_count[tag_name]
 
     def clean_tags(self):
         forbidden = [' ', ';']
@@ -317,13 +271,9 @@ class Tag(object):
 if __name__ == "__main__":
     t = Tag()
 
-    # t.tag_count_cache()
+    # print(t.get_photo_count_by_tag('people'))
 
-    # print(t.tag_count)
-
-    print(t.get_photo_count_by_tag('people'))
-
-    # print(t.get_all_tags())
+    print(t.get_all_tags())
 
     # print(t.get_all_tags_without_count())
 

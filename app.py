@@ -462,8 +462,9 @@ def delete_tag(tag_name):
 
 @app.route('/tags/')
 def get_tags():
-    # tag_data = t.get_all_tags()
-    tag_data = t.get_all_tags_without_count()
+    # this is now using a cache
+    tag_data = t.get_all_tags()
+    # tag_data = t.get_all_tags_without_count()
     # print(tag_data)
     return render_template('tags.html', json_data=tag_data)
 
