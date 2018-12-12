@@ -176,6 +176,11 @@ def discard_photo():
         return json.dumps({'success': False}), 500, {'ContentType': 'application/json'}
 
 
+@app.route('/api/select/album')
+def upload_select_album():
+    return 'select album page'
+
+
 @app.route('/api/uploaded/title', methods=['GET', 'POST'])
 def update_title():
     d = request.get_json()

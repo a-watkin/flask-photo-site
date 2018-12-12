@@ -262,7 +262,7 @@ class Tag(object):
 if __name__ == "__main__":
     t = Tag()
 
-    t.clean_tags()
+    # t.clean_tags()
 
     # print(t.add_tags_to_photo('3400128875', ['test tag name', 'test tag two']))
 
