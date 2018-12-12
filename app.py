@@ -336,6 +336,17 @@ def get_albums_json():
 
         print('test', request.get_json())
 
+        data = request.get_json()
+
+        album_id = data['albumId'][0]
+
+        # add all the uplaoded photos to the album
+        up.add_all_to_album(album_id)
+
+        return redirect("/albums/{}".format(album_id), code=302)
+
+        # add_all_to_album
+
         #     data = request.get_json()
         #     a.add_photos_to_album(data['albumId'], data['photos'])
 

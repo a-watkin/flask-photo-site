@@ -128,14 +128,14 @@ class AlbumSelector extends React.Component {
         "Content-Type": "application/json"
       },
       body: JSON.stringify({
-        albums: this.state.selectedAlbum
+        albumId: this.state.selectedAlbum
       })
     }).then(() => {
       console.log("eh");
       // redirect after successful post
-      // window.location.assign(
-      //   `http://127.0.0.1:5000/albums/${this.state.albumId}`
-      // );
+      window.location.assign(
+        `http://127.0.0.1:5000/albums/${this.state.selectedAlbum[0]}`
+      );
     });
   }
 
