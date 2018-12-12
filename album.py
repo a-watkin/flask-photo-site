@@ -99,7 +99,7 @@ class Album(object):
 
         album_cover = self.db.get_query_as_list(query_string)
 
-        print(album_cover)
+        # print(album_cover)
 
         return album_cover
 
@@ -336,9 +336,76 @@ class Album(object):
 
         return identifier
 
+    def get_albums_in_range(self, limit=20, offset=0):
+        """
+        Returns the latest 20 albums.
+
+        Offset is where you want to start from, so 0 would be from the most recent.
+        10 from the tenth most recent etc.
+        """
+        q_data = None
+        with sqlite3.connect(self.db.db_name) as connection:
+            c = connection.cursor()
+
+            c.row_factory = sqlite3.Row
+
+            query_string = (
+                '''
+                select * from album
+                order by date_created
+                desc limit {} offset {}
+                '''
+            ).format(limit, offset)
+
+            q_data = c.execute(query_string)
+
+        rtn_dict = {
+            'limit': limit,
+            'offset': offset,
+            'photos': []
+        }
+
+        """
+        I think it may actually be better to layout what fields you want here.
+
+        And maybe include all sizes.
+        """
+
+        data = [dict(ix) for ix in q_data]
+
+        # print(data)
+
+        for album in data:
+            album_id = album['album_id']
+            album_cover = self.get_album_cover(album_id)
+            # print()
+            if len(album_cover) > 0:
+                # print(album_cover[0]['large_square'])
+                album['large_square'] = album_cover[0]['large_square']
+
+            # album['large_square'] = self.get_album_cover(album['album_id'])[
+            #     0]['large_square']
+            # print()
+            # print(album)
+
+        a_dict = {}
+        count = 0
+        for d in data:
+            a_dict[count] = d
+            count += 1
+
+        rtn_dict = {'photos': a_dict}
+
+        rtn_dict['limit'] = limit
+        rtn_dict['offset'] = offset
+
+        return rtn_dict
+
 
 if __name__ == "__main__":
     a = Album()
+    print(a.get_albums_in_range(20, 20))
+
     # print(a.get_album_cover('72157650725849398'))
     # blah = a.get_albums()
 
@@ -348,7 +415,7 @@ if __name__ == "__main__":
 
     # a.get_album('1847925474')
 
-    a.get_album_cover('1847925474')
+    # a.get_album_cover('1847925474')
 
     # print(a.get_album_photos_in_range('72157678080171871'))
 

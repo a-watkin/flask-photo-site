@@ -178,7 +178,7 @@ def discard_photo():
 
 @app.route('/api/select/album')
 def upload_select_album():
-    return 'select album page'
+    return render_template('upload_select_album.html'), 200
 
 
 @app.route('/api/uploaded/title', methods=['GET', 'POST'])
@@ -308,6 +308,42 @@ def get_photos():
         json_data = photo_data
         # print(json_data)
         return render_template('photos.html', json_data=json_data), 200
+
+
+@app.route('/api/getalbums', methods=['GET', 'POST'])
+def get_albums_json():
+    args = request.args.to_dict()
+
+    # print(args)
+    if request.method == 'GET':
+        if len(args) > 0:
+
+            if 'offset' in args.keys() and 'limit' not in args.keys():
+                if int(args['offset']) <= 0:
+                    args['offset'] = 0
+                # gotta make this an int
+                album_data = a.get_albums_in_range(20, int(args['offset']))
+                json_data = album_data
+
+                # print('args are ', args)
+
+                json_data = photo_data
+                return jsonify(json_data)
+
+        else:
+            args['offset'] = 0
+            album_data = a.get_albums_in_range(20, int(args['offset']))
+            json_data = album_data
+            return jsonify(album_data)
+
+    # if request.method == 'POST':
+
+    #     # print('test', request.get_json())
+
+    #     data = request.get_json()
+    #     a.add_photos_to_album(data['albumId'], data['photos'])
+
+    #     return redirect("/albums/{}".format(data['albumId']), code=302)
 
 
 @app.route('/api/getphotos', methods=['GET', 'POST'])

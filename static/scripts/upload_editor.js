@@ -212,6 +212,11 @@ class PhotosData extends React.Component {
     window.location.assign(`/api/create/album`);
   }
 
+  addToExistingAlbum() {
+    console.log("hello from addToExistingAlbum");
+    window.location.assign(`/api/select/album`);
+  }
+
   render() {
     let photo = null;
     let discardPhoto = this.discardPhoto;
@@ -219,6 +224,7 @@ class PhotosData extends React.Component {
     let addTags = this.addTags;
     let addToPhotoStream = this.addToPhotoStream;
     let addToNewAlbum = this.addToNewAlbum;
+    let addToExistingAlbum = this.addToExistingAlbum;
 
     if (this.state.items) {
       let photos = this.state.items;
@@ -306,7 +312,10 @@ class PhotosData extends React.Component {
             </div>
 
             <div className="col text-center">
-              <button className="btn btn-success btn-lg">
+              <button
+                className="btn btn-success btn-lg"
+                onClick={() => addToExistingAlbum()}
+              >
                 Add to existing album
               </button>
             </div>

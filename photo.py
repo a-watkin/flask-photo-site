@@ -15,7 +15,7 @@ class Photos(object):
 
     def get_photos_in_range(self, limit=20, offset=0):
         """
-        Returns the latest 10 photos.
+        Returns the latest 20 photos.
 
         Offset is where you want to start from, so 0 would be from the most recent.
         10 from the tenth most recent etc.
@@ -259,12 +259,12 @@ if __name__ == "__main__":
     # it can't get that photo
     # print(p.get_photo(1125251958))
 
-    # print(p.get_photos_in_range())
+    print(p.get_photos_in_range())
     # print(p.db.db_name)
 
     # p.update_title('30081941117', 'tenticles title')
 
-    p.delete_photo('44692597905')
+    # p.delete_photo('44692597905')
 
     # not in an album
     # 43917844765
