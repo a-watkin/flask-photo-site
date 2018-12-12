@@ -238,11 +238,33 @@ class Tag(object):
 
         return True
 
+    def remove_tag_name(self, tag_name):
+        self.db.make_query(
+            '''
+            delete from tag where tag_name = '{}'
+            '''.format(tag_name)
+        )
+
+    def clean_tags(self):
+        forbidden = [' ', ';']
+        # as a list of dict values
+        tag_data = self.db.get_query_as_list("SELECT tag_name FROM tag")
+        for tag in tag_data:
+            tag_name = tag['tag_name']
+
+            if len(tag_name) == 1:
+                self.remove_tag_name(tag_name)
+
+            if tag_name in forbidden:
+                self.remove_tag_name(tag_name)
+
 
 if __name__ == "__main__":
     t = Tag()
 
-    print(t.add_tags_to_photo('3400128875', ['test tag name', 'test tag two']))
+    t.clean_tags()
+
+    # print(t.add_tags_to_photo('3400128875', ['test tag name', 'test tag two']))
 
     # print(t.get_photo_tags('3400128875'))
 
