@@ -527,9 +527,17 @@ def remove_tag():
     """
     Remove a tag from a photo
     """
-    args = request.args.to_dict()
+    if request.method == 'GET':
+        args = request.args.to_dict()
+        photo_data = p.get_photo(args['photo_id'])
+        # tags = t.get_photo_tags(args['photo_id'])
+        # args['tags'] = tags
 
-    return 'remove tag page'
+        print(photo_data)
+
+        # return 'remove tag page'
+
+        return render_template('remove_tags.html', json_data=photo_data), 200
 
 
 @app.route('/albums')
