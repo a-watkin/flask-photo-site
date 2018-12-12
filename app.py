@@ -522,6 +522,16 @@ def add_tag():
         return render_template('photo.html', json_data=photo_data), 200
 
 
+@app.route('/remove/tag/', methods=['GET', 'POST'])
+def remove_tag():
+    """
+    Remove a tag from a photo
+    """
+    args = request.args.to_dict()
+
+    return 'remove tag page'
+
+
 @app.route('/albums')
 def get_albums():
     albums_data = a.get_albums()
