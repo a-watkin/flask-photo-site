@@ -21,15 +21,16 @@ class TagSelector extends React.Component {
     let splitUrl = currentUrl.split("=");
     const albumId = splitUrl[1];
 
-    fetch(`http://127.0.0.1:5000/api/get/phototags?photo_id=${albumId}`)
+    fetch(`/api/get/phototags?photo_id=${albumId}`)
       .then(res => res.json())
       .then(
         result => {
-          console.log("result", result);
+          // ok i am getting the data
+          console.log(`result ${result}`, result);
           this.setState({
             isLoaded: true,
-            albums: result.albums,
-            currentOffset: result.offset
+            selectedTags: [],
+            albumId: albumId
           });
         },
         error => {
