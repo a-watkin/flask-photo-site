@@ -115,7 +115,12 @@ class AlbumSelector extends React.Component {
   }
 
   sendData() {
-    console.log("getting here?", this.state.albumId, this.state.selectedAlbum);
+    if (this.state.selectedAlbum.length < 1) {
+      console.log("do nothing if no album has been selected");
+      return false;
+    }
+
+    console.log("getting here?", this.state.selectedAlbum);
     fetch("http://127.0.0.1:5000/api/getalbums", {
       method: "POST",
       headers: {
@@ -123,27 +128,43 @@ class AlbumSelector extends React.Component {
         "Content-Type": "application/json"
       },
       body: JSON.stringify({
-        albumId: this.state.albumId,
         albums: this.state.selectedAlbum
       })
     }).then(() => {
+      console.log("eh");
       // redirect after successful post
-      window.location.assign(
-        `http://127.0.0.1:5000/albums/${this.state.albumId}`
-      );
+      // window.location.assign(
+      //   `http://127.0.0.1:5000/albums/${this.state.albumId}`
+      // );
     });
   }
 
   albumClick(album_id) {
     console.log("Greetings from albumClick the album_id is ", album_id);
+    console.log(this.state.selectedAlbum);
 
-    let tempArray = [];
-    tempArray.push(album_id);
+    if (
+      this.state.selectedAlbum.length === 1 &&
+      this.state.selectedAlbum[0] === album_id
+    ) {
+      console.log("deselect it?");
+      let tempArray = [...this.state.selectedAlbum];
+      tempArray.splice(0, 1);
+      console.log(tempArray);
+      this.setState({
+        selectedAlbum: tempArray
+      });
 
-    // i only wan this to allow one item in the array
-    this.setState({
-      selectedAlbum: tempArray
-    });
+      console.log(this.state.selectedAlbum);
+    } else {
+      let tempArray = [];
+      tempArray.push(album_id);
+
+      // i only wan this to allow one item in the array
+      this.setState({
+        selectedAlbum: tempArray
+      });
+    }
 
     // also not ideal but good enough for now
     this.forceUpdate();

@@ -332,14 +332,14 @@ def get_albums_json():
             json_data = album_data
             return jsonify(album_data)
 
-    # if request.method == 'POST':
+    if request.method == 'POST':
 
-    #     # print('test', request.get_json())
+        print('test', request.get_json())
 
-    #     data = request.get_json()
-    #     a.add_photos_to_album(data['albumId'], data['photos'])
+        #     data = request.get_json()
+        #     a.add_photos_to_album(data['albumId'], data['photos'])
 
-    #     return redirect("/albums/{}".format(data['albumId']), code=302)
+        #     return redirect("/albums/{}".format(data['albumId']), code=302)
 
 
 @app.route('/api/getphotos', methods=['GET', 'POST'])
