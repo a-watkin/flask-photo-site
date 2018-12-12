@@ -382,6 +382,9 @@ class Album(object):
             if len(album_cover) > 0:
                 # print(album_cover[0]['large_square'])
                 album['large_square'] = album_cover[0]['large_square']
+            else:
+                # placeholder image
+                album['large_square'] = '/static/images/logo.jpg'
             # print()
             # print(album)
 
