@@ -56,7 +56,13 @@ class AlbumSelector extends React.Component {
       .then(res => res.json())
       .then(
         result => {
-          console.log("result", result);
+          console.log("result", result, Object.keys(result["albums"]).length);
+
+          if (Object.keys(result["albums"]).length === 0) {
+            console.log("no more albums");
+            return false;
+          }
+
           this.setState({
             isLoaded: true,
             albums: result.albums,
@@ -156,7 +162,8 @@ class AlbumSelector extends React.Component {
       margin: "0 auto",
       float: "none",
       marginBottom: "10px",
-      backgroundColor: "#28a745"
+      backgroundColor: "#28a745",
+      color: "white"
     };
 
     let selectedAlbum = this.state.selectedAlbum;
@@ -171,7 +178,7 @@ class AlbumSelector extends React.Component {
       const albums = this.state.albums;
 
       // console.log(this.state.items[0]["large_square"]);
-      let test = Object.keys(albums).map(function(key, index) {
+      let test = Object.keys(albums).map(function(key) {
         return (
           <div key={albums[key]["album_id"]} className="col text-right">
             <div
@@ -190,7 +197,12 @@ class AlbumSelector extends React.Component {
               <div className="card-header">
                 <h5 className="card-title text-center">
                   {" "}
-                  {albums[key]["title"]}{" "}
+                  <a
+                    id="album-links"
+                    href={`/albums/${albums[key]["album_id"]}`}
+                  >
+                    {albums[key]["title"]}{" "}
+                  </a>
                 </h5>{" "}
               </div>
               <div className="card-body">
@@ -200,6 +212,21 @@ class AlbumSelector extends React.Component {
                   className="card-img-top"
                 />
               </div>{" "}
+              <div className="row">
+                <div id="maring-text" className="col text-left">
+                  <p>{albums[key]["description"]}</p>
+                </div>
+              </div>
+              <div className="row">
+                <div className="col text-center">
+                  <p>views: {albums[key]["views"]}</p>
+                </div>
+
+                <div className="col text-center">
+                  <p> photos: {albums[key]["photos"]} </p>{" "}
+                </div>
+              </div>
+              <div className="col" />
             </div>{" "}
           </div>
         );
@@ -227,11 +254,12 @@ class AlbumSelector extends React.Component {
           </div>
           <hr />
           <div className="row"> {test} </div>
+          <hr />
           <div className="row">
             <div className="col text-left">
               <a href="/edit/albums">
                 <button className="btn btn-success btn-lg">
-                  Return to edit albums without making changes{" "}
+                  Return to uploaded photos page{" "}
                 </button>{" "}
               </a>{" "}
             </div>
@@ -241,7 +269,7 @@ class AlbumSelector extends React.Component {
                 className="btn btn-warning btn-lg"
                 onClick={() => this.sendData()}
               >
-                Add photos{" "}
+                Save to album{" "}
               </button>{" "}
             </div>
           </div>
