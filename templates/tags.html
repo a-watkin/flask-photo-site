@@ -10,26 +10,14 @@
 <hr>
 
 <div class="row">
-
     <div class="col text-center">
-
         {% for key, value in json_data.items() %}
-
         <a href="/tags/{{value['tag_name']}}">
-
             <button type="button" class="btn btn-outline-success btn-lg">{{value['tag_name']}}</button>
-
         </a>
-
-
         {% endfor %}
-
-
-
     </div>
-
 </div>
-
 
 
 {% endblock %}

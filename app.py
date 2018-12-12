@@ -390,7 +390,13 @@ def delete_photo(photo_id):
 def photos_by_tag_name(tag_name):
     tag_data = t.get_photos_by_tag(tag_name)
     json_data = tag_data
-    # print(json_data)
+    print()
+    print('tag data ', json_data)
+    print()
+
+    if tag_data['tag_info']['number_of_photos'] < 1:
+        tag_data['tag_name'] = tag_name
+
     return render_template('tag_photos.html', json_data=json_data)
 
 
@@ -423,24 +429,18 @@ def edit_tags():
 def edit_tag(tag_name):
     if request.method == 'GET':
         # print('\n get message recieved')
-
         return render_template('edit_tag.html', tag_name=tag_name), 200
 
     if request.method == 'POST':
         new_tag_name = request.form['new_tag_name']
         # attemp to do database update
-
         # print('POST REQUEST RECIEVED WITH VALUE OF', new_tag_name, tag_name)
         update_response = t.update_tag(new_tag_name, tag_name)
         # print('UPDATE RESPONSE', update_response)
-
         # if the tag is updated then redirect to the edit page for the new tag
         if update_response:
-
             redirect_url = "/edit/tag/{}".format(new_tag_name)
-
             # print('INFO ', redirect_url, new_tag_name, tag_name)
-
             # http://127.0.0.1:5000/edit/tag/17191909
             # you need to return with the photo also
             return redirect(redirect_url, code=302)

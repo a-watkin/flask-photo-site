@@ -5,13 +5,24 @@
 
     <div class="col">
 
+
         <h1 class="text-center">
+            {% if json_data[0] %}
+
             {{json_data['tag_info']['number_of_photos']}} photos for tag:
             <button class="btn btn-outline-success btn-lg">
                 {{json_data[0]['tag_name']}}
             </button>
 
+            {% else %}
+            No photos found for the tag
 
+            <button class="btn btn-outline-success btn-lg">
+                {{json_data['tag_name']}}
+            </button>
+
+            <!-- {{json_data}} -->
+            {% endif %}
 
         </h1>
 
@@ -19,6 +30,22 @@
     </div>
 </div>
 
+{% if not json_data[0] %}
+<hr>
+<div class="row">
+    <div class="col text-center">
+        <a href="{{url_for('get_tags')}}">
+
+
+            <button class="btn btn-primary btn-lg">
+                Return to tags page
+            </button>
+
+        </a>
+
+    </div>
+</div>
+{% endif %}
 
 
 <div id="photos-page-container" class="row mx-auto">
