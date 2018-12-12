@@ -7,6 +7,26 @@ class Tag(object):
     def __init__(self):
         self.db = Database('eigi-data.db')
 
+    def get_all_tags_without_count(self):
+        # as a list of dict values
+        tag_data = self.db.get_query_as_list("SELECT tag_name FROM tag")
+
+        rtn_dict = {
+
+        }
+
+        count = 0
+        for tag in tag_data:
+            rtn_dict[count] = tag
+            tag_name = tag['tag_name']
+            # adding the number of photos with the tag
+            # it's slow here because each tag means a query to the db
+            # rtn_dict[count]['photos'] = self.get_photo_count_by_tag(
+            #     tag['tag_name'])
+            count += 1
+
+        return rtn_dict
+
     def get_all_tags(self):
         # as a list of dict values
         tag_data = self.db.get_query_as_list("SELECT tag_name FROM tag")
@@ -22,6 +42,8 @@ class Tag(object):
         # rtn_dict = {
         #     'tag_info': {'number_of_photos': self.get_photo_count_by_tag(tag_name)}
         # }
+
+        # return tag_data
 
         rtn_dict = {
 
@@ -261,6 +283,12 @@ class Tag(object):
 
 if __name__ == "__main__":
     t = Tag()
+
+    # print(t.get_all_tags())
+
+    print(t.get_all_tags_without_count())
+
+    # print(t.get_photo_count_by_tag('vienna'))
 
     # t.clean_tags()
 
