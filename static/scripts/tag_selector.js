@@ -72,6 +72,14 @@ class TagSelector extends React.Component {
     console.log("what", this.state.selectedTags);
   }
 
+  backToPhoto() {
+    window.location.assign(`/api/photos/${this.state.albumId}`);
+  }
+
+  sendData() {
+    console.log("clicked on remove tag");
+  }
+
   render() {
     let notSelected = {
       // width: "18rem",
@@ -143,13 +151,22 @@ class TagSelector extends React.Component {
           <hr />
           <div className="row">
             <div className="col text-center">
-              <button className="btn btn-success btn-lg">
+              <button
+                className="btn btn-success btn-lg"
+                onClick={() => this.backToPhoto()}
+              >
                 Return to photo
               </button>
             </div>
 
             <div className="col text-center">
-              <button className="btn btn-danger btn-lg"> Remove tags </button>
+              <button
+                className="btn btn-danger btn-lg"
+                onClick={() => this.sendData()}
+              >
+                {" "}
+                Remove tags{" "}
+              </button>
             </div>
           </div>
         </div>
