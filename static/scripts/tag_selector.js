@@ -7,11 +7,12 @@ class TagSelector extends React.Component {
     super(props);
     this.state = {
       isLoaded: false,
+      photoData: null,
       selectedTags: [],
       albumId: null
     };
 
-    this.albumClick = this.albumClick.bind(this);
+    this.tagClick = this.tagClick.bind(this);
   }
 
   componentWillMount() {
@@ -19,16 +20,19 @@ class TagSelector extends React.Component {
     // getting the album id from the URL
     let currentUrl = window.location.href;
     let splitUrl = currentUrl.split("=");
-    const albumId = splitUrl[1];
+    let albumId = splitUrl[1];
 
     fetch(`/api/get/phototags?photo_id=${albumId}`)
       .then(res => res.json())
       .then(
         result => {
           // ok i am getting the data
-          console.log(`result ${result}`, result);
+          console.log(`result ${result}`, Object.keys(result), result.original);
           this.setState({
             isLoaded: true,
+            original: result.original,
+            title: result.title,
+            tags: result.tags,
             selectedTags: [],
             albumId: albumId
           });
@@ -67,7 +71,7 @@ class TagSelector extends React.Component {
     });
   }
 
-  albumClick(album_id) {
+  tagClick(album_id) {
     console.log("Greetings from albumClick the album_id is ", album_id);
     console.log(this.state.selectedAlbum);
 
@@ -106,7 +110,7 @@ class TagSelector extends React.Component {
       marginBottom: "10px"
     };
 
-    let selectedCard = {
+    let selectedTag = {
       width: "18rem",
       margin: "0 auto",
       float: "none",
@@ -115,38 +119,50 @@ class TagSelector extends React.Component {
       color: "white"
     };
 
-    let selectedAlbum = this.state.selectedAlbum;
-    let large_square = "";
-    // it doesn't seemt to be able to get this reference
-    // without delaring it here from the Objct.keys reurn statment
-    // also passing it and invoking leads to it being executed twice?
-    let albumClick = this.albumClick;
-
-    if (this.state.albums) {
-      large_square = this.state.albums[0]["large_square"];
-      const albums = this.state.albums;
-
-      // console.log(this.state.items[0]["large_square"]);
-      let test = Object.keys(albums).map(function(key) {
-        return (
-          <div className="col text-right">
-            <h1>Tag selector </h1>
-          </div>
-        );
-      });
-
+    if (this.state.isLoaded) {
       return (
         <div>
-          <h1>hello from tag selector </h1>
+          <div className="row text-center">
+            <div className="col">
+              <img className="img-fluid" src={this.state.original} alt="" />
+            </div>
+
+            <div className="col">
+              <h3>
+                {" "}
+                Tags for the photo{" "}
+                <span className="font-weight-bold font-italic">
+                  {" "}
+                  {this.state.title}{" "}
+                </span>
+              </h3>
+              <p>Select tags to remove by clicking on them below.</p>
+              <hr />
+            </div>
+          </div>
+          <hr />
+          <div className="row">
+            <div className="col text-center">
+              <button className="btn btn-success btn-lg">
+                Return to photo
+              </button>
+            </div>
+
+            <div className="col text-center">
+              <button className="btn btn-danger btn-lg"> Remove tags </button>
+            </div>
+          </div>
         </div>
       );
     }
 
     return (
-      <div className="row">
-        <div className="col">
-          <h1> Some problem with getting the data. </h1>{" "}
-        </div>{" "}
+      <div>
+        <div className="row">
+          <div className="col text-center">
+            <h2>Problem getting data.</h2>
+          </div>
+        </div>
       </div>
     );
   }

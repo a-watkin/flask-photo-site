@@ -7,42 +7,9 @@
 </div>
 <hr>
 
-<h2>{{json_data}}</h2>
-
-<div class="row text-center">
-    <div class="col">
-        <img src="{{json_data['original']}}" alt="">
-    </div>
-    <div class="col">
-        <h3>{{json_data['title']}}</h3>
-        <p>Select the tags you want to remove.</p>
-        <hr>
-        {% for tag in json_data['tags'] %}
-        <button type="button" class="btn btn-outline-success btn-lg remove-tags">
-            {{ tag["tag_name"] }}
-        </button>
-        {% endfor %}
-    </div>
-</div>
-<hr>
-<div class="row">
-    <div class="col text-left">
-        <a href="/api/photos/{{json_data['photo_id']}}">
-            <button class="btn btn-success btn-lg"">Go back to the photo</button>
-        </a>
-    </div>
-
-<div class="
-                col text-right">
-                <a href="/api/photos/{{json_data['photo_id']}}">
-                    <button id="remove-photo-tags" class="btn btn-danger btn-lg">Remove tags</button>
-                </a>
-    </div>
-</div>
-<hr>
-
 <div id="tag-selector"></div>
 
+<hr>
 <!-- Scripts for React -->
 <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
 <script src="https://unpkg.com/react@16/umd/react.development.js" crossorigin></script>
