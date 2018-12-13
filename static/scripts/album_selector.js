@@ -160,7 +160,7 @@ class AlbumSelector extends React.Component {
       let tempArray = [];
       tempArray.push(album_id);
 
-      // i only wan this to allow one item in the array
+      // i only want this to allow one item in the array
       this.setState({
         selectedAlbum: tempArray
       });

@@ -73,19 +73,19 @@ class TagSelector extends React.Component {
   }
 
   render() {
-    let cardStyle = {
-      width: "18rem",
+    let notSelected = {
+      // width: "18rem",
       margin: "0 auto",
       float: "none",
       marginBottom: "10px"
     };
 
     let selectedTag = {
-      width: "18rem",
+      // width: "18rem",
       margin: "0 auto",
       float: "none",
       marginBottom: "10px",
-      backgroundColor: "#28a745",
+      backgroundColor: "#dc3545",
       color: "white"
     };
 
@@ -101,8 +101,17 @@ class TagSelector extends React.Component {
           <div key={index}>
             <button
               type="button"
-              className="btn btn-outline-success btn-lg"
+              className={
+                this.state.selectedTags.includes(tagName)
+                  ? "btn btn-outline-danger btn-lg"
+                  : "btn btn-outline-success btn-lg"
+              }
               onClick={() => this.tagClick(tagName)}
+              style={
+                this.state.selectedTags.includes(tagName)
+                  ? selectedTag
+                  : notSelected
+              }
             >
               {tagName}
             </button>
@@ -113,7 +122,7 @@ class TagSelector extends React.Component {
       return (
         <div>
           <div className="row text-center">
-            <div className="col">
+            <div className="col my-auto">
               <img className="img-fluid" src={this.state.original} alt="" />
             </div>
 
