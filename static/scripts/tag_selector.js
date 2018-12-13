@@ -73,7 +73,7 @@ class TagSelector extends React.Component {
   }
 
   backToPhoto() {
-    window.location.assign(`/api/photos/${this.state.albumId}`);
+    window.location.assign(`/api/photos/${this.state.photoId}`);
   }
 
   sendData() {

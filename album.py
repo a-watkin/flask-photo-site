@@ -19,11 +19,7 @@ class Album(object):
             "select * from album order by date_created desc;"
         )
 
-        # get the album id
-        # print(album_data)
-
         # I also need an image to represent the album
-
         rtn_dict = {
 
         }
@@ -55,7 +51,6 @@ class Album(object):
         if len(album_data) > 0 and album_data[0]['photos'] > 0:
             # list index out of range
             # setting large square in the return data to the value returned by self.get_album_cover
-
             if self.get_album_cover(album_data[0]['album_id']):
                 album_data[0]['large_square'] = self.get_album_cover(
                     album_data[0]['album_id'])[0]['large_square']
@@ -84,23 +79,19 @@ class Album(object):
 
         return album_data
 
-    # query string for getting the large_square photo for the album cover
-
     def get_album_cover(self, album_id):
         query_string = '''
-                            select images.large_square from album
-                            join photo_album on(album.album_id=photo_album.album_id)
-                            join photo on(photo_album.photo_id=photo.photo_id)
-                            join images on(images.photo_id=photo.photo_id)
-                            where album.album_id={}
-                            order by photo.date_uploaded asc limit 1
+                select images.large_square from album
+                join photo_album on(album.album_id=photo_album.album_id)
+                join photo on(photo_album.photo_id=photo.photo_id)
+                join images on(images.photo_id=photo.photo_id)
+                where album.album_id={}
+                order by photo.date_uploaded asc limit 1
 
                         '''.format(album_id)
 
         album_cover = self.db.get_query_as_list(query_string)
-
         # print(album_cover)
-
         return album_cover
 
     def get_album_photos(self, album_id):
@@ -159,7 +150,6 @@ class Album(object):
     def delete_album(self, album_id):
         # you have to delete from photo_album first
         # then from album, this is due to database constraints
-
         delete_from_photo_album = '''
         delete from photo_album where album_id = {}
         '''.format(album_id)
@@ -198,7 +188,6 @@ class Album(object):
         #     tag_name=new_tag,
         #     user_id='28035310@N00'
         # )
-
         for photo in photos:
 
             self.db.insert_data(
@@ -210,9 +199,9 @@ class Album(object):
 
         # get the number of photos in the album after adding them
         query_string = '''
-        SELECT COUNT(photo_id)
-        FROM photo_album
-        WHERE album_id='{}';
+            SELECT COUNT(photo_id)
+            FROM photo_album
+            WHERE album_id='{}';
         '''.format(album_id)
         # update the count in album
         photo_count = self.db.make_query(query_string)[0][0]
@@ -220,10 +209,9 @@ class Album(object):
 
         # update the count in album
         query_string = '''
-        UPDATE album
-        SET photos = {}
-        WHERE album_id='{}';
-
+            UPDATE album
+            SET photos = {}
+            WHERE album_id='{}';
         '''.format(int(photo_count), album_id)
         self.db.make_query(query_string)
 
