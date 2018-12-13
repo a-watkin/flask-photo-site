@@ -11,7 +11,7 @@ class TagSelector extends React.Component {
       title: null,
       tags: null,
       selectedTags: [],
-      albumId: null
+      photoId: null
     };
 
     this.tagClick = this.tagClick.bind(this);
@@ -22,9 +22,9 @@ class TagSelector extends React.Component {
     // getting the album id from the URL
     let currentUrl = window.location.href;
     let splitUrl = currentUrl.split("=");
-    let albumId = splitUrl[1];
+    let photoId = splitUrl[1];
 
-    fetch(`/api/get/phototags?photo_id=${albumId}`)
+    fetch(`/api/get/phototags?photo_id=${photoId}`)
       .then(res => res.json())
       .then(
         result => {
@@ -36,7 +36,7 @@ class TagSelector extends React.Component {
             title: result.title,
             tags: result.tags,
             selectedTags: [],
-            albumId: albumId
+            photoId: photoId
           });
         },
         error => {
@@ -78,6 +78,29 @@ class TagSelector extends React.Component {
 
   sendData() {
     console.log("clicked on remove tag");
+    if (this.state.selectedTags.length < 1) {
+      console.log("do nothing if no tag has been selected");
+      return false;
+    }
+
+    console.log("getting here?", this.state.selectedAlbum);
+    fetch("/api/get/phototags", {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        photoId: this.state.photoId,
+        selectedTags: this.state.selectedTags
+      })
+    }).then(() => {
+      console.log("sent data");
+      // redirect after successful post
+      // window.location.assign(
+      //   `http://127.0.0.1:5000/albums/${this.state.selectedAlbum[0]}`
+      // );
+    });
   }
 
   render() {

@@ -542,9 +542,14 @@ def remove_tag():
 
 @app.route('/api/get/phototags', methods=['GET', 'POST'])
 def get_photo_tag_data():
-    args = request.args.to_dict()
-    photo_data = p.get_photo(args['photo_id'])
-    return jsonify(photo_data)
+    if request.method == 'GET':
+        args = request.args.to_dict()
+        photo_data = p.get_photo(args['photo_id'])
+        return jsonify(photo_data)
+    else:
+        data = request.get_json()
+        print(data)
+        return json.dumps({'success': True}), 200, {'ContentType': 'application/json'}
 
 
 @app.route('/albums')

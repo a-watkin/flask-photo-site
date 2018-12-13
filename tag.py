@@ -267,13 +267,26 @@ class Tag(object):
             if tag_name in forbidden:
                 self.remove_tag_name(tag_name)
 
+    def remove_tags_from_photo(self, photo_id, tag_list):
+        self.db.make_query(
+            '''
+            delete from photo_tag
+            where
+
+            '''.format(photo_id, tag)
+        )
+        pass
+
 
 if __name__ == "__main__":
     t = Tag()
 
+    # {'photoId': '31734289628', 'selectedTags': ['donaupark']}
+    t.remove_tags_from_photo('31734289628', ['donaupark'])
+
     # print(t.get_photo_count_by_tag('people'))
 
-    print(t.get_all_tags())
+    # print(t.get_all_tags())
 
     # print(t.get_all_tags_without_count())
 
