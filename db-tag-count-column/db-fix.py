@@ -12,36 +12,73 @@ class AlterDB(object):
     def temp_tag_table(self):
         resp = self.db.make_query(
             '''
-            CREATE TABLE IF NOT EXISTS test_photo_tag (
-                photo_id  INT,
-                tag_name  TEXT,
+            CREATE TABLE IF NOT EXISTS test_tag (
+                tag_name TEXT NOT NULL UNIQUE,
+                user_id TEXT NOT NULL,
                 photos INT,
-                FOREIGN KEY(photo_id) REFERENCES photo(photo_id) on update cascade,
-                PRIMARY KEY(photo_id,tag_name),
-                FOREIGN KEY(tag_name) REFERENCES tag(tag_name) on update cascade
+                PRIMARY KEY (tag_name, user_id)
+                FOREIGN KEY(user_id) REFERENCES user(user_id) ON DELETE CASCADE
             );
             '''
         )
         print(resp)
 
+    def copy_data(self):
+        data = self.db.get_query_as_list(
+            '''
+            select * from tag
+            '''
+        )
+
+        for tag in data:
+            print()
+            print(tag)
+
+            count = self.db.get_query_as_list(
+                '''
+                select count(tag_name)
+                from photo_tag
+                where tag_name = '{}'
+                '''.format(tag['tag_name'])
+            )[0]['count(tag_name)']
+
+            print(count)
+            print()
+
+            self.db.make_query(
+                '''
+                insert into test_tag (tag_name, user_id, photos)
+                values('{}', '{}', {})
+                '''.format(tag['tag_name'], '28035310@N00', count)
+            )
+
+    def make_upload_table(self):
+        self.db.make_query(
+            '''
+            CREATE TABLE upload_photo(
+                photo_id int 
+                primary key unique not null, 
+                user_id text not null, 
+                foreign key(user_id) 
+                references user(user_id) on delete cascade )
+            '''
+        )
+
 
 def main():
+    # make sure it's the right table...
+    os.chdir(os.getcwd() + '/db-tag-count-column')
     print(os.getcwd())
-
+    print(os.listdir())
     adb = AlterDB()
-
+    # create temp table
     # adb.temp_tag_table()
 
-    # get all rows for photo_tag
-    # save it as a dict?
+    # copy everything from
+    # adb.copy_data()
 
-    # files_in_dir = os.listdir(os.getcwd())
-
-    # insert_data('photo_tag', data)
-
-    # test that it really does update
-    # seems to have updated
-    # what i need to check is that the cascade works
+    # add the upload table to this db
+    adb.make_upload_table()
 
 
 if __name__ == "__main__":
