@@ -27,7 +27,7 @@ class Tag(object):
 
         return rtn_dict
 
-    def update_tag_photo_count(self):
+    def check_tag_photo_count(self):
         """
         Gets a count of all the photos associated with a tag.
         Checks that the photos column in tag is up to date.
@@ -67,17 +67,50 @@ class Tag(object):
                 count = query_count[0]['count(tag_name)']
 
                 # Updating
-                print('UPDATING')
-                self.db.make_query(
-                    '''
-                    update tag 
-                    set photos = {}
-                    where tag_name = '{}'
-                    '''.format(count, tag_name)
-                )
+                # print('UPDATING')
+                # self.db.make_query(
+                #     '''
+                #     update tag
+                #     set photos = {}
+                #     where tag_name = '{}'
+                #     '''.format(count, tag_name)
+                # )
 
-                print(tag_name, count)
+                # print(tag_name, count)
                 break
+
+        print('\nDONE NO PROBLEMS!')
+
+    def update_photo_count(self, tag_name):
+        """
+        Updates the photo count for the given tag.
+        """
+        # tag_data = self.db.get_query_as_list(
+        #     '''
+        #     select * from tag where tag_name = '{}'
+        #     '''.format(tag_name)
+        # )
+
+        query_count = self.db.get_query_as_list(
+            '''
+                select count(tag_name)
+                from photo_tag
+                where tag_name = '{}'
+                '''.format(tag_name)
+        )
+
+        count = query_count[0]['count(tag_name)']
+        print(count)
+
+        self.db.make_query(
+            '''
+            update tag
+            set photos = {}
+            where tag_name = '{}'
+            '''.format(count, tag_name)
+        )
+
+        print(tag_name, count)
 
     def tag_photo_count(self):
         """
@@ -187,7 +220,7 @@ class Tag(object):
         q_data = None
 
         query_string = '''
-            select photo_id, photo_title, views, tag_name, large_square from photo 
+            select photo_id, photo_title, views, tag_name, large_square from photo
             join photo_tag using(photo_id)
             join images using(photo_id)
             where tag_name={}
@@ -227,7 +260,7 @@ class Tag(object):
         # Save the data to be updated from photo_data
         photo_tag_query = '''
                         select * from photo_tag
-                        where tag_name = '{}' 
+                        where tag_name = '{}'
                         '''.format(old_tag)
 
         # get the old tags photo_tag data
@@ -340,6 +373,8 @@ class Tag(object):
         for tag in tag_list:
             if tag not in tags_in_data:
                 return False
+            else:
+                self.update_photo_count(tag)
 
         return True
 
@@ -377,12 +412,15 @@ class Tag(object):
             )
             print(resp)
 
+            self.update_photo_count(tag)
+
 
 if __name__ == "__main__":
     t = Tag()
 
     # t.tag_photo_count()
-    t.update_tag_photo_count()
+    t.check_tag_photo_count()
+    # t.update_photo_count('manchester')
     # t.get_all_tags()
 
     # {'photoId': '31734289628', 'selectedTags': ['donaupark']}
