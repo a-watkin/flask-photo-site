@@ -4,31 +4,33 @@
 <div class="row text-center">
     <div class="col">
         <h1>Edit tag:
-
-            <button type="button" class="btn btn-outline-success btn-lg">
-
-                {{tag_name}}
-
-            </button></h1>
+            <a href="{{url_for('photos_by_tag_name', tag_name=tag_name)}}">
+                <button type="button" class="btn btn-outline-success btn-lg">
+                    {{tag_name}}
+                </button>
+            </a>
+        </h1>
     </div>
 </div>
 
 <div class="row">
     <div class="col">
         <form method="post">
+            <div class="row">
+
+                <div class="col">
+                    <div class="alert alert-warning text-center" role="alert">
+                        Tags must be unique and not contain any punctuation.
+                    </div>
+                </div>
+            </div>
+
             <div class="form-group">
                 <label for="renaming-tag">Make changes to the tag name below</label>
                 <input name="new_tag_name" type="text" class="form-control" value="{{tag_name}}">
             </div>
 
-            <div class="row">
 
-                <div class="col">
-                    <div class="alert alert-dark" role="alert">
-                        Tags must be unique.
-                    </div>
-                </div>
-            </div>
 
             <hr>
             <div class="row">

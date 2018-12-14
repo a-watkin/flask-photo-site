@@ -278,7 +278,8 @@ class Tag(object):
             self.db.insert_data(
                 table='tag',
                 tag_name=new_tag,
-                user_id='28035310@N00'
+                user_id='28035310@N00',
+                count=self.get_photo_count_by_tag(new_tag)
             )
 
         # otherwise the new_tag is in the tag table and doesn't need to be added
@@ -418,8 +419,12 @@ class Tag(object):
 if __name__ == "__main__":
     t = Tag()
 
+    # print(t.update_tag('cheese', 'london'))
+    # t.update_tag('london', 'cheese')
+
     # t.tag_photo_count()
     t.check_tag_photo_count()
+
     # t.update_photo_count('manchester')
     # t.get_all_tags()
 
