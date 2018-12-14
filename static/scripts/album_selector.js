@@ -277,7 +277,7 @@ class AlbumSelector extends React.Component {
           <hr />
           <div className="row">
             <div className="col text-left">
-              <a href="/edit/albums">
+              <a href="/uploaded">
                 <button className="btn btn-success btn-lg">
                   Return to uploaded photos page{" "}
                 </button>{" "}
