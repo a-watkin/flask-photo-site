@@ -27,6 +27,95 @@ class Tag(object):
 
         return rtn_dict
 
+    def update_tag_photo_count(self):
+        """
+        Gets a count of all the photos associated with a tag.
+        Checks that the photos column in tag is up to date.
+        """
+        data = self.db.get_query_as_list(
+            '''
+            select * from tag
+            '''
+        )
+
+        # print(data)
+
+        for tag in data:
+            print()
+            print(tag)
+            # query for the number of photos using the tag
+            # compare it to the number in the photos column
+            # update if necessary
+            query_count = self.db.get_query_as_list(
+                '''
+                select count(tag_name)
+                from photo_tag
+                where tag_name = '{}'
+                '''.format(tag['tag_name'])
+            )
+
+            # print(query_count)
+
+            if query_count[0]['count(tag_name)'] == tag['photos']:
+                print('OK', 'actual photos number with tag',
+                      query_count[0]['count(tag_name)'], 'in photos column', tag['photos'])
+            else:
+                print('MISSMATCH IN PHOTOS AND PHOTOS WITH TAG\n', 'actual photos number with tag',
+                      query_count[0]['count(tag_name)'], 'in photos column', tag['photos'])
+
+                tag_name = tag['tag_name']
+                count = query_count[0]['count(tag_name)']
+
+                # Updating
+                print('UPDATING')
+                self.db.make_query(
+                    '''
+                    update tag 
+                    set photos = {}
+                    where tag_name = '{}'
+                    '''.format(count, tag_name)
+                )
+
+                print(tag_name, count)
+                break
+
+    def tag_photo_count(self):
+        """
+        Gets a count of all the photos associated with a tag.
+        Checks that the photos column in tag is up to date.
+        """
+        data = self.db.get_query_as_list(
+            '''
+            select * from tag
+            '''
+        )
+
+        # print(data)
+
+        for tag in data:
+            print()
+            print(tag)
+            # query for the number of photos using the tag
+            # compare it to the number in the photos column
+            # update if necessary
+            query_count = self.db.get_query_as_list(
+                '''
+                select count(tag_name)
+                from photo_tag
+                where tag_name = '{}'
+                '''.format(tag['tag_name'])
+            )
+
+            # print(query_count)
+
+            if query_count[0]['count(tag_name)'] == tag['photos']:
+                print('OK', 'actual photos number with tag',
+                      query_count[0]['count(tag_name)'], 'in photos column', tag['photos'])
+            else:
+                print('MISSMATCH IN PHOTOS AND PHOTOS WITH TAG\n', 'actual photos number with tag',
+                      query_count[0]['count(tag_name)'], 'in photos column', tag['photos'])
+                break
+
     def get_all_tags(self):
         """
         DANGER!
@@ -292,7 +381,9 @@ class Tag(object):
 if __name__ == "__main__":
     t = Tag()
 
-    t.get_all_tags()
+    # t.tag_photo_count()
+    t.update_tag_photo_count()
+    # t.get_all_tags()
 
     # {'photoId': '31734289628', 'selectedTags': ['donaupark']}
     # t.remove_tags_from_photo('31734289628', ['donaupark', 'cheese'])
