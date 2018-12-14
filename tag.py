@@ -50,7 +50,7 @@ class Tag(object):
                 '''
                 select count(tag_name)
                 from photo_tag
-                where tag_name = '{}'
+                where tag_name = "{}"
                 '''.format(tag['tag_name'])
             )
 
@@ -72,7 +72,7 @@ class Tag(object):
                 #     '''
                 #     update tag
                 #     set photos = {}
-                #     where tag_name = '{}'
+                #     where tag_name = "{}"
                 #     '''.format(count, tag_name)
                 # )
 
@@ -87,7 +87,7 @@ class Tag(object):
         """
         # tag_data = self.db.get_query_as_list(
         #     '''
-        #     select * from tag where tag_name = '{}'
+        #     select * from tag where tag_name = "{}"
         #     '''.format(tag_name)
         # )
 
@@ -95,7 +95,7 @@ class Tag(object):
             '''
                 select count(tag_name)
                 from photo_tag
-                where tag_name = '{}'
+                where tag_name = "{}"
                 '''.format(tag_name)
         )
 
@@ -106,7 +106,7 @@ class Tag(object):
             '''
             update tag
             set photos = {}
-            where tag_name = '{}'
+            where tag_name = "{}"
             '''.format(count, tag_name)
         )
 
@@ -135,7 +135,7 @@ class Tag(object):
                 '''
                 select count(tag_name)
                 from photo_tag
-                where tag_name = '{}'
+                where tag_name = "{}"
                 '''.format(tag['tag_name'])
             )
 
@@ -203,7 +203,7 @@ class Tag(object):
         query_string = '''
             select count(photo_id) from photo
             join photo_tag using(photo_id)
-            where tag_name = '{}'
+            where tag_name = "{}"
         '''.format(tag_name)
 
         photo_count = self.db.get_query_as_list(query_string)
@@ -217,17 +217,19 @@ class Tag(object):
 
         I will need to handle spaces.
         """
-        q_data = None
+        # q_data = None
 
         query_string = '''
             select photo_id, photo_title, views, tag_name, large_square from photo
             join photo_tag using(photo_id)
             join images using(photo_id)
-            where tag_name={}
+            where tag_name = "{}"
             order by views desc
-        '''.format("'" + tag_name + "'")
+        '''.format(tag_name)
 
         tag_data = self.db.get_query_as_list(query_string)
+
+        # print(tag_data)
 
         rtn_dict = {
             'tag_info': {'number_of_photos': self.get_photo_count_by_tag(tag_name)}
@@ -243,7 +245,7 @@ class Tag(object):
     def get_tag(self, tag_name):
         tag_data = self.db.make_query(
             '''
-            select tag_name from tag where tag_name = '{}'
+            select tag_name from tag where tag_name = "{}"
             '''.format(tag_name)
         )
 
@@ -253,14 +255,14 @@ class Tag(object):
         # Check if the tag is already in the database
         check = self.db.make_query(
             '''
-            select tag_name from tag where tag_name = '{}'
+            select tag_name from tag where tag_name = "{}"
             '''.format(new_tag)
         )
 
         # Save the data to be updated from photo_data
         photo_tag_query = '''
                         select * from photo_tag
-                        where tag_name = '{}'
+                        where tag_name = "{}"
                         '''.format(old_tag)
 
         # get the old tags photo_tag data
@@ -301,7 +303,7 @@ class Tag(object):
 
     def check_photo_tag(self, tag_name):
         data = self.db.make_query(
-            '''select * from photo_tag where tag_name = '{}' '''
+            '''select * from photo_tag where tag_name = "{}" '''
             .format(tag_name))
 
         if len(data) > 0:
@@ -382,7 +384,7 @@ class Tag(object):
     def remove_tag_name(self, tag_name):
         self.db.make_query(
             '''
-            delete from tag where tag_name = '{}'
+            delete from tag where tag_name = "{}"
             '''.format(tag_name)
         )
 
@@ -408,7 +410,7 @@ class Tag(object):
                 '''
                 delete from photo_tag
                 where photo_id = {}
-                and tag_name = '{}'
+                and tag_name = "{}"
                 '''.format(photo_id, tag)
             )
             print(resp)
@@ -419,11 +421,15 @@ class Tag(object):
 if __name__ == "__main__":
     t = Tag()
 
+    t.get_photos_by_tag('london')
+
+    # t.clean_tags()
+
     # print(t.update_tag('cheese', 'london'))
     # t.update_tag('london', 'cheese')
 
     # t.tag_photo_count()
-    t.check_tag_photo_count()
+    # t.check_tag_photo_count()
 
     # t.update_photo_count('manchester')
     # t.get_all_tags()
@@ -443,7 +449,7 @@ if __name__ == "__main__":
 
     # print(t.add_tags_to_photo('3400128875', ['test tag name', 'test tag two']))
 
-    # print(t.get_photo_tags('3400128875'))
+    # print(t.get_photo_tags('5052576689'))
 
     # print(t.get_all_tags())
 

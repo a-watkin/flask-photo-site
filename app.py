@@ -483,10 +483,14 @@ def edit_tag(tag_name):
 
     if request.method == 'POST':
         new_tag_name = request.form['new_tag_name']
+        print('new tag names', new_tag_name)
+
+        # forbidden = [ $ - _ . + ! * ' ( ) , , ]
+
         # attemp to do database update
         # print('POST REQUEST RECIEVED WITH VALUE OF', new_tag_name, tag_name)
         update_response = t.update_tag(new_tag_name, tag_name)
-        print('UPDATE RESPONSE', update_response)
+        # print('UPDATE RESPONSE', update_response)
         # if the tag is updated then redirect to the edit page for the new tag
         if update_response:
             redirect_url = "/edit/tag/{}".format(new_tag_name)
