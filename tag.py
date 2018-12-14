@@ -271,8 +271,8 @@ class Tag(object):
         self.db.make_query(
             '''
             delete from photo_tag
-            where
-
+            where photo_id = {}
+            and tag_name = '{}'
             '''.format(photo_id, tag)
         )
         pass

@@ -64,6 +64,42 @@ class AlterDB(object):
             '''
         )
 
+    def drop_table(self, table_name):
+        self.db.make_query(
+            '''
+            drop table if exists '{}'
+            '''.format(table_name)
+        )
+
+    def copy_back_to_tag(self):
+        data = self.db.get_query_as_list(
+            '''
+            select * from test_tag
+            '''
+        )
+
+        for tag in data:
+            print()
+            print(tag)
+
+            count = self.db.get_query_as_list(
+                '''
+                select count(tag_name)
+                from photo_tag
+                where tag_name = '{}'
+                '''.format(tag['tag_name'])
+            )[0]['count(tag_name)']
+
+            print(count)
+            print()
+
+            # self.db.make_query(
+            #     '''
+            #     insert into tag (tag_name, user_id, photos)
+            #     values('{}', '{}', {})
+            #     '''.format(tag['tag_name'], '28035310@N00', count)
+            # )
+
 
 def main():
     # make sure it's the right table...
@@ -78,7 +114,12 @@ def main():
     # adb.copy_data()
 
     # add the upload table to this db
-    adb.make_upload_table()
+    # adb.make_upload_table()
+
+    # drop old tag table
+    # adb.drop_table('tag')
+
+    adb.copy_back_to_tag()
 
 
 if __name__ == "__main__":
