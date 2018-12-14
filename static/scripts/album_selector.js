@@ -232,12 +232,11 @@ class AlbumSelector extends React.Component {
                   alt="Responsive image"
                   className="card-img-top"
                 />
+                <p className="card-text text-left">
+                  {" "}
+                  {albums[key]["description"]}{" "}
+                </p>
               </div>{" "}
-              <div className="row">
-                <div id="maring-text" className="col text-left">
-                  <p>{albums[key]["description"]}</p>
-                </div>
-              </div>
               <div className="row">
                 <div className="col text-center">
                   <p>views: {albums[key]["views"]}</p>
