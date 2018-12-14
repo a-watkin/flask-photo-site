@@ -23,6 +23,20 @@ class AlterDB(object):
         )
         print(resp)
 
+    def recreate_tag_table(self):
+        resp = self.db.make_query(
+            '''
+            CREATE TABLE IF NOT EXISTS tag (
+                tag_name TEXT NOT NULL UNIQUE,
+                user_id TEXT NOT NULL,
+                photos INT,
+                PRIMARY KEY (tag_name, user_id)
+                FOREIGN KEY(user_id) REFERENCES user(user_id) ON DELETE CASCADE
+            );
+            '''
+        )
+        print(resp)
+
     def copy_data(self):
         data = self.db.get_query_as_list(
             '''
@@ -93,12 +107,12 @@ class AlterDB(object):
             print(count)
             print()
 
-            # self.db.make_query(
-            #     '''
-            #     insert into tag (tag_name, user_id, photos)
-            #     values('{}', '{}', {})
-            #     '''.format(tag['tag_name'], '28035310@N00', count)
-            # )
+            self.db.make_query(
+                '''
+                insert into tag (tag_name, user_id, photos)
+                values('{}', '{}', {})
+                '''.format(tag['tag_name'], '28035310@N00', count)
+            )
 
 
 def main():
@@ -119,7 +133,11 @@ def main():
     # drop old tag table
     # adb.drop_table('tag')
 
-    adb.copy_back_to_tag()
+    # adb.recreate_tag_table()
+    # adb.copy_back_to_tag()
+
+    # Drop temp tables
+    # adb.drop_table('test_tag')
 
 
 if __name__ == "__main__":
