@@ -28,8 +28,15 @@ class Tag(object):
         return rtn_dict
 
     def get_all_tags(self):
+        """
+        DANGER!
+        Now getting count of photos for the tag from the database.
+        """
         # as a list of dict values
-        tag_data = self.db.get_query_as_list("SELECT tag_name FROM tag")
+        tag_data = self.db.get_query_as_list(
+            "SELECT tag_name, photos FROM tag order by tag_name")
+
+        # print(tag_data)
 
         rtn_dict = {
 
@@ -41,11 +48,11 @@ class Tag(object):
             tag_name = tag['tag_name']
             # adding the number of photos with the tag
             # it's slow here because each tag means a query to the db
-            rtn_dict[count]['photos'] = self.get_photo_count_by_tag(
-                tag['tag_name'])
+            rtn_dict[count]['photos'] = tag['photos']
 
             count += 1
 
+        # print(rtn_dict)
         return rtn_dict
 
     def get_photo_tags(self, photo_id):
@@ -285,8 +292,10 @@ class Tag(object):
 if __name__ == "__main__":
     t = Tag()
 
+    t.get_all_tags()
+
     # {'photoId': '31734289628', 'selectedTags': ['donaupark']}
-    t.remove_tags_from_photo('31734289628', ['donaupark', 'cheese'])
+    # t.remove_tags_from_photo('31734289628', ['donaupark', 'cheese'])
 
     # print(t.get_photo_count_by_tag('people'))
 
