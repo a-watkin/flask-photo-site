@@ -268,21 +268,25 @@ class Tag(object):
                 self.remove_tag_name(tag_name)
 
     def remove_tags_from_photo(self, photo_id, tag_list):
-        self.db.make_query(
-            '''
-            delete from photo_tag
-            where photo_id = {}
-            and tag_name = '{}'
-            '''.format(photo_id, tag)
-        )
-        pass
+        for tag in tag_list:
+            print(tag)
+
+            # if the tag isn't present it will just fail silently
+            resp = self.db.make_query(
+                '''
+                delete from photo_tag
+                where photo_id = {}
+                and tag_name = '{}'
+                '''.format(photo_id, tag)
+            )
+            print(resp)
 
 
 if __name__ == "__main__":
     t = Tag()
 
     # {'photoId': '31734289628', 'selectedTags': ['donaupark']}
-    t.remove_tags_from_photo('31734289628', ['donaupark'])
+    t.remove_tags_from_photo('31734289628', ['donaupark', 'cheese'])
 
     # print(t.get_photo_count_by_tag('people'))
 

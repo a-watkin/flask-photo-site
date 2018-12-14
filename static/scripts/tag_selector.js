@@ -82,8 +82,6 @@ class TagSelector extends React.Component {
       console.log("do nothing if no tag has been selected");
       return false;
     }
-
-    console.log("getting here?", this.state.selectedAlbum);
     fetch("/api/get/phototags", {
       method: "POST",
       headers: {
@@ -97,9 +95,8 @@ class TagSelector extends React.Component {
     }).then(() => {
       console.log("sent data");
       // redirect after successful post
-      // window.location.assign(
-      //   `http://127.0.0.1:5000/albums/${this.state.selectedAlbum[0]}`
-      // );
+      // console.log(`/api/photos/${this.state.photoId}`);
+      window.location.assign(`/api/photos/${this.state.photoId}`);
     });
   }
 
