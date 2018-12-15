@@ -10,27 +10,7 @@ class Tag(object):
     def __init__(self):
         self.db = Database('eigi-data.db')
 
-    def get_all_tags_without_count(self):
-        # as a list of dict values
-        tag_data = self.db.get_query_as_list("SELECT tag_name FROM tag")
-
-        rtn_dict = {
-
-        }
-
-        count = 0
-        for tag in tag_data:
-            rtn_dict[count] = tag
-            tag_name = tag['tag_name']
-            # adding the number of photos with the tag
-            # it's slow here because each tag means a query to the db
-            # rtn_dict[count]['photos'] = self.get_photo_count_by_tag(
-            #     tag['tag_name'])
-            count += 1
-
-        return rtn_dict
-
-    def check_tag_photo_count(self):
+    def check_all_tag_photo_counts(self):
         """
         Gets a count of all the photos associated with a tag.
         Checks that the photos column in tag is up to date.
@@ -40,8 +20,6 @@ class Tag(object):
             select * from tag
             '''
         )
-
-        # print(data)
 
         for tag in data:
             print()
@@ -57,8 +35,6 @@ class Tag(object):
                 '''.format(tag['tag_name'])
             )
 
-            # print(query_count)
-
             if query_count[0]['count(tag_name)'] == tag['photos']:
                 print('OK', 'actual photos number with tag',
                       query_count[0]['count(tag_name)'], 'in photos column', tag['photos'])
@@ -68,18 +44,6 @@ class Tag(object):
 
                 tag_name = tag['tag_name']
                 count = query_count[0]['count(tag_name)']
-
-                # Updating
-                # print('UPDATING')
-                # self.db.make_query(
-                #     '''
-                #     update tag
-                #     set photos = {}
-                #     where tag_name = "{}"
-                #     '''.format(count, tag_name)
-                # )
-
-                # print(tag_name, count)
                 break
 
         print('\nDONE NO PROBLEMS!')
@@ -88,12 +52,6 @@ class Tag(object):
         """
         Updates the photo count for the given tag.
         """
-        # tag_data = self.db.get_query_as_list(
-        #     '''
-        #     select * from tag where tag_name = "{}"
-        #     '''.format(tag_name)
-        # )
-
         query_count = self.db.get_query_as_list(
             '''
                 select count(tag_name)
@@ -103,7 +61,6 @@ class Tag(object):
         )
 
         count = query_count[0]['count(tag_name)']
-        print(count)
 
         self.db.make_query(
             '''
@@ -112,8 +69,6 @@ class Tag(object):
             where tag_name = "{}"
             '''.format(count, tag_name)
         )
-
-        print(tag_name, count)
 
     def tag_photo_count(self):
         """
@@ -165,15 +120,9 @@ class Tag(object):
         return tag_name
 
     def get_all_tags(self):
-        """
-        DANGER!
-        Now getting count of photos for the tag from the database.
-        """
         # as a list of dict values
         tag_data = self.db.get_query_as_list(
             "SELECT tag_name, photos FROM tag order by tag_name")
-
-        # print(tag_data)
 
         rtn_dict = {
 
@@ -184,14 +133,11 @@ class Tag(object):
             rtn_dict[count] = tag
             tag_name = tag['tag_name']
             # adding the number of photos with the tag
-            # it's slow here because each tag means a query to the db
             rtn_dict[count]['photos'] = tag['photos']
             rtn_dict['human_readable_tag'] = self.check_forbidden(
                 tag['tag_name'])
-
             count += 1
 
-        # print(rtn_dict)
         return rtn_dict
 
     def get_photo_tags(self, photo_id):
@@ -277,6 +223,14 @@ class Tag(object):
             return True
         return False
 
+    def remove_tag_name(self, tag_name):
+        tag_name = urllib.parse.quote(tag_name, safe='')
+        self.db.make_query(
+            '''
+            delete from tag where tag_name = "{}"
+            '''.format(tag_name)
+        )
+
     def delete_tag(self, tag_name):
         # you have to remove the tag from the tag table
         self.db.delete_rows_where('tag', 'tag_name', tag_name)
@@ -287,85 +241,6 @@ class Tag(object):
             return True
         else:
             return False
-
-    def add_tags_to_photo(self, photo_id, tag_list):
-        print('add_tags_to_photo', tag_list)
-
-        # for tag in tag_list:
-        #     tag = urllib.parse.quote(tag, safe='')
-
-        for i in range(len(tag_list)):
-            tag_list[i] = urllib.parse.quote(tag_list[i], safe='')
-            print(tag_list[i],
-                  'parsed', urllib.parse.unquote(tag_list[i]), tag_list)
-
-        # print(tag_list)
-        # iterate over the list of tags
-
-        # for each tag
-        # check if the tag is in the database already
-        # if it is not then add it to the tag table
-        for tag in tag_list:
-
-            # will return None if the tag is not in the tag table
-            # tag_name is the column name
-            data = self.db.get_row('tag', 'tag_name', tag)
-
-            if data is None:
-
-                print(tag)
-                print('that value is not in the db')
-
-                self.db.insert_data(
-                    table='tag',
-                    tag_name=tag,
-                    user_id='28035310@N00',
-                    photos=self.get_photo_count_by_tag(tag)
-                )
-
-                print('should be added now...\n')
-
-                if self.db.get_row('tag', 'tag_name', tag):
-                    print('added tag, ', tag)
-
-            # so now the tag should be in the table tag
-            # already present or added
-
-            # add the tag to the table photo_tag
-            self.db.insert_data(
-                table='photo_tag',
-                photo_id=photo_id,
-                tag_name=tag,
-                photos=self.get_photo_count_by_tag(tag)
-            )
-
-        data = self.db.make_query(
-            '''
-            select * from photo_tag where photo_id = {}
-            '''.format(photo_id)
-        )
-
-        tags_in_data = []
-        if len(data) > 0:
-            for tag in data:
-                tags_in_data.append(tag[1])
-
-        print(tags_in_data)
-        for tag in tag_list:
-            if tag not in tags_in_data:
-                return False
-            else:
-                self.update_photo_count(tag)
-
-        return True
-
-    def remove_tag_name(self, tag_name):
-        tag_name = urllib.parse.quote(tag_name, safe='')
-        self.db.make_query(
-            '''
-            delete from tag where tag_name = "{}"
-            '''.format(tag_name)
-        )
 
     def clean_tags(self):
         forbidden = [' ', ';']
@@ -431,11 +306,80 @@ class Tag(object):
         else:
             return False
 
+    def add_tags_to_photo(self, photo_id, tag_list):
+        print('add_tags_to_photo', tag_list)
+
+        # for i in range(len(tag_list)):
+        #     tag_list[i] = urllib.parse.quote(tag_list[i], safe='')
+        #     print(tag_list[i],
+        #           'parsed', urllib.parse.unquote(tag_list[i]), tag_list)
+
+        # for each tag
+        # check if the tag is in the database already
+        # if it is not then add it to the tag table
+        for tag in tag_list:
+
+            # will return None if the tag is not in the tag table
+            # tag_name is the column name
+            data = self.db.get_row('tag', 'tag_name', tag)
+
+            print('data is', data)
+
+            if data is None:
+                print('should not get here')
+
+                print(tag)
+                print('that value is not in the db')
+
+                self.db.insert_data(
+                    table='tag',
+                    tag_name=tag,
+                    user_id='28035310@N00',
+                    photos=self.get_photo_count_by_tag(tag)
+                )
+
+                print('should be added now...\n')
+
+                if self.db.get_row('tag', 'tag_name', tag):
+                    print('added tag, ', tag)
+
+            # The tag is now in the database.
+
+            # Does return 0 if there are no pictures using the tag.
+            # print(self.get_photo_count_by_tag(tag))
+
+            # add the tag to the table photo_tag
+            resp = self.db.insert_data(
+                table='photo_tag',
+                photo_id=photo_id,
+                tag_name=tag,
+            )
+
+        data = self.db.make_query(
+            '''
+            select * from photo_tag where photo_id = {}
+            '''.format(photo_id)
+        )
+
+        tags_in_data = []
+        if len(data) > 0:
+            for tag in data:
+                tags_in_data.append(tag[1])
+
+        print(tags_in_data)
+        for tag in tag_list:
+            if tag not in tags_in_data:
+                return False
+            else:
+                self.update_photo_count(tag)
+
+        return True
+
 
 if __name__ == "__main__":
     t = Tag()
 
-    t.add_tags_to_photo(44692598005, ['fuck you'])
+    print(t.add_tags_to_photo(44692598005, ['test']))
 
     # print(t.get_all_tags())
 
