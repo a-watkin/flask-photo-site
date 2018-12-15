@@ -13,8 +13,7 @@ jQuery(document).ready(function($) {
       console.log("DANGER");
       $("#update-tag-button").prop("disabled", true);
       $("#warning-text").text("The characters: \\ and / are not allowed.");
-    }
-    if (arr.join("").replace(/ /g, "").length < 1) {
+    } else if (arr.join("").replace(/ /g, "").length < 1) {
       $("#update-tag-button").prop("disabled", true);
       $("#warning-text").text(
         "Please enter a new tag. An empty space is not valid."
