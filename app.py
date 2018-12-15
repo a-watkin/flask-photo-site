@@ -607,6 +607,10 @@ def get_photo_tag_data():
         print(data)
         # remove tags here
         print(data['photoId'], data['selectedTags'])
+
+        # for i in range(len(data['selectedTags'])):
+        #     data['selectedTags'][i] = check_chars(data['selectedTags'][i])
+
         t.remove_tags_from_photo(data['photoId'], data['selectedTags'])
         return json.dumps({'success': True}), 200, {'ContentType': 'application/json'}
 
