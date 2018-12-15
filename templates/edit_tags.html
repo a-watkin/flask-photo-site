@@ -5,6 +5,7 @@
     <div class="col">
 
         <h1>Edit tags page</h1>
+        <!-- <h1>{{json_data}}</h1> -->
 
     </div>
 </div>
@@ -31,7 +32,7 @@
 
                         <a href="/tags/{{value['tag_name']}}">
                             <button type="button" class="btn btn-outline-success btn-lg">
-                                {{ value["tag_name"] }}
+                                {{ value["human_readable_tag"] }}
                             </button>
                         </a>
 

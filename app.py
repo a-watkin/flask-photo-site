@@ -423,7 +423,7 @@ def check_forbidden(tag_name):
     print(tag_name)
 
     forbidden = [";", "/", "?", ":", "@", "=", "&", '"', "'", "<", ">",
-                 "#", "%", "{", "}", "|", "\\", "/", "^", "~", "[", "]", "`"]
+                 "#", "%", "{", "}", "|", "\\", "^", "~", "[", "]", "`"]
     for char in tag_name:
         if char in forbidden:
             tag_data = t.get_photos_by_tag(
@@ -504,61 +504,43 @@ def get_tags():
 @app.route('/edit/tags')
 def edit_tags():
     tag_data = t.get_all_tags()
-    for tag in tag_data:
-        if '%' in str(tag):
-            print('decode tag needed')
-
-    print(tag_data)
     return render_template('edit_tags.html', json_data=tag_data), 200
+
+
+def check_chars(tag_name):
+    forbidden = [";", "/", "?", ":", "@", "=", "&", '"', "'", "<", ">",
+                 "#", "%", "{", "}", "|", "\\", "/", "^", "~", "[", "]", "`"]
+    for char in tag_name:
+        if char in forbidden:
+            return url_encode_tag(tag_name)
+        else:
+            return tag_name
 
 
 @app.route('/edit/tag/<string:tag_name>', methods=['GET', 'POST'])
 def edit_tag(tag_name):
-    if '%' in str(tag_name):
-        tag_name = urllib.parse.unquote(tag_name)
-
+    print('hello from edit tags')
     if request.method == 'GET':
-        """
-        seems to automtically convert from url encoding to a normal string
-        """
-        print('get part of edit_tag method')
-        print('the tag name is ', tag_name)
-        if '%' in tag_name:
-            print('waht', tag_name)
-
-        # print('\n get message recieved')
         return render_template('edit_tag.html', tag_name=tag_name), 200
 
     if request.method == 'POST':
         new_tag_name = request.form['new_tag_name']
-        # print('new tag names', new_tag_name, urllib.urlencode(new_tag_name))
 
-        forbidden = [";", "/", "?", ":", "@", "=", "&", '"', "'", "<", ">",
-                     "#", "%", "{", "}", "|", "\\", "/", "^", "~", "[", "]", "`"]
-        endco_url = urllib.parse.quote(new_tag_name, safe='')
-        # encode
-        print()
-        print(new_tag_name, endco_url)
-        # decode
-        print(urllib.parse.unquote(endco_url))
-        print()
-        for value in new_tag_name:
-            print('what is the value', value)
-            if value in forbidden:
-                encoded_tag = urllib.parse.quote(new_tag_name, safe='')
-                update_response = t.update_tag(encoded_tag, tag_name)
-                print('no go', endco_url)
-                # flash(
-                #     'Forbidden character detected. The following characters are not allowed:\n {} \nplease remove the invalid characters and try again.'.format(foribdden_string))
-                return render_template('edit_tag.html', tag_name=tag_name), 200
+        # IF THE THING YOU'RE TRYING TO CHANGE IS IN AN INVALID FORMAT THEN YOU NEED
+        # ENCODE THAT instead of its replacement
+        old_tag = check_chars(tag_name)
+        new_tag = check_chars(new_tag_name)
 
-        # attemp to do database update
-        print('POST REQUEST RECIEVED WITH VALUE OF', new_tag_name, tag_name)
-        update_response = t.update_tag(new_tag_name, tag_name)
-        # print('UPDATE RESPONSE', update_response)
-        # if the tag is updated then redirect to the edit page for the new tag
+        print()
+        print('old_tag', old_tag, 'new_tag', new_tag)
+        print()
+
+        update_response = t.update_tag(new_tag, old_tag)
+
+        print('\n', update_response, '\n')
+
         if update_response:
-            redirect_url = "/edit/tag/{}".format(new_tag_name)
+            redirect_url = "/edit/tag/{}".format(new_tag)
             # print('INFO ', redirect_url, new_tag_name, tag_name)
             # http://127.0.0.1:5000/edit/tag/17191909
             # you need to return with the photo also

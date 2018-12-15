@@ -5,20 +5,22 @@ jQuery(document).ready(function($) {
     console.log("on the add photo to album page");
   }
 
-  // $("#update-tag-button").prop("disabled", true);
+  $("#tag-update").keyup(function(e) {
+    var arr = e.target.value.split("");
+    console.log(arr);
 
-  // var forbidden = ["'", "#", "%", "?"];
-  // $("#tag-update").blur(function() {
-  //   var inputValues = $(this).val();
-  //   // console.log(inputValues.split());
-  //   for (var i = 0; i < forbidden.length; i++) {
-  //     if (inputValues.includes(forbidden[i])) {
-  //       console.log("arrhiuhsihfdihsdih");
-  //     } else {
-  //       $("#update-tag-button").prop("disabled", false);
-  //     }
-  //   }
-
-  // var splitValues = inputValues.split();
-  // });
+    if (arr.indexOf("\\") > -1 || arr.indexOf("/") > -1) {
+      console.log("DANGER");
+      $("#update-tag-button").prop("disabled", true);
+      $("#warning-text").text("The characters: \\ and / are not allowed.");
+    }
+    if (arr.join("").replace(/ /g, "").length < 1) {
+      $("#update-tag-button").prop("disabled", true);
+      $("#warning-text").text(
+        "Please enter a new tag. An empty space is not valid."
+      );
+    } else {
+      $("#update-tag-button").prop("disabled", false);
+    }
+  });
 });

@@ -275,41 +275,6 @@ class Tag(object):
 
             self.update_photo_count(tag)
 
-    def update_tag(self, new_tag, old_tag):
-        test = self.db.make_query(
-            '''
-            select * from tag where tag_name = "{}"
-            '''.format(new_tag)
-        )
-
-        if not test:
-            # if the tag doesn't exist already then update it
-            # existing tag to the new tag
-            self.db.make_query(
-                '''
-                update tag
-                set tag_name = "{}"
-                where tag_name = "{}"
-                '''.format(new_tag, old_tag)
-            )
-
-        # if new tag exists or not you have to update photo_tag
-        self.db.make_query(
-            '''
-            update photo_tag
-            set tag_name = "{}"
-            where tag_name = "{}"
-            '''.format(new_tag, old_tag)
-        )
-
-        # update the photo count for the tag table
-        self.update_photo_count(new_tag)
-
-        if self.get_tag(new_tag) and not self.get_tag(old_tag):
-            return True
-        else:
-            return False
-
     def add_tags_to_photo(self, photo_id, tag_list):
         print('add_tags_to_photo', tag_list)
 
@@ -379,11 +344,52 @@ class Tag(object):
 
         return True
 
+    def update_tag(self, new_tag, old_tag):
+        print('hello from update_tag - passed values, ', new_tag, old_tag)
+        # check if new tag exists
+        test = self.db.make_query(
+            '''
+            select * from tag where tag_name = "{}"
+            '''.format(new_tag)
+        )
+
+        # print(test)
+
+        if not test:
+            # if the tag doesn't exist already then update it
+            # existing tag to the new tag
+            self.db.make_query(
+                '''
+                update tag
+                set tag_name = "{}"
+                where tag_name = "{}"
+                '''.format(new_tag, old_tag)
+            )
+
+        # if new tag exists or not you have to update photo_tag
+        self.db.make_query(
+            '''
+            update photo_tag
+            set tag_name = "{}"
+            where tag_name = "{}"
+            '''.format(new_tag, old_tag)
+        )
+
+        # update the photo count for the tag table
+        self.update_photo_count(new_tag)
+
+        if self.get_tag(new_tag) and not self.get_tag(old_tag):
+            return True
+        else:
+            return False
+
 
 if __name__ == "__main__":
     t = Tag()
 
-    print(t.get_all_tags())
+    # print(t.update_tag('mars', 'aberdeen'))
+
+    # print(t.get_all_tags())
 
     # print(t.add_tags_to_photo(44692598005, ['cheese']))
 
