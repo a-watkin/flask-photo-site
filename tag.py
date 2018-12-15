@@ -52,15 +52,15 @@ class Tag(object):
         """
         Updates the photo count for the given tag.
         """
-        query_count = self.db.get_query_as_list(
-            '''
-                select count(tag_name)
-                from photo_tag
-                where tag_name = "{}"
-                '''.format(tag_name)
-        )
+        # query_count = self.db.get_query_as_list(
+        #     '''
+        #         select count(tag_name)
+        #         from photo_tag
+        #         where tag_name = "{}"
+        #         '''.format(tag_name)
+        # )
 
-        count = query_count[0]['count(tag_name)']
+        count = self.get_photo_count_by_tag(tag_name)
 
         self.db.make_query(
             '''
@@ -239,6 +239,7 @@ class Tag(object):
             delete from tag where tag_name = "{}"
             '''.format(tag_name)
         )
+        self.update_photo_count(tag_name)
 
     def delete_tag(self, tag_name):
         # you have to remove the tag from the tag table
@@ -392,7 +393,9 @@ class Tag(object):
 if __name__ == "__main__":
     t = Tag()
 
-    t.get_photo_tags(31734289038)
+    # t.get_photo_tags(31734289038)
+
+    t.update_photo_count('365')
 
     # print(t.update_tag('mars', 'aberdeen'))
 

@@ -204,7 +204,7 @@ class Photos(object):
 
     def update_title(self, photo_id, new_title):
         resp = self.db.make_query('''
-        update photo 
+        update photo
         set photo_title = '{}'
         where photo_id = '{}'
         '''.format(new_title, photo_id)
@@ -213,7 +213,8 @@ class Photos(object):
         # print(resp)
 
     def delete_photo(self, photo_id):
-        # Update tag count
+        # Update tag count, data for later update
+        tags = self.tag.get_photo_tags(photo_id)
 
         # check if photo is in an album
         album_check = self.db.make_query(
@@ -252,6 +253,11 @@ class Photos(object):
         )
 
         print(album_check)
+
+        # update photo_tag count after deleting the photo
+        for tag in tags:
+            print('tag name', tag['tag_name'])
+            self.tag.update_photo_count(tag['tag_name'])
 
 
 if __name__ == "__main__":

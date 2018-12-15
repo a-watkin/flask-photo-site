@@ -141,46 +141,52 @@ class PhotosData extends React.Component {
     });
   }
 
+  checkTags(tags) {
+    console.log(tags);
+  }
+
   addTags(e, photo_id, key) {
     console.log("hello from addTags");
     console.log(e.target.value);
 
     if (e.target.value) {
-      let test = JSON.stringify({
-        photoId: photo_id,
-        tagValues: e.target.value
-      });
-
-      console.log(test);
-
-      fetch("http://127.0.0.1:5000/api/add/tags", {
-        method: "POST",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
+      if (checkTags(e.taget.value)) {
+        let test = JSON.stringify({
           photoId: photo_id,
           tagValues: e.target.value
-        })
-      }).then(Response => {
-        console.log("Response", Response.status);
+        });
 
-        if (Response.status === 200) {
-          console.log(Response);
-          let objectCopy = this.state.items;
-          console.log("wtf");
+        console.log(test);
 
-          console.log(objectCopy);
+        fetch("http://127.0.0.1:5000/api/add/tags", {
+          method: "POST",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            photoId: photo_id,
+            tagValues: e.target.value
+          })
+        }).then(Response => {
+          console.log("Response", Response.status);
 
-          // let test = [e.target.value, ...objectCopy[key]["tags"]];
-          // console.log("test", test);
-          //   objectCopy[key]["tags"] = e.target.value;
+          if (Response.status === 200) {
+            console.log(Response);
+            let objectCopy = this.state.items;
+            console.log("wtf");
 
-          //   this.setState({
-          //     items: objectCopy
-        }
-      });
+            console.log(objectCopy);
+
+            // let test = [e.target.value, ...objectCopy[key]["tags"]];
+            // console.log("test", test);
+            //   objectCopy[key]["tags"] = e.target.value;
+
+            //   this.setState({
+            //     items: objectCopy
+          }
+        });
+      }
     }
   }
 
