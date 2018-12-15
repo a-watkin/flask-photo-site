@@ -3,6 +3,7 @@
 
 <div class="row">
 
+    <!-- <h1>{{json_data}}</h1> -->
     <div class="col">
 
 
@@ -11,14 +12,14 @@
 
             {{json_data['tag_info']['number_of_photos']}} photos for tag:
             <button class="btn btn-outline-success btn-lg">
-                {{json_data[0]['tag_name']}}
+                {{json_data['human_readable_tag']}}
             </button>
 
             {% else %}
             No photos found for the tag
 
             <button class="btn btn-outline-success btn-lg">
-                {{json_data['tag_name']}}
+                {{json_data['human_readable_tag']}}
             </button>
 
             <!-- {{json_data}} -->

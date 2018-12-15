@@ -1,5 +1,8 @@
-from database_interface import Database
+import urllib.parse
 import sqlite3
+
+
+from database_interface import Database
 
 
 class Tag(object):
@@ -149,6 +152,18 @@ class Tag(object):
                       query_count[0]['count(tag_name)'], 'in photos column', tag['photos'])
                 break
 
+    def check_forbidden(self, tag_name):
+        print('hello from check_forbidden')
+        print(tag_name)
+
+        forbidden = [";", "/", "?", ":", "@", "=", "&", '"', "'", "<", ">",
+                     "#", "%", "{", "}", "|", "\\", "/", "^", "~", "[", "]", "`"]
+        for char in tag_name:
+            if char in forbidden:
+                return urllib.parse.quote(tag_name, safe='')
+
+        return tag_name
+
     def get_all_tags(self):
         """
         DANGER!
@@ -171,6 +186,8 @@ class Tag(object):
             # adding the number of photos with the tag
             # it's slow here because each tag means a query to the db
             rtn_dict[count]['photos'] = tag['photos']
+            rtn_dict['human_readable_tag'] = self.check_forbidden(
+                tag['tag_name'])
 
             count += 1
 
@@ -250,56 +267,6 @@ class Tag(object):
         )
 
         return tag_data
-
-    def update_tag(self, new_tag, old_tag):
-        # Check if the tag is already in the database
-        check = self.db.make_query(
-            '''
-            select tag_name from tag where tag_name = "{}"
-            '''.format(new_tag)
-        )
-
-        # Save the data to be updated from photo_data
-        photo_tag_query = '''
-                        select * from photo_tag
-                        where tag_name = "{}"
-                        '''.format(old_tag)
-
-        # get the old tags photo_tag data
-        photo_tag_data = self.db.make_query(photo_tag_query)
-
-        # prepare data for insert back, change the values that you need to change
-        new_photo_tag_data = []
-        # update photo_tag and delete the old tag name from tag
-        for v in photo_tag_data:
-            new_photo_tag_data.append((v[0], new_tag))
-
-        # if the new tag is not in the table tag then add it
-        if len(check) == 0:
-            print('tag is not in the table tag, so adding it')
-            self.db.insert_data(
-                table='tag',
-                tag_name=new_tag,
-                user_id='28035310@N00',
-                count=self.get_photo_count_by_tag(new_tag)
-            )
-
-        # otherwise the new_tag is in the tag table and doesn't need to be added
-
-        # insert new tag into photo_tag
-        self.db.insert_tag_data('photo_tag', new_photo_tag_data)
-
-        # it doesn't cascade on delete so delete the old tag
-        self.db.delete_rows_where('tag', 'tag_name', old_tag)
-
-        # delete the old tag from photo_tag
-        self.db.delete_rows_where('photo_tag', 'tag_name', old_tag)
-
-        # confirm that the new tag is present and the old tag is not
-        if self.get_tag(new_tag) and not self.get_tag(old_tag):
-            return True
-        else:
-            return False
 
     def check_photo_tag(self, tag_name):
         data = self.db.make_query(
@@ -417,16 +384,59 @@ class Tag(object):
 
             self.update_photo_count(tag)
 
+    def update_tag(self, new_tag, old_tag):
+        test = self.db.make_query(
+            '''
+            select * from tag where tag_name = "{}"
+            '''.format(new_tag)
+        )
+
+        if not test:
+            # if the tag doesn't exist already then update it
+            # existing tag to the new tag
+            self.db.make_query(
+                '''
+                update tag
+                set tag_name = "{}"
+                where tag_name = "{}"
+                '''.format(new_tag, old_tag)
+            )
+
+        # if new tag exists or not you have to update photo_tag
+        self.db.make_query(
+            '''
+            update photo_tag
+            set tag_name = "{}"
+            where tag_name = "{}"
+            '''.format(new_tag, old_tag)
+        )
+
+        # update the photo count for the tag table
+        self.update_photo_count(new_tag)
+
+        if self.get_tag(new_tag) and not self.get_tag(old_tag):
+            return True
+        else:
+            return False
+
 
 if __name__ == "__main__":
     t = Tag()
 
+    # print(t.get_all_tags())
+
+    t.update_tag('%23%london', "london")
+    # t.update_tag_test('%23london', '#london')
+
     # t.get_photos_by_tag("21erh'aus")
 
-    # t.clean_tags()
+    # this is now really slow?
+    # cascade on update also means that if you don't add back for some reason you will lose all those tags
+    # so it's way more dangerous
+    # new tag, old tag
+    # print(t.update_tag("test", "london"))
+    # print(t.update_photo_count('london'))
 
-    # def update_tag(self, new_tag, old_tag):
-    print(t.update_tag('test', "adverts"))
     # print(t.update_tag())
     # t.update_tag('london', 'cheese')
 

@@ -192,23 +192,6 @@ def update_title():
         return json.dumps({'success': False}), 500, {'ContentType': 'application/json'}
 
 
-@app.route('/api/add/tags', methods=['GET', 'POST'])
-def add_uploaded_tags():
-    tag_data = request.get_json()
-    # print()
-    # tags are a string when they come in here,
-    # they need to be split
-    tags = tag_data['tagValues'].split(',')
-
-    # print('tag_data', tag_data)
-    resp = t.add_tags_to_photo(tag_data['photoId'], tags)
-    # print(resp)
-    if resp:
-        return json.dumps({'success': True}), 200, {'ContentType': 'application/json'}
-    else:
-        return json.dumps({'success': False}), 500, {'ContentType': 'application/json'}
-
-
 @app.route('/api/upload/photostream', methods=['GET', 'POST'])
 def to_photostream():
     # print('hello from to_photostream')
@@ -435,16 +418,51 @@ def delete_photo(photo_id):
         return render_template('deleted_photo.html', json_data=photo_data), 200
 
 
+@app.route('/api/add/tags', methods=['GET', 'POST'])
+def add_uploaded_tags():
+    """
+    gets data from react
+    """
+    tag_data = request.get_json()
+    # print()
+    # tags are a string when they come in here,
+    # they need to be split
+    tags = tag_data['tagValues'].split(',')
+
+    # print('tag_data', tag_data)
+    resp = t.add_tags_to_photo(tag_data['photoId'], tags)
+    # print(resp)
+    if resp:
+        return json.dumps({'success': True}), 200, {'ContentType': 'application/json'}
+    else:
+        return json.dumps({'success': False}), 500, {'ContentType': 'application/json'}
+
+
+def check_forbidden(tag_name):
+    print('hello from check_forbidden')
+    print(tag_name)
+
+    forbidden = [";", "/", "?", ":", "@", "=", "&", '"', "'", "<", ">",
+                 "#", "%", "{", "}", "|", "\\", "/", "^", "~", "[", "]", "`"]
+    for char in tag_name:
+        if char in forbidden:
+            tag_data = t.get_photos_by_tag(
+                urllib.parse.quote(tag_name, safe=''))
+            tag_data['human_readable_tag'] = tag_name
+            return tag_data
+
+    tag_data = t.get_photos_by_tag(tag_name)
+    tag_data['human_readable_tag'] = tag_name
+
+    return tag_data
+
+
 @app.route('/tags/<string:tag_name>')
 def photos_by_tag_name(tag_name):
-    tag_data = t.get_photos_by_tag(tag_name)
-    json_data = tag_data
-    print()
-    print('tag data ', json_data)
-    print()
+    json_data = check_forbidden(tag_name)
 
-    if tag_data['tag_info']['number_of_photos'] < 1:
-        tag_data['tag_name'] = tag_name
+    # if tag_data['tag_info']['number_of_photos'] < 1:
+    #     tag_data['tag_name'] = tag_name
 
     return render_template('tag_photos.html', json_data=json_data)
 
@@ -463,7 +481,8 @@ def delete_tag(tag_name):
 
 @app.route('/tags/')
 def get_tags():
-    # this is now using a cache
+    print('hello from get_tags')
+
     tag_data = t.get_all_tags()
     # tag_data = t.get_all_tags_without_count()
     # print(tag_data)
@@ -473,13 +492,17 @@ def get_tags():
 @app.route('/edit/tags')
 def edit_tags():
     tag_data = t.get_all_tags()
+    for tag in tag_data:
+        if '%' in str(tag):
+            print('decode tag needed')
+
     print(tag_data)
     return render_template('edit_tags.html', json_data=tag_data), 200
 
 
 @app.route('/edit/tag/<string:tag_name>', methods=['GET', 'POST'])
 def edit_tag(tag_name):
-    if '%' in tag_name:
+    if '%' in str(tag_name):
         tag_name = urllib.parse.unquote(tag_name)
 
     if request.method == 'GET':
@@ -518,20 +541,20 @@ def edit_tag(tag_name):
                 return render_template('edit_tag.html', tag_name=tag_name), 200
 
         # attemp to do database update
-        # print('POST REQUEST RECIEVED WITH VALUE OF', new_tag_name, tag_name)
-        # update_response = t.update_tag(new_tag_name, tag_name)
-        # # print('UPDATE RESPONSE', update_response)
-        # # if the tag is updated then redirect to the edit page for the new tag
-        # if update_response:
-        #     redirect_url = "/edit/tag/{}".format(new_tag_name)
-        #     # print('INFO ', redirect_url, new_tag_name, tag_name)
-        #     # http://127.0.0.1:5000/edit/tag/17191909
-        #     # you need to return with the photo also
-        #     return redirect(redirect_url, code=302)
+        print('POST REQUEST RECIEVED WITH VALUE OF', new_tag_name, tag_name)
+        update_response = t.update_tag(new_tag_name, tag_name)
+        # print('UPDATE RESPONSE', update_response)
+        # if the tag is updated then redirect to the edit page for the new tag
+        if update_response:
+            redirect_url = "/edit/tag/{}".format(new_tag_name)
+            # print('INFO ', redirect_url, new_tag_name, tag_name)
+            # http://127.0.0.1:5000/edit/tag/17191909
+            # you need to return with the photo also
+            return redirect(redirect_url, code=302)
 
-        # else:
-        #     flash('There was a problem updating the tag, please contact support.')
-        #     return render_template('edit_tag.html', tag_name=new_tag_name), 200
+        else:
+            flash('There was a problem updating the tag, please contact support.')
+            return render_template('edit_tag.html', tag_name=new_tag_name), 200
 
 
 @app.route('/add/tag/', methods=['GET', 'POST'])

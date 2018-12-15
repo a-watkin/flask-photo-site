@@ -124,7 +124,7 @@ class Database(object):
         with sqlite3.connect(self.db_name) as connection:
             c = connection.cursor()
             query_string = '''
-            delete from {} where {} = '{}'
+            delete from {} where {} = "{}"
             '''.format(table_name, name, where)
 
             try:
@@ -140,7 +140,9 @@ class Database(object):
                 with sqlite3.connect(self.db_name) as connection:
                     c = connection.cursor()
                     # INSERT INTO photo_tag VALUES(5052580779, 'london')
-                    insert_string = '''INSERT INTO photo_tag VALUES({}, '{}')'''.format(
+                    insert_string = '''
+                                    INSERT INTO photo_tag VALUES({}, "{}")
+                                    '''.format(
                         int(x[0]), x[1])
 
                     c.execute(insert_string)
