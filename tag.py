@@ -425,7 +425,9 @@ if __name__ == "__main__":
 
     # t.clean_tags()
 
-    print(t.update_tag('london', "21erh'aus"))
+    # def update_tag(self, new_tag, old_tag):
+    print(t.update_tag('test', "adverts"))
+    # print(t.update_tag())
     # t.update_tag('london', 'cheese')
 
     # t.tag_photo_count()

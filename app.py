@@ -473,12 +473,24 @@ def get_tags():
 @app.route('/edit/tags')
 def edit_tags():
     tag_data = t.get_all_tags()
+    print(tag_data)
     return render_template('edit_tags.html', json_data=tag_data), 200
 
 
 @app.route('/edit/tag/<string:tag_name>', methods=['GET', 'POST'])
 def edit_tag(tag_name):
+    if '%' in tag_name:
+        tag_name = urllib.parse.unquote(tag_name)
+
     if request.method == 'GET':
+        """
+        seems to automtically convert from url encoding to a normal string
+        """
+        print('get part of edit_tag method')
+        print('the tag name is ', tag_name)
+        if '%' in tag_name:
+            print('waht', tag_name)
+
         # print('\n get message recieved')
         return render_template('edit_tag.html', tag_name=tag_name), 200
 
@@ -496,8 +508,10 @@ def edit_tag(tag_name):
         print(urllib.parse.unquote(endco_url))
         print()
         for value in new_tag_name:
+            print('what is the value', value)
             if value in forbidden:
-                endco_url = urllib.parse.quote(value, safe='')
+                encoded_tag = urllib.parse.quote(new_tag_name, safe='')
+                update_response = t.update_tag(encoded_tag, tag_name)
                 print('no go', endco_url)
                 # flash(
                 #     'Forbidden character detected. The following characters are not allowed:\n {} \nplease remove the invalid characters and try again.'.format(foribdden_string))
