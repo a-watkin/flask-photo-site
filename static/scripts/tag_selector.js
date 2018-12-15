@@ -125,6 +125,7 @@ class TagSelector extends React.Component {
       const tag = tagData.map((tag, index) => {
         console.log(tag, index);
         const tagName = tag["tag_name"];
+        const humanTag = tag["human_readable_tag"];
         return (
           <div key={index}>
             <button
@@ -141,7 +142,7 @@ class TagSelector extends React.Component {
                   : notSelected
               }
             >
-              {tagName}
+              {humanTag}
             </button>
           </div>
         );
