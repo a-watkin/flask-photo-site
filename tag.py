@@ -162,6 +162,11 @@ class Tag(object):
 
         # so an array of tags would be ok
         tag_data = self.db.get_query_as_list(query_string)
+        for tag in tag_data:
+            # print(self.decode_tag(tag['tag_name']))
+
+            tag['human_readable_tag'] = self.decode_tag(tag['tag_name'])
+
         # print(tag_data)
 
         return tag_data
@@ -386,6 +391,8 @@ class Tag(object):
 
 if __name__ == "__main__":
     t = Tag()
+
+    t.get_photo_tags(31734289038)
 
     # print(t.update_tag('mars', 'aberdeen'))
 

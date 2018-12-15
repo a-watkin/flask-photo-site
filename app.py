@@ -566,6 +566,11 @@ def add_tag():
         tag_data = request.form['new_tag_name']
         # This is a string of values
         tag_data = tag_data.split(',')
+        for i in range(len(tag_data)):
+            tag_data[i] = check_chars(tag_data[i])
+
+        print('nope', tag_data)
+
         # add tags to the tag table if needed and associated them with the photo
         t.add_tags_to_photo(photo_id, tag_data)
         # data on the photo to render the view
