@@ -18,39 +18,41 @@
 <hr>
 
 <div class="row">
+
+
+    <div class="col text-center">
+        <div id="warning-text" class="alert alert-warning" role="alert">
+            You can enter multiple tags, seperating them by commas.
+        </div>
+    </div>
+</div>
+
+<div class="row">
+
+
+
     <div class="col">
         <!-- passing the photo_id back to add_tag for the POST section of code -->
         <form method="post" action="{{ url_for('add_tag', photo_id=json_data['photo_id']) }}">
             <div class="form-group">
                 <label for="renaming-tag">Add addtional tags below.</label>
-                <input name="new_tag_name" type="text" class="form-control" value="{{tag_name}}">
+                <input id="tag-update" name="new_tag_name" type="text" class="form-control text-center" value="{{tag_name}}">
             </div>
-
-            <div class="row">
-
-
-                <div class="col">
-                    <div class="alert alert-dark" role="alert">
-                        You can enter multiple tags, seperating them by commas. Tags should be unique.
-                    </div>
-                </div>
-            </div>
-
-            <div class="row">
-                <div class="col text-center">
-                    <button type="submit" class="btn btn-primary">Add tag</button>
-                </div>
-            </div>
-        </form>
     </div>
 </div>
 <hr>
 <div class="row">
-    <div class="col">
+    <div class="col text-left">
         <a href="/api/photos/{{json_data['photo_id']}}">
-            <button class="btn btn-success"">Go back to the photo</button>
+            <button type="button" class="btn btn-success btn-lg">Go back to the photo</button>
         </a>
     </div>
+
+    <div class="col text-right">
+        <button id="update-tag-button" type="submit" class="btn btn-primary btn-lg">Add tag</button>
+    </div>
+    </form>
+
 </div>
 
 <hr>
