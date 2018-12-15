@@ -421,11 +421,11 @@ class Tag(object):
 if __name__ == "__main__":
     t = Tag()
 
-    t.get_photos_by_tag('london')
+    # t.get_photos_by_tag("21erh'aus")
 
     # t.clean_tags()
 
-    # print(t.update_tag('cheese', 'london'))
+    print(t.update_tag('london', "21erh'aus"))
     # t.update_tag('london', 'cheese')
 
     # t.tag_photo_count()

@@ -2,6 +2,7 @@ import json
 import os
 import datetime
 import uuid
+import urllib.parse
 
 from flask import Flask, render_template, request, session, flash, redirect, url_for, g, jsonify
 from flask import json
@@ -483,25 +484,40 @@ def edit_tag(tag_name):
 
     if request.method == 'POST':
         new_tag_name = request.form['new_tag_name']
-        print('new tag names', new_tag_name)
+        # print('new tag names', new_tag_name, urllib.urlencode(new_tag_name))
 
-        # forbidden = [ $ - _ . + ! * ' ( ) , , ]
+        forbidden = [";", "/", "?", ":", "@", "=", "&", '"', "'", "<", ">",
+                     "#", "%", "{", "}", "|", "\\", "/", "^", "~", "[", "]", "`"]
+        endco_url = urllib.parse.quote(new_tag_name, safe='')
+        # encode
+        print()
+        print(new_tag_name, endco_url)
+        # decode
+        print(urllib.parse.unquote(endco_url))
+        print()
+        for value in new_tag_name:
+            if value in forbidden:
+                endco_url = urllib.parse.quote(value, safe='')
+                print('no go', endco_url)
+                # flash(
+                #     'Forbidden character detected. The following characters are not allowed:\n {} \nplease remove the invalid characters and try again.'.format(foribdden_string))
+                return render_template('edit_tag.html', tag_name=tag_name), 200
 
         # attemp to do database update
         # print('POST REQUEST RECIEVED WITH VALUE OF', new_tag_name, tag_name)
-        update_response = t.update_tag(new_tag_name, tag_name)
-        # print('UPDATE RESPONSE', update_response)
-        # if the tag is updated then redirect to the edit page for the new tag
-        if update_response:
-            redirect_url = "/edit/tag/{}".format(new_tag_name)
-            # print('INFO ', redirect_url, new_tag_name, tag_name)
-            # http://127.0.0.1:5000/edit/tag/17191909
-            # you need to return with the photo also
-            return redirect(redirect_url, code=302)
+        # update_response = t.update_tag(new_tag_name, tag_name)
+        # # print('UPDATE RESPONSE', update_response)
+        # # if the tag is updated then redirect to the edit page for the new tag
+        # if update_response:
+        #     redirect_url = "/edit/tag/{}".format(new_tag_name)
+        #     # print('INFO ', redirect_url, new_tag_name, tag_name)
+        #     # http://127.0.0.1:5000/edit/tag/17191909
+        #     # you need to return with the photo also
+        #     return redirect(redirect_url, code=302)
 
-        else:
-            flash('There was a problem updating the tag, please contact support.')
-            return render_template('edit_tag.html', tag_name=new_tag_name), 200
+        # else:
+        #     flash('There was a problem updating the tag, please contact support.')
+        #     return render_template('edit_tag.html', tag_name=new_tag_name), 200
 
 
 @app.route('/add/tag/', methods=['GET', 'POST'])
