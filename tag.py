@@ -291,6 +291,15 @@ class Tag(object):
     def add_tags_to_photo(self, photo_id, tag_list):
         print('add_tags_to_photo', tag_list)
 
+        # for tag in tag_list:
+        #     tag = urllib.parse.quote(tag, safe='')
+
+        for i in range(len(tag_list)):
+            tag_list[i] = urllib.parse.quote(tag_list[i], safe='')
+            print(tag_list[i],
+                  'parsed', urllib.parse.unquote(tag_list[i]), tag_list)
+
+        # print(tag_list)
         # iterate over the list of tags
 
         # for each tag
@@ -310,7 +319,8 @@ class Tag(object):
                 self.db.insert_data(
                     table='tag',
                     tag_name=tag,
-                    user_id='28035310@N00'
+                    user_id='28035310@N00',
+                    photos=self.get_photo_count_by_tag(tag)
                 )
 
                 print('should be added now...\n')
@@ -325,7 +335,8 @@ class Tag(object):
             self.db.insert_data(
                 table='photo_tag',
                 photo_id=photo_id,
-                tag_name=tag
+                tag_name=tag,
+                photos=self.get_photo_count_by_tag(tag)
             )
 
         data = self.db.make_query(
@@ -349,6 +360,7 @@ class Tag(object):
         return True
 
     def remove_tag_name(self, tag_name):
+        tag_name = urllib.parse.quote(tag_name, safe='')
         self.db.make_query(
             '''
             delete from tag where tag_name = "{}"
@@ -423,9 +435,11 @@ class Tag(object):
 if __name__ == "__main__":
     t = Tag()
 
+    t.add_tags_to_photo(44692598005, ['fuck you'])
+
     # print(t.get_all_tags())
 
-    t.update_tag('%23%london', "london")
+    # t.update_tag('%23%london', "london")
     # t.update_tag_test('%23london', '#london')
 
     # t.get_photos_by_tag("21erh'aus")
