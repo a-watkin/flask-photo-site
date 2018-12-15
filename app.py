@@ -418,26 +418,6 @@ def delete_photo(photo_id):
         return render_template('deleted_photo.html', json_data=photo_data), 200
 
 
-@app.route('/api/add/tags', methods=['GET', 'POST'])
-def add_uploaded_tags():
-    """
-    gets data from react
-    """
-    tag_data = request.get_json()
-    # print()
-    # tags are a string when they come in here,
-    # they need to be split
-    tags = tag_data['tagValues'].split(',')
-
-    # print('tag_data', tag_data)
-    resp = t.add_tags_to_photo(tag_data['photoId'], tags)
-    # print(resp)
-    if resp:
-        return json.dumps({'success': True}), 200, {'ContentType': 'application/json'}
-    else:
-        return json.dumps({'success': False}), 500, {'ContentType': 'application/json'}
-
-
 def check_forbidden(tag_name):
     print('hello from check_forbidden')
     print(tag_name)
@@ -457,13 +437,45 @@ def check_forbidden(tag_name):
     return tag_data
 
 
+def url_encode_tag(tag_name):
+    return urllib.parse.quote(tag_name, safe='')
+
+
+def url_decode_tag(tag_name):
+    return urllib.parse.unquote(tag_name)
+
+
+@app.route('/api/add/tags', methods=['GET', 'POST'])
+def add_uploaded_tags():
+    """
+    gets data from react
+    """
+    tag_data = request.get_json()
+    # tags are a string when they come in here,
+    # they need to be split
+    tags = tag_data['tagValues'].split(',')
+
+    for i in range(len(tags)):
+        # remove whitespace from front and back of element
+        tags[i] = tags[i].strip()
+        # make it url safe
+        tags[i] = url_encode_tag(tags[i])
+
+    print(tags)
+
+    print('tag_data', tag_data)
+    resp = t.add_tags_to_photo(tag_data['photoId'], tags)
+    print(resp)
+    if resp:
+        return json.dumps({'success': True}), 200, {'ContentType': 'application/json'}
+    else:
+        return json.dumps({'success': False}), 500, {'ContentType': 'application/json'}
+
+
 @app.route('/tags/<string:tag_name>')
 def photos_by_tag_name(tag_name):
+    # gettings the photos by tag with sanitised names
     json_data = check_forbidden(tag_name)
-
-    # if tag_data['tag_info']['number_of_photos'] < 1:
-    #     tag_data['tag_name'] = tag_name
-
     return render_template('tag_photos.html', json_data=json_data)
 
 

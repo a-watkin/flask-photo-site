@@ -1,7 +1,7 @@
 {% extends "template.html" %}
 {% block content %}
 
-<h1>{{url_for('get_tags')}}</h1>
+<!-- <h1>{{json_data}}</h1> -->
 <div class="row text-center">
     <div class="col">
         <h1>Tags page</h1>
@@ -14,7 +14,7 @@
     <div class="col text-center">
         {% for key, value in json_data.items() %}
         <a href="/tags/{{value['tag_name']}}">
-            <button type="button" class="btn btn-outline-success btn-lg">{{value['tag_name']}}</button>
+            <button type="button" class="btn btn-outline-success btn-lg">{{value['human_readable_tag']}}</button>
         </a>
         {% endfor %}
     </div>

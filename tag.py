@@ -119,10 +119,14 @@ class Tag(object):
 
         return tag_name
 
+    def decode_tag(self, tag_name):
+        return urllib.parse.unquote(tag_name)
+
     def get_all_tags(self):
         # as a list of dict values
         tag_data = self.db.get_query_as_list(
-            "SELECT tag_name, photos FROM tag order by tag_name")
+            "SELECT tag_name, photos FROM tag order by tag_name"
+        )
 
         rtn_dict = {
 
@@ -134,7 +138,7 @@ class Tag(object):
             tag_name = tag['tag_name']
             # adding the number of photos with the tag
             rtn_dict[count]['photos'] = tag['photos']
-            rtn_dict['human_readable_tag'] = self.check_forbidden(
+            rtn_dict[count]['human_readable_tag'] = self.decode_tag(
                 tag['tag_name'])
             count += 1
 
@@ -379,7 +383,9 @@ class Tag(object):
 if __name__ == "__main__":
     t = Tag()
 
-    print(t.add_tags_to_photo(44692598005, ['test']))
+    print(t.get_all_tags())
+
+    # print(t.add_tags_to_photo(44692598005, ['cheese']))
 
     # print(t.get_all_tags())
 
