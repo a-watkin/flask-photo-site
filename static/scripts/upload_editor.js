@@ -11,6 +11,8 @@ class PhotosData extends React.Component {
       currentOffset: 20,
       selectedPhotos: [],
       albumId: null,
+      allowTitle: true,
+      allowTags: true,
       allowButtons: true
     };
 
@@ -18,6 +20,36 @@ class PhotosData extends React.Component {
     this.discardPhoto = this.discardPhoto.bind(this);
     this.addToPhotoStream = this.addToPhotoStream.bind(this);
     this.addTags = this.addTags.bind(this);
+    this.updateTitle = this.updateTitle.bind(this);
+  }
+
+  checkInput(input_string) {
+    function checkTags(tags) {
+      const forbidden = ["\\", "/", "%"];
+      let arr = tags.split(",");
+      let safe = true;
+
+      // for each value in arr check each char against the forbidden values
+      for (var i = 0; i < arr.length; i++) {
+        console.log(arr[i]);
+        forbidden.forEach(char => {
+          if (arr[i].includes(char)) {
+            safe = false;
+          }
+        });
+
+        if (arr[i].replace(/ /g, "").length < 1) {
+          safe = false;
+        }
+      }
+
+      if (arr.join("").replace(/,/g, "") < 1) {
+        safe = false;
+      }
+
+      return safe;
+    }
+    return checkTags(input_string);
   }
 
   componentWillMount() {
@@ -36,9 +68,6 @@ class PhotosData extends React.Component {
             items: result.photos
           });
         },
-        // Note: it's important to handle errors here
-        // instead of a catch() block so that we don't swallow
-        // exceptions from actual bugs in components.
         error => {
           this.setState({
             isLoaded: true,
@@ -91,13 +120,6 @@ class PhotosData extends React.Component {
       console.log("Response", Response.status);
 
       if (Response.status === 200) {
-        // let tempArray = [...this.state.items];
-        // console.log("tempArray", tempArray);
-        // tempAray.splice(key, 1);
-        // this.setState({
-        //   items: tempArray
-        // });
-        // let index = tempAray.indexOf(photo_id);
         let objectCopy = this.state.items;
         delete objectCopy[key];
         this.setState({
@@ -105,7 +127,6 @@ class PhotosData extends React.Component {
         });
         console.log("getting here ok");
         console.log(this.state.items);
-        // console.log(this.state.items[key]);
       }
     });
   }
@@ -113,71 +134,50 @@ class PhotosData extends React.Component {
   updateTitle(e, photo_id, key) {
     console.log("updateTitle called", e.target.value, photo_id, key);
 
-    let test = JSON.stringify({
-      photoId: photo_id
-    });
+    if (this.checkInput(e.target.value)) {
+      this.setState({
+        allowTitle: true,
+        allowButtons: true
+      });
 
-    console.log(test);
+      console.log("eh");
+      fetch("http://127.0.0.1:5000/api/uploaded/title", {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          photoId: photo_id,
+          title: e.target.value
+        })
+      }).then(Response => {
+        console.log("Response", Response.status);
 
-    fetch("http://127.0.0.1:5000/api/uploaded/title", {
-      method: "POST",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        photoId: photo_id,
-        title: e.target.value
-      })
-    }).then(Response => {
-      console.log("Response", Response.status);
+        if (Response.status === 200) {
+          let objectCopy = this.state.items;
+          objectCopy[key]["photo_title"] = e.target.value;
 
-      if (Response.status === 200) {
-        let objectCopy = this.state.items;
-        objectCopy[key]["photo_title"] = e.target.value;
-
-        this.setState({
-          items: objectCopy
-        });
-      }
-    });
+          this.setState({
+            items: objectCopy
+          });
+        }
+      });
+    } else {
+      // invalid input detected
+      this.setState({
+        allowTitle: false,
+        allowButtons: false
+      });
+    }
   }
 
-  addTags(e, photo_id, key) {
-    function checkTags(tags) {
-      const forbidden = ["\\", "/", "%"];
-      let arr = tags.split(",");
-      let safe = true;
-
-      // for each value in arr check each char against the forbidden values
-      for (var i = 0; i < arr.length; i++) {
-        console.log(arr[i]);
-        forbidden.forEach(char => {
-          if (arr[i].includes(char)) {
-            safe = false;
-          }
-        });
-
-        if (arr[i].replace(/ /g, "").length < 1) {
-          safe = false;
-        }
-      }
-
-      if (arr.join("").replace(/,/g, "") < 1) {
-        safe = false;
-      }
-
-      return safe;
-    }
-
-    // console.log("hello from addTags");
-    // console.log(e.target.value);
-    console.log("check tags returned ", checkTags(e.target.value));
-
+  addTags(e, photo_id) {
     if (e.target.value) {
-      if (checkTags(e.target.value)) {
+      if (this.checkInput(e.target.value) && this.state.allowTitle) {
         this.setState({
-          allowButtons: true
+          allowButtons: true,
+          allowTags: true
         });
 
         let test = JSON.stringify({
@@ -208,32 +208,35 @@ class PhotosData extends React.Component {
       } else {
         console.log("checkTags returned False");
         this.setState({
-          allowButtons: false
+          allowButtons: false,
+          allowTags: false
         });
       }
     }
   }
 
   addToPhotoStream() {
-    console.log("hello from addToPhotoStream");
-    // send data to the backend
-    fetch("http://127.0.0.1:5000/api/upload/photostream", {
-      method: "POST",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        photos: this.state.items
-      })
-    }).then(Response => {
-      console.log("Response", Response.status);
+    if (this.state.allowButtons) {
+      console.log("hello from addToPhotoStream");
+      // send data to the backend
+      fetch("http://127.0.0.1:5000/api/upload/photostream", {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          photos: this.state.items
+        })
+      }).then(Response => {
+        console.log("Response", Response.status);
 
-      if (Response.status === 200) {
-        // redirect to the photostream on success
-        window.location.assign(`/`);
-      }
-    });
+        if (Response.status === 200) {
+          // redirect to the photostream on success
+          window.location.assign(`/`);
+        }
+      });
+    }
   }
 
   addToNewAlbum() {
@@ -252,8 +255,21 @@ class PhotosData extends React.Component {
       <div className="row">
         <div className="col text-center">
           <div id="warning-text" className="alert alert-warning" role="alert">
-            Tags may not be spaces and may not contain the characters \, / or %.
+            Tags may not be spaces and may not contain the characters: \ / %.
             Please check your tags and try again.
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  warningAreaTitle() {
+    return (
+      <div className="row">
+        <div className="col text-center">
+          <div id="warning-text" className="alert alert-warning" role="alert">
+            The title may not be a space and may not contain the characters: \ /
+            %.
           </div>
         </div>
       </div>
@@ -270,8 +286,12 @@ class PhotosData extends React.Component {
     let addToNewAlbum = this.addToNewAlbum;
     let addToExistingAlbum = this.addToExistingAlbum;
 
+    // safeguards against wrong input and warnings
+    let allowTitle = this.state.allowTitle;
+    let allowTags = this.state.allowTags;
     let allowButtons = this.state.allowButtons;
     const warningArea = this.warningArea;
+    const warningAreaTitle = this.warningAreaTitle;
 
     if (this.state.items) {
       let photos = this.state.items;
@@ -283,7 +303,7 @@ class PhotosData extends React.Component {
         return (
           <div key={photos[key]["photo_id"]}>
             <div className="row">
-              <div className="col">
+              <div className="col my-auto">
                 <img
                   src={photos[key]["original"]}
                   alt="Uploaded photo"
@@ -306,21 +326,25 @@ class PhotosData extends React.Component {
                       : photos[key]["photo_title"]
                   }
                   onBlur={e => updateTitle(e, photo_id, key)}
+                  // disabled={!allowTags}
                 />
-                <h6>{photos[key]["photo_id"]}</h6>
+                {/* Title warning area */}
+                {allowTitle === false ? warningAreaTitle() : null}
+                {/* <h6>{photos[key]["photo_id"]}</h6> */}
                 <hr />
                 <h5>Enter tags below</h5>
                 <p>
                   You can enter multiple tags seperating them with commas. Tags
-                  may contain spaces, but a space cannot be a tag.
+                  may contain spaces, but a space itself cannot be a tag.
                 </p>
-                {allowButtons === false ? warningArea() : null}
+                {allowTags === false ? warningArea() : null}
                 <input
                   className="input-group input-group-text"
                   type="text"
                   onBlur={e => addTags(e, photo_id, key)}
                   placeholder={photos[key]["tags"]}
                   defaultValue={photos[key]["tags"]}
+                  // disabled={!allowTitle}
                 />
                 <hr />
                 <button
