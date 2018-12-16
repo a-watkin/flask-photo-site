@@ -82,17 +82,20 @@
 
         {% with messages = get_flashed_messages() %}
         {% if messages %}
-
         <div class="row">
-            <div class="alert alert-warning" role="alert">
-                <ul class=flashes>
-                    {% for message in messages %}
 
-                    {{ message }}
+            <div class="col">
+                <div class="alert alert-warning text-center" role="alert">
+                    <ul class=flashes>
+                        {% for message in messages %}
 
-                    {% endfor %}
-                </ul>
+                        {{ message }}
+
+                        {% endfor %}
+                    </ul>
+                </div>
             </div>
+
         </div>
 
         {% endif %}
