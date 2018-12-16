@@ -10,12 +10,14 @@ class PhotosData extends React.Component {
       items: null,
       currentOffset: 20,
       selectedPhotos: [],
-      albumId: null
+      albumId: null,
+      allowButtons: true
     };
 
     // this.photoClick = this.photoClick.bind(this);
     this.discardPhoto = this.discardPhoto.bind(this);
     this.addToPhotoStream = this.addToPhotoStream.bind(this);
+    this.addTags = this.addTags.bind(this);
   }
 
   componentWillMount() {
@@ -141,16 +143,44 @@ class PhotosData extends React.Component {
     });
   }
 
-  checkTags(tags) {
-    console.log(tags);
-  }
-
   addTags(e, photo_id, key) {
-    console.log("hello from addTags");
-    console.log(e.target.value);
+    function checkTags(tags) {
+      let arr = tags.split(",");
+
+      let result = true;
+      arr.forEach(char => {
+        if (char.replace(/ /g, "").length < 1) {
+          result = false;
+        }
+      });
+
+      if (arr.indexOf("\\") > -1 || arr.indexOf("/") > -1) {
+        console.log("DANGER, slashes");
+        return false;
+      } else if (arr.join("").replace(/ /g, "").length < 1) {
+        console.log("DANGER, spaces");
+        return false;
+      } else if (arr.join("").replace(/,/g, "") < 1) {
+        console.log("DANGER, only commas and spaces");
+        return false;
+      } else if (result === false) {
+        console.log("result is , ", result);
+        return false;
+      }
+
+      return true;
+    }
+
+    // console.log("hello from addTags");
+    // console.log(e.target.value);
+    console.log("check tags returned ", checkTags(e.target.value));
 
     if (e.target.value) {
-      if (checkTags(e.taget.value)) {
+      if (checkTags(e.target.value)) {
+        this.setState({
+          allowButtons: true
+        });
+
         let test = JSON.stringify({
           photoId: photo_id,
           tagValues: e.target.value
@@ -174,17 +204,12 @@ class PhotosData extends React.Component {
           if (Response.status === 200) {
             console.log(Response);
             let objectCopy = this.state.items;
-            console.log("wtf");
-
-            console.log(objectCopy);
-
-            // let test = [e.target.value, ...objectCopy[key]["tags"]];
-            // console.log("test", test);
-            //   objectCopy[key]["tags"] = e.target.value;
-
-            //   this.setState({
-            //     items: objectCopy
           }
+        });
+      } else {
+        console.log("checkTags returned False");
+        this.setState({
+          allowButtons: false
         });
       }
     }
@@ -223,14 +248,31 @@ class PhotosData extends React.Component {
     window.location.assign(`/api/select/album`);
   }
 
+  warningArea() {
+    return (
+      <div className="row">
+        <div className="col text-center">
+          <div id="warning-text" className="alert alert-warning" role="alert">
+            Tags may not be spaces and may not contain the characters \ or /.
+            Please check your tags and try again.
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   render() {
     let photo = null;
     let discardPhoto = this.discardPhoto;
     let updateTitle = this.updateTitle;
     let addTags = this.addTags;
+    // onClick handlers for buttons
     let addToPhotoStream = this.addToPhotoStream;
     let addToNewAlbum = this.addToNewAlbum;
     let addToExistingAlbum = this.addToExistingAlbum;
+
+    let allowButtons = this.state.allowButtons;
+    const warningArea = this.warningArea;
 
     if (this.state.items) {
       let photos = this.state.items;
@@ -271,8 +313,9 @@ class PhotosData extends React.Component {
                 <h5>Enter tags below</h5>
                 <p>
                   You can enter multiple tags seperating them with commas. Tags
-                  may contain spaces.
+                  may contain spaces, but a space cannot be a tag.
                 </p>
+                {allowButtons === false ? warningArea() : null}
                 <input
                   className="input-group input-group-text"
                   type="text"
@@ -301,6 +344,7 @@ class PhotosData extends React.Component {
           <div className="row">
             <div className="col text-center">
               <button
+                disabled={!allowButtons}
                 className="btn btn-warning btn-lg"
                 onClick={() => addToNewAlbum()}
               >
@@ -310,6 +354,7 @@ class PhotosData extends React.Component {
 
             <div className="col text-center">
               <button
+                disabled={!allowButtons}
                 className="btn btn-success btn-lg"
                 onClick={() => addToPhotoStream()}
               >
@@ -319,6 +364,7 @@ class PhotosData extends React.Component {
 
             <div className="col text-center">
               <button
+                disabled={!allowButtons}
                 className="btn btn-success btn-lg"
                 onClick={() => addToExistingAlbum()}
               >
