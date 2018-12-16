@@ -8,9 +8,6 @@ class PhotosData extends React.Component {
     this.state = {
       isLoaded: false,
       items: null,
-      currentOffset: 20,
-      selectedPhotos: [],
-      albumId: null,
       allowTitle: true,
       allowTags: true,
       allowButtons: true
@@ -328,11 +325,6 @@ class PhotosData extends React.Component {
                   className="input-group input-group-text"
                   type="text"
                   placeholder={
-                    photos[key]["human_readable_title"] === null
-                      ? ""
-                      : photos[key]["human_readable_title"]
-                  }
-                  defaultValue={
                     photos[key]["photo_title"] === null
                       ? ""
                       : photos[key]["photo_title"]
@@ -354,11 +346,13 @@ class PhotosData extends React.Component {
                   className="input-group input-group-text"
                   type="text"
                   onBlur={e => addTags(e, photo_id, key)}
-                  placeholder={photos[key]["tags"]}
-                  defaultValue={photos[key]["tags"]}
+                  placeholder={
+                    photos[key]["tags"] === null ? "" : photos[key]["tags"]
+                  }
                   // disabled={!allowTitle}
                 />
                 <hr />
+
                 <button
                   className="btn btn-danger btn-lg"
                   onClick={() => discardPhoto(photo_id, key)}

@@ -405,9 +405,9 @@ class Tag(object):
 if __name__ == "__main__":
     t = Tag()
 
-    t.clean_tags()
+    # t.clean_tags()
 
-    # t.get_photo_tags(31734289038)
+    t.get_photo_tags(31734289038)
 
     # t.update_photo_count('365')
 

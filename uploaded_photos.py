@@ -126,26 +126,28 @@ class UploadedPhotos(object):
 
         print(data)
 
+        print((self.tag.get_photo_tags(data[0]['photo_id'])))
+
         # fix this later so that it doesn't suck
         for photo in data:
+            # print(self.tag.get_photo_tags(photo['photo_id']))
             photo['tags'] = []
             if photo['photo_title']:
                 photo['photo_title'] = name_util.make_decoded(
                     photo['photo_title'])
-            # photo['human_readable_title'] =
             for tag in self.tag.get_photo_tags(photo['photo_id']):
-                for t in tag.values():
-                    photo['tags'].append(name_util.make_decoded(t))
-
-        cur_dir = os.getcwd()
+                for key, value in tag.items():
+                    print()
+                    print('key', key, 'value', value)
+                    if key == 'human_readable_tag':
+                        print('wtf', value, photo['tags'])
+                        photo['tags'].append(value)
 
         a_dict = {}
         count = 0
         for d in data:
             a_dict[count] = d
             count += 1
-            # d['original'] = cur_dir + d['original']
-            # d['large_square'] = cur_dir + d['large_square']
 
         rtn_dict = {'photos': a_dict}
 

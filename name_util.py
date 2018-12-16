@@ -24,12 +24,12 @@ def make_encoded(a_str):
 
     If not return it unencoded.
     """
-    print('hello from check_chars', a_str)
+    # print('hello from check_chars', a_str)
     forbidden = [";", "/", "?", ":", "@", "=", "&", '"', "'", "<", ">",
                  "#", "{", "}", "|", "\\", "/", "^", "~", "[", "]", "`"]
     for char in a_str:
         if char in forbidden:
-            print(a_str, ' needs encoding')
+            # print(a_str, ' needs encoding')
             return url_encode_tag(a_str)
 
     return a_str

@@ -489,6 +489,7 @@ def add_uploaded_tags():
     gets data from react
     """
     tag_data = request.get_json()
+    print('tags from react ', tag_data)
     # tags are a string when they come in here,
     # they need to be split
     tags = tag_data['tagValues'].split(',')
