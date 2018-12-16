@@ -3,42 +3,56 @@ jQuery(document).ready(function($) {
 
   // console.log("anything?");
 
+  function showWarnings() {
+    $("#update-tag-button").prop("disabled", true);
+    $("#warning-text").text(
+      "Please enter a valid tag name. The characters: \\, /, % space."
+    );
+  }
+
   if ($("h1").text() === "Add photos to the album") {
     console.log("on the add photo to album page");
   }
 
-  $("#tag-update").keyup(function(e) {
-    var arr = e.target.value.split(",");
-    var result = true;
-    arr.forEach(char => {
-      console.log(char);
-      if (char.replace(/ /g, "").length < 1) {
-        result = false;
-      }
-    });
+  var showWarningText = false;
+  var forbidden = ["\\", "/", "%"];
+  var safe = true;
 
-    if (arr.indexOf("\\") > -1 || arr.indexOf("/") > -1) {
-      console.log("DANGER");
-      $("#update-tag-button").prop("disabled", true);
-      $("#warning-text").text("The characters: \\ and / are not allowed.");
-    } else if (arr.join("").replace(/ /g, "").length < 1) {
+  // if (showWarningText) {
+  //   $("#warning-text").text("The characters: \\, / and % are not allowed.");
+  // }
+
+  $("#tag-update").keyup(function(e) {
+    safe = true;
+    var arr = e.target.value.split(",");
+
+    // for each value in arr check each char against the forbidden values
+    for (var i = 0; i < arr.length; i++) {
+      console.log(arr[i]);
+      forbidden.forEach(char => {
+        if (arr[i].includes(char)) {
+          safe = false;
+        }
+      });
+
+      if (arr[i].replace(/ /g, "").length < 1) {
+        safe = false;
+      }
+    }
+
+    if (arr.join("").replace(/,/g, "") < 1) {
+      safe = false;
+    }
+    console.log(arr);
+
+    if (!safe) {
       $("#update-tag-button").prop("disabled", true);
       $("#warning-text").text(
-        "Please enter a new tag. An empty space is not a valid tag."
-      );
-    } else if (arr.join("").replace(/,/g, "") < 1) {
-      $("#update-tag-button").prop("disabled", true);
-      $("#warning-text").text(
-        "Please enter a new tag. An empty space is not a valid tag."
-      );
-    } else if (result === false) {
-      console.log("problem coming from result");
-      $("#update-tag-button").prop("disabled", true);
-      $("#warning-text").text(
-        "Please enter a new tag. An empty space is not a valid tag."
+        "Please enter a valid tag name. The characters: \\, /, % space."
       );
     } else {
       $("#update-tag-button").prop("disabled", false);
+      $("#warning-text").text("Please enter a valid tag name.");
     }
   });
 });
