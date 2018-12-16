@@ -8,8 +8,16 @@ jQuery(document).ready(function($) {
   }
 
   $("#tag-update").keyup(function(e) {
-    var arr = e.target.value.split("");
+    var arr = e.target.value.split(",");
     console.log(arr);
+
+    var result = true;
+    arr.forEach(char => {
+      console.log(char);
+      if (char.replace(/ /g, "").length < 1) {
+        result = false;
+      }
+    });
 
     if (arr.indexOf("\\") > -1 || arr.indexOf("/") > -1) {
       console.log("DANGER");
@@ -21,6 +29,12 @@ jQuery(document).ready(function($) {
         "Please enter a new tag. An empty space is not valid."
       );
     } else if (arr.join("").replace(/,/g, "") < 1) {
+      $("#update-tag-button").prop("disabled", true);
+      $("#warning-text").text(
+        "Please enter a new tag. An empty space is not valid."
+      );
+    } else if (result === false) {
+      console.log("problem coming from result");
       $("#update-tag-button").prop("disabled", true);
       $("#warning-text").text(
         "Please enter a new tag. An empty space is not valid."
