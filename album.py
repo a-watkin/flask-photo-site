@@ -4,6 +4,7 @@ import uuid
 
 
 from database_interface import Database
+import name_util
 
 
 class Album(object):
@@ -54,6 +55,12 @@ class Album(object):
             if self.get_album_cover(album_data[0]['album_id']):
                 album_data[0]['large_square'] = self.get_album_cover(
                     album_data[0]['album_id'])[0]['large_square']
+
+                album_data[0]['title'] = name_util.make_decoded(
+                    album_data[0]['title'])
+
+                album_data[0]['description'] = name_util.make_decoded(
+                    album_data[0]['description'])
 
             print(album_data)
             return album_data[0]
@@ -397,7 +404,9 @@ class Album(object):
 
 if __name__ == "__main__":
     a = Album()
-    print(a.get_albums_in_range(20, 20))
+    # print(a.get_albums_in_range(20, 20))
+
+    print(a.get_album(72157672063116008))
 
     # print(a.get_album_cover('72157650725849398'))
     # blah = a.get_albums()

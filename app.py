@@ -16,6 +16,7 @@ from album import Album
 from tag import Tag
 from uploaded_photos import UploadedPhotos
 from resize_photo import square_thumbnail
+import name_util
 
 
 UPLOAD_FOLDER = os.getcwd() + '/static/images'
@@ -719,8 +720,8 @@ def edit_album(album_id):
         return render_template('edit_album.html', json_data=json_data), 200
 
     if request.method == 'POST':
-        album_name = request.form['name']
-        album_description = request.form['description']
+        album_name = name_util.make_encoded(request.form['name'])
+        album_description = name_util.make_encoded(request.form['description'])
         # add the data to the database
 
         a.update_album(album_id, album_name, album_description)

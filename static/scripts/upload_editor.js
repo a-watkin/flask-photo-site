@@ -18,7 +18,6 @@ class PhotosData extends React.Component {
     this.addToPhotoStream = this.addToPhotoStream.bind(this);
     this.addTags = this.addTags.bind(this);
     this.updateTitle = this.updateTitle.bind(this);
-    this.clearTags = this.clearTags.bind(this);
     // this.enableButtons = this.enableButtons.bind(this);
   }
 
@@ -299,7 +298,6 @@ class PhotosData extends React.Component {
     let addToPhotoStream = this.addToPhotoStream;
     let addToNewAlbum = this.addToNewAlbum;
     let addToExistingAlbum = this.addToExistingAlbum;
-    let clearTags = this.clearTags;
 
     // safeguards against wrong input and warnings
     let allowTitle = this.state.allowTitle;
@@ -359,15 +357,6 @@ class PhotosData extends React.Component {
                 />
                 <hr />
                 <div className="row">
-                  <div className="col">
-                    <button
-                      className="btn btn-warning btn-lg"
-                      onClick={() => clearTags(photo_id, key)}
-                    >
-                      Clear tags{" "}
-                    </button>{" "}
-                  </div>
-
                   <div className="col">
                     <button
                       className="btn btn-danger btn-lg"
