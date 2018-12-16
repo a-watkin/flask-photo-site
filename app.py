@@ -157,7 +157,8 @@ def upload_file():
 
             # Return all the data about the uloaded photos
             # json_data = up.get_uploaded_photos()
-            return render_template('uploaded_photos.html'), 200
+            # return render_template('uploaded_photos.html'), 200
+            return redirect(url_for('uploaded_photos_page'), code=302)
 
     # Get request and initial loading of the upload page
     return render_template('upload.html'), 200
@@ -184,8 +185,13 @@ def upload_select_album():
 
 @app.route('/api/uploaded/title', methods=['GET', 'POST'])
 def update_title():
+    print('GETTING HERE?')
     d = request.get_json()
-    # print(d)
+
+    # Make sure input is sanitised.
+    d['title'] = check_chars(d['title'])
+    print(d)
+
     if up.update_title(d['photoId'], d['title']):
         return json.dumps({'success': True}), 200, {'ContentType': 'application/json'}
     else:
@@ -254,6 +260,9 @@ def get_photos():
                 args['offset'] = 0
             # gotta make this an int
             photo_data = p.get_photos_in_range(20, int(args['offset']))
+
+            print(photo_data)
+
             json_data = photo_data
 
             # print('args are ', args)
@@ -289,6 +298,7 @@ def get_photos():
         """
         # print(10 * '\n', 'why you no work')
         photo_data = p.get_photos_in_range()
+        print(10*'\n')
         json_data = photo_data
         # print(json_data)
         return render_template('photos.html', json_data=json_data), 200
@@ -391,21 +401,27 @@ def home():
     return render_template('photos.html', json_data=json_data), 200
 
 
-@app.route('/edit/photo<int:photo_id>', methods=['GET', 'POST'])
+@app.route('/edit/photo/<int:photo_id>', methods=['GET', 'POST'])
 def edit_photo(photo_id):
     if request.method == 'GET':
+        print(10*'\n')
         photo_data = p.get_photo(photo_id)
+        photo_data['title'] = needs_decode(photo_data['title'])
+
+        print('get_photo', photo_data)
+        print(10*'\n')
         return render_template('edit_photo.html', json_data=photo_data), 200
     if request.method == 'POST':
         # get the value from the form
         new_title = request.form['new_photo_name']
 
-        # new_title = check_chars(new_title)
+        new_title = check_chars(new_title)
 
-        print(check_chars(new_title))
+        print(new_title)
         # update the name in the database
-        # p.update_title(photo_id, new_title)
-        # photo_data = p.get_photo(photo_id)
+        p.update_title(photo_id, new_title)
+        photo_data = p.get_photo(photo_id)
+        photo_data['title'] = needs_decode(photo_data['title'])
         return render_template('edit_photo.html', json_data=photo_data), 200
 
 
@@ -427,6 +443,13 @@ def url_encode_tag(tag_name):
 
 def url_decode_tag(tag_name):
     return urllib.parse.unquote(tag_name)
+
+
+def needs_decode(a_str):
+    if '%' in a_str:
+        return url_decode_tag(a_str)
+    else:
+        return a_str
 
 
 def check_forbidden(tag_name):
@@ -451,7 +474,7 @@ def check_forbidden(tag_name):
 def check_chars(tag_name):
     print('hello from check_chars', tag_name)
     forbidden = [";", "/", "?", ":", "@", "=", "&", '"', "'", "<", ">",
-                 "#", "%", "{", "}", "|", "\\", "/", "^", "~", "[", "]", "`"]
+                 "#", "{", "}", "|", "\\", "/", "^", "~", "[", "]", "`"]
     for char in tag_name:
         if char in forbidden:
             print(tag_name, ' needs encoding')

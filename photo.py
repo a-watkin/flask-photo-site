@@ -1,5 +1,6 @@
 from database_interface import Database
 import sqlite3
+import urllib.parse
 
 
 from tag import Tag
@@ -12,6 +13,17 @@ class Photos(object):
         self.db = Database('eigi-data.db')
         self.tag = Tag()
         self.album = Album()
+
+    @classmethod
+    def url_decode_tag(cls, tag_name):
+        return urllib.parse.unquote(tag_name)
+
+    @classmethod
+    def needs_decode(cls, a_str):
+        if '%' in a_str:
+            return cls.url_decode_tag(a_str)
+        else:
+            return a_str
 
     def get_photos_in_range(self, limit=20, offset=0):
         """
@@ -48,6 +60,12 @@ class Photos(object):
         """
 
         data = [dict(ix) for ix in q_data]
+
+        print()
+        for photo in data:
+            photo['photo_title'] = self.needs_decode(photo['photo_title'])
+            print(photo)
+            print()
 
         a_dict = {}
         count = 0
@@ -154,7 +172,7 @@ class Photos(object):
         next_photo = self.get_next_photo(photo_id)
         prev_photo = self.get_previous_photo(photo_id)
 
-        # print('PHOTO DATA\n', photo_data[0]['photo_id'])
+        print('PHOTO DATA\n', photo_data[0]['photo_id'])
 
         # prevent None being retunred when the last pictures are reached
         if next_photo is None:
@@ -186,7 +204,7 @@ class Photos(object):
 
             rtn_data = {
                 'photo_id': photo_data['photo_id'],
-                'title': photo_data['photo_title'],
+                'title': self.needs_decode(photo_data['photo_title']),
                 'views': photo_data['views'],
                 'tags': tag_data,
                 'containing_album': album_data,
@@ -265,14 +283,14 @@ if __name__ == "__main__":
     # next photo is working
     # print(p.get_next_photo(44692597905))
     # it can't get that photo
-    # print(p.get_photo(1125251958))
+    print(p.get_photo(2419813647))
 
     # print(p.get_photos_in_range())
     # print(p.db.db_name)
 
     # p.update_title('30081941117', 'tenticles title')
 
-    p.delete_photo('5052578527')
+    # p.delete_photo('5052578527')
 
     # not in an album
     # 43917844765
