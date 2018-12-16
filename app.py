@@ -567,6 +567,7 @@ def add_tag():
         # This is a string of values
         tag_data = tag_data.split(',')
         for i in range(len(tag_data)):
+            tag_data[i] = tag_data[i].strip()
             tag_data[i] = check_chars(tag_data[i])
 
         print('nope', tag_data)

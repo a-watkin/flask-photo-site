@@ -233,12 +233,20 @@ class Tag(object):
         return False
 
     def remove_tag_name(self, tag_name):
-        tag_name = urllib.parse.quote(tag_name, safe='')
+        if '%' in tag_name:
+            tag_name = urllib.parse.quote(tag_name, safe='')
         self.db.make_query(
             '''
             delete from tag where tag_name = "{}"
             '''.format(tag_name)
         )
+
+        self.db.make_query(
+            '''
+            delete from photo_tag where tag_name = "{}"
+            '''.format(tag_name)
+        )
+
         self.update_photo_count(tag_name)
 
     def delete_tag(self, tag_name):
@@ -253,17 +261,21 @@ class Tag(object):
             return False
 
     def clean_tags(self):
-        forbidden = [' ', ';']
+        forbidden = ['  ', ';']
         # as a list of dict values
-        tag_data = self.db.get_query_as_list("SELECT tag_name FROM tag")
+        tag_data = self.db.get_query_as_list("SELECT * FROM tag")
         for tag in tag_data:
-            tag_name = tag['tag_name']
+            print(tag['tag_name'], tag['tag_name'] in forbidden)
+            if tag['tag_name'] in forbidden:
+                print('please just ket me die already, ', tag['tag_name'])
+                self.remove_tag_name(tag['tag_name'])
 
-            if len(tag_name) == 1:
-                self.remove_tag_name(tag_name)
-
-            if tag_name in forbidden:
-                self.remove_tag_name(tag_name)
+        tag_data = self.db.get_query_as_list("SELECT * FROM photo_tag")
+        for tag in tag_data:
+            print(tag['tag_name'], tag['tag_name'] in forbidden)
+            if tag['tag_name'] in forbidden:
+                print('please just ket me die already, ', tag['tag_name'])
+                self.remove_tag_name(tag['tag_name'])
 
     def remove_tags_from_photo(self, photo_id, tag_list):
         for tag in tag_list:
@@ -272,7 +284,7 @@ class Tag(object):
             # if the tag isn't present it will just fail silently
             resp = self.db.make_query(
                 '''
-                delete from photo_tag
+                delete from photo_tag 
                 where photo_id = {}
                 and tag_name = "{}"
                 '''.format(photo_id, tag)
@@ -393,9 +405,11 @@ class Tag(object):
 if __name__ == "__main__":
     t = Tag()
 
+    t.clean_tags()
+
     # t.get_photo_tags(31734289038)
 
-    t.update_photo_count('365')
+    # t.update_photo_count('365')
 
     # print(t.update_tag('mars', 'aberdeen'))
 
