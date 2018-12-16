@@ -145,30 +145,29 @@ class PhotosData extends React.Component {
 
   addTags(e, photo_id, key) {
     function checkTags(tags) {
+      const forbidden = ["\\", "/", "%"];
       let arr = tags.split(",");
+      let safe = true;
 
-      let result = true;
-      arr.forEach(char => {
-        if (char.replace(/ /g, "").length < 1) {
-          result = false;
+      // for each value in arr check each char against the forbidden values
+      for (var i = 0; i < arr.length; i++) {
+        console.log(arr[i]);
+        forbidden.forEach(char => {
+          if (arr[i].includes(char)) {
+            safe = false;
+          }
+        });
+
+        if (arr[i].replace(/ /g, "").length < 1) {
+          safe = false;
         }
-      });
-
-      if (arr.indexOf("\\") > -1 || arr.indexOf("/") > -1) {
-        console.log("DANGER, slashes");
-        return false;
-      } else if (arr.join("").replace(/ /g, "").length < 1) {
-        console.log("DANGER, spaces");
-        return false;
-      } else if (arr.join("").replace(/,/g, "") < 1) {
-        console.log("DANGER, only commas and spaces");
-        return false;
-      } else if (result === false) {
-        console.log("result is , ", result);
-        return false;
       }
 
-      return true;
+      if (arr.join("").replace(/,/g, "") < 1) {
+        safe = false;
+      }
+
+      return safe;
     }
 
     // console.log("hello from addTags");
@@ -253,7 +252,7 @@ class PhotosData extends React.Component {
       <div className="row">
         <div className="col text-center">
           <div id="warning-text" className="alert alert-warning" role="alert">
-            Tags may not be spaces and may not contain the characters \ or /.
+            Tags may not be spaces and may not contain the characters \, / or %.
             Please check your tags and try again.
           </div>
         </div>
