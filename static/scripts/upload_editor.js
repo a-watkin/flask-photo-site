@@ -184,7 +184,6 @@ class PhotosData extends React.Component {
       this.setState({
         allowTitle: false
       });
-      e.target.value = "";
     }
   }
 
