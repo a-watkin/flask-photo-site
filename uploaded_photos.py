@@ -4,6 +4,7 @@ import datetime
 
 from database_interface import Database
 from tag import Tag
+import name_util
 # from exif_util import ExifUtil
 
 
@@ -123,12 +124,18 @@ class UploadedPhotos(object):
 
         data = [dict(ix) for ix in q_data]
 
+        print(data)
+
         # fix this later so that it doesn't suck
         for photo in data:
             photo['tags'] = []
+            if photo['photo_title']:
+                photo['photo_title'] = name_util.make_decoded(
+                    photo['photo_title'])
+            # photo['human_readable_title'] =
             for tag in self.tag.get_photo_tags(photo['photo_id']):
                 for t in tag.values():
-                    photo['tags'].append(t)
+                    photo['tags'].append(name_util.make_decoded(t))
 
         cur_dir = os.getcwd()
 
@@ -370,6 +377,8 @@ class UploadedPhotos(object):
 
 def main():
     up = UploadedPhotos()
+
+    print(up.get_uploaded_photos())
 
     # print(up.add_all_to_album('eh'))
 

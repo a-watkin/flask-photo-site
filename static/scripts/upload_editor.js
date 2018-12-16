@@ -21,6 +21,7 @@ class PhotosData extends React.Component {
     this.addToPhotoStream = this.addToPhotoStream.bind(this);
     this.addTags = this.addTags.bind(this);
     this.updateTitle = this.updateTitle.bind(this);
+    // this.enableButtons = this.enableButtons.bind(this);
   }
 
   checkInput(input_string) {
@@ -51,6 +52,25 @@ class PhotosData extends React.Component {
     }
     return checkTags(input_string);
   }
+
+  // enableButtons() {
+  //   console.log(
+  //     "enableButtonsCalled",
+  //     "allowTitle",
+  //     this.state.allowTitle,
+  //     "allowTags",
+  //     this.state.allowTags
+  //   );
+  //   if (this.state.allowTags && this.state.allowTitle) {
+  //     this.setState({
+  //       allowButtons: true
+  //     });
+  //   } else {
+  //     this.setState({
+  //       allowButtons: false
+  //     });
+  //   }
+  // }
 
   componentWillMount() {
     // getting the album id from the URL
@@ -136,8 +156,7 @@ class PhotosData extends React.Component {
 
     if (this.checkInput(e.target.value)) {
       this.setState({
-        allowTitle: true,
-        allowButtons: true
+        allowTitle: true
       });
 
       console.log("eh");
@@ -166,26 +185,19 @@ class PhotosData extends React.Component {
     } else {
       // invalid input detected
       this.setState({
-        allowTitle: false,
-        allowButtons: false
+        allowTitle: false
       });
+      e.target.value = "";
     }
   }
 
   addTags(e, photo_id) {
     if (e.target.value) {
-      if (this.checkInput(e.target.value) && this.state.allowTitle) {
+      if (this.checkInput(e.target.value)) {
         this.setState({
-          allowButtons: true,
-          allowTags: true
+          allowTags: true,
+          allowButtons: true
         });
-
-        let test = JSON.stringify({
-          photoId: photo_id,
-          tagValues: e.target.value
-        });
-
-        console.log(test);
 
         fetch("http://127.0.0.1:5000/api/add/tags", {
           method: "POST",
@@ -208,8 +220,8 @@ class PhotosData extends React.Component {
       } else {
         console.log("checkTags returned False");
         this.setState({
-          allowButtons: false,
-          allowTags: false
+          allowTags: false,
+          allowButtons: false
         });
       }
     }
@@ -316,9 +328,9 @@ class PhotosData extends React.Component {
                   className="input-group input-group-text"
                   type="text"
                   placeholder={
-                    photos[key]["photo_title"] === null
+                    photos[key]["human_readable_title"] === null
                       ? ""
-                      : photos[key]["photo_title"]
+                      : photos[key]["human_readable_title"]
                   }
                   defaultValue={
                     photos[key]["photo_title"] === null
