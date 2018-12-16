@@ -399,10 +399,13 @@ def edit_photo(photo_id):
     if request.method == 'POST':
         # get the value from the form
         new_title = request.form['new_photo_name']
-        print(new_title)
+
+        # new_title = check_chars(new_title)
+
+        print(check_chars(new_title))
         # update the name in the database
-        p.update_title(photo_id, new_title)
-        photo_data = p.get_photo(photo_id)
+        # p.update_title(photo_id, new_title)
+        # photo_data = p.get_photo(photo_id)
         return render_template('edit_photo.html', json_data=photo_data), 200
 
 
@@ -416,6 +419,14 @@ def delete_photo(photo_id):
         # delete the photo
         p.delete_photo(photo_id)
         return render_template('deleted_photo.html', json_data=photo_data), 200
+
+
+def url_encode_tag(tag_name):
+    return urllib.parse.quote(tag_name, safe='')
+
+
+def url_decode_tag(tag_name):
+    return urllib.parse.unquote(tag_name)
 
 
 def check_forbidden(tag_name):
@@ -437,12 +448,16 @@ def check_forbidden(tag_name):
     return tag_data
 
 
-def url_encode_tag(tag_name):
-    return urllib.parse.quote(tag_name, safe='')
+def check_chars(tag_name):
+    print('hello from check_chars', tag_name)
+    forbidden = [";", "/", "?", ":", "@", "=", "&", '"', "'", "<", ">",
+                 "#", "%", "{", "}", "|", "\\", "/", "^", "~", "[", "]", "`"]
+    for char in tag_name:
+        if char in forbidden:
+            print(tag_name, ' needs encoding')
+            return url_encode_tag(tag_name)
 
-
-def url_decode_tag(tag_name):
-    return urllib.parse.unquote(tag_name)
+    return tag_name
 
 
 @app.route('/api/add/tags', methods=['GET', 'POST'])
@@ -505,16 +520,6 @@ def get_tags():
 def edit_tags():
     tag_data = t.get_all_tags()
     return render_template('edit_tags.html', json_data=tag_data), 200
-
-
-def check_chars(tag_name):
-    forbidden = [";", "/", "?", ":", "@", "=", "&", '"', "'", "<", ">",
-                 "#", "%", "{", "}", "|", "\\", "/", "^", "~", "[", "]", "`"]
-    for char in tag_name:
-        if char in forbidden:
-            return url_encode_tag(tag_name)
-        else:
-            return tag_name
 
 
 @app.route('/edit/tag/<string:tag_name>', methods=['GET', 'POST'])
