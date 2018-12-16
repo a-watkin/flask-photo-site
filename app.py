@@ -198,7 +198,7 @@ def to_photostream():
     data = request.get_json()
     up.add_to_photostream(data['photos'])
     # print(data)
-    return json.dumps({'success': False}), 500, {'ContentType': 'application/json'}
+    return json.dumps({'success': False}), 200, {'ContentType': 'application/json'}
 
 
 @app.route('/api/create/album', methods=['GET', 'POST'])

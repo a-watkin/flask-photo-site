@@ -232,7 +232,7 @@ class PhotosData extends React.Component {
 
       if (Response.status === 200) {
         // redirect to the photostream on success
-        window.location.assign(`/api/photos/`);
+        window.location.assign(`/`);
       }
     });
   }
