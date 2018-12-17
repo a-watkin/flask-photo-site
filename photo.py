@@ -163,6 +163,15 @@ class Photos(object):
             return photo_data[0][0]
 
     def get_photo(self, photo_id):
+        # update view count
+        self.db.make_query(
+            '''
+            update photo
+            set views = views + 1
+            where photo_id = {}
+            '''.format(photo_id)
+        )
+
         rtn_data = {}
         photo_data = None
         with sqlite3.connect(self.db.db_name) as connection:
@@ -286,11 +295,11 @@ class Photos(object):
 if __name__ == "__main__":
     p = Photos()
 
-    p.delete_photo(39974272161)
+    # p.delete_photo(39974272161)
     # next photo is working
     # print(p.get_next_photo(44692597905))
     # it can't get that photo
-    # print(p.get_photo(1823726615))
+    print(p.get_photo(3325396595))
 
     # print(p.get_photos_in_range())
     # print(p.db.db_name)

@@ -12,6 +12,15 @@ class Album(object):
     def __init__(self):
         self.db = Database('eigi-data.db')
 
+    def increment_views(self, album_id):
+        self.db.make_query(
+            '''
+            update album
+            set views = views + 1
+            where album_id = "{}"
+            '''.format(album_id)
+        )
+
     def get_albums(self):
         """
         Returns all albums.
@@ -41,6 +50,10 @@ class Album(object):
         return rtn_dict
 
     def get_album(self, album_id):
+
+        # update view count
+        self.increment_views(album_id)
+
         query = '''
         select * from album where album_id = {}
         '''.format(album_id)
@@ -71,6 +84,9 @@ class Album(object):
             return album_data
 
     def get_containing_album(self, photo_id):
+        """
+        Get the album that a photo belongs to.
+        """
         query_string = '''
 
                 select album.album_id, album.title, album.views, album.description, album.photos, date_created
@@ -102,6 +118,9 @@ class Album(object):
         return album_cover
 
     def get_album_photos(self, album_id):
+        # increment the view count
+        self.increment_views(album_id)
+
         query_string = '''
                 select album.title, album.album_id,
                 album.description, album.views, album.photos,
@@ -145,14 +164,14 @@ class Album(object):
 
         return rtn_dict
 
-    def get_photo_album(self, album_id):
-        query = '''
-        select * from photo_album where album_id = {}
-        '''.format(album_id)
+    # def get_photo_album(self, album_id):
+    #     query = '''
+    #     select * from photo_album where album_id = {}
+    #     '''.format(album_id)
 
-        photo_album_data = self.db.make_query(query)
+    #     photo_album_data = self.db.make_query(query)
 
-        return photo_album_data
+    #     return photo_album_data
 
     def delete_album(self, album_id):
         # you have to delete from photo_album first
@@ -406,7 +425,7 @@ if __name__ == "__main__":
     a = Album()
     # print(a.get_albums_in_range(20, 20))
 
-    print(a.get_album(72157672063116008))
+    print(a.get_album(1621888039))
 
     # print(a.get_album_cover('72157650725849398'))
     # blah = a.get_albums()
