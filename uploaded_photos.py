@@ -1,10 +1,13 @@
 import os
+import uuid
 import sqlite3
+import json
 import datetime
 
 from database_interface import Database
 from tag import Tag
 import name_util
+from exif_util import ExifUtil
 # from exif_util import ExifUtil
 
 
@@ -23,6 +26,41 @@ class UploadedPhotos(object):
         self.tag = Tag()
 
     def save_photo(self, photo_id, date_uploaded, original, large_square):
+        print('original', original)
+
+        # print(ExifUtil.read_exif('test_portrait.jpg'))
+        # print(ExifUtil.get_datetime_taken('test_portrait.jpg'))
+
+        date_taken = None
+        exif_data = None
+        exif_id = str(int(uuid.uuid4()))[0:10]
+
+        # a photo may not have any exif data
+        try:
+            date_taken = ExifUtil.get_datetime_taken(os.getcwd() + original)
+            exif_data = ExifUtil.read_exif(os.getcwd() + original)
+
+            print()
+            print(exif_data)
+            print(date_taken)
+            print()
+
+        except Exception as e:
+            print('problem reading exif data ', e)
+
+        if exif_data is not None:
+            # make into a blob
+            exif_data = json.dumps(exif_data)
+            print(exif_data)
+
+        # insert exif data
+        self.db.insert_data(
+            exif_id=exif_id,
+            exif_data=exif_data,
+            photo_id=photo_id,
+            table='exif'
+        )
+
         # print(original)
         # get_datetime_taken(os.getcwd() + original)
         # print(photo_id, self.user_id)
@@ -39,9 +77,9 @@ class UploadedPhotos(object):
         # write to the photo table
         self.db.make_query(
             '''
-            insert into photo(photo_id, user_id, views, date_uploaded)
-            values({},'{}', {}, '{}')
-            '''.format(int(photo_id), self.user_id, 0, date_uploaded)
+            insert into photo(photo_id, user_id, views, date_uploaded, date_taken)
+            values({},'{}', {}, '{}', '{}')
+            '''.format(int(photo_id), self.user_id, 0, date_uploaded, str(date_taken))
         )
 
         # write to images

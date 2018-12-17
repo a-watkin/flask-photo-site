@@ -1,5 +1,6 @@
 import os
 import sys
+import json
 
 
 from PIL import Image, ImageOps
@@ -25,6 +26,9 @@ original
 
 
 class ExifUtil(object):
+
+    def __init__(self):
+        pass
 
     def resize_photo(infile, outfile, base_size):
         """
@@ -57,18 +61,42 @@ class ExifUtil(object):
         thumb = ImageOps.fit(img, size, Image.ANTIALIAS)
         thumb.save(outfile)
 
-    def read_exif(infile):
-        img = Image.open(infile)
-        print(dir(img))
-        print(img._getexif())
+    def test_exifread(fn):
+        import exifread
+        print('\n<< Test of exifread >>\n')
 
         rtn_dict = {}
 
-        for (k, v) in img._getexif().items():
-            print('%s = %s' % (TAGS.get(k), v))
-            rtn_dict[TAGS.get(k)] = v
+        with open(fn, 'rb') as f:
+            exif = exifread.process_file(f)
 
-        print(rtn_dict)
+        for k in sorted(exif.items()):
+            print(k)
+            if k not in ['JPEGThumbnail', 'TIFFThumbnail', 'Filename', 'EXIF MakerNote']:
+                # print('%s = %s' % (k, exif[k]))
+                print('%s = %s' % (TAGS.get(k), v))
+                rtn_dict[TAGS.get(k)] = v
+
+    def read_exif(infile):
+        img = Image.open(infile)
+        # print(dir(img))
+        # print(img._getexif())
+        rtn_dict = {}
+
+        for (k, v) in img._getexif().items():
+            # print('%s = %s' % (TAGS.get(k), v))
+            data = v
+            # remove bytes
+            try:
+                data = v.decode()
+                # print('yes?', data)
+            except AttributeError:
+                print('nope')
+
+                # print(TAGS.get(k))
+            rtn_dict[TAGS.get(k)] = data
+
+        return rtn_dict
 
     # resize_photo('test_landscape.jpg', 'test_landscape_resized.jpg', 700)
     # resize_photo('test_portrait.jpg', 'test_portrait_resized.jpg', 700)
@@ -76,20 +104,7 @@ class ExifUtil(object):
     # square_thumbnail('test_landscape.jpg', 'test_landscape_resized.jpg', 300)
     # square_thumbnail('test_portrait.jpg', 'test_portrait_resized.jpg', 300)
 
-    read_exif('test_portrait.jpg')
-
-    def test_exifread(fn):
-        import exifread
-        print('\n<< Test of exifread >>\n')
-
-        with open(fn, 'rb') as f:
-            exif = exifread.process_file(f)
-
-        for k in sorted(exif.keys()):
-            if k not in ['JPEGThumbnail', 'TIFFThumbnail', 'Filename', 'EXIF MakerNote']:
-                print('%s = %s' % (k, exif[k]))
-
-    # Image DateTime
+    # read_exif('test_portrait.jpg')
 
     def get_datetime_taken(fn):
         with open(fn, 'rb') as f:
@@ -105,6 +120,15 @@ class ExifUtil(object):
 
 
 def main():
+    # eu = ExifUtil()
+    # print(ExifUtil.test_exifread('test_portrait.jpg'))
+    # test = json.dumps(ExifUtil.read_exif('test_portrait.jpg'),
+    #                   ensure_ascii=False).encode('utf-8')
+    # test = ExifUtil.test_exifread('test_portrait.jpg')
+
+    test = ExifUtil.read_exif('test_portrait.jpg')
+    print(json.dumps(test))
+    # print(ExifUtil.get_datetime_taken('test_portrait.jpg'))
     pass
 
 
