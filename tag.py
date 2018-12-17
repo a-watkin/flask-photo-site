@@ -322,6 +322,8 @@ class Tag(object):
                 '''.format(photo_id, tag)
             )
 
+            self.update_photo_count(tag)
+
     def add_tags_to_photo(self, photo_id, tag_list):
         print('add_tags_to_photo', tag_list)
 
