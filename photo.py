@@ -248,18 +248,18 @@ class Photos(object):
 
         print(album_check)
 
-        # if the photo is in an album decrement the value
-        # decrement the value of the album count
+        # # if the photo is in an album decrement the value
+        # # decrement the value of the album count
         if len(album_check) > 0:
             for album in album_check:
-                print(album[0])
+                print(album[1])
 
                 self.db.make_query(
                     '''
                     update album
                     set photos = photos - 1
                     where album_id = '{}'
-                    '''.format(album[0])
+                    '''.format(album[1])
                 )
 
         # delete photo from photo_album
@@ -285,12 +285,14 @@ class Photos(object):
 
 if __name__ == "__main__":
     p = Photos()
+
+    p.delete_photo(39974272161)
     # next photo is working
     # print(p.get_next_photo(44692597905))
     # it can't get that photo
     # print(p.get_photo(1823726615))
 
-    print(p.get_photos_in_range())
+    # print(p.get_photos_in_range())
     # print(p.db.db_name)
 
     # p.update_title('30081941117', 'tenticles title')
