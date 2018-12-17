@@ -8,7 +8,6 @@ class PhotosData extends React.Component {
     this.state = {
       isLoaded: false,
       items: null,
-      allowTitle: true,
       allowTags: true,
       allowButtons: true
     };
@@ -116,6 +115,13 @@ class PhotosData extends React.Component {
       })
     }).then(Response => {
       console.log(Response.status);
+      if (Response.status === 200) {
+        let objectCopy = this.state.items;
+        objectCopy[key]["photo_title"] = new_title;
+        this.setState({
+          items: objectCopy
+        });
+      }
     });
   }
 
@@ -142,7 +148,7 @@ class PhotosData extends React.Component {
 
           if (Response.status === 200) {
             console.log(Response);
-            let objectCopy = this.state.items;
+            // let objectCopy = this.state.items;
           }
         });
       } else {
@@ -176,13 +182,7 @@ class PhotosData extends React.Component {
           photos: this.state.items
         })
       }).then(Response => {
-        console.log("Response", Response.status);
-
-        if (Response.status === 200) {
-          console.log("got a good response");
-          // redirect to the photostream on success
-          // window.location.assign(`/`);
-        }
+        window.location.assign(`/`);
       });
     }
   }
@@ -211,23 +211,6 @@ class PhotosData extends React.Component {
     );
   }
 
-  warningAreaTitle() {
-    return (
-      <div className="row">
-        <div className="col text-center">
-          <div id="warning-text" className="alert alert-warning" role="alert">
-            The title may not be a space and may not contain the characters: \ /
-            %.
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  clearTags(photo_id, key) {
-    console.log("click, click, kill");
-  }
-
   render() {
     let photo = null;
     let discardPhoto = this.discardPhoto;
@@ -239,17 +222,15 @@ class PhotosData extends React.Component {
     let addToExistingAlbum = this.addToExistingAlbum;
 
     // safeguards against wrong input and warnings
-    let allowTitle = this.state.allowTitle;
     let allowTags = this.state.allowTags;
     let allowButtons = this.state.allowButtons;
     const warningArea = this.warningArea;
-    const warningAreaTitle = this.warningAreaTitle;
 
     if (this.state.items) {
       let photos = this.state.items;
       // console.log(photos);
       let photo = Object.keys(photos).map(function(key) {
-        let photo_url = photos[key]["original"];
+        // let photo_url = photos[key]["original"];
         let photo_id = photos[key]["photo_id"];
         // console.log(photo_url);
         return (
@@ -275,9 +256,6 @@ class PhotosData extends React.Component {
                   onBlur={e => updateTitle(e, photo_id, key)}
                   // disabled={!allowTags}
                 />
-                {/* Title warning area */}
-                {allowTitle === false ? warningAreaTitle() : null}
-                {/* <h6>{photos[key]["photo_id"]}</h6> */}
                 <hr />
                 <h5>Enter tags below</h5>
                 <p>

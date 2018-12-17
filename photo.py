@@ -5,6 +5,7 @@ import urllib.parse
 
 from tag import Tag
 from album import Album
+import name_util
 
 
 class Photos(object):
@@ -20,6 +21,9 @@ class Photos(object):
 
     @classmethod
     def needs_decode(cls, a_str):
+        print(a_str)
+        if a_str is None:
+            return ""
         if '%' in a_str:
             return cls.url_decode_tag(a_str)
         else:
