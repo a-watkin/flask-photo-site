@@ -186,15 +186,11 @@ def upload_select_album():
 
 @app.route('/api/uploaded/title', methods=['GET', 'POST'])
 def update_title():
-    print('GETTING HERE?')
     d = request.get_json()
+    title = d['title'].strip()
+    title = name_util.make_encoded(title)
 
-    # Make sure input is sanitised.
-    d['title'] = name_util.make_encoded(d['title'])
-    print(d)
-
-    if up.update_title(d['photoId'], d['title']):
-        print('uploaded title')
+    if up.update_title(d['photoId'], title):
         return json.dumps({'success': True}), 200, {'ContentType': 'application/json'}
     else:
         return json.dumps({'success': False}), 500, {'ContentType': 'application/json'}

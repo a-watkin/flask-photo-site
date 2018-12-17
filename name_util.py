@@ -25,7 +25,7 @@ def make_encoded(a_str):
     If not return it unencoded.
     """
     # print('hello from check_chars', a_str)
-    forbidden = [";", "/", "?", ":", "@", "=", "&", '"', "'", "<", ">",
+    forbidden = [";", "/", "?", ":", "@", "=", "&", '"', "'", "<", ">", "%",
                  "#", "{", "}", "|", "\\", "/", "^", "~", "[", "]", "`"]
     for char in a_str:
         if char in forbidden:

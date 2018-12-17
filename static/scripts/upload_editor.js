@@ -13,12 +13,10 @@ class PhotosData extends React.Component {
       allowButtons: true
     };
 
-    // this.photoClick = this.photoClick.bind(this);
     this.discardPhoto = this.discardPhoto.bind(this);
     this.addToPhotoStream = this.addToPhotoStream.bind(this);
     this.addTags = this.addTags.bind(this);
     this.updateTitle = this.updateTitle.bind(this);
-    // this.enableButtons = this.enableButtons.bind(this);
   }
 
   checkInput(input_string) {
@@ -49,25 +47,6 @@ class PhotosData extends React.Component {
     }
     return checkTags(input_string);
   }
-
-  // enableButtons() {
-  //   console.log(
-  //     "enableButtonsCalled",
-  //     "allowTitle",
-  //     this.state.allowTitle,
-  //     "allowTags",
-  //     this.state.allowTags
-  //   );
-  //   if (this.state.allowTags && this.state.allowTitle) {
-  //     this.setState({
-  //       allowButtons: true
-  //     });
-  //   } else {
-  //     this.setState({
-  //       allowButtons: false
-  //     });
-  //   }
-  // }
 
   componentWillMount() {
     fetch("http://127.0.0.1:5000/api/uploaded")
@@ -123,43 +102,21 @@ class PhotosData extends React.Component {
   }
 
   updateTitle(e, photo_id, key) {
-    // Doing this is needed for some reason?
-    // It seems to lose this value otherwise.
     const new_title = e.target.value;
-    // console.log("updateTitle called", e.target.value, photo_id, key);
 
-    if (this.checkInput(e.target.value)) {
-      this.setState({
-        allowTitle: true
-      });
-
-      fetch("http://127.0.0.1:5000/api/uploaded/title", {
-        method: "POST",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          photoId: photo_id,
-          title: new_title
-        })
-      }).then(Response => {
-        // console.log("Response", Response.status, Response.status === 200);
-
-        if (Response.status === 200) {
-          let objectCopy = this.state.items;
-          objectCopy[key]["photo_title"] = new_title;
-          this.setState({
-            items: objectCopy
-          });
-        }
-      });
-    } else {
-      // invalid input detected
-      this.setState({
-        allowTitle: false
-      });
-    }
+    fetch("http://127.0.0.1:5000/api/uploaded/title", {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        photoId: photo_id,
+        title: new_title
+      })
+    }).then(Response => {
+      console.log(Response.status);
+    });
   }
 
   addTags(e, photo_id) {
@@ -195,6 +152,12 @@ class PhotosData extends React.Component {
           allowButtons: false
         });
       }
+    } else {
+      console.log("no tag value?");
+      this.setState({
+        allowTags: true,
+        allowButtons: false
+      });
     }
   }
 

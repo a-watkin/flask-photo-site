@@ -293,6 +293,35 @@ class Tag(object):
 
             self.update_photo_count(tag)
 
+    def replace_tags(self, photo_id, tag_list):
+        """
+        Replaes the tags attached to a photo with new tags.
+        """
+        # get all the tags attached to the photo
+        current_tags = self.db.make_query(
+            '''
+            select * from photo_tag where photo_id = {}
+            '''.format(photo_id)
+        )
+
+        print(current_tags)
+
+        # remove the current tags
+        self.db.make_query(
+            '''
+            delete from photo_tag where photo_id = {}
+            '''.format(photo_id)
+        )
+
+        for tag in tag_list:
+            # add tags in the tag_list
+            self.db.make_query(
+                '''
+                insert into photo_tag (photo_id, tag_name)
+                values ({}, "{}")
+                '''.format(photo_id, tag)
+            )
+
     def add_tags_to_photo(self, photo_id, tag_list):
         print('add_tags_to_photo', tag_list)
 
@@ -405,9 +434,11 @@ class Tag(object):
 if __name__ == "__main__":
     t = Tag()
 
+    t.replace_tags(1038492826, ['tag1, tag3'])
+
     # t.clean_tags()
 
-    t.get_photo_tags(31734289038)
+    # t.get_photo_tags(31734289038)
 
     # t.update_photo_count('365')
 

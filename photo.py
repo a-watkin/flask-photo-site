@@ -63,6 +63,7 @@ class Photos(object):
 
         print()
         for photo in data:
+            print('HERE', photo)
             photo['photo_title'] = self.needs_decode(photo['photo_title'])
             print(photo)
             print()
@@ -283,9 +284,9 @@ if __name__ == "__main__":
     # next photo is working
     # print(p.get_next_photo(44692597905))
     # it can't get that photo
-    print(p.get_photo(1823726615))
+    # print(p.get_photo(1823726615))
 
-    # print(p.get_photos_in_range())
+    print(p.get_photos_in_range())
     # print(p.db.db_name)
 
     # p.update_title('30081941117', 'tenticles title')
