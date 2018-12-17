@@ -190,10 +190,11 @@ def update_title():
     d = request.get_json()
 
     # Make sure input is sanitised.
-    d['title'] = check_chars(d['title'])
+    d['title'] = name_util.make_encoded(d['title'])
     print(d)
 
     if up.update_title(d['photoId'], d['title']):
+        print('uploaded title')
         return json.dumps({'success': True}), 200, {'ContentType': 'application/json'}
     else:
         return json.dumps({'success': False}), 500, {'ContentType': 'application/json'}
@@ -204,7 +205,6 @@ def to_photostream():
     # print('hello from to_photostream')
     data = request.get_json()
     up.add_to_photostream(data['photos'])
-    # print(data)
     return json.dumps({'success': False}), 200, {'ContentType': 'application/json'}
 
 

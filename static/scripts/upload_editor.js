@@ -70,11 +70,6 @@ class PhotosData extends React.Component {
   // }
 
   componentWillMount() {
-    // getting the album id from the URL
-    let currentUrl = window.location.href;
-    let splitUrl = currentUrl.split("/");
-    const albumId = splitUrl[5];
-
     fetch("http://127.0.0.1:5000/api/uploaded")
       .then(res => res.json())
       .then(
@@ -92,27 +87,6 @@ class PhotosData extends React.Component {
           });
         }
       );
-  }
-
-  sendData() {
-    console.log("getting here?", this.state.albumId, this.state.selectedPhotos);
-    // /api/getphotos
-    fetch("http://127.0.0.1:5000/api/getphotos", {
-      method: "POST",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        albumId: this.state.albumId,
-        photos: this.state.selectedPhotos
-      })
-    }).then(() => {
-      // redirect after successful post
-      window.location.assign(
-        `http://127.0.0.1:5000/albums/${this.state.albumId}`
-      );
-    });
   }
 
   discardPhoto(photo_id, key) {
@@ -149,14 +123,16 @@ class PhotosData extends React.Component {
   }
 
   updateTitle(e, photo_id, key) {
-    console.log("updateTitle called", e.target.value, photo_id, key);
+    // Doing this is needed for some reason?
+    // It seems to lose this value otherwise.
+    const new_title = e.target.value;
+    // console.log("updateTitle called", e.target.value, photo_id, key);
 
     if (this.checkInput(e.target.value)) {
       this.setState({
         allowTitle: true
       });
 
-      console.log("eh");
       fetch("http://127.0.0.1:5000/api/uploaded/title", {
         method: "POST",
         headers: {
@@ -165,15 +141,14 @@ class PhotosData extends React.Component {
         },
         body: JSON.stringify({
           photoId: photo_id,
-          title: e.target.value
+          title: new_title
         })
       }).then(Response => {
-        console.log("Response", Response.status);
+        // console.log("Response", Response.status, Response.status === 200);
 
         if (Response.status === 200) {
           let objectCopy = this.state.items;
-          objectCopy[key]["photo_title"] = e.target.value;
-
+          objectCopy[key]["photo_title"] = new_title;
           this.setState({
             items: objectCopy
           });
@@ -227,6 +202,7 @@ class PhotosData extends React.Component {
     if (this.state.allowButtons) {
       console.log("hello from addToPhotoStream");
       // send data to the backend
+      console.log(this.state.items);
       fetch("http://127.0.0.1:5000/api/upload/photostream", {
         method: "POST",
         headers: {
@@ -240,8 +216,9 @@ class PhotosData extends React.Component {
         console.log("Response", Response.status);
 
         if (Response.status === 200) {
+          console.log("got a good response");
           // redirect to the photostream on success
-          window.location.assign(`/`);
+          // window.location.assign(`/`);
         }
       });
     }
@@ -350,6 +327,9 @@ class PhotosData extends React.Component {
                   type="text"
                   onBlur={e => addTags(e, photo_id, key)}
                   placeholder={
+                    photos[key]["tags"] === null ? "" : photos[key]["tags"]
+                  }
+                  defaultValue={
                     photos[key]["tags"] === null ? "" : photos[key]["tags"]
                   }
                   // disabled={!allowTitle}

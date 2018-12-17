@@ -126,7 +126,7 @@ class UploadedPhotos(object):
 
         print(data)
 
-        print((self.tag.get_photo_tags(data[0]['photo_id'])))
+        # print((self.tag.get_photo_tags(data[0]['photo_id'])))
 
         # fix this later so that it doesn't suck
         for photo in data:
@@ -283,6 +283,7 @@ class UploadedPhotos(object):
         return False
 
     def add_to_photostream(self, data):
+        print('PROBLEM DATA ', data)
         # get the photo_id for eatch photo
         for photo in data.values():
             # set the date_posted to the current datetime
@@ -291,13 +292,22 @@ class UploadedPhotos(object):
             print(photo['photo_id'], date_posted)
 
             if photo['photo_title'] is None:
-                self.db.make_query(
+                check_title = self.db.make_query(
                     '''
-                    update photo
-                    set photo_title = ''
-                    where photo_id = {}
+                    select photo_title from photo where photo_id = {}
                     '''.format(photo['photo_id'])
                 )
+
+                if len(check_title) < 1:
+
+                    print('here be problems?')
+                    self.db.make_query(
+                        '''
+                        update photo
+                        set photo_title = ''
+                        where photo_id = {}
+                        '''.format(photo['photo_id'])
+                    )
 
             # update the date_posted column in the table photo
             self.db.make_query(
