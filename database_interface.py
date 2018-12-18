@@ -96,7 +96,7 @@ class Database(object):
     def get_row(self, table_name, id_name, id_value):
         with sqlite3.connect(self.db_name) as connection:
             c = connection.cursor()
-            for row in c.execute("SELECT * FROM {} WHERE {}= '{}' ".format(
+            for row in c.execute("SELECT * FROM {} WHERE {} = '{}' ".format(
                     table_name, id_name, id_value)):
                 return list(row)
             # print(row)
