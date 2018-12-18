@@ -54,7 +54,9 @@ class User(object):
 def main():
     # existing user
     u = User('eigi', 'test')
-    print('eigi' == u.check_for_username())
+    print(u.check_for_username())
+
+    # print('eigi' == u.check_for_username())
     # print(u.check_password())
 
     # non-existant user
