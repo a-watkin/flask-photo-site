@@ -863,8 +863,8 @@ def account():
         new_password = request.form.get("new-password")
         new_pass_confirm = request.form.get("new-password-confirm")
 
-        if old_pass != = old_pass_confirm:
-            flash('Your old password does not match.')
+        if new_password != new_pass_confirm:
+            flash('Your passwords do not match.')
         pass
     return render_template('account.html'), 200
 
