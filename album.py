@@ -164,14 +164,17 @@ class Album(object):
 
         return rtn_dict
 
-    # def get_photo_album(self, album_id):
-    #     query = '''
-    #     select * from photo_album where album_id = {}
-    #     '''.format(album_id)
+    def get_photo_album(self, album_id):
+        """
+        used to getting albums when deleting them
+        """
+        query = '''
+        select * from photo_album where album_id = {}
+        '''.format(album_id)
 
-    #     photo_album_data = self.db.make_query(query)
+        photo_album_data = self.db.make_query(query)
 
-    #     return photo_album_data
+        return photo_album_data
 
     def delete_album(self, album_id):
         # you have to delete from photo_album first

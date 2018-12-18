@@ -84,12 +84,21 @@
         {% if messages %}
         <div class="row">
 
-            <div class="col">
+            <div class="col my-auto">
                 <div class="alert alert-warning text-center" role="alert">
-                    <ul class=flashes>
+                    <ul class="flashes my-auto">
                         {% for message in messages %}
 
-                        {{ message }}
+
+                        <h2>
+
+                            {{ message }}
+
+                        </h2>
+
+
+
+
 
                         {% endfor %}
                     </ul>
