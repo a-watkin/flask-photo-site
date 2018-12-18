@@ -17,6 +17,7 @@ from tag import Tag
 from uploaded_photos import UploadedPhotos
 from resize_photo import square_thumbnail
 import name_util
+from user import User
 
 
 UPLOAD_FOLDER = os.getcwd() + '/static/images'
@@ -783,7 +784,15 @@ def login():
     if request.method == 'POST':
         username = request.form.get('username', None)
         password = request.form.get('password', None)
-        if username == app.config['USERNAME'] and password == app.config['PASSWORD']:
+
+        print(username, password)
+
+        user = User(username, password)
+
+        # print(password == user.check_password())
+
+        if user.check_for_username() and user.check_password():
+            print('so wtf?')
             flash('you did it, congrats')
             return render_template('main.html')
         else:
