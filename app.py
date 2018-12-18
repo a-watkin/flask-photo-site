@@ -85,6 +85,7 @@ def allowed_file(filename):
 
 
 @app.route('/upload', methods=['GET', 'POST'])
+@login_required
 def upload_file():
     if request.method == 'POST':
         files = request.files.getlist('file')
@@ -190,6 +191,7 @@ def upload_file():
 
 
 @app.route('/api/discard', methods=['GET', 'POST'])
+@login_required
 def discard_photo():
     photo_id = request.get_json()
     # print(photo_id)
@@ -204,11 +206,13 @@ def discard_photo():
 
 
 @app.route('/api/select/album')
+@login_required
 def upload_select_album():
     return render_template('upload_select_album.html'), 200
 
 
 @app.route('/api/uploaded/title', methods=['GET', 'POST'])
+@login_required
 def update_title():
     d = request.get_json()
     title = d['title'].strip()
@@ -221,6 +225,7 @@ def update_title():
 
 
 @app.route('/api/upload/photostream', methods=['GET', 'POST'])
+@login_required
 def to_photostream():
     # print('hello from to_photostream')
     data = request.get_json()
@@ -229,6 +234,7 @@ def to_photostream():
 
 
 @app.route('/api/create/album', methods=['GET', 'POST'])
+@login_required
 def to_new_album():
     # print('hello from to_new_album')
     if request.method == 'GET':
@@ -250,6 +256,7 @@ def to_new_album():
 
 
 @app.route('/uploaded')
+@login_required
 def uploaded_photos_page():
     """
     React gets the data for this.
@@ -258,6 +265,7 @@ def uploaded_photos_page():
 
 
 @app.route('/api/uploaded/')
+@login_required
 def get_uploaded_photos():
     json_data = up.get_uploaded_photos()
     # json_data = up.get_uploaded_photos_test()
@@ -326,6 +334,7 @@ def get_photos():
 
 
 @app.route('/api/getalbums', methods=['GET', 'POST'])
+@login_required
 def get_albums_json():
     args = request.args.to_dict()
 
@@ -369,6 +378,7 @@ def get_albums_json():
 
 
 @app.route('/api/getphotos', methods=['GET', 'POST'])
+@login_required
 def get_photos_json():
     args = request.args.to_dict()
 
@@ -423,6 +433,7 @@ def home():
 
 
 @app.route('/edit/photo/<int:photo_id>', methods=['GET', 'POST'])
+@login_required
 def edit_photo(photo_id):
     if request.method == 'GET':
         print(10*'\n')
@@ -447,6 +458,7 @@ def edit_photo(photo_id):
 
 
 @app.route('/delete/photo<int:photo_id>', methods=['GET', 'POST'])
+@login_required
 def delete_photo(photo_id):
     if request.method == 'GET':
         photo_data = p.get_photo(photo_id)
@@ -505,6 +517,7 @@ def check_chars(tag_name):
 
 
 @app.route('/api/add/tags', methods=['GET', 'POST'])
+@login_required
 def add_uploaded_tags():
     """
     gets data from react
@@ -540,6 +553,7 @@ def photos_by_tag_name(tag_name):
 
 
 @app.route('/delete/<string:tag_name>', methods=['GET', 'POST'])
+@login_required
 def delete_tag(tag_name):
     if request.method == 'GET':
         return render_template('delete_tag.html', tag_name=tag_name), 200
@@ -562,12 +576,14 @@ def get_tags():
 
 
 @app.route('/edit/tags')
+@login_required
 def edit_tags():
     tag_data = t.get_all_tags()
     return render_template('edit_tags.html', json_data=tag_data), 200
 
 
 @app.route('/edit/tag/<string:tag_name>', methods=['GET', 'POST'])
+@login_required
 def edit_tag(tag_name):
     print('hello from edit tags')
     if request.method == 'GET':
@@ -602,6 +618,7 @@ def edit_tag(tag_name):
 
 
 @app.route('/add/tag/', methods=['GET', 'POST'])
+@login_required
 def add_tag():
     args = request.args.to_dict()
 
@@ -630,6 +647,7 @@ def add_tag():
 
 
 @app.route('/remove/tag/', methods=['GET', 'POST'])
+@login_required
 def remove_tag():
     """
     Remove a tag from a photo
@@ -648,6 +666,7 @@ def remove_tag():
 
 
 @app.route('/api/get/phototags', methods=['GET', 'POST'])
+@login_required
 def get_photo_tag_data():
     if request.method == 'GET':
         args = request.args.to_dict()
@@ -676,6 +695,7 @@ def get_albums():
 
 
 @app.route('/delete/album/<string:album_id>', methods=['GET', 'POST'])
+@login_required
 def delete_album(album_id):
     if request.method == 'GET':
         # get data for that album
@@ -706,6 +726,7 @@ def get_album_photos(album_id):
 
 
 @app.route('/add/album', methods=['GET', 'POST'])
+@login_required
 def create_album():
     if request.method == 'GET':
         return render_template('create_album.html'), 200
@@ -722,6 +743,7 @@ def create_album():
 
 
 @app.route('/edit/album/<int:album_id>/photos')
+@login_required
 def add_album_photos(album_id):
     album_data = a.get_album(album_id)
     photo_data = p.get_photos_in_range(20, 0)
@@ -731,6 +753,7 @@ def add_album_photos(album_id):
 
 
 @app.route('/edit/album/<int:album_id>', methods=['GET', 'POST'])
+@login_required
 def edit_album(album_id):
     """
     Updates the name and description of an album.
@@ -751,6 +774,7 @@ def edit_album(album_id):
 
 
 @app.route('/edit/albums')
+@login_required
 def edit_albums():
     """
     Lists all the albums.
@@ -761,6 +785,7 @@ def edit_albums():
 
 
 @app.route('/api/albumphotos', methods=['GET', 'POST'])
+@login_required
 def get_album_photos_json():
     """
     Used to pass data to React.
@@ -792,6 +817,7 @@ def get_album_photos_json():
 
 
 @app.route('/edit/album/<int:album_id>/remove/photos', methods=['GET'])
+@login_required
 def remove_album_photos(album_id):
     album_data = a.get_album(album_id)
     photo_data = a.get_album_photos_in_range(album_id)
@@ -821,6 +847,7 @@ def login():
 
 
 @app.route('/logout')
+@login_required
 def logout():
     session.pop('logged_in', None)
     flash('You have been logged out.')
