@@ -38,6 +38,18 @@ img {
     min-height: 740px;
 }
 
+#albums-page-container {
+    /* border: black solid 2px; */
+    /* padding-left: 2rem; */
+
+    /* margin-left: auto;
+    margin-right: auto; */
+}
+
+.albums-card {
+    padding-left: 2rem;
+}
+
 .nav-arrows {
     /* border: black solid 2px; */
 }
@@ -75,6 +87,7 @@ img {
     /* border: solid black 2px; */
 
 }
+
 
 #album-text {
     text-shadow: -1px 0 black,

@@ -8,11 +8,11 @@
 
 </div>
 
+
 <hr>
 
 {% if session %}
 <div class="row">
-
     <div class="col text-center">
         <a href="{{url_for('create_album')}}">
             <button class="btn btn btn-primary btn-lg">
@@ -21,24 +21,21 @@
         </a>
     </div>
 </div>
-
 <hr>
-
 {% endif %}
 
 
-<div class="row">
+<div id="albums-page-container" class="row mx-auto">
     {% for key, value in json_data.items() %}
-
-    <div class="col">
-        <a href="/albums/{{value['album_id']}}">
-            <div class="card" style="width: 18rem;">
+    <div class="col albums-card">
+        <div class="card" style="width: 18rem;">
+            <a href="/albums/{{value['album_id']}}">
                 <div class="card-body">
                     <h5 class="card-title text-center">{{value['title']}}</h5>
                     <img class="card-img-top" src={% if value['large_square'] %} {{
-value['large_square']
-}} {% else %}
-                        '/static/images/logo.jpg' {% endif %} alt="{{ value['title'] }} album">
+    value['large_square']
+    }} {%
+                        else %} '/static/images/logo.jpg' {% endif %} alt="{{ value['title'] }} album">
                     <p class="card-text">{{value['description']}}</p>
                     <div class="row">
                         <div class="col text-left">
@@ -53,14 +50,9 @@ value['large_square']
                         </div>
                     </div>
                 </div>
-            </div>
-        </a>
-
+            </a>
+        </div>
     </div>
-
-
-
     {% endfor %}
 </div>
-
 {% endblock %}
