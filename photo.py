@@ -21,7 +21,7 @@ class Photos(object):
 
     @classmethod
     def needs_decode(cls, a_str):
-        print(a_str)
+        # print(a_str)
         if a_str is None:
             return ""
         if '%' in a_str:
@@ -36,6 +36,18 @@ class Photos(object):
         Offset is where you want to start from, so 0 would be from the most recent.
         10 from the tenth most recent etc.
         """
+
+        # get number of photos in database total
+        num_photos = self.db.make_query(
+            '''
+            select count(photo_id)
+            from photo
+            '''
+        )[0][0]
+
+        if offset > num_photos:
+            offset = num_photos - (num_photos % 20)
+
         q_data = None
         with sqlite3.connect(self.db.db_name) as connection:
             c = connection.cursor()
@@ -65,12 +77,12 @@ class Photos(object):
 
         data = [dict(ix) for ix in q_data]
 
-        print()
+        # print()
         for photo in data:
-            print('HERE', photo)
+            # print('HERE', photo)
             photo['photo_title'] = self.needs_decode(photo['photo_title'])
-            print(photo)
-            print()
+            # print(photo)
+            # print()
 
         a_dict = {}
         count = 0
@@ -295,11 +307,13 @@ class Photos(object):
 if __name__ == "__main__":
     p = Photos()
 
+    p.get_photos_in_range(20, 15280)
+
     # p.delete_photo(39974272161)
     # next photo is working
     # print(p.get_next_photo(44692597905))
     # it can't get that photo
-    print(p.get_photo(3325396595))
+    # print(p.get_photo(3325396595))
 
     # print(p.get_photos_in_range())
     # print(p.db.db_name)
