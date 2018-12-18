@@ -2,26 +2,52 @@
 {% block content %}
 <div class="login-wrapper">
 
-    <h2>Welcome</h2>
-    <h3>Please log in</h3>
+    <div class="row">
 
-    <form action="" method="POST">
-        <div>
-            <label for="name">Username:</label>
-            <input type="text" name="username" id="username" value="{{
+        <div class="col text-center">
+
+            <h1>Welcome</h1>
+
+
+        </div>
+    </div>
+    <hr>
+    <div class="row">
+
+        <div class="col">
+            <h2>Please log in to continue</h2>
+        </div>
+    </div>
+
+    <div class="row">
+
+        <div class="col">
+
+            <form action="" method="POST">
+                <div class="form-group">
+                    <label for="name">Username</label>
+                    <input class="form-control text-center" placeholder="Enter username" type="text" name="username" id="username"
+                        value="{{
                 request.form.username
             }}">
-        </div>
+                </div>
 
-        <div>
-            <label for="password">Password</label>
-            <input type="password" name="password" id="password" value="{{request.form.password}}">
-        </div>
+                <div class="form-group">
+                    <label for="exampleInputPassword1">Password</label>
+                    <input type="password" class="form-control text-center" id="exampleInputPassword1" name="password"
+                        placeholder="Password">
+                </div>
+                <!-- <hr> -->
+                <div>
+                    <button type="submit" class="btn btn-primary btn-lg btn-block">Submit</button>
+                </div>
+            </form>
 
-        <div>
-            <button type="submit">Log In</button>
+
         </div>
-    </form>
+    </div>
+
+
 </div>
 
 

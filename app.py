@@ -784,17 +784,12 @@ def login():
     if request.method == 'POST':
         username = request.form.get('username', None)
         password = request.form.get('password', None)
-
-        print(username, password)
-
+        # new instance of User
         user = User(username, password)
 
-        # print(password == user.check_password())
-
         if user.check_for_username() and user.check_password():
-            print('so wtf?')
-            flash('you did it, congrats')
-            return render_template('main.html')
+            flash('Welcome back {}'.format(username))
+            return redirect(url_for('get_photos'))
         else:
             status_code = 401
             flash('Wrong username and/or password', error)
