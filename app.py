@@ -854,5 +854,20 @@ def logout():
     return render_template('login.html')
 
 
+@app.route('/account', methods=['GET', 'POST'])
+@login_required
+def account():
+    if request.method == 'POST':
+        print('getting here?')
+        old_pass = request.form.get("old-password")
+        new_password = request.form.get("new-password")
+        new_pass_confirm = request.form.get("new-password-confirm")
+
+        if old_pass != = old_pass_confirm:
+            flash('Your old password does not match.')
+        pass
+    return render_template('account.html'), 200
+
+
 if __name__ == '__main__':
     app.run(debug=True)

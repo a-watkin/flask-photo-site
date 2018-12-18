@@ -84,7 +84,11 @@
             </li>
             {% endif %}
 
-
+            {% if session %}
+            <li class="nav-item mx-auto">
+                <a class="nav-link" href="{{url_for('account')}}">Account</a>
+            </li>
+            {% endif%}
 
             {% if session %}
 
