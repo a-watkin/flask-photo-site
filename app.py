@@ -32,8 +32,8 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 # some change with flask?
 # for some reason it accepts secret_key but nothing else
 # without doing this
-app.config['USERNAME'] = 'admin'
-app.config['PASSWORD'] = 'admin'
+# app.config['USERNAME'] = 'admin'
+# app.config['PASSWORD'] = 'admin'
 # so secret key is built in from the get go
 app.config['SECRET_KEY'] = 'secret'
 """
@@ -47,7 +47,6 @@ a = Album()
 t = Tag()
 up = UploadedPhotos()
 
-# tags = db.get_all_tags()
 
 """
 $ export FLASK_APP=app.py
@@ -60,6 +59,7 @@ $ flask run
 lsof -w -n -i tcp:5000
 kill -9 processId
 """
+current_user = None
 
 
 def login_required(test):
@@ -835,11 +835,12 @@ def login():
         password = request.form.get('password', None)
         # new instance of User
         user = User(username, password)
+        current_user = user
 
         if user.check_for_username() and user.check_password():
             flash('Welcome back {}'.format(username))
             session['logged_in'] = True
-            return redirect(url_for('get_photos'))
+            # return redirect(url_for('get_photos'))
         else:
             status_code = 401
             flash('Wrong username and/or password', error)
@@ -858,14 +859,24 @@ def logout():
 @login_required
 def account():
     if request.method == 'POST':
-        print('getting here?')
+
+        username = request.form.get("username")
         old_pass = request.form.get("old-password")
         new_password = request.form.get("new-password")
         new_pass_confirm = request.form.get("new-password-confirm")
 
+        user = User(username, old_pass)
+
+        # print(old_pass, user.check_password(),
+        #       old_pass == user.check_password())
+
         if new_password != new_pass_confirm:
             flash('Your passwords do not match.')
-        pass
+
+        if user.check_password() and user.password == old_pass:
+            user.insert_hased_password(new_password)
+            flash('Password changed.')
+
     return render_template('account.html'), 200
 
 
