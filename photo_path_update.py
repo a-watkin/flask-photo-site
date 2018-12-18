@@ -62,13 +62,13 @@ for photo in photo_ids:
     large_square_dir = '/static/images/{}/{}/'.format(
         dt_obj.year, dt_obj.month)
 
-    resize_photo.square_thumbnail(
-        os.getcwd() + original_path, large_square_filename, os.getcwd() + large_square_dir, 300)
+    # resize_photo.square_thumbnail(
+    #     os.getcwd() + original_path, large_square_filename, os.getcwd() + large_square_dir, 300)
 
     db.make_query(
         '''
         update images
-        set large_square = "{}"
+        set original = "{}"
         where photo_id = "{}"
-        '''.format(large_square_path, photo_id)
+        '''.format(original_path, photo_id)
     )
