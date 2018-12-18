@@ -54,25 +54,49 @@
                 <a class="nav-link" href="/albums">Albums</a>
             </li>
 
+
+            {% if session %}
+
             <li class="nav-item">
                 <a class="nav-link" href="/edit/albums">Edit Albums</a>
             </li>
+            {% endif %}
+
+
+
 
             <li class="nav-item mx-auto">
                 <a class="nav-link" href="{{url_for('get_tags')}}">Tags</a>
             </li>
 
+            {% if session %}
+
             <li class="nav-item mx-auto">
                 <a class="nav-link" href="/edit/tags">Edit tags</a>
             </li>
+            {% endif %}
+
+
+            {% if session %}
 
             <li class="nav-item mx-auto">
                 <a class="nav-link" href="/upload">Upload</a>
             </li>
+            {% endif %}
+
+
+
+            {% if session %}
 
             <li class="nav-item mx-auto">
-                <a class="nav-link" href="/login">Login</a>
+                <a class="nav-link" href="{{url_for('logout')}}">Logout</a>
             </li>
+            {% else %}
+
+            <li class="nav-item mx-auto">
+                <a class="nav-link" href="{{url_for('login')}}">Login</a>
+            </li>
+            {% endif %}
         </ul>
     </div>
 </nav>
@@ -80,13 +104,23 @@
 <body>
     <div class="container">
 
+        <div class="row">
+
+            <div class="col">
+
+                {% if session %}
+                <h1>Logout</h1>
+                {% endif %}
+            </div>
+        </div>
+
         {% with messages = get_flashed_messages() %}
         {% if messages %}
         <hr>
         <div class="row">
 
             <div class="col">
-                <div class="alert alert-warning text-center" role="alert">
+                <div id="flash-message" class="alert alert-warning text-center" role="alert">
 
                     {% for message in messages %}
 

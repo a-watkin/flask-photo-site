@@ -3,6 +3,16 @@ jQuery(document).ready(function($) {
 
   // console.log("anything?");
 
+  if (
+    $("#flash-message").text(function(e, value) {
+      // console.log("logged out", e, value.trim());
+      if(value.trim() === "You have been logged out.") {
+        // console.log("Refresh page here!")
+        window.location.replace("/")
+      }
+    })
+  ) 
+
   function showWarnings() {
     $("#update-tag-button").prop("disabled", true);
     $("#warning-text").text(

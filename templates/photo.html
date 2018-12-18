@@ -2,10 +2,9 @@
 
 <div class="row text-center">
     <!-- <h1>{{json_data}}</h1> -->
-    <div class="col">
-        <h1 class="text-center">{{ json_data["title"] }}
-    </div>
 
+
+    {% if session %}
     <div class="col">
         <a href="{{url_for('edit_photo', photo_id=json_data['photo_id'])}}">
 
@@ -13,13 +12,21 @@
 
         </a>
     </div>
+    {% endif %}
+
+    <div class="col">
+        <h1 class="text-center">{{ json_data["title"] }}
+    </div>
+
+    {% if session %}
     <div class="col">
         <a href="{{url_for('delete_photo', photo_id=json_data['photo_id'])}}">
 
-            <button class="btn btn-danger btn-lg">Delete photo</button></h1>
+            <button class="btn btn-danger btn-lg">Delete photo</button>
 
         </a>
     </div>
+    {% endif %}
 
 </div>
 <!-- displays the photo -->
@@ -42,6 +49,8 @@
 
 <div id="photo-info" class="row">
     <div class="col-5">
+        {% if json_data['tags'] %}
+
         <h2>Tags</h2>
         {% for tag in json_data['tags'] %}
         <!-- <h2>{{tag['human_readable_tag']}}</h2> -->
@@ -52,10 +61,14 @@
         </a>
         {% endfor %}
 
+        {% endif %}
+
+        {% if session %}
         <hr>
+
         <div class="row">
 
-            <div class="col">
+            <div class="col text-center">
 
                 <a href="{{ url_for( 'add_tag', photo_id = json_data['photo_id'] ) }}">
                     <button class="btn btn-warning btn-lg">
@@ -65,7 +78,7 @@
 
             </div>
 
-            <div class="col">
+            <div class="col text-center">
 
                 <a href="{{ url_for( 'remove_tag', photo_id = json_data['photo_id'] ) }}">
                     <button class="btn btn-danger btn-lg">
@@ -75,6 +88,8 @@
 
             </div>
         </div>
+        {% endif %}
+
     </div>
 
     <div class="col-2">

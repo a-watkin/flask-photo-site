@@ -3,6 +3,8 @@ import os
 import datetime
 import uuid
 import urllib.parse
+from functools import wraps
+
 
 from flask import Flask, render_template, request, session, flash, redirect, url_for, g, jsonify
 from flask import json
@@ -34,6 +36,10 @@ app.config['USERNAME'] = 'admin'
 app.config['PASSWORD'] = 'admin'
 # so secret key is built in from the get go
 app.config['SECRET_KEY'] = 'secret'
+"""
+$ python -c 'import os; print(os.urandom(16))'
+b'_5#y2L"F4Q8z\n\xec]/'
+"""
 
 db = Database('eigi-data.db')
 p = Photos()
@@ -54,6 +60,23 @@ $ flask run
 lsof -w -n -i tcp:5000
 kill -9 processId
 """
+
+
+def login_required(test):
+    @wraps(test)
+    def wrap(*args, **kwargs):
+        if 'logged_in' in session:
+            return test(*args, **kwargs)
+        else:
+            flash('You need to log in first.')
+            return redirect(url_for('login'))
+    return wrap
+
+
+@app.route('/test')
+@login_required
+def test_route():
+    return 'you should not see this'
 
 
 def allowed_file(filename):
@@ -789,10 +812,18 @@ def login():
 
         if user.check_for_username() and user.check_password():
             flash('Welcome back {}'.format(username))
+            session['logged_in'] = True
             return redirect(url_for('get_photos'))
         else:
             status_code = 401
             flash('Wrong username and/or password', error)
+    return render_template('login.html')
+
+
+@app.route('/logout')
+def logout():
+    session.pop('logged_in', None)
+    flash('You have been logged out.')
     return render_template('login.html')
 
 
