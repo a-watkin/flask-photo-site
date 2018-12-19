@@ -17,9 +17,10 @@ from photo import Photos
 from album import Album
 from tag import Tag
 from uploaded_photos import UploadedPhotos
-from resize_photo import square_thumbnail
+# from resize_photo import square_thumbnail
 import name_util
 from user import User
+from resize_photo import PhotoUtil
 
 
 UPLOAD_FOLDER = os.getcwd() + '/static/images'
@@ -118,13 +119,18 @@ def upload_file():
                     if filename in file_in_dir:
                         temp = filename.split('.')
 
-                        temp[0] = temp[0] + "_" + photo_id
+                        temp[0] = temp[0] + "_" + photo_id + '_o'
 
                         filename = '.'.join(temp)
 
                     # save the file in the path
-                    file.save(os.path.join(
-                        save_directory, filename))
+                    file.save(
+                        os.path.join(
+                            save_directory, filename))
+
+                    print('here', save_directory, filename)
+
+                    PhotoUtil.orientate_save(save_directory, filename)
 
                     # save path to the photo
                     file_path = save_directory + '/' + filename
@@ -143,7 +149,13 @@ def upload_file():
                     #       filename in os.listdir(save_path), '\n',
                     #       save_path)
 
-                    square_thumbnail(filename, thumbnail_filename, save_path)
+                    print()
+                    print(save_path)
+                    print(thumbnail_filename)
+                    print()
+
+                    PhotoUtil.square_thumbnail(
+                        filename, thumbnail_filename, save_path)
 
                     # path for the database
                     original_path = '/static/images/{}/{}/{}'.format(
@@ -177,13 +189,6 @@ def upload_file():
                     flash('Incorrect file type.')
                     return redirect(request.url)
 
-            # write to temp table, return page where things can be editied
-            # return redirect(url_for('upload_file',
-            #                         filename=filename))
-
-            # Return all the data about the uloaded photos
-            # json_data = up.get_uploaded_photos()
-            # return render_template('uploaded_photos.html'), 200
             return redirect(url_for('uploaded_photos_page'), code=302)
 
     # Get request and initial loading of the upload page
