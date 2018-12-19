@@ -46,6 +46,11 @@ img {
     margin-right: auto; */
 }
 
+#edit-album-buttons {
+    max-width: 4rem;
+    /* border: solid black 2px; */
+}
+
 .albums-card {
     padding-left: 2rem;
 }
