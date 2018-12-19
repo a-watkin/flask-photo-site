@@ -840,7 +840,7 @@ def login():
         if user.check_for_username() and user.check_password():
             flash('Welcome back {}'.format(username))
             session['logged_in'] = True
-            # return redirect(url_for('get_photos'))
+            return redirect(url_for('get_photos'))
         else:
             status_code = 401
             flash('Wrong username and/or password', error)
