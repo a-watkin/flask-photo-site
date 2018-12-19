@@ -23,8 +23,8 @@
                 <tr>
                     <td id="edit-albums-container" class="text-left">
 
-                        <a href="{{url_for('get_album_photos', album_id=value['album_id'])}}">
-                            <div class="card" style="width: 18rem;">
+                        <div class="card" style="width: 18rem;">
+                            <a href="{{url_for('get_album_photos', album_id=value['album_id'])}}">
                                 <div class="card-body">
                                     <h5 class="card-title text-center">{{value['title']}}</h5>
                                     <img class="card-img-top" src={% if value['large_square'] %}
@@ -46,8 +46,8 @@ value['large_square']
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                        </a>
+                            </a>
+                        </div>
 
                     </td>
                     <!-- <td>

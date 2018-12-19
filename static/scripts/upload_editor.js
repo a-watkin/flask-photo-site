@@ -301,7 +301,7 @@ class PhotosData extends React.Component {
             <div className="col text-center">
               <button
                 disabled={!allowButtons}
-                className="btn btn-warning btn-lg"
+                className="btn btn-warning btn-block btn-lg"
                 onClick={() => addToNewAlbum()}
               >
                 Add to a new album
@@ -311,7 +311,7 @@ class PhotosData extends React.Component {
             <div className="col text-center">
               <button
                 disabled={!allowButtons}
-                className="btn btn-success btn-lg"
+                className="btn btn-success btn-block btn-lg"
                 onClick={() => addToPhotoStream()}
               >
                 Add to photostream only
@@ -321,7 +321,7 @@ class PhotosData extends React.Component {
             <div className="col text-center">
               <button
                 disabled={!allowButtons}
-                className="btn btn-success btn-lg"
+                className="btn btn-success btn-block btn-lg"
                 onClick={() => addToExistingAlbum()}
               >
                 Add to existing album

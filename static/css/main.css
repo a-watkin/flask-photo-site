@@ -147,3 +147,9 @@ card:hover {
 #album-links {
     color: black;
 }
+
+
+
+.btn-block {
+    margin-bottom: 0.2em;
+}
