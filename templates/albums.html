@@ -5,9 +5,7 @@
     <div class="col">
         <h1>Albums</h1>
     </div>
-
 </div>
-
 
 <hr>
 
@@ -24,12 +22,11 @@
 <hr>
 {% endif %}
 
-
 <div id="albums-page-container" class="row mx-auto">
     {% for key, value in json_data.items() %}
     <div class="col albums-card">
         <div class="card" style="width: 18rem;">
-            <a href="/albums/{{value['album_id']}}">
+            <a href="{{url_for('get_album_photos', album_id=value['album_id']) }}">
                 <div class="card-body">
                     <h5 class="card-title text-center">{{value['title']}}</h5>
                     <img class="card-img-top" src={% if value['large_square'] %} {{

@@ -7,11 +7,8 @@
 </div>
 
 <div class="row">
-
     <div class="col text-center">
-
         <img src="{{json_data['original']}}" alt="{{json_data['title']}}">
-
     </div>
 </div>
 
@@ -38,16 +35,15 @@
 <hr>
 <div class="row">
     <div class="col text-left">
-        <a href="/api/photos/{{json_data['photo_id']}}">
-            <button type="button" class="btn btn-success btn-lg">Go back to the photo</button>
+        <a href="{{ url_for('get_photo', photo_id=json_data['photo_id']) }}">
+            <button type="button" class="btn btn-success btn-block btn-lg">Go back to the photo</button>
         </a>
     </div>
 
     <div class="col text-right">
-        <button id="update-tag-button" type="submit" class="btn btn-primary btn-lg">Add tag</button>
+        <button id="update-tag-button" type="submit" class="btn btn-primary btn-block btn-lg">Add tag</button>
     </div>
     </form>
-
 </div>
 
 <hr>

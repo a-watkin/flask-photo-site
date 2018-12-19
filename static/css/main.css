@@ -153,3 +153,8 @@ card:hover {
 .btn-block {
     margin-bottom: 0.2em;
 }
+
+/* for the page delete tag */
+#no-underline {
+    text-decoration: none;
+}

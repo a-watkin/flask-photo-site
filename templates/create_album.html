@@ -31,16 +31,16 @@
                 <h3></h3>
             </div>
 
-
             <div class="row ">
                 <div class="col text-left">
-                    <a href="{{url_for('edit_albums')}}">
-                        <button class="btn btn-success">Return to albums</button>
+                    <h1>{{url_for('edit_albums')}}</h1>
+                    <a href="/edit/albums">
+                        <button class="btn btn-success btn-block btn-lg">Return to albums</button>
                     </a>
                 </div>
 
                 <div class="col text-right">
-                    <button type="submit" class="btn btn-warning">Save changes and add photos</button>
+                    <button type="submit" class="btn btn-warning btn-block btn-lg">Save changes and add photos</button>
                 </div>
             </div>
         </form>

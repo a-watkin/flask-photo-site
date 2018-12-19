@@ -1,19 +1,20 @@
-{% extends "template.html" %} {% block content %}
+{% extends "template.html" %}
+{% block content %}
 
 <div class="row">
-
     <div class="col">
-
         <h1>Are you sure you want to delete the tag:
-            <button type="button" class="btn btn-outline-success btn-lg">
-                {{tag_name}}
-            </button> ?
-        </h1>
-
+            <a id="no-underline" href="{{url_for('photos_by_tag_name', tag_name=tag_name)}}">
+                <button type="button" class="btn btn-outline-success btn-lg">
+                    {{tag_name}}
+                </button>
+            </a>
+            ?</h1>
     </div>
 </div>
 
 <hr>
+
 <div class="row">
     <div class="col">
 
@@ -24,29 +25,22 @@
     </div>
 </div>
 
-
 <hr>
+
 <div class="row">
     <div class="col">
-
-        <a href="/edit/tags">
-            <button type="button" class="btn btn-success btn-lg">
-                Return to edit tags without deleting
+        <a href="{{url_for('edit_tags')}}">
+            <button type="button" class="btn btn-success btn-block btn-lg">
+                Return to edit tags
             </button>
         </a>
-
-
     </div>
 
-    <form method="post">
-        <div class="col">
-            <button type="submit" type="button" class="btn btn-danger btn-lg">Delete the tag</button>
-        </div>
-    </form>
-
+    <div class="col">
+        <form method="post">
+            <button type="submit" type="button" class="btn btn-danger btn-block btn-lg">Delete the tag</button>
+        </form>
+    </div>
 </div>
-
-
-
 
 {% endblock %}

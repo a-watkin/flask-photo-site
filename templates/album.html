@@ -26,7 +26,7 @@
 <div class="row">
     {% for key, value in json_data.items() %}
     <div class="col-3">
-        <a id="photostream-page" href="/api/photos/{{value['photo_id']}}">
+        <a id="photostream-page" href="{{ url_for('get_photo', photo_id=value['photo_id']) }}">
             <img id="photo-page-image" class="img-fluid" src="{{value['large_square']}}" alt="Responsive image">
             <!-- <h2>{{value.photo_id}}</h2> -->
         </a>
@@ -53,7 +53,7 @@
 <hr>
 <div class="row text-center">
     <div id="selected-album" class="col">
-        <a href="/albums/{{json_data[0]['album_id']}}">
+        <a href="/albums/{{url_for('get_album_photos', album_id=json_data[0]['album_id']) }}">
             <div class="card" style="width: 18rem;">
                 <div class="card-body">
                     <h5 class="card-title text-center">{{json_data[0]['title']}}</h5>
@@ -82,8 +82,6 @@
 
 </div>
 
-
-
 <hr>
 <div class="row text-center">
 
@@ -92,7 +90,6 @@
             <button class="btn btn-success btn-lg">Add photos</button>
         </a>
     </div>
-
 
     <div class="col">
         <a href="{{url_for('edit_album', album_id=json_data[0]['album_id'])}}">

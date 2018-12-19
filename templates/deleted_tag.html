@@ -1,46 +1,33 @@
 {% extends "template.html" %} {% block content %}
 
 <div class="row text-center">
-
     <div class="col">
-
         <h1>The tag
-
-            <button type="button" class="btn btn-outline-success btn-lg">
+            <button type="button" class="btn btn-outline-success btn-block btn-lg">
                 {{ deleted_tag }}
             </button>
             has been removed.</h1>
-
     </div>
 </div>
 
 <hr>
 
 <div class="row text-center">
-
     <div class="col">
-
-        <a href="/edit/tags">
-            <button class="btn btn-primary btn-lg">
+        <a href="{{url_for('edit_tags')}}">
+            <button class="btn btn-primary btn-block btn-lg">
                 Go back to edit tags
             </button>
         </a>
-
     </div>
-
 
     <div class="col">
-        <a href="/api/photos/">
-
-            <button class="btn btn-primary btn-lg">
-
+        <a href="{{url_for('get_photos')}}">
+            <button class="btn btn-primary btn-block  btn-lg">
                 Go to photos
-
             </button>
         </a>
-
     </div>
 </div>
-
 
 {% endblock %}

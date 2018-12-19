@@ -11,7 +11,8 @@
 
 <div class="row text-center">
     <div id="selected-album" class="col">
-        <a href="/albums/{{json_data['album_data']['album_id']}}">
+
+        <a href="{ url_for('get_albums', album_id=json_data['album_data']['album_id']) }}">
             <div class="card" style="width: 18rem;">
                 <div class="card-body">
                     <h5 class="card-title text-center">{{json_data['album_data']['title']}}</h5>
@@ -46,6 +47,5 @@
 
 <hr>
 
-<script type="text/babel" src="{{ url_for('static', filename='scripts/photos_data.js') }}"></script>
 
 {% endblock %}

@@ -11,7 +11,8 @@
 <div class="row text-center">
 
     <div id="problem-div" class="col">
-        <a href="/albums/{{json_data['album_id']}}">
+
+        <a href="{{url_for('get_album_photos', album_id=json_data['album_id']) }}">
             <div class="card" style="width: 18rem;">
                 <div class="card-body">
                     <h5 class="card-title text-center">{{json_data['title']}}</h5>
@@ -36,21 +37,15 @@ json_data['large_square']
             </div>
         </a>
     </div>
-
-
 </div>
 
-
-
-
 <hr>
+
 <div class="row">
     <div class="col">
-
         <div class="alert alert-danger text-center" role="alert">
             Deleting an album cannot be undone.
         </div>
-
     </div>
 </div>
 
@@ -58,27 +53,19 @@ json_data['large_square']
 <hr>
 <div class="row">
     <div class="col">
-
         <a href="{{url_for('edit_albums')}}">
-            <button type="button" class="btn btn-success btn-lg">
-                Return to edit albums page without deleting
-
-
+            <button type="button" class="btn btn-success btn-block btn-lg">
+                Return to edit albums
             </button>
         </a>
-
-
     </div>
 
     <form method="post">
         <div class="col">
-            <button type="submit" type="button" class="btn btn-danger btn-lg">Delete the album</button>
+            <button type="submit" type="button" class="btn btn-danger btn-block btn-lg">Delete the album</button>
         </div>
     </form>
 
 </div>
-
-
-
 
 {% endblock %}
