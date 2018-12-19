@@ -10,7 +10,6 @@
         </h1> -->
         <h1 class="text-center"></h1>
 
-
         <div id="album-text" class="card bg-dark text-white">
             <img class="card-img" src="{{json_data[0]['original']}}" alt="Card image">
             <div class="card-img-overlay">
@@ -21,14 +20,11 @@
             </div>
         </div>
 
-
     </div>
 </div>
 
 <div class="row">
     {% for key, value in json_data.items() %}
-
-
     <div class="col-3">
         <a id="photostream-page" href="/api/photos/{{value['photo_id']}}">
             <img id="photo-page-image" class="img-fluid" src="{{value['large_square']}}" alt="Responsive image">
@@ -41,15 +37,8 @@
 {% else %}
 
 <div class="row text-center">
-
     <div class="col">
-
         <h1>The album {{json_data[0]['title']}}</h1>
-
-
-
-
-
     </div>
 </div>
 <hr>

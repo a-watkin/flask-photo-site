@@ -18,8 +18,6 @@
 <hr>
 
 <div class="row">
-
-
     <div class="col text-center">
         <div id="warning-text" class="alert alert-warning" role="alert">
             You can enter multiple tags, seperating them by commas.
@@ -28,9 +26,6 @@
 </div>
 
 <div class="row">
-
-
-
     <div class="col">
         <!-- passing the photo_id back to add_tag for the POST section of code -->
         <form method="post" action="{{ url_for('add_tag', photo_id=json_data['photo_id']) }}">
