@@ -873,6 +873,9 @@ def account():
         if new_password != new_pass_confirm:
             flash('Your passwords do not match.')
 
+        if not user.check_password():
+            flash('Incorrect password.')
+
         if user.check_password() and user.password == old_pass:
             user.insert_hased_password(new_password)
             flash('Password changed.')
