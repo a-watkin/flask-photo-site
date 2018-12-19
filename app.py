@@ -552,8 +552,10 @@ def add_uploaded_tags():
 
 @app.route('/tags/<string:tag_name>')
 def photos_by_tag_name(tag_name):
-    # gettings the photos by tag with sanitised names
-    json_data = check_forbidden(tag_name)
+    # print('hello from photos by tag name, ',
+    #       tag_name)
+    json_data = t.get_photos_by_tag(tag_name)
+    print(json_data)
     return render_template('tag_photos.html', json_data=json_data)
 
 

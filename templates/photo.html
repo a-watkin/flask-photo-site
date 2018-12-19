@@ -92,7 +92,7 @@
     <div class="col-5">
         {% for value in json_data['containing_album'] %}
         <div class="col-5">
-            <a href="/albums/{{ url_for('get_album_photos', album_id=value['album_id']) }}">
+            <a href="{{ url_for('get_album_photos', album_id=value['album_id']) }}">
                 <div class="card" style="width: 18rem;">
                     <div class="card-body">
                         <h5 class="card-title text-center">{{ value["title"] }}</h5>

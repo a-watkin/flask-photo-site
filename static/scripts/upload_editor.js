@@ -48,7 +48,7 @@ class PhotosData extends React.Component {
   }
 
   componentWillMount() {
-    fetch("http://127.0.0.1:5000/api/uploaded")
+    fetch("/api/uploaded")
       .then(res => res.json())
       .then(
         result => {
@@ -76,7 +76,7 @@ class PhotosData extends React.Component {
 
     console.log(test);
 
-    fetch("http://127.0.0.1:5000/api/discard", {
+    fetch("/api/discard", {
       method: "POST",
       headers: {
         Accept: "application/json",
@@ -103,7 +103,7 @@ class PhotosData extends React.Component {
   updateTitle(e, photo_id, key) {
     const new_title = e.target.value;
 
-    fetch("http://127.0.0.1:5000/api/uploaded/title", {
+    fetch("/api/uploaded/title", {
       method: "POST",
       headers: {
         Accept: "application/json",
@@ -133,7 +133,7 @@ class PhotosData extends React.Component {
           allowButtons: true
         });
 
-        fetch("http://127.0.0.1:5000/api/add/tags", {
+        fetch("/api/add/tags", {
           method: "POST",
           headers: {
             Accept: "application/json",
@@ -172,7 +172,7 @@ class PhotosData extends React.Component {
       console.log("hello from addToPhotoStream");
       // send data to the backend
       console.log(this.state.items);
-      fetch("http://127.0.0.1:5000/api/upload/photostream", {
+      fetch("/api/upload/photostream", {
         method: "POST",
         headers: {
           Accept: "application/json",

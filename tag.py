@@ -3,6 +3,7 @@ import sqlite3
 
 
 from database_interface import Database
+import name_util
 
 
 class Tag(object):
@@ -210,6 +211,8 @@ class Tag(object):
         count = 0
         for t in tag_data:
             rtn_dict[count] = t
+            rtn_dict[count]['human_readable_tag'] = name_util.make_decoded(
+                rtn_dict[count]['tag_name'])
             count += 1
 
         return rtn_dict
@@ -436,7 +439,7 @@ class Tag(object):
 if __name__ == "__main__":
     t = Tag()
 
-    t.replace_tags(1038492826, ['tag1, tag3'])
+    # t.replace_tags(1038492826, ['tag1, tag3'])
 
     # t.clean_tags()
 

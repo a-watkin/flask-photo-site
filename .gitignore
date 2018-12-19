@@ -122,6 +122,7 @@ FLICKR_API_KEYS.py
 *.csv
 .auth.txt
 *.jpg
+*.JPG
 *.jpg?zz=1
 *.db
 
