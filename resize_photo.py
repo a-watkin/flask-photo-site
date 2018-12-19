@@ -73,7 +73,7 @@ class PhotoUtil(object):
         img.save(outfile)
 
     @staticmethod
-    def square_thumbnail(infile, outfile, save_path, base_size=150):
+    def square_thumbnail(infile, outfile, save_path, base_size=300):
         start_path = os.getcwd()
         os.chdir(save_path)
         print(save_path)
