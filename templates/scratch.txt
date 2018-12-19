@@ -1,4 +1,0 @@
-
-FROM add_tag
-<form method="post" 
-action="{{ url_for('add_tag', photo_id=json_data['photo_id']) }}">

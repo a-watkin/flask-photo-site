@@ -1,25 +1,30 @@
 {% extends "template.html" %}
 {% block content %}
-<h1 class="text-center">Photos page</h1>
+
+
+<!-- <h1 class="text-center">Photos page</h1> -->
+
 <hr>
+
 <div class="row text-center">
     <div class="col">
         <a href="/api/photos?offset={{ json_data.offset - 20 }}">
 
-            <button type="button" class="btn btn-secondary btn-lg">Previous page</button>
+            <button type="button" class="btn btn-secondary btn-block btn-lg">Previous page</button>
 
         </a>
     </div>
     <div class="col">
         <a href="/api/photos?offset={{ json_data.offset + 20 }}">
 
-            <button type="button" class="btn btn-secondary btn-lg">Next page
-
+            <button type="button" class="btn btn-secondary btn-block btn-lg">Next page
             </button>
         </a>
     </div>
 </div>
+
 <hr>
+
 <!-- <h1>{{json_data.photos.items()}}</h1> -->
 <div id="photos-page-container" class="row mx-auto">
 
@@ -40,6 +45,7 @@
 </div>
 
 <hr>
-<h1 class="text-center">{{json_data.offset, json_data.offset + 20}}</h1>
+
+<!-- <h1 class="text-center">{{json_data.offset, json_data.offset + 20}}</h1> -->
 
 {% endblock %}

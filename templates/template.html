@@ -2,11 +2,12 @@
 <html lang="en">
 
 <head>
-
-    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Site icon -->
+    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
 
     <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
     <script src="https://unpkg.com/react@16/umd/react.production.min.js"></script>
@@ -35,13 +36,13 @@
     <link href="{{ url_for('static', filename='css/main.css') }}" rel="stylesheet">
     <script src="{{ url_for('static', filename='scripts/script.js') }}"></script>
 
-    <title>flickr-flask</title>
+    <title>Photography-by-Eigi</title>
+
 </head>
 
-
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <a href="http://127.0.0.1:5000/">
-        <img src="/static/images/logo.jpg" width="40" height="40" alt="">
+    <a href="/">
+        <img src="{{ url_for('static', filename='favicon.ico') }}" width="40" height="40" alt="">
     </a>
 
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText" aria-controls="navbarText"
@@ -55,36 +56,28 @@
             </li>
 
             <li class="nav-item">
-                <a class="nav-link" href="/albums">Albums</a>
+                <a class="nav-link" href="{{url_for('get_albums')}}">Albums</a>
             </li>
-
 
             {% if session %}
-
             <li class="nav-item">
-                <a class="nav-link" href="/edit/albums">Edit Albums</a>
+                <a class="nav-link" href="{{url_for('edit_albums')}}">Edit Albums</a>
             </li>
             {% endif %}
-
-
-
 
             <li class="nav-item mx-auto">
                 <a class="nav-link" href="{{url_for('get_tags')}}">Tags</a>
             </li>
 
             {% if session %}
-
             <li class="nav-item mx-auto">
-                <a class="nav-link" href="/edit/tags">Edit tags</a>
+                <a class="nav-link" href="{{url_for('edit_tags')}}">Edit tags</a>
             </li>
             {% endif %}
 
-
             {% if session %}
-
             <li class="nav-item mx-auto">
-                <a class="nav-link" href="/upload">Upload</a>
+                <a class="nav-link" href="{{url_for('upload_file')}}">Upload</a>
             </li>
             {% endif %}
 
@@ -94,8 +87,8 @@
             </li>
             {% endif%}
 
+            <!-- Login/logout -->
             {% if session %}
-
             <li class="nav-item mx-auto">
                 <a class="nav-link" href="{{url_for('logout')}}">Logout</a>
             </li>
@@ -105,22 +98,14 @@
                 <a class="nav-link" href="{{url_for('login')}}">Login</a>
             </li>
             {% endif %}
+
+
         </ul>
     </div>
 </nav>
 
 <body>
     <div class="container">
-
-        <!-- <div class="row">
-
-            <div class="col">
-
-                {% if session %}
-                <h1>Logout</h1>
-                {% endif %}
-            </div>
-        </div> -->
 
         {% with messages = get_flashed_messages() %}
         {% if messages %}
@@ -132,17 +117,9 @@
 
                     {% for message in messages %}
 
-
-
                     <h2>
-
                         {{ message }}
-
                     </h2>
-
-
-
-
 
                     {% endfor %}
 
@@ -158,13 +135,6 @@
         {% endblock %}
 
     </div>
-
-
-
-
-
-
-
 
 </body>
 

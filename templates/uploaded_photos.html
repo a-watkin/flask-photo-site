@@ -6,19 +6,15 @@
         <h1>Uploaded photos</h1>
     </div>
 </div>
+
 <hr>
+
 <!-- <h2>{{json_data}}</h2> -->
 
-
+<!-- Entry point for React -->
 <div id="upload-editor"></div>
 
-
-
-
-<!-- Scripts for React -->
-<!-- <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
-<script src="https://unpkg.com/react@16/umd/react.development.js" crossorigin></script>
-<script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js" crossorigin></script> -->
+<!-- React script -->
 <script type="text/babel" src="{{ url_for('static', filename='scripts/upload_editor.js') }}"></script>
 
 {% endblock %}

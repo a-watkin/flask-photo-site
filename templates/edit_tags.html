@@ -1,15 +1,11 @@
 {% extends "template.html" %} {% block content %}
 
 <div class="row text-center">
-
     <div class="col">
-
-        <h1>Edit tags page</h1>
+        <h1>Edit tags</h1>
         <!-- <h1>{{json_data}}</h1> -->
-
     </div>
 </div>
-
 
 <div class="row">
     <div class="col text-center">
@@ -24,13 +20,12 @@
             </thead>
             <tbody class="align-items-center">
 
-
                 {% for key, value in json_data.items() %}
 
                 <tr>
                     <td class="text-left">
 
-                        <a href="/tags/{{value['tag_name']}}">
+                        <a href="{url_for('photos_by_tag_name' tag_name=value['tag_name'])}}">
                             <button type="button" class="btn btn-outline-success btn-lg">
                                 {{ value["human_readable_tag"] }}
                             </button>
@@ -42,21 +37,20 @@
                         <h2>{{value["photos"]}}</h2>
                     </td>
                     <td>
-                        <a href="/edit/tag/{{ value["tag_name"] }}">
+                        <a href="{{ url_for('edit_tag', tag_name=value["tag_name"]) }}">
 
-                            <button id="edit-buttons" class="btn btn-warning btn-block">Edit this tag</button>
+                            <button id="edit-buttons" class="btn btn-warning btn-block">Edit tag</button>
 
                         </a>
 
                         <!-- <h2>{{value["tag_name"]}}</h2> -->
 
                         <a href="{{url_for('delete_tag', tag_name=value["tag_name"])}}">
-                            <button class="btn btn-danger btn-block">Delete this tag</button>
+                            <button class="btn btn-danger btn-block">Delete tag</button>
                     </td>
 
                     </a>
                 </tr>
-
 
                 {% endfor %}
 

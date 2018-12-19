@@ -3,13 +3,10 @@
 <div class="row text-center">
     <!-- <h1>{{json_data}}</h1> -->
 
-
     {% if session %}
     <div class="col">
         <a href="{{url_for('edit_photo', photo_id=json_data['photo_id'])}}">
-
-            <button class="btn btn-warning btn-lg">Edit this title</button></h1>
-
+            <button class="btn btn-warning btn-block btn-lg">Edit title</button></h1>
         </a>
     </div>
     {% endif %}
@@ -21,9 +18,7 @@
     {% if session %}
     <div class="col">
         <a href="{{url_for('delete_photo', photo_id=json_data['photo_id'])}}">
-
-            <button class="btn btn-danger btn-lg">Delete photo</button>
-
+            <button class="btn btn-danger btn-block btn-lg">Delete photo</button>
         </a>
     </div>
     {% endif %}
@@ -34,7 +29,8 @@
 
     <!-- Next -->
     <div class="col-1 text-center nav-arrows">
-        <a href="http://127.0.0.1:5000/api/photos/{{ json_data['next'] }}"><i class="fas fa-angle-left fa-3x"></i></a>
+        <!-- Can't use url_for here as the argument is unnamed. -->
+        <a href="/api/photos/{{ json_data['next'] }}"><i class="fas fa-angle-left fa-3x"></i></a>
     </div>
 
     <div class="col-10 text-center">
@@ -43,7 +39,8 @@
 
     <!-- Previous -->
     <div class="col-1 text-center nav-arrows">
-        <a href="http://127.0.0.1:5000/api/photos/{{ json_data['previous'] }}"><i class="fas fa-angle-right fa-3x"></i></a>
+        <!-- Can't use url_for here as the argument is unnamed. -->
+        <a href="/api/photos/{{ json_data['previous'] }}"><i class="fas fa-angle-right fa-3x"></i></a>
     </div>
 </div>
 
@@ -54,7 +51,7 @@
         <h2>Tags</h2>
         {% for tag in json_data['tags'] %}
         <!-- <h2>{{tag['human_readable_tag']}}</h2> -->
-        <a href="/tags/{{tag['tag_name']}}">
+        <a href="{{ url_for('photos_by_tag_name', tag_name=tag['tag_name']) }}">
             <button type="button" class="btn btn-outline-success btn-lg">
                 {{tag['human_readable_tag']}}
             </button>
@@ -67,25 +64,20 @@
         <hr>
 
         <div class="row">
-
             <div class="col text-center">
-
                 <a href="{{ url_for( 'add_tag', photo_id = json_data['photo_id'] ) }}">
-                    <button class="btn btn-warning btn-lg">
+                    <button class="btn btn-warning btn-block btn-lg">
                         Add a tag
                     </button>
                 </a>
-
             </div>
 
             <div class="col text-center">
-
                 <a href="{{ url_for( 'remove_tag', photo_id = json_data['photo_id'] ) }}">
-                    <button class="btn btn-danger btn-lg">
+                    <button class="btn btn-danger btn-block btn-lg">
                         Remove a tag
                     </button>
                 </a>
-
             </div>
         </div>
         {% endif %}
@@ -100,7 +92,7 @@
     <div class="col-5">
         {% for value in json_data['containing_album'] %}
         <div class="col-5">
-            <a href="/albums/{{value['album_id']}}">
+            <a href="/albums/{{ url_for('get_album_photos', album_id=value['album_id']) }}">
                 <div class="card" style="width: 18rem;">
                     <div class="card-body">
                         <h5 class="card-title text-center">{{ value["title"] }}</h5>
@@ -121,5 +113,7 @@
         {% endfor %}
     </div>
 </div>
+
 <hr>
+
 {% endblock %}

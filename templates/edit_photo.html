@@ -1,4 +1,5 @@
-{% extends "template.html" %} {% block content %}
+{% extends "template.html" %}
+{% block content %}
 
 <!-- <h1>{{json_data}}</h1> -->
 <div class="row text-center">
@@ -18,7 +19,7 @@
         <form method="post">
             <div class="form-group">
                 <label for="renaming-photo">Make changes to the photo name below</label>
-                <input name="new_photo_name" type="text" class="form-control" value="{{json_data['title']}}">
+                <input name="new_photo_name" type="text" class="form-control text-center" value="{{json_data['title']}}">
             </div>
 
 
@@ -26,12 +27,12 @@
 
                 <div class="col text-left">
                     <a href="{{url_for('get_photo', photo_id=json_data['photo_id'])}}">
-                        <button type="button" class="btn btn-success btn-lg">Go back to the photos page</button>
+                        <button type="button" class="btn btn-success btn-block btn-lg">Go back to the photos page</button>
                     </a>
                 </div>
 
                 <div class="col text-right">
-                    <button type="submit" class="btn btn-primary btn-lg">Update title</button>
+                    <button type="submit" class="btn btn-primary btn-block btn-lg">Update title</button>
                 </div>
             </div>
         </form>
