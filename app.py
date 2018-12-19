@@ -779,6 +779,7 @@ def edit_albums():
     """
     Lists all the albums.
     """
+    print('hello from edit albums')
     albums_data = a.get_albums()
     print(albums_data)
     return render_template('edit_albums.html', json_data=albums_data), 200
