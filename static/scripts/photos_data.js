@@ -22,7 +22,7 @@ class PhotosData extends React.Component {
     let splitUrl = currentUrl.split("/");
     const albumId = splitUrl[5];
 
-    fetch("http://127.0.0.1:5000/api/getphotos")
+    fetch("/api/getphotos")
       .then(res => res.json())
       .then(
         result => {

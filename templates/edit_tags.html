@@ -22,10 +22,14 @@
 
                 {% for key, value in json_data.items() %}
 
+                <!-- <h2>{{json_data[key]['tag_name']}}</h2> -->
+                <!-- <h3>{{value['tag_name']}}</h3>
+                <h4>{{url_for('photos_by_tag_name', tag_name=value['tag_name'])}}</h4> -->
+
                 <tr>
                     <td class="text-left">
 
-                        <a href="{url_for('photos_by_tag_name' tag_name=value['tag_name'])}}">
+                        <a href="{{url_for('photos_by_tag_name', tag_name=value['tag_name'])}}">
                             <button type="button" class="btn btn-outline-success btn-lg">
                                 {{ value["human_readable_tag"] }}
                             </button>
