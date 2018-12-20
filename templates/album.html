@@ -4,24 +4,35 @@
 {% if json_data[0]['photos'] > 0 %}
 
 <div class="row">
-    <div class="col">
-        <!-- <h1>
-            {{json_data[0]}}
-        </h1> -->
-        <h1 class="text-center"></h1>
-
-        <div id="album-text" class="card bg-dark text-white">
-            <img class="card-img" src="{{json_data[0]['original']}}" alt="Card image">
-            <div class="card-img-overlay">
-                <h1 class="card-title text-center">{{json_data[0]['title']}}</h1>
-                <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional
-                    content. This content is a little bit longer.</p>
-                <p class="card-text">Last updated 3 mins ago</p>
+    <div id="problem-div" class="col">
+        <a href="{{url_for('get_album_photos', album_id=json_data[0]['album_id'])}}">
+            <div class="card" style="width: 18rem;">
+                <div class="card-body">
+                    <h5 class="card-title text-center">{{json_data[0]['title']}}</h5>
+                    <img class="card-img-top" src={% if json_data[0]['large_square'] %}
+                        {{
+json_data[0]['large_square']
+}} {% else %} '/static/images/logo.jpg' {% endif %} alt="{{ json_data[0]['title'] }} album">
+                    <p class="card-text">{{json_data[0]['description']}}</p>
+                    <div class="row text-center">
+                        <div class="col">
+                            <p>
+                                views: {{json_data[0]['views']}}
+                            </p>
+                        </div>
+                        <div class="col">
+                            <p>
+                                photos: {{json_data[0]['photos']}}
+                            </p>
+                        </div>
+                    </div>
+                </div>
             </div>
-        </div>
-
+        </a>
     </div>
 </div>
+
+<hr>
 
 <div class="row">
     {% for key, value in json_data.items() %}
