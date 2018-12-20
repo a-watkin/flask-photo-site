@@ -3,7 +3,7 @@ import datetime
 
 
 from database_interface import Database
-import resize_photo
+from resize_photo import PhotoUtil
 
 db = Database('eigi-data.db')
 
@@ -62,13 +62,15 @@ for photo in photo_ids:
     large_square_dir = '/static/images/{}/{}/'.format(
         dt_obj.year, dt_obj.month)
 
-    # resize_photo.square_thumbnail(
-    #     os.getcwd() + original_path, large_square_filename, os.getcwd() + large_square_dir, 300)
+    PhotoUtil.square_thumbnail(
+        os.getcwd() + original_path, large_square_filename, os.getcwd() + large_square_dir, 300)
 
     db.make_query(
         '''
-        update images
-        set original = "{}"
-        where photo_id = "{}"
-        '''.format(original_path, photo_id)
+            update images
+            set original = "{}", large_square = "{}"
+            where photo_id = "{}"
+            '''.format(original_path, large_square_path, photo_id)
     )
+
+    # break

@@ -23,7 +23,12 @@ class PasswordUtil(object):
         :param hashed_password: pbkdf2_sha512 encrypted password
         :return: True if the passwords match, false otherwise
         """
-        return pbkdf2_sha512.verify(password, hashed_password)
+        try:
+            return pbkdf2_sha512.verify(password, hashed_password)
+        except Exception as e:
+            print('check_hashed_password', e)
+        finally:
+            return False
 
 
 if __name__ == '__main__':
