@@ -17,17 +17,17 @@ class AlbumSelector extends React.Component {
   }
 
   componentWillMount() {
-    console.log("hello from componentWillMount");
+    // console.log("hello from componentWillMount");
     // getting the album id from the URL
     let currentUrl = window.location.href;
     let splitUrl = currentUrl.split("/");
-    const albumId = splitUrl[5];
+    // const albumId = splitUrl[5];
 
-    fetch("http://127.0.0.1:5000/api/getalbums")
+    fetch("/api/getalbums")
       .then(res => res.json())
       .then(
         result => {
-          console.log("result", result);
+          // console.log("result", result);
           this.setState({
             isLoaded: true,
             albums: result.albums,
@@ -47,19 +47,16 @@ class AlbumSelector extends React.Component {
   }
 
   getNextAlbums() {
-    console.log("next called ", this.state.currentOffset);
+    // console.log("next called ", this.state.currentOffset);
 
-    fetch(
-      `http://127.0.0.1:5000/api/getalbums?offset=${this.state.currentOffset +
-        20}`
-    )
+    fetch(`/api/getalbums?offset=${this.state.currentOffset + 20}`)
       .then(res => res.json())
       .then(
         result => {
-          console.log("result", result, Object.keys(result["albums"]).length);
+          // console.log("result", result, Object.keys(result["albums"]).length);
 
           if (Object.keys(result["albums"]).length === 0) {
-            console.log("no more albums");
+            // console.log("no more albums");
             return false;
           }
 
@@ -82,20 +79,17 @@ class AlbumSelector extends React.Component {
   }
 
   getPreviousAlbums() {
-    console.log("previous called ", this.state.currentOffset);
+    // console.log("previous called ", this.state.currentOffset);
 
     if (this.state.currentOffset <= 0) {
       return false;
     }
 
-    fetch(
-      `http://127.0.0.1:5000/api/getalbums?offset=${this.state.currentOffset -
-        20}`
-    )
+    fetch(`/api/getalbums?offset=${this.state.currentOffset - 20}`)
       .then(res => res.json())
       .then(
         result => {
-          console.log("result", result);
+          // console.log("result", result);
           this.setState({
             isLoaded: true,
             albums: result.albums,
@@ -116,12 +110,12 @@ class AlbumSelector extends React.Component {
 
   sendData() {
     if (this.state.selectedAlbum.length < 1) {
-      console.log("do nothing if no album has been selected");
+      // console.log("do nothing if no album has been selected");
       return false;
     }
 
-    console.log("getting here?", this.state.selectedAlbum);
-    fetch("http://127.0.0.1:5000/api/getalbums", {
+    // console.log("getting here?", this.state.selectedAlbum);
+    fetch("/api/getalbums", {
       method: "POST",
       headers: {
         Accept: "application/json",
@@ -131,31 +125,29 @@ class AlbumSelector extends React.Component {
         albumId: this.state.selectedAlbum
       })
     }).then(() => {
-      console.log("eh");
+      // console.log("eh");
       // redirect after successful post
-      window.location.assign(
-        `http://127.0.0.1:5000/albums/${this.state.selectedAlbum[0]}`
-      );
+      window.location.assign(`/albums/${this.state.selectedAlbum[0]}`);
     });
   }
 
   albumClick(album_id) {
-    console.log("Greetings from albumClick the album_id is ", album_id);
-    console.log(this.state.selectedAlbum);
+    // console.log("Greetings from albumClick the album_id is ", album_id);
+    // console.log(this.state.selectedAlbum);
 
     if (
       this.state.selectedAlbum.length === 1 &&
       this.state.selectedAlbum[0] === album_id
     ) {
-      console.log("deselect it?");
+      // console.log("deselect it?");
       let tempArray = [...this.state.selectedAlbum];
       tempArray.splice(0, 1);
-      console.log(tempArray);
+      // console.log(tempArray);
       this.setState({
         selectedAlbum: tempArray
       });
 
-      console.log(this.state.selectedAlbum);
+      // console.log(this.state.selectedAlbum);
     } else {
       let tempArray = [];
       tempArray.push(album_id);
@@ -257,7 +249,7 @@ class AlbumSelector extends React.Component {
           <div className="row text-center">
             <div className="col">
               <button
-                className="btn btn-lg"
+                className="btn btn-block btn-lg"
                 onClick={() => this.getPreviousAlbums()}
               >
                 Next{" "}
@@ -265,7 +257,7 @@ class AlbumSelector extends React.Component {
             </div>{" "}
             <div className="col">
               <button
-                className="btn btn-lg"
+                className="btn btn-block btn-lg"
                 onClick={() => this.getNextAlbums()}
               >
                 Previous{" "}
@@ -278,15 +270,15 @@ class AlbumSelector extends React.Component {
           <div className="row">
             <div className="col text-left">
               <a href="/uploaded">
-                <button className="btn btn-success btn-lg">
-                  Return to uploaded photos page{" "}
+                <button className="btn btn-success btn-block btn-lg">
+                  Return to uploaded photos{" "}
                 </button>{" "}
               </a>{" "}
             </div>
             <div className="col text-right">
               <button
                 type="submit"
-                className="btn btn-warning btn-lg"
+                className="btn btn-warning btn-block btn-lg"
                 onClick={() => this.sendData()}
               >
                 Save to album{" "}
