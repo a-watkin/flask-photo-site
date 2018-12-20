@@ -2,7 +2,7 @@
 
 const e = React.createElement;
 
-class PhotosData extends React.Component {
+class PhotoSelector extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -47,16 +47,13 @@ class PhotosData extends React.Component {
   }
 
   getNextPhotos() {
-    console.log("next called ", this.state.currentOffset);
+    // console.log("next called ", this.state.currentOffset);
 
-    fetch(
-      `http://127.0.0.1:5000/api/getphotos?offset=${this.state.currentOffset +
-        20}`
-    )
+    fetch(`/api/getphotos?offset=${this.state.currentOffset + 20}`)
       .then(res => res.json())
       .then(
         result => {
-          console.log("result", result);
+          // console.log("result", result);
           this.setState({
             isLoaded: true,
             items: result.photos,
@@ -76,20 +73,17 @@ class PhotosData extends React.Component {
   }
 
   getPreviousPhotos() {
-    console.log("previous called ", this.state.currentOffset);
+    // console.log("previous called ", this.state.currentOffset);
 
     if (this.state.currentOffset <= 0) {
       return false;
     }
 
-    fetch(
-      `http://127.0.0.1:5000/api/getphotos?offset=${this.state.currentOffset -
-        20}`
-    )
+    fetch(`/api/getphotos?offset=${this.state.currentOffset - 20}`)
       .then(res => res.json())
       .then(
         result => {
-          console.log("result", result);
+          // console.log("result", result);
           this.setState({
             isLoaded: true,
             items: result.photos,
@@ -109,9 +103,9 @@ class PhotosData extends React.Component {
   }
 
   sendData() {
-    console.log("getting here?", this.state.albumId, this.state.selectedPhotos);
+    // console.log("getting here?", this.state.albumId, this.state.selectedPhotos);
     // /api/getphotos
-    fetch("http://127.0.0.1:5000/api/getphotos", {
+    fetch("/api/getphotos", {
       method: "POST",
       headers: {
         Accept: "application/json",
@@ -123,14 +117,12 @@ class PhotosData extends React.Component {
       })
     }).then(() => {
       // redirect after successful post
-      window.location.assign(
-        `http://127.0.0.1:5000/albums/${this.state.albumId}`
-      );
+      window.location.assign(`/albums/${this.state.albumId}`);
     });
   }
 
   photoClick(photo_id) {
-    console.log("Greetings from photoClick the photo_id is ", photo_id);
+    // console.log("Greetings from photoClick the photo_id is ", photo_id);
 
     // only add the photo_id if it's not in the array
     if (!this.state.selectedPhotos.includes(photo_id)) {
@@ -147,7 +139,7 @@ class PhotosData extends React.Component {
       }
     }
 
-    console.log("state of selectedPhotos ", this.state.selectedPhotos);
+    // console.log("state of selectedPhotos ", this.state.selectedPhotos);
     // also not ideal but good enough for now
     this.forceUpdate();
   }
@@ -214,14 +206,14 @@ class PhotosData extends React.Component {
         );
       });
 
-      console.log("what is?", selectedPhotos);
+      // console.log("what is?", selectedPhotos);
 
       return (
         <div>
           <div className="row text-center">
             <div className="col">
               <button
-                className="btn btn-lg"
+                className="btn btn-block btn-lg"
                 onClick={() => this.getPreviousPhotos()}
               >
                 Next
@@ -229,7 +221,7 @@ class PhotosData extends React.Component {
             </div>
             <div className="col">
               <button
-                className="btn btn-lg"
+                className="btn btn-block btn-lg"
                 onClick={() => this.getNextPhotos()}
               >
                 Previous
@@ -244,8 +236,8 @@ class PhotosData extends React.Component {
           <div className="row">
             <div className="col text-left">
               <a href="/edit/albums">
-                <button className="btn btn-success btn-lg">
-                  Return to edit albums without making changes
+                <button className="btn btn-success btn-block btn-lg">
+                  Return to edit albums
                 </button>
               </a>
             </div>
@@ -253,7 +245,7 @@ class PhotosData extends React.Component {
             <div className="col text-right">
               <button
                 type="submit"
-                className="btn btn-warning btn-lg"
+                className="btn btn-warning btn-block btn-lg"
                 onClick={() => this.sendData()}
               >
                 Add photos
@@ -275,4 +267,4 @@ class PhotosData extends React.Component {
 }
 
 const domContainer = document.querySelector("#photos-selector");
-ReactDOM.render(e(PhotosData), domContainer);
+ReactDOM.render(e(PhotoSelector), domContainer);
