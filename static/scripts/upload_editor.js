@@ -2,7 +2,7 @@
 
 const e = React.createElement;
 
-class PhotosData extends React.Component {
+class UploadEditor extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -26,7 +26,7 @@ class PhotosData extends React.Component {
 
       // for each value in arr check each char against the forbidden values
       for (var i = 0; i < arr.length; i++) {
-        console.log(arr[i]);
+        // console.log(arr[i]);
         forbidden.forEach(char => {
           if (arr[i].includes(char)) {
             safe = false;
@@ -68,13 +68,13 @@ class PhotosData extends React.Component {
   }
 
   discardPhoto(photo_id, key) {
-    console.log("clicked discard", photo_id);
+    // console.log("clicked discard", photo_id);
 
     let test = JSON.stringify({
       photoId: photo_id
     });
 
-    console.log(test);
+    // console.log(test);
 
     fetch("/api/discard", {
       method: "POST",
@@ -86,7 +86,7 @@ class PhotosData extends React.Component {
         photoId: photo_id
       })
     }).then(Response => {
-      console.log("Response", Response.status);
+      // console.log("Response", Response.status);
 
       if (Response.status === 200) {
         let objectCopy = this.state.items;
@@ -94,8 +94,8 @@ class PhotosData extends React.Component {
         this.setState({
           items: objectCopy
         });
-        console.log("getting here ok");
-        console.log(this.state.items);
+        // console.log("getting here ok");
+        // console.log(this.state.items);
       }
     });
   }
@@ -114,7 +114,7 @@ class PhotosData extends React.Component {
         title: new_title
       })
     }).then(Response => {
-      console.log(Response.status);
+      // console.log(Response.status);
       if (Response.status === 200) {
         let objectCopy = this.state.items;
         objectCopy[key]["photo_title"] = new_title;
@@ -143,23 +143,25 @@ class PhotosData extends React.Component {
             photoId: photo_id,
             tagValues: e.target.value
           })
-        }).then(Response => {
-          console.log("Response", Response.status);
-
-          if (Response.status === 200) {
-            console.log(Response);
-            // let objectCopy = this.state.items;
-          }
         });
+
+        // .then(Response => {
+        //   // console.log("Response", Response.status);
+
+        //   if (Response.status === 200) {
+        //     console.log(Response);
+        //     // let objectCopy = this.state.items;
+        //   }
+        // });
       } else {
-        console.log("checkTags returned False");
+        // console.log("checkTags returned False");
         this.setState({
           allowTags: false,
           allowButtons: false
         });
       }
     } else {
-      console.log("no tag value?");
+      // console.log("no tag value?");
       this.setState({
         allowTags: true,
         allowButtons: false
@@ -169,9 +171,9 @@ class PhotosData extends React.Component {
 
   addToPhotoStream() {
     if (this.state.allowButtons) {
-      console.log("hello from addToPhotoStream");
+      // console.log("hello from addToPhotoStream");
       // send data to the backend
-      console.log(this.state.items);
+      // console.log(this.state.items);
       fetch("/api/upload/photostream", {
         method: "POST",
         headers: {
@@ -188,13 +190,13 @@ class PhotosData extends React.Component {
   }
 
   addToNewAlbum() {
-    console.log("hello from addToNewAlbum");
+    // console.log("hello from addToNewAlbum");
     // it just needs to direct to a new page
     window.location.assign(`/api/create/album`);
   }
 
   addToExistingAlbum() {
-    console.log("hello from addToExistingAlbum");
+    // console.log("hello from addToExistingAlbum");
     window.location.assign(`/api/select/album`);
   }
 
@@ -344,4 +346,4 @@ class PhotosData extends React.Component {
 }
 
 const domContainer = document.querySelector("#upload-editor");
-ReactDOM.render(e(PhotosData), domContainer);
+ReactDOM.render(e(UploadEditor), domContainer);
