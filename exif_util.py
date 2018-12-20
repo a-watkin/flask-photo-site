@@ -28,25 +28,23 @@ original
 class ExifUtil(object):
 
     @staticmethod
-    def read_exif(infile):
-        img = Image.open(infile)
+    def test_exifread(fn):
+        import exifread
+        print('\n<< Test of exifread >>\n')
 
         rtn_dict = {}
 
-        for (k, v) in img._getexif().items():
-            # print('%s = %s' % (TAGS.get(k), v))
-            data = v
-            # remove bytes
-            try:
-                data = v.decode()
-                # print('yes?', data)
-            except AttributeError as e:
-                print('AttributeError', e)
+        with open(fn, 'rb') as f:
+            exif = exifread.process_file(f)
 
-                # print(TAGS.get(k))
-            rtn_dict[TAGS.get(k)] = data
+        for k, v in sorted(exif.items()):
+            if k not in ['JPEGThumbnail', 'TIFFThumbnail', 'Filename', 'EXIF MakerNote']:
+                print('%s = %s' % (k, exif[k]))
+                # print('%s = %s' % (TAGS.get(k), v))
+                # rtn_dict[TAGS.get(k)] = v
+                rtn_dict[str(k)] = str(exif[k])
 
-        return rtn_dict
+        return json.dumps(rtn_dict)
 
     @staticmethod
     def get_datetime_taken(fn):
@@ -64,24 +62,17 @@ class ExifUtil(object):
 
 
 def main():
-    # print(ExifUtil.read_exif('IMG_9017.JPG'))
-
-    print(ExifUtil.read_exif('IMG_9021.JPG'))
-
-    # ExifUtil.resize_photo('problem_portrait.JPG', 'test.jpg', 700)
-
-    # ExifUtil.rotate_orientation(os.getcwd(), 'problem_portrait.JPG')
-
-    # print(ExifUtil.test_exifread('test_portrait.jpg'))
-    # test = json.dumps(ExifUtil.read_exif('test_portrait.jpg'),
-    #                   ensure_ascii=False).encode('utf-8')
-    # test = ExifUtil.test_exifread('test_portrait.jpg')
-
     # test = ExifUtil.read_exif('test_portrait.jpg')
-    # print(test)
     # print(json.dumps(test))
-    # print(ExifUtil.get_datetime_taken('test_portrait.jpg'))
-    pass
+    # print(ExifUtil.read_exif('test_portrait.jpg'))
+    # print(ExifUtil.read_exif('IMG_9811.JPG'))
+
+    print(ExifUtil.test_exifread('test.jpg'))
+    # exif_data = ExifUtil.test_exifread('IMG_9811.JPG')
+    # print(
+    #     '\n',
+    #     json.dumps(exif_data)
+    # )
 
 
 if __name__ == "__main__":

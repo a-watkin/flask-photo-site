@@ -125,10 +125,6 @@ def upload_file():
 
                         filename = '.'.join(temp)
 
-                    date_taken = ExifUtil.get_datetime_taken(
-                        os.path.join(save_directory, filename))
-                    exif_data = ExifUtil.
-
                     # save the file in the path
                     file.save(
                         os.path.join(
@@ -136,8 +132,17 @@ def upload_file():
 
                     print('here', save_directory, filename)
 
-                    PhotoUtil.orientate_save(save_directory, filename)
+                    date_taken = ExifUtil.get_datetime_taken(
+                        os.path.join(save_directory, filename))
 
+                    try:
+                        exif_data = ExifUtil.test_exifread(
+                            os.path.join(save_directory, filename))
+                    except Exception as e:
+                        exif_data = None
+                        print('problem reading exif data', e)
+
+                    PhotoUtil.orientate_save(save_directory, filename)
                     # save path to the photo
                     file_path = save_directory + '/' + filename
 
@@ -188,7 +193,9 @@ def upload_file():
                         photo_id,
                         str(created),
                         original_path,
-                        large_square_path
+                        large_square_path,
+                        exif_data,
+                        date_taken
                     )
 
                 else:

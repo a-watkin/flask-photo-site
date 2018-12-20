@@ -25,7 +25,7 @@ class UploadedPhotos(object):
         self.user_id = '28035310@N00'
         self.tag = Tag()
 
-    def save_photo(self, photo_id, date_uploaded, original, large_square):
+    def save_photo(self, photo_id, date_uploaded, original, large_square, exif_data, date_taken):
         # print('original', original)
         # print('original file path', os.path.join(original))
         # print()
@@ -35,28 +35,27 @@ class UploadedPhotos(object):
         # print(ExifUtil.read_exif('test_portrait.jpg'))
         # print(ExifUtil.get_datetime_taken('test_portrait.jpg'))
 
-        date_taken = None
-        exif_data = None
+        # date_taken = None
         exif_id = str(int(uuid.uuid4()))[0:10]
 
         # a photo may not have any exif data
-        try:
+        # try:
 
-            date_taken = ExifUtil.get_datetime_taken(os.getcwd() + original)
-            exif_data = ExifUtil.read_exif(os.getcwd() + original)
+        #     date_taken = ExifUtil.get_datetime_taken(os.getcwd() + original)
+        #     # exif_data = ExifUtil.read_exif(os.getcwd() + original)
 
-            # print()
-            # print(exif_data)
-            # print('date_taken', date_taken)
-            # print()
+        #     # print()
+        #     # print(exif_data)
+        #     # print('date_taken', date_taken)
+        #     # print()
 
-        except Exception as e:
-            print('problem reading exif data ', e)
+        # except Exception as e:
+        #     print('problem reading exif data ', e)
 
-        if exif_data is not None:
-            # make into a blob
-            exif_data = json.dumps(exif_data)
-            # print(exif_data)
+        # if exif_data is not None:
+        #     # make into a blob
+        #     exif_data = json.dumps(exif_data)
+        #     # print(exif_data)
 
         # insert exif data
         self.db.insert_data(
