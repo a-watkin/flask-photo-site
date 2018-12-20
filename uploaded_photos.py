@@ -26,11 +26,11 @@ class UploadedPhotos(object):
         self.tag = Tag()
 
     def save_photo(self, photo_id, date_uploaded, original, large_square):
-        print('original', original)
-        print('original file path', os.path.join(original))
-        print()
-        print(os.getcwd() + original)
-        print()
+        # print('original', original)
+        # print('original file path', os.path.join(original))
+        # print()
+        # print(os.getcwd() + original)
+        # print()
 
         # print(ExifUtil.read_exif('test_portrait.jpg'))
         # print(ExifUtil.get_datetime_taken('test_portrait.jpg'))
@@ -45,10 +45,10 @@ class UploadedPhotos(object):
             date_taken = ExifUtil.get_datetime_taken(os.getcwd() + original)
             exif_data = ExifUtil.read_exif(os.getcwd() + original)
 
-            print()
-            print(exif_data)
-            print('date_taken', date_taken)
-            print()
+            # print()
+            # print(exif_data)
+            # print('date_taken', date_taken)
+            # print()
 
         except Exception as e:
             print('problem reading exif data ', e)
@@ -56,7 +56,7 @@ class UploadedPhotos(object):
         if exif_data is not None:
             # make into a blob
             exif_data = json.dumps(exif_data)
-            print(exif_data)
+            # print(exif_data)
 
         # insert exif data
         self.db.insert_data(
@@ -75,7 +75,7 @@ class UploadedPhotos(object):
         values('{}', '{}')
         '''.format(photo_id, self.user_id)
 
-        print(query_string)
+        # print(query_string)
 
         self.db.make_query(query_string)
 

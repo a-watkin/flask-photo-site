@@ -28,27 +28,9 @@ original
 class ExifUtil(object):
 
     @staticmethod
-    def test_exifread(fn):
-        import exifread
-        print('\n<< Test of exifread >>\n')
-
-        rtn_dict = {}
-
-        with open(fn, 'rb') as f:
-            exif = exifread.process_file(f)
-
-        for k in sorted(exif.items()):
-            print(k)
-            if k not in ['JPEGThumbnail', 'TIFFThumbnail', 'Filename', 'EXIF MakerNote']:
-                # print('%s = %s' % (k, exif[k]))
-                print('%s = %s' % (TAGS.get(k), v))
-                rtn_dict[TAGS.get(k)] = v
-
-    @staticmethod
     def read_exif(infile):
         img = Image.open(infile)
-        print(dir(img), img.format)
-        print(img._getexif().items())
+
         rtn_dict = {}
 
         for (k, v) in img._getexif().items():
@@ -59,8 +41,7 @@ class ExifUtil(object):
                 data = v.decode()
                 # print('yes?', data)
             except AttributeError as e:
-                continue
-                # print('AttributeError', e)
+                print('AttributeError', e)
 
                 # print(TAGS.get(k))
             rtn_dict[TAGS.get(k)] = data
@@ -69,7 +50,7 @@ class ExifUtil(object):
 
     @staticmethod
     def get_datetime_taken(fn):
-        print('hello from get_datetime_taken', fn)
+        # print('hello from get_datetime_taken', fn)
         with open(fn, 'rb') as f:
             exif = exifread.process_file(f)
 
@@ -85,7 +66,7 @@ class ExifUtil(object):
 def main():
     # print(ExifUtil.read_exif('IMG_9017.JPG'))
 
-    # print(ExifUtil.test_exifread('IMG_9017.JPG'))
+    print(ExifUtil.read_exif('IMG_9021.JPG'))
 
     # ExifUtil.resize_photo('problem_portrait.JPG', 'test.jpg', 700)
 

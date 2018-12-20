@@ -41,7 +41,10 @@ class PhotoUtil(object):
             elif exif[orientation] == 8:
                 image = image.rotate(90, expand=True)
 
+            print(dir(image.save))
             image.save(os.path.join(path, file_name))
+            # with open('blah.jpg', 'wb') as fw:
+            #     fw.write(image.tobytes())
 
         except Exception as error:
             print('problems ', error)
@@ -74,29 +77,30 @@ class PhotoUtil(object):
 
     @staticmethod
     def square_thumbnail(infile, outfile, save_path, base_size=300):
-        print()
-        print('lol wut ', infile, outfile, save_path)
-        print(os.listdir(save_path))
-        print()
-        # start_path = os.getcwd()
-        # os.chdir(save_path)
-        # print(save_path)
-        # img = Image.open(infile)
-        # size = (base_size, base_size)
-        # thumb = ImageOps.fit(img, size, Image.ANTIALIAS)
-        # # save current dir
-        # thumb.save(outfile)
-        # # back to the start path
-        # os.chdir(start_path)
-        # print(os.getcwd())
+        start_path = os.getcwd()
+        os.chdir(save_path)
+        print(save_path)
+        img = Image.open(infile)
+        size = (base_size, base_size)
+        thumb = ImageOps.fit(img, size, Image.ANTIALIAS)
+        # save current dir
+        thumb.save(outfile)
+        # back to the start path
+        os.chdir(start_path)
+        print(os.getcwd())
+
+    # resize_photo('test_landscape.jpg', 'test_landscape_resized.jpg', 700)
+    # resize_photo('test_portrait.jpg', 'test_portrait_resized.jpg', 700)
+
+    # square_thumbnail('test_landscape.jpg', 'test_landscape_resized.jpg', 150)
+    # square_thumbnail('test_portrait.jpg', 'test_portrait_resized.jpg',
+    #                  '/home/a/projects/flask-photo-site/static/images/2018/12/',
+    #                  300)
 
 
 def main():
-    # PhotoUtil.resize_photo('test_landscape.jpg',
-    #                        'test_landscape_resized.jpg', 700)
-
-    PhotoUtil.square_thumbnail('IMG_9053.JPG', 'IMG_9053_test.JPG',
-                               '/home/a/projects/flask-photo-site/static/images/2018/12')
+    PhotoUtil.orientate_save(
+        '/home/a/projects/testicles/flask-photo-site/static/images/2018/12/', 'IMG_9810.JPG')
 
 
 if __name__ == "__main__":
