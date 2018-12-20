@@ -389,6 +389,16 @@ class UploadedPhotos(object):
         for photo in uploaded_photos:
             photo_id = photo[0]
 
+            date_posted = datetime.datetime.now()
+            # set published datetime
+            self.db.make_query(
+                '''
+                update photo
+                set date_posted = "{}"
+                where photo_id = {}
+                '''.format(date_posted, photo_id)
+            )
+
             print(photo_id)
             # db.insert_data(
             #     table='tag',
