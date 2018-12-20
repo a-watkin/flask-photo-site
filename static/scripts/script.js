@@ -11,7 +11,7 @@ jQuery(document).ready(function($) {
         window.location.replace("/")
       }
     })
-  ) 
+  )
 
   function showWarnings() {
     $("#update-tag-button").prop("disabled", true);

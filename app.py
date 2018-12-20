@@ -859,8 +859,9 @@ def login():
 @login_required
 def logout():
     session.pop('logged_in', None)
-    flash('You have been logged out.')
-    return render_template('login.html')
+    # flash('You have been logged out.')
+    # return render_template('login.html')
+    return redirect(url_for('get_photos'))
 
 
 @app.route('/account', methods=['GET', 'POST'])

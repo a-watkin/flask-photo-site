@@ -27,10 +27,12 @@ class PasswordUtil(object):
             return pbkdf2_sha512.verify(password, hashed_password)
         except Exception as e:
             print('check_hashed_password', e)
-        finally:
+        else:
             return False
 
 
 if __name__ == '__main__':
-    blah = PasswordUtil()
-    print(blah.hash_password("test"))
+    # blah = PasswordUtil()
+    # print(blah.hash_password("test"))
+
+    print()
