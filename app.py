@@ -17,10 +17,12 @@ from photo import Photos
 from album import Album
 from tag import Tag
 from uploaded_photos import UploadedPhotos
-# from resize_photo import square_thumbnail
+
 import name_util
 from user import User
 from resize_photo import PhotoUtil
+
+from exif_util import ExifUtil
 
 
 UPLOAD_FOLDER = os.getcwd() + '/static/images'
@@ -110,32 +112,30 @@ def upload_file():
                     # check if directory exists if not create it
                     if not os.path.exists(save_directory):
                         os.makedirs(save_directory)
+
                     # Get all files in the save_directory
                     file_in_dir = os.listdir(save_directory)
+
                     # this guards against multiple files having the same name
                     # a problem here is that it also allows the same file to be uploaded
                     # multiple times
-                    # identifier = str(uuid.uuid1()).split('-')[0]
                     if filename in file_in_dir:
                         temp = filename.split('.')
-
                         temp[0] = temp[0] + "_" + photo_id + '_o'
-
                         filename = '.'.join(temp)
 
                     # save the file in the path
-                    file.save(
-                        os.path.join(
-                            save_directory, filename))
+                    # file.save(os.path.join(save_directory, filename))
 
                     print('here', save_directory, filename)
 
+                    # get exif data
+
+                    # Reorientates and saves the file
                     PhotoUtil.orientate_save(save_directory, filename)
 
                     # save path to the photo
                     file_path = save_directory + '/' + filename
-
-                    # print(file_path)
 
                     # add idenfitying name to file
                     thumbnail_name = filename.split('.')
@@ -145,14 +145,8 @@ def upload_file():
 
                     # construct path to save thumbnail file to
                     save_path = save_directory + '/'
-                    # print(os.listdir(save_path), filename,
-                    #       filename in os.listdir(save_path), '\n',
-                    #       save_path)
 
-                    print()
-                    print(save_path)
-                    print(thumbnail_filename)
-                    print()
+                    print('save directory is ', save_directory)
 
                     PhotoUtil.square_thumbnail(
                         filename, thumbnail_filename, save_path)
@@ -163,21 +157,6 @@ def upload_file():
                     large_square_path = '/static/images/{}/{}/{}'.format(
                         created.year, created.month, thumbnail_filename)
 
-                    # print('\n TEST OF PATHS', original_path,
-                    #       large_square_path, '\nTEST OF PATHS')
-
-                    # print()
-                    # print(
-                    #     photo_id,
-                    #     str(created),
-                    #     original_path,
-                    #     large_square_path
-                    # )
-                    # print()
-
-                    # getting a missing arg error
-                    # it expects 4 args and i'm passing 4
-                    # was using the class name instead of the instance name...:(
                     up.save_photo(
                         photo_id,
                         str(created),

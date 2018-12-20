@@ -27,6 +27,10 @@ class UploadedPhotos(object):
 
     def save_photo(self, photo_id, date_uploaded, original, large_square):
         print('original', original)
+        print('original file path', os.path.join(original))
+        print()
+        print(os.getcwd() + original)
+        print()
 
         # print(ExifUtil.read_exif('test_portrait.jpg'))
         # print(ExifUtil.get_datetime_taken('test_portrait.jpg'))
@@ -37,12 +41,13 @@ class UploadedPhotos(object):
 
         # a photo may not have any exif data
         try:
+
             date_taken = ExifUtil.get_datetime_taken(os.getcwd() + original)
             exif_data = ExifUtil.read_exif(os.getcwd() + original)
 
             print()
             print(exif_data)
-            print(date_taken)
+            print('date_taken', date_taken)
             print()
 
         except Exception as e:
