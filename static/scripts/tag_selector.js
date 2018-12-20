@@ -49,27 +49,27 @@ class TagSelector extends React.Component {
   }
 
   tagClick(tagName) {
-    console.log("clicked", tagName);
+    // console.log("clicked", tagName);
     let tempTags = [...this.state.selectedTags];
-    console.log(tempTags);
+    // console.log(tempTags);
     if (tempTags.indexOf(tagName) === -1) {
       tempTags.push(tagName);
     } else {
-      console.log("getting here on first try?");
+      // console.log("getting here on first try?");
       tempTags.splice(tempTags.indexOf(tagName), 1);
     }
-    console.log(
-      "should be altering state here",
-      tempTags,
-      this.state.selectedTags
-    );
+    // console.log(
+    //   "should be altering state here",
+    //   tempTags,
+    //   this.state.selectedTags
+    // );
 
     this.setState({
       selectedTags: tempTags
     });
     // so for some reason it's just not updated yet
     // when you try and get the state here?
-    console.log("what", this.state.selectedTags);
+    // console.log("what", this.state.selectedTags);
   }
 
   backToPhoto() {
@@ -77,7 +77,7 @@ class TagSelector extends React.Component {
   }
 
   sendData() {
-    console.log("clicked on remove tag");
+    // console.log("clicked on remove tag");
     if (this.state.selectedTags.length < 1) {
       console.log("do nothing if no tag has been selected");
       return false;
@@ -93,7 +93,7 @@ class TagSelector extends React.Component {
         selectedTags: this.state.selectedTags
       })
     }).then(() => {
-      console.log("sent data");
+      // console.log("sent data");
       // redirect after successful post
       // console.log(`/api/photos/${this.state.photoId}`);
       window.location.assign(`/api/photos/${this.state.photoId}`);
@@ -117,13 +117,13 @@ class TagSelector extends React.Component {
       color: "white"
     };
 
-    console.log("what is it here?", this.state.selectedTags);
+    // console.log("what is it here?", this.state.selectedTags);
 
     if (this.state.isLoaded) {
       const tagData = this.state.tags;
 
       const tag = tagData.map((tag, index) => {
-        console.log(tag, index);
+        // console.log(tag, index);
         const tagName = tag["tag_name"];
         const humanTag = tag["human_readable_tag"];
         return (
@@ -173,7 +173,7 @@ class TagSelector extends React.Component {
           <div className="row">
             <div className="col text-center">
               <button
-                className="btn btn-success btn-lg"
+                className="btn btn-success btn-block btn-lg"
                 onClick={() => this.backToPhoto()}
               >
                 Return to photo
@@ -182,7 +182,7 @@ class TagSelector extends React.Component {
 
             <div className="col text-center">
               <button
-                className="btn btn-danger btn-lg"
+                className="btn btn-danger btn-block btn-lg"
                 onClick={() => this.sendData()}
               >
                 {" "}
