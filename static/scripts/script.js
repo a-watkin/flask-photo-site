@@ -1,8 +1,6 @@
 jQuery(document).ready(function($) {
   $.noConflict();
 
-  // console.log("anything?");
-
   if (
     $("#flash-message").text(function(e, value) {
       // console.log("logged out", e, value.trim());
@@ -20,11 +18,11 @@ jQuery(document).ready(function($) {
     );
   }
 
-  if ($("h1").text() === "Add photos to the album") {
-    console.log("on the add photo to album page");
-  }
+  // if ($("h1").text() === "Add photos to the album") {
+  //   console.log("on the add photo to album page");
+  // }
 
-  var showWarningText = false;
+  // var showWarningText = false;
   var forbidden = ["\\", "/", "%"];
   var safe = true;
 
@@ -38,7 +36,7 @@ jQuery(document).ready(function($) {
 
     // for each value in arr check each char against the forbidden values
     for (var i = 0; i < arr.length; i++) {
-      console.log(arr[i]);
+      // console.log(arr[i]);
       forbidden.forEach(char => {
         if (arr[i].includes(char)) {
           safe = false;
@@ -53,7 +51,7 @@ jQuery(document).ready(function($) {
     if (arr.join("").replace(/,/g, "") < 1) {
       safe = false;
     }
-    console.log(arr);
+    // console.log(arr);
 
     if (!safe) {
       $("#update-tag-button").prop("disabled", true);
@@ -62,7 +60,7 @@ jQuery(document).ready(function($) {
       );
     } else {
       $("#update-tag-button").prop("disabled", false);
-      $("#warning-text").text("Please enter a valid tag name.");
+      $("#warning-text").text("You can enter multiple tags, seperating them by commas.");
     }
   });
 });
