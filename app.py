@@ -38,7 +38,8 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 # app.config['USERNAME'] = 'admin'
 # app.config['PASSWORD'] = 'admin'
 # so secret key is built in from the get go
-app.config['SECRET_KEY'] = 'secret'
+# app.config['SECRET_KEY'] = 'secret'
+app.config['SECRET_KEY'] = os.urandom(16)
 """
 $ python -c 'import os; print(os.urandom(16))'
 b'_5#y2L"F4Q8z\n\xec]/'
