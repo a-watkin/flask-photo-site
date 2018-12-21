@@ -908,7 +908,7 @@ def account():
 
 
 if __name__ == '__main__':
-    #if socket.gethostname() == "a-Z97-D3H":
-    #    app.run(debug=True)
-    #else:
-    app.run(host='0.0.0.0')
+    # if socket.gethostname() == "a-Z97-D3H":
+    app.run(debug=True)
+    # else:
+    # app.run(host='0.0.0.0')
