@@ -158,3 +158,11 @@ card:hover {
 #no-underline {
     text-decoration: none;
 }
+
+/* center element in a col */
+.center-block {
+    /* border: black solid 2px; */
+    -webkit-box-align: center;
+    -webkit-box-pack: center;
+    display: -webkit-box;
+}

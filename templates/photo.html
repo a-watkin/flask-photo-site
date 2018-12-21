@@ -89,26 +89,25 @@
     </div>
 
     <!-- Photo album -->
-    <div class="col-5">
+    <div class="col-5 center-block">
         {% for value in json_data['containing_album'] %}
-        <div class="col-5">
+        <div class="card" style="width: 18rem;">
             <a href="{{ url_for('get_album_photos', album_id=value['album_id']) }}">
-                <div class="card" style="width: 18rem;">
-                    <div class="card-body">
-                        <h5 class="card-title text-center">{{ value["title"] }}</h5>
-                        <img class="card-img-top" src="{{value['large_square']}}" alt="{{ value['title'] }} album" />
-                        <div class="row">
-                            <div class="col">
-                                <p>views: {{ value["views"] }}</p>
-                            </div>
-                            <div class="col">
-                                <p>photos: {{ value["photos"] }}</p>
-                            </div>
+                <div class="card-body">
+                    <h5 class="card-title text-center">{{ value["title"] }}</h5>
+                    <img class="card-img-top" src="{{value['large_square']}}" alt="{{ value['title'] }} album" />
+                    <div class="row">
+                        <div class="col">
+                            <p>views: {{ value["views"] }}</p>
+                        </div>
+                        <div class="col">
+                            <p>photos: {{ value["photos"] }}</p>
                         </div>
                     </div>
                 </div>
             </a>
         </div>
+
 
         {% endfor %}
     </div>
