@@ -55,7 +55,7 @@ def main():
     # existing user
     u = User('eigi', 'test')
     print(u.check_for_username())
-    u.insert_hased_password("prettywittlejaana")
+
     # print('eigi' == u.check_for_username())
     # print(u.check_password())
 
