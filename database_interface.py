@@ -64,6 +64,12 @@ class Database(object):
 
         try:
             with sqlite3.connect(self.db_name) as connection:
+                query_string = ('INSERT INTO {} VALUES({})'.format(
+                    table_name, placeholders), data)
+
+                print('\nInsert datas query to the database is ',
+                      query_string, '\n')
+
                 c = connection.cursor()
                 c.executemany('INSERT INTO {} VALUES({})'.format(
                     table_name, placeholders), data)
