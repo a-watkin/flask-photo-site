@@ -368,10 +368,17 @@ class Tag(object):
             # print(self.get_photo_count_by_tag(tag))
 
             # add the tag to the table photo_tag
-            resp = self.db.insert_data(
-                table='photo_tag',
-                photo_id=photo_id,
-                tag_name=tag,
+            # resp = self.db.insert_data(
+            #     table='photo_tag',
+            #     photo_id=photo_id,
+            #     tag_name=tag,
+            # )
+
+            self.db.make_query(
+                '''
+                insert into photo_tag (photo_id, tag_name)
+                values ({}, "{}")
+                '''.format(photo_id, tag)
             )
 
         data = self.db.make_query(
