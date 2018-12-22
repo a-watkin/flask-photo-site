@@ -328,7 +328,7 @@ class Tag(object):
             self.update_photo_count(tag)
 
     def add_tags_to_photo(self, photo_id, tag_list):
-        print('add_tags_to_photo', tag_list)
+        print('\nHello from add_tags_to_photo, the tag list is: ', tag_list)
 
         # for i in range(len(tag_list)):
         #     tag_list[i] = urllib.parse.quote(tag_list[i], safe='')
@@ -347,10 +347,8 @@ class Tag(object):
             print('data is', data)
 
             if data is None:
-                print('should not get here')
 
-                print(tag)
-                print('that value is not in the db')
+                print('\nthat value {} is not in the db\n'.format(tag))
 
                 self.db.insert_data(
                     table='tag',
@@ -359,10 +357,10 @@ class Tag(object):
                     photos=self.get_photo_count_by_tag(tag)
                 )
 
-                print('should be added now...\n')
+                print('\nshould be added now...\n')
 
                 if self.db.get_row('tag', 'tag_name', tag):
-                    print('added tag, ', tag)
+                    print('\nadded tag, ', tag, '\n')
 
             # The tag is now in the database.
 
