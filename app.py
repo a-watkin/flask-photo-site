@@ -525,7 +525,7 @@ def check_forbidden(tag_name):
 
 def check_chars(tag_name):
     print('hello from check_chars', tag_name)
-    forbidden = [";", "/", "?", ":", "@", "=", "&", '"', "'", "<", ">",
+    forbidden = [";", "/", "?", ":", "@", "=", "&", '"', "'", "<", ">", " ",
                  "#", "{", "}", "|", "\\", "/", "^", "~", "[", "]", "`"]
     for char in tag_name:
         if char in forbidden:
@@ -641,6 +641,7 @@ def edit_tag(tag_name):
 @app.route('/add/tag/', methods=['GET', 'POST'])
 @login_required
 def add_tag():
+    print('\nHello from add_tag \n')
     args = request.args.to_dict()
 
     if request.method == 'GET':
