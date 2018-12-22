@@ -2,7 +2,6 @@ import json
 import os
 import datetime
 import uuid
-#import socket
 import urllib.parse
 from functools import wraps
 
@@ -908,4 +907,4 @@ def account():
 
 
 if __name__ == '__main__':
-    app.run('0,0,0,0', debug=True)
+    app.run(host='0,0,0,0', debug=True)
