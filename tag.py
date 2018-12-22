@@ -350,12 +350,23 @@ class Tag(object):
 
                 print('\nthat value {} is not in the db\n'.format(tag))
 
-                self.db.insert_data(
-                    table='tag',
-                    tag_name=tag,
-                    user_id='28035310@N00',
-                    photos=self.get_photo_count_by_tag(tag)
+                self.db.make_query(
+                    '''
+                    insert into tag (tag_name, user_id, photos)
+                    values ("{}", "{}", {})
+                    '''.format(
+                        tag,
+                        '28035310@N00',
+                        self.get_photo_count_by_tag(tag)
+                    )
                 )
+
+                # self.db.insert_data(
+                #     table='tag',
+                #     tag_name=tag,
+                #     user_id='28035310@N00',
+                #     photos=self.get_photo_count_by_tag(tag)
+                # )
 
                 print('\nshould be added now...\n')
 
