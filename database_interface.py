@@ -67,7 +67,7 @@ class Database(object):
                 c.executemany('INSERT INTO {} VALUES({})'.format(
                     table_name, placeholders), data)
         except Exception as e:
-            print('Problem ', e)
+            print('insert_data problem ', e)
 
     # def execute_query(self, query):
     #     with sqlite3.connect(self.db_name) as connection:
