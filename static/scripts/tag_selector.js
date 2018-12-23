@@ -158,13 +158,16 @@ class TagSelector extends React.Component {
             <div className="col">
               <h3>
                 {" "}
-                Tags for the photo{" "}
+                Tags for this photo{" "}
                 <span className="font-weight-bold font-italic">
                   {" "}
                   {this.state.title}{" "}
                 </span>
               </h3>
-              <p>Select tags to remove by clicking on them below.</p>
+              <p class="text-left">
+                Tags for this photo are shown below. Select the tags you want to
+                remove by clicking on them.
+              </p>
               <hr />
               {tag}
             </div>
