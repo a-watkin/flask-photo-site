@@ -224,6 +224,8 @@ class Tag(object):
             '''.format(tag_name)
         )
 
+        print(tag_data)
+
         return tag_data
 
     def check_photo_tag(self, tag_name):
@@ -454,6 +456,8 @@ class Tag(object):
 
 if __name__ == "__main__":
     t = Tag()
+
+    t.get_tag('some%20tag')
 
     # t.replace_tags(1038492826, ['tag1, tag3'])
 

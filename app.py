@@ -607,7 +607,10 @@ def edit_tags():
 @login_required
 def edit_tag(tag_name):
     print('hello from edit tags')
+
     if request.method == 'GET':
+        print('get received ', tag_name)
+
         return render_template('edit_tag.html', tag_name=tag_name), 200
 
     if request.method == 'POST':
@@ -908,4 +911,6 @@ def account():
 
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', debug=True)
+    app.run(
+        # host='0.0.0.0',
+        debug=True)
