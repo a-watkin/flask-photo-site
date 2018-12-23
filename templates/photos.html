@@ -2,6 +2,7 @@
 {% block content %}
 
 
+{% if session %}
 {% if json_data['show_session'] %}
 
 <hr>
@@ -33,7 +34,7 @@
 
 
 {% endif %}
-
+{% endif %}
 
 <!-- <h1 class="text-center">Photos page</h1> -->
 

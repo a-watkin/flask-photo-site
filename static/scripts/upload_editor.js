@@ -68,7 +68,7 @@ class UploadEditor extends React.Component {
   }
 
   discardPhoto(photo_id, key) {
-    // console.log("clicked discard", photo_id);
+    console.log("clicked discard", photo_id);
 
     let test = JSON.stringify({
       photoId: photo_id
@@ -94,8 +94,10 @@ class UploadEditor extends React.Component {
         this.setState({
           items: objectCopy
         });
-        // console.log("getting here ok");
-        // console.log(this.state.items);
+
+        if (Number(Object.keys(this.state.items).length) === 0) {
+          window.location.assign(`/`);
+        }
       }
     });
   }

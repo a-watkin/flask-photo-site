@@ -357,13 +357,14 @@ def get_photos():
         """
         No arguments
         """
-        if session:
-            print('\n session present \n')
-
-        # print(10 * '\n', 'why you no work')
         photo_data = p.get_photos_in_range()
         json_data = photo_data
-        json_data['show_session'] = True
+
+        print('\n', session and len(up.get_uploaded_photos()['photos']) > 0)
+        if session and len(up.get_uploaded_photos()['photos']) > 0:
+            print('\n session present \n')
+            json_data['show_session'] = True
+
         print(json_data)
         print(10*'\n')
         return render_template('photos.html', json_data=json_data), 200

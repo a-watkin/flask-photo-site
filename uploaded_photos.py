@@ -442,7 +442,7 @@ class UploadedPhotos(object):
 def main():
     up = UploadedPhotos()
 
-    print(up.get_uploaded_photos())
+    print(len(up.get_uploaded_photos()['photos']))
 
     # print(up.add_all_to_album('eh'))
 
