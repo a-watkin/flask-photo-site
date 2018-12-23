@@ -576,15 +576,17 @@ def photos_by_tag_name(tag_name):
 @app.route('/delete/<string:tag_name>', methods=['GET', 'POST'])
 @login_required
 def delete_tag(tag_name):
+    print('hello from delete_tag passed the value ', tag_name)
+    # return 'test'
     if request.method == 'GET':
         tag_data = t.get_tag(tag_name)
-        return render_template('delete_tag.html', tag_name=tag_name), 200
+        return render_template('delete_tag.html', data=tag_data), 200
     if request.method == 'POST':
         # print('DELETE THE THING', tag_name)
-        deleted_tag = tag_name
+        deleted_tag = t.get_tag(tag_name)
         if t.delete_tag(tag_name):
             # print('no more cucumbers')
-            return render_template('deleted_tag.html', deleted_tag=deleted_tag), 200
+            return render_template('deleted_tag.html', data=deleted_tag), 200
 
 
 @app.route('/tags/')

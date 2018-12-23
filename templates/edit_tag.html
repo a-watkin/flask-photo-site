@@ -4,7 +4,7 @@
 <div class="row text-center">
     <div class="col">
         <h1>Edit tag:
-            <a href="{{url_for('photos_by_tag_name', tag_name=tag_name)}}">
+            <a href="{{url_for('photos_by_tag_name', tag_name=data['tag_name'])}}">
                 <button type="button" class="btn btn-outline-success btn-lg">
                     {{data['human_readable_name']}}
                 </button>
