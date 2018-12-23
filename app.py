@@ -577,6 +577,7 @@ def photos_by_tag_name(tag_name):
 @login_required
 def delete_tag(tag_name):
     if request.method == 'GET':
+        tag_data = t.get_tag(tag_name)
         return render_template('delete_tag.html', tag_name=tag_name), 200
     if request.method == 'POST':
         # print('DELETE THE THING', tag_name)
@@ -606,12 +607,17 @@ def edit_tags():
 @app.route('/edit/tag/<string:tag_name>', methods=['GET', 'POST'])
 @login_required
 def edit_tag(tag_name):
+    """
+    Change tag name.
+    """
     print('hello from edit tags')
 
     if request.method == 'GET':
         print('get received ', tag_name)
 
-        return render_template('edit_tag.html', tag_name=tag_name), 200
+        tag_data = t.get_tag(tag_name)
+
+        return render_template('edit_tag.html', data=tag_data), 200
 
     if request.method == 'POST':
         new_tag_name = request.form['new_tag_name']
@@ -630,11 +636,12 @@ def edit_tag(tag_name):
         print('\n', update_response, '\n')
 
         if update_response:
-            redirect_url = "/edit/tag/{}".format(new_tag)
+            # redirect_url = "/edit/tag/{}".format(new_tag)
             # print('INFO ', redirect_url, new_tag_name, tag_name)
             # http://127.0.0.1:5000/edit/tag/17191909
             # you need to return with the photo also
-            return redirect(redirect_url, code=302)
+            return redirect(url_for('edit_tag', tag_name=new_tag))
+            # return redirect(redirect_url, code=302)
 
         else:
             flash('There was a problem updating the tag, please contact support.')

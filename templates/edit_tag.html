@@ -1,13 +1,12 @@
 {% extends "template.html" %} {% block content %}
 
-<h1>{{}}</h1>
-
+<!-- <h1>{{data}}</h1> -->
 <div class="row text-center">
     <div class="col">
         <h1>Edit tag:
             <a href="{{url_for('photos_by_tag_name', tag_name=tag_name)}}">
                 <button type="button" class="btn btn-outline-success btn-lg">
-                    {{tag_name}}
+                    {{data['human_readable_name']}}
                 </button>
             </a>
         </h1>
@@ -27,7 +26,7 @@
 
             <div class="form-group">
                 <label for="renaming-tag">Make changes to the tag name below</label>
-                <input id="tag-update" name="new_tag_name" type="text" class="form-control text-center" value="{{tag_name}}">
+                <input id="tag-update" name="new_tag_name" type="text" class="form-control text-center" value="{{data['human_readable_name']}}">
             </div>
 
             <hr>

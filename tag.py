@@ -218,15 +218,29 @@ class Tag(object):
         return rtn_dict
 
     def get_tag(self, tag_name):
+        """
+        Changed to return human_readable_tag
+
+        Might cause problems because before it was pointlesly returning none.
+        """
         tag_data = self.db.make_query(
             '''
             select tag_name from tag where tag_name = "{}"
             '''.format(tag_name)
         )
 
-        print(tag_data)
+        if len(tag_data) > 0:
+            tag_name = tag_data[0][0]
+            human_readable_tag = name_util.make_decoded(tag_data[0][0])
 
-        return tag_data
+            rtn_dict = {
+                'tag_name': tag_name,
+                'human_readable_name': human_readable_tag
+            }
+
+            return rtn_dict
+
+        # return tag_data
 
     def check_photo_tag(self, tag_name):
         data = self.db.make_query(
@@ -458,6 +472,7 @@ if __name__ == "__main__":
     t = Tag()
 
     t.get_tag('some%20tag')
+    t.get_tag('test')
 
     # t.replace_tags(1038492826, ['tag1, tag3'])
 
