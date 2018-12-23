@@ -2,6 +2,39 @@
 {% block content %}
 
 
+{% if json_data['show_session'] %}
+
+<hr>
+
+
+<div class="row">
+    <div class="col">
+
+        <h1>You have uploaded photos waiting to be published</h1>
+
+
+
+    </div>
+</div>
+
+<div class="row">
+
+    <div class="col">
+        <a href="{{url_for('uploaded_photos_page')}}">
+
+            <button class="btn btn-primary btn-block btn-lg">
+                Go to uplaoded photos
+            </button>
+
+        </a>
+    </div>
+</div>
+
+
+
+{% endif %}
+
+
 <!-- <h1 class="text-center">Photos page</h1> -->
 
 <hr>
