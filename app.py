@@ -263,15 +263,28 @@ def to_new_album():
         album_title = request.form['title']
         album_description = request.form['description']
 
-        album_id = a.create_album(
-            '28035310@N00', album_title, album_description)
+        if a.get_album_by_name(album_title):
+            new_album_data = {
+                'album_title': album_title,
+                'album_description': album_description
+            }
 
-        # use album_id to add all uploaded photos to the album
-        up.add_all_to_album(album_id)
+            flash(
+                'An album with this name already exists. Please enter a different name.')
 
-        album_data = a.get_album(album_id)
+            return render_template('create_album.html', data=new_album_data), 200
 
-        return redirect('/albums/{}'.format(album_id)), 302
+        else:
+
+            album_id = a.create_album(
+                '28035310@N00', album_title, album_description)
+
+            # use album_id to add all uploaded photos to the album
+            up.add_all_to_album(album_id)
+
+            album_data = a.get_album(album_id)
+
+            return redirect('/albums/{}'.format(album_id)), 302
 
 
 @app.route('/uploaded')
@@ -776,12 +789,25 @@ def create_album():
         album_title = request.form['title']
         album_description = request.form['description']
 
-        album_id = a.create_album(
-            '28035310@N00', album_title, album_description)
+        if a.get_album_by_name(album_title):
+            new_album_data = {
+                'album_title': album_title,
+                'album_description': album_description
+            }
 
-        album_data = a.get_album(album_id)
+            flash(
+                'An album with this name already exists. Please enter a different name.')
 
-        return redirect('/edit/album/{}/photos'.format(album_id)), 302
+            return render_template('create_album.html', data=new_album_data), 200
+
+        else:
+
+            album_id = a.create_album(
+                '28035310@N00', album_title, album_description)
+
+            album_data = a.get_album(album_id)
+
+            return redirect('/edit/album/{}/photos'.format(album_id)), 302
 
 
 @app.route('/edit/album/<int:album_id>/photos')

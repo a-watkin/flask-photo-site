@@ -337,16 +337,32 @@ class Album(object):
 
         identifier = str(int(uuid.uuid4()))[0:10]
 
-        self.db.insert_data(
-            table='album',
-            album_id=identifier,
-            user_id='28035310@N00',
-            views=0,
-            title=title,
-            description=description,
-            photos=0,
-            date_created=(str(created)),
-            date_updated=(str(created))
+        # self.db.insert_data(
+        #     table='album',
+        #     album_id=identifier,
+        #     user_id='28035310@N00',
+        #     views=0,
+        #     title=title,
+        #     description=description,
+        #     photos=0,
+        #     date_created=(str(created)),
+        #     date_updated=(str(created))
+        # )
+
+        self.db.make_query(
+            '''
+            insert into album (album_id, user_id, views, title, description, photos, date_created, date_updated)
+            values ("{}", "{}", {}, "{}", "{}", {}, "{}", "{}")
+            '''.format(
+                identifier,
+                '28035310@N00',
+                0,
+                title,
+                description,
+                0,
+                str(created),
+                str(created)
+            )
         )
 
         print('album created with identifier ', identifier)
@@ -423,12 +439,25 @@ class Album(object):
 
         return rtn_dict
 
+    def get_album_by_name(self, album_name):
+        data = self.db.make_query(
+            '''
+            select * from album where title = "{}"
+            '''.format(album_name)
+        )
+
+        # album with this title exists
+        if len(data) > 0:
+            return data
+
 
 if __name__ == "__main__":
     a = Album()
     # print(a.get_albums_in_range(20, 20))
 
-    print(a.get_album(1621888039))
+    # print(a.get_album(1621888039))
+
+    print(a.get_album_by_name("test 1"))
 
     # print(a.get_album_cover('72157650725849398'))
     # blah = a.get_albums()
