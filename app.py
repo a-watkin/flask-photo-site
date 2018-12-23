@@ -570,6 +570,14 @@ def photos_by_tag_name(tag_name):
     #       tag_name)
     json_data = t.get_photos_by_tag(tag_name)
     print(json_data)
+
+    if json_data['tag_info']['number_of_photos'] == 0:
+        print('handle this \n')
+
+        tag_data = t.get_tag(tag_name)
+
+        return render_template('tag_photos.html', json_data=tag_data)
+
     return render_template('tag_photos.html', json_data=json_data)
 
 

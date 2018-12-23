@@ -471,8 +471,11 @@ class Tag(object):
 if __name__ == "__main__":
     t = Tag()
 
-    t.get_tag('some%20tag')
-    t.get_tag('test')
+    # t.get_tag('some%20tag')
+    # t.get_tag('test')
+
+    print(t.get_photos_by_tag(
+        '/tags/but%2520when%2520i%2520try%2520to%2520i%2520never%2520get%2520far'))
 
     # t.replace_tags(1038492826, ['tag1, tag3'])
 

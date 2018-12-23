@@ -2,25 +2,25 @@
 {% block content %}
 
 <div class="row">
-
+    <!-- <h1>{{ json_data }}</h1> -->
     <div class="col">
 
         <h1 class="text-center">
-            {% if json_data[0] %}
+            <!-- So cehcking for the key doesn't work, but checking for not the key does...ok-->
+            {% if not json_data[0] %}
+            No photos found for the tag:
+
+            <button class="btn btn-outline-success btn-lg">
+                {{json_data['human_readable_name']}}
+            </button>
+
+            {% else %}
 
             {{json_data['tag_info']['number_of_photos']}} photos for tag:
             <button class="btn btn-outline-success btn-lg">
                 {{json_data[0]['human_readable_tag']}}
             </button>
 
-            {% else %}
-            No photos found for the tag
-
-            <button class="btn btn-outline-success btn-lg">
-                {{json_data[0]['human_readable_tag']}}
-            </button>
-
-            <!-- {{json_data}} -->
             {% endif %}
 
         </h1>
