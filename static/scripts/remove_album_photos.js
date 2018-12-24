@@ -221,7 +221,7 @@ class SelectPhotos extends React.Component {
                 <img
                   src={photos[key]["large_square"]}
                   alt="Responsive image"
-                  className="card-img-top"
+                  className="card-img-top img-fluid"
                 />
               </div>
             </div>

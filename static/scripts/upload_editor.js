@@ -68,7 +68,7 @@ class UploadEditor extends React.Component {
   }
 
   discardPhoto(photo_id, key) {
-    console.log("clicked discard", photo_id);
+    // console.log("clicked discard", photo_id);
 
     let test = JSON.stringify({
       photoId: photo_id

@@ -7,14 +7,31 @@
     </div>
 </div>
 
+
+<div id="upload-message" hidden>
+    <hr>
+
+    <div class="row text-center">
+
+        <div class="col">
+
+            <div class="alert alert-secondary" role="alert">
+                Files uploading, please leave this page open until you are redirected.
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
 <hr>
 
 <div class="row text-center">
     <div class="col">
 
         <form method=post enctype=multipart/form-data> <p>Select files to upload</p>
-            <input class="" type=file name="file" multiple>
-            <input class="" type="submit" value="Upload">
+            <input id="" type=file name="file" multiple>
+            <input id="upload-button" type="submit" value="Upload">
         </form>
 
     </div>

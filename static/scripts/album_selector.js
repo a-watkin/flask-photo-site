@@ -222,7 +222,7 @@ class AlbumSelector extends React.Component {
                 <img
                   src={albums[key]["large_square"]}
                   alt="Responsive image"
-                  className="card-img-top"
+                  className="card-img-top img-fluid"
                 />
                 <p className="card-text text-left">
                   {" "}

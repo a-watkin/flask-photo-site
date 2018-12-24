@@ -1,6 +1,14 @@
 jQuery(document).ready(function($) {
   $.noConflict();
 
+  console.log('i am alive')
+
+  $("#upload-button").click(function() {
+    console.log('clicked upload')
+    $('#upload-message').removeAttr('hidden');
+  })
+
+
   if (
     $("#flash-message").text(function(e, value) {
       // console.log("logged out", e, value.trim());
