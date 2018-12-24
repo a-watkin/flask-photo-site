@@ -16,7 +16,7 @@
             <div class="card" style="width: 18rem;">
                 <div class="card-body">
                     <h5 class="card-title text-center">{{json_data['album_data']['title']}}</h5>
-                    <img class="card-img-top" src={% if json_data['album_data']['large_square'] %}
+                    <img class="card-img-top img-fluid" src={% if json_data['album_data']['large_square'] %}
                         {{
                         json_data['album_data']['large_square']
                     }} {%
