@@ -8,10 +8,10 @@
         <div class="card" style="width: 18rem;">
             <div class="card-body">
                 <h5 class="card-title text-center">{{json_data[0]['title']}}</h5>
-                <img class="card-img-top" src={% if json_data[0]['large_square'] %} {{
+                <img class="card-img-top img-fluid" src={% if json_data[0]['large_square'] %}
+                    {{
 json_data[0]['large_square']
-}}
-                    {% else %} '/static/images/logo.jpg' {% endif %} alt="{{ json_data[0]['title'] }} album">
+}} {% else %} '/static/images/logo.jpg' {% endif %} alt="{{ json_data[0]['title'] }} album">
                 <p class="card-text">{{json_data[0]['description']}}</p>
                 <div class="row text-center">
                     <div class="col">
@@ -66,7 +66,7 @@ json_data[0]['large_square']
             <div class="card" style="width: 18rem;">
                 <div class="card-body">
                     <h5 class="card-title text-center">{{json_data[0]['title']}}</h5>
-                    <img class="card-img-top" src={% if json_data[0]['large_square'] %}
+                    <img class="card-img-top img-fluid" src={% if json_data[0]['large_square'] %}
                         {{
                         json_data[0]['large_square']
                     }} {% else %}

@@ -66,6 +66,14 @@ kill -9 processId
 current_user = None
 
 
+def show_uplaoded(json_data):
+    if session and len(up.get_uploaded_photos()['photos']) > 0:
+        print('\n session present \n')
+        json_data['show_session'] = True
+
+    return json_data
+
+
 def login_required(test):
     @wraps(test)
     def wrap(*args, **kwargs):
@@ -327,13 +335,15 @@ def get_photos():
             json_data = photo_data
 
             # print('args are ', args)
-
+            json_data = show_uplaoded(json_data)
             return render_template('photos.html', json_data=json_data), 200
         elif 'offset' not in args.keys() and 'limit' in args.keys():
             # print(9 * '\n')
             # default offset is 0
             photo_data = p.get_photos_in_range(int(args['limit']))
             json_data = photo_data
+
+            json_data = show_uplaoded(json_data)
             return render_template('photos.html', json_data=json_data), 200
 
         else:
@@ -351,6 +361,8 @@ def get_photos():
             )
 
             json_data = photo_data
+
+            json_data = show_uplaoded(json_data)
             return render_template('photos.html', json_data=json_data), 200
 
     else:
@@ -360,13 +372,15 @@ def get_photos():
         photo_data = p.get_photos_in_range()
         json_data = photo_data
 
-        print('\n', session and len(up.get_uploaded_photos()['photos']) > 0)
-        if session and len(up.get_uploaded_photos()['photos']) > 0:
-            print('\n session present \n')
-            json_data['show_session'] = True
+        # print('\n', session and len(up.get_uploaded_photos()['photos']) > 0)
+        # if session and len(up.get_uploaded_photos()['photos']) > 0:
+        #     print('\n session present \n')
+        #     json_data['show_session'] = True
 
-        print(json_data)
-        print(10*'\n')
+        # print(json_data)
+        # print(10*'\n')
+
+        json_data = show_uplaoded(json_data)
         return render_template('photos.html', json_data=json_data), 200
 
 
@@ -465,7 +479,7 @@ def get_photo(photo_id):
 def home():
     photo_data = p.get_photos_in_range()
     json_data = photo_data
-    # print(json_data)
+    json_data = show_uplaoded(json_data)
     return render_template('photos.html', json_data=json_data), 200
 
 
