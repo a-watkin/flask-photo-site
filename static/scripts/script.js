@@ -4,7 +4,7 @@ jQuery(document).ready(function($) {
   console.log('i am alive')
 
   $("#upload-button").click(function() {
-    console.log('clicked upload')
+    // console.log('clicked upload')
     $('#upload-message').removeAttr('hidden');
   })
 
