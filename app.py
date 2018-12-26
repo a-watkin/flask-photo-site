@@ -613,6 +613,11 @@ def photos_by_tag_name(tag_name):
     return render_template('tag_photos.html', json_data=json_data)
 
 
+@app.route('/api/tag/photos')
+def get_tag_photos():
+    pass
+
+
 @app.route('/delete/<string:tag_name>', methods=['GET', 'POST'])
 @login_required
 def delete_tag(tag_name):
