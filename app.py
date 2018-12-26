@@ -616,8 +616,20 @@ def photos_by_tag_name(tag_name):
 @app.route('/api/tag/photos', methods=['GET', 'POST'])
 def get_tag_photos():
     args = request.args.to_dict()
-    tag_photos_data = t.get_tag_photos_in_range(args['tag_name'])
+
     print(args)
+
+    if 'offset' in args.keys():
+        offset = int(args['offset'])
+
+        if offset < 0:
+            offset = 0
+
+        tag_photos_data = t.get_tag_photos_in_range(
+            args['tag_name'], 20, offset)
+        return render_template('tag_photos.html', json_data=tag_photos_data)
+
+    tag_photos_data = t.get_tag_photos_in_range(args['tag_name'])
     return render_template('tag_photos.html', json_data=tag_photos_data)
 
 

@@ -3,7 +3,14 @@
 
 
 
-<h1>{{json_data}}</h1>
+<!-- <h1>{{json_data}}</h1> -->
+<!-- <h2>
+    "/api/tag/photos?tag_name={{json_data['tag_name']}}&offset={{json_data.offset - 20}}"
+</h2>
+
+<h3>Page {{json_data['page']}} of {{json_data['pages']}}</h3> -->
+
+
 
 
 <div class="row">
@@ -18,7 +25,7 @@
 
                 {% else %}
 
-                {{json_data['number_of_photos']}} photos for tag:
+                {{json_data['tag_info']['number_of_photos']}} photos for tag:
                 <button class="btn btn-outline-success btn-lg">
                     {{json_data['human_readable_name']}}
                 </button>
@@ -34,14 +41,14 @@
 <hr>
 <div class="row text-center">
     <div class="col">
-        <a href="">
+        <a href="/api/tag/photos?tag_name={{json_data['tag_name']}}&offset={{json_data.offset - 20}}">
 
             <button type="button" class="btn btn-secondary btn-block btn-lg">Previous page</button>
 
         </a>
     </div>
     <div class="col">
-        <a href="">
+        <a href="/api/tag/photos?tag_name={{json_data['tag_name']}}&offset={{json_data.offset + 20}}">
 
             <button type="button" class="btn btn-secondary btn-block btn-lg">Next page
             </button>
@@ -54,7 +61,7 @@
 {% if json_data['tag_info']['number_of_photos'] < 0 %} <hr>
     <div class="row">
         <div class="col text-center">
-            <a href="{{url_for('get_tags')}}">
+            <a href="/api/tagphotos?tag_name={{json_data['tag_name']}}&{{json_data.offset - 20}}">
                 <button class="btn btn-primary btn-block btn-lg">
                     Go to tags page
                 </button>
@@ -101,7 +108,7 @@
 
         <div class="col text-center">
 
-            <h3>Showing {{json_data['limit']}} of {{json_data['tag_info']['number_of_photos']}} photos</h3>
+            <h3>Showing page {{json_data['page']}} of {{json_data['pages']}}</h3>
         </div>
     </div>
 

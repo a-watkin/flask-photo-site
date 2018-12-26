@@ -497,6 +497,12 @@ class Tag(object):
         if offset > num_photos:
             offset = num_photos - (num_photos % 20)
 
+        page = offset // limit
+
+        page += 1
+
+        pages = num_photos // limit
+
         q_data = None
         with sqlite3.connect(self.db.db_name) as connection:
             c = connection.cursor()
@@ -549,6 +555,8 @@ class Tag(object):
         rtn_dict['offset'] = offset
         rtn_dict['tag_name'] = tag_name
         rtn_dict['human_readable_name'] = name_util.make_decoded(tag_name)
+        rtn_dict['page'] = page
+        rtn_dict['pages'] = pages
 
         rtn_dict['tag_info'] = {
             'number_of_photos': self.get_photo_count_by_tag(tag_name)}
@@ -563,8 +571,8 @@ class Tag(object):
 if __name__ == "__main__":
     t = Tag()
 
-    print(t.get_photos_by_tag('people'))
-    print(t.get_tag_photos_in_range('people', 5, 0))
+    # print(t.get_photos_by_tag('people'))
+    print(t.get_tag_photos_in_range('people', 5, -20))
 
     # t.get_tag('some%20tag')
     # t.get_tag('test')
