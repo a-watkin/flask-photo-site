@@ -499,9 +499,11 @@ class Tag(object):
 
         page = offset // limit
 
-        page += 1
-
         pages = num_photos // limit
+
+        # otherwise it starts at 0 and I want it to start at 1
+        page += 1
+        pages += 1
 
         q_data = None
         with sqlite3.connect(self.db.db_name) as connection:
@@ -572,7 +574,7 @@ if __name__ == "__main__":
     t = Tag()
 
     # print(t.get_photos_by_tag('people'))
-    print(t.get_tag_photos_in_range('people', 5, -20))
+    print(t.get_tag_photos_in_range('ardvark'))
 
     # t.get_tag('some%20tag')
     # t.get_tag('test')

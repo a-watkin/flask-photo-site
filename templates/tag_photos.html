@@ -19,7 +19,7 @@
 
         <h1 class="text-center">
             <!-- So cehcking for the key doesn't work, but checking for not the key does...ok-->
-            {% if json_data['tag_info']['number_of_photos'] < 0 %} No photos found for the tag: <button class="btn btn-outline-success btn-lg">
+            {% if json_data['tag_info']['number_of_photos'] < 1 %} No photos found for the tag: <button class="btn btn-outline-success btn-lg">
                 {{json_data['human_readable_name']}}
                 </button>
 
@@ -58,10 +58,10 @@
 <hr>
 {% endif %}
 
-{% if json_data['tag_info']['number_of_photos'] < 0 %} <hr>
+{% if json_data['tag_info']['number_of_photos'] < 1 %} <hr>
     <div class="row">
         <div class="col text-center">
-            <a href="/api/tagphotos?tag_name={{json_data['tag_name']}}&{{json_data.offset - 20}}">
+            <a href="{{url_for('get_tags')}}">
                 <button class="btn btn-primary btn-block btn-lg">
                     Go to tags page
                 </button>
