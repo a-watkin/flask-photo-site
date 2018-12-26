@@ -467,15 +467,49 @@ class Tag(object):
         else:
             return False
 
+    def count_photos_by_tag_name(self, tag_name):
+        """
+        SELECT COUNT(column_name)
+        FROM table_name
+        WHERE condition; 
+        """
+
+        count = self.db.make_query(
+            '''
+            select count(tag_name)
+            from photo_tag
+            where tag_name = "{}"
+            '''.format(tag_name)
+        )
+
+        if len(count) > 0:
+            return count[0][0]
+        else:
+            return 0
+
+    def get_tag_photos_in_range(self, tag_name, limit=20, offset=0):
+
+        # get number of photos in database total
+        num_photos = self.count_photos_by_tag_name(tag_name)
+
+        print(num_photos)
+
+        if offset > num_photos:
+            offset = num_photos - (num_photos % 20)
+
+        # print(num_photos)
+
 
 if __name__ == "__main__":
     t = Tag()
 
+    t.get_tag_photos_in_range('people')
+
     # t.get_tag('some%20tag')
     # t.get_tag('test')
 
-    print(t.get_photos_by_tag(
-        '/tags/but%2520when%2520i%2520try%2520to%2520i%2520never%2520get%2520far'))
+    # print(t.get_photos_by_tag(
+    #     '/tags/but%2520when%2520i%2520try%2520to%2520i%2520never%2520get%2520far'))
 
     # t.replace_tags(1038492826, ['tag1, tag3'])
 
