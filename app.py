@@ -613,9 +613,12 @@ def photos_by_tag_name(tag_name):
     return render_template('tag_photos.html', json_data=json_data)
 
 
-@app.route('/api/tag/photos')
+@app.route('/api/tag/photos', methods=['GET', 'POST'])
 def get_tag_photos():
-    pass
+    args = request.args.to_dict()
+    tag_photos_data = t.get_tag_photos_in_range(args['tag_name'])
+    print(args)
+    return render_template('tag_photos.html', json_data=tag_photos_data)
 
 
 @app.route('/delete/<string:tag_name>', methods=['GET', 'POST'])

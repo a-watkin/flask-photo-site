@@ -303,7 +303,7 @@ class Tag(object):
             # if the tag isn't present it will just fail silently
             resp = self.db.make_query(
                 '''
-                delete from photo_tag 
+                delete from photo_tag
                 where photo_id = {}
                 and tag_name = "{}"
                 '''.format(photo_id, tag)
@@ -471,7 +471,7 @@ class Tag(object):
         """
         SELECT COUNT(column_name)
         FROM table_name
-        WHERE condition; 
+        WHERE condition;
         """
 
         count = self.db.make_query(
@@ -497,13 +497,74 @@ class Tag(object):
         if offset > num_photos:
             offset = num_photos - (num_photos % 20)
 
+        q_data = None
+        with sqlite3.connect(self.db.db_name) as connection:
+            c = connection.cursor()
+
+            c.row_factory = sqlite3.Row
+
+            query_string = (
+                '''
+                select photo_id, photo_title, views, tag_name, large_square from photo
+                join photo_tag using(photo_id)
+                join images using(photo_id)
+                where tag_name = "{}"
+                order by views
+                desc limit {} offset {}
+                '''
+            ).format(tag_name, limit, offset)
+
+            q_data = c.execute(query_string)
+
+        rtn_dict = {
+            'limit': limit,
+            'offset': offset,
+            'photos': []
+        }
+
+        """
+        I think it may actually be better to layout what fields you want here.
+
+        And maybe include all sizes.
+        """
+
+        data = [dict(ix) for ix in q_data]
+
+        # print()
+        for photo in data:
+            # print('HERE', photo)
+            photo['photo_title'] = name_util.make_decoded(photo['photo_title'])
+            # print(photo)
+            # print()
+
+        a_dict = {}
+        count = 0
+        for d in data:
+            a_dict[count] = d
+            count += 1
+
+        rtn_dict = {'photos': a_dict}
+
+        rtn_dict['limit'] = limit
+        rtn_dict['offset'] = offset
+        rtn_dict['tag_name'] = tag_name
+        rtn_dict['human_readable_name'] = name_util.make_decoded(tag_name)
+
+        rtn_dict['tag_info'] = {
+            'number_of_photos': self.get_photo_count_by_tag(tag_name)}
+
+        # rtn_dict['number_of_photos'] = self.get_photo_count_by_tag(tag_name)
+
+        return rtn_dict
+
         # print(num_photos)
 
 
 if __name__ == "__main__":
     t = Tag()
 
-    t.get_tag_photos_in_range('people')
+    print(t.get_photos_by_tag('people'))
+    print(t.get_tag_photos_in_range('people', 5, 0))
 
     # t.get_tag('some%20tag')
     # t.get_tag('test')
