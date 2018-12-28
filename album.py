@@ -419,9 +419,6 @@ class Album(object):
         10 from the tenth most recent etc.
         """
 
-        # make sure album photos count is correct
-        self.update_album_photo_count(album_id)
-
         q_data = None
         with sqlite3.connect(self.db.db_name) as connection:
             c = connection.cursor()

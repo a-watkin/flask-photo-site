@@ -20,7 +20,7 @@ class UploadEditor extends React.Component {
 
   checkInput(input_string) {
     function checkTags(tags) {
-      const forbidden = ["\\", "/", "%"];
+      const forbidden = ["\\", "/", "%", "."];
       let arr = tags.split(",");
       let safe = true;
 
