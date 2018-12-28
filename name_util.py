@@ -30,11 +30,10 @@ def make_encoded(a_str):
                  "#", "{", "}", "|", "\\", "/", "^", "~", "[", "]", "`", " "]
     for char in a_str:
         if char in forbidden:
-            # print(a_str, ' needs encoding')
+            print(a_str, ' needs encoding')
             return url_encode_tag(a_str)
 
     return a_str
 
 
 # print(make_decoded('i%20don%27t%20give%20a%20hoot'))
-print(make_encoded('fuck you'))

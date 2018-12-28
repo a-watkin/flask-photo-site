@@ -207,7 +207,7 @@ class UploadEditor extends React.Component {
       <div className="row">
         <div className="col text-center">
           <div id="warning-text" className="alert alert-warning" role="alert">
-            Tags may not be spaces and may not contain the characters: \ / %
+            Tags may not be spaces and may not contain the characters: \ / % .
             Please check your tags and try again.
           </div>
         </div>

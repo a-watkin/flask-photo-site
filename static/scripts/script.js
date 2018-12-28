@@ -34,7 +34,7 @@ jQuery(document).ready(function($) {
   //
   // Check for improper user input for tags.
   //
-  var forbidden = ["\\", "/", "%"];
+  var forbidden = ["\\", "/", "%", "."];
   var safe = true;
 
   $("#tag-update").keyup(function(e) {
@@ -64,7 +64,7 @@ jQuery(document).ready(function($) {
       $("#update-tag-button").prop("disabled", true);
       showWarnings();
       $("#warning-text").text(
-        "Please enter a valid tag name. The characters: \\, /, % are not allowed."
+        "Please enter a valid tag name. The characters: \\, ., /, % are not allowed."
       );
     } else {
       $("#update-tag-button").prop("disabled", false);

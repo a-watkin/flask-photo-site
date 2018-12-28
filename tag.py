@@ -239,7 +239,7 @@ class Tag(object):
             return False
 
     def clean_tags(self):
-        forbidden = ['  ', ';']
+        forbidden = ['.', ';', '%']
         # as a list of dict values
         tag_data = self.db.get_query_as_list("SELECT * FROM tag")
         for tag in tag_data:
@@ -534,6 +534,8 @@ class Tag(object):
 
 if __name__ == "__main__":
     t = Tag()
+
+    print(t.clean_tags())
 
     # print(t.get_tag_photos_in_range('i%20don%27t%20give%20a%20hoot'))
 
