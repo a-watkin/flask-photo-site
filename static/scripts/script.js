@@ -1,26 +1,6 @@
 jQuery(document).ready(function ($) {
   $.noConflict();
 
-  // if(!$('#flash-message').text('No file selected')) {
-
-  //   $("#upload-button").click(function () {
-  //     // console.log('clicked upload')
-  //     $('#upload-message').removeAttr('hidden');
-  //   })
-
-
-
-  // }
-
-  // $(":file").filestyle({
-  //   text: "Select photos"
-  // });
-  
-  
-  // $('#upload-info').click(function() {
-    //   console.log($(":file").filestyle('input'));
-    // })
-    
   // Start the upload button as disabled
   $('#upload-button').prop('disabled', true);
   
@@ -52,6 +32,8 @@ jQuery(document).ready(function ($) {
     $('#upload-message').removeAttr('hidden');
   })
 
+
+  // Redirects to photos page when a user logs out
   if (
     $("#flash-message").text(function (e, value) {
       // console.log("logged out", e, value.trim());
@@ -62,6 +44,9 @@ jQuery(document).ready(function ($) {
     })
   )
 
+  //
+  // Check for improper user input for tags.
+  // 
   function showWarnings() {
     $("#update-tag-button").prop("disabled", true);
     $("#warning-text").text(
@@ -69,17 +54,9 @@ jQuery(document).ready(function ($) {
     );
   }
 
-  // if ($("h1").text() === "Add photos to the album") {
-  //   console.log("on the add photo to album page");
-  // }
-
-  // var showWarningText = false;
   var forbidden = ["\\", "/", "%"];
   var safe = true;
 
-  // if (showWarningText) {
-  //   $("#warning-text").text("The characters: \\, / and % are not allowed.");
-  // }
 
   $("#tag-update").keyup(function (e) {
     safe = true;
