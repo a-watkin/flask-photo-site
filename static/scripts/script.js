@@ -1,64 +1,43 @@
-jQuery(document).ready(function ($) {
+jQuery(document).ready(function($) {
   $.noConflict();
 
   // Start the upload button as disabled
-  $('#upload-button').prop('disabled', true);
-  
+  $("#upload-button").prop("disabled", true);
+
   // Allows for checking the number of files
   $(":file").filestyle({
-    'onChange': function (files) {
-      console.log(files)
-      
-      if(files.length > 0) {
-        $('#upload-button').prop('disabled', false);
+    onChange: function(files) {
+      console.log(files);
+
+      if (files.length > 0) {
+        $("#upload-button").prop("disabled", false);
       }
     }
   });
-  
+
   // Removes selected photos from the upload input
-  $('#clear-input').on('click', function () {
-    $(":file").filestyle('clear');
-    $('#upload-button').prop('disabled', true);
-  })
-  
+  $("#clear-input").on("click", function() {
+    $(":file").filestyle("clear");
+    $("#upload-button").prop("disabled", true);
+  });
+
   // Change button size on the file input field
-  $(":file").filestyle('size', 'lg');
+  $(":file").filestyle("size", "lg");
   // Puts the select photos button on the left
-  $(":file").filestyle('buttonBefore', true);
+  $(":file").filestyle("buttonBefore", true);
 
-  
   // User feedback to say that files are uploading
-  $("#upload-button").click(function () {
-    $('#upload-message').removeAttr('hidden');
-  })
-
-
-  // Redirects to photos page when a user logs out
-  if (
-    $("#flash-message").text(function (e, value) {
-      // console.log("logged out", e, value.trim());
-      if (value.trim() === "You have been logged out.") {
-        // console.log("Refresh page here!")
-        window.location.replace("/")
-      }
-    })
-  )
+  $("#upload-button").click(function() {
+    $("#upload-message").removeAttr("hidden");
+  });
 
   //
   // Check for improper user input for tags.
-  // 
-  function showWarnings() {
-    $("#update-tag-button").prop("disabled", true);
-    $("#warning-text").text(
-      "Please enter a valid tag name. The characters: \\, /, % space."
-    );
-  }
-
+  //
   var forbidden = ["\\", "/", "%"];
   var safe = true;
 
-
-  $("#tag-update").keyup(function (e) {
+  $("#tag-update").keyup(function(e) {
     safe = true;
     var arr = e.target.value.split(",");
 
@@ -83,12 +62,24 @@ jQuery(document).ready(function ($) {
 
     if (!safe) {
       $("#update-tag-button").prop("disabled", true);
+      showWarnings();
       $("#warning-text").text(
-        "Please enter a valid tag name. The characters: \\, /, % space."
+        "Please enter a valid tag name. The characters: \\, /, % are not allowed."
       );
     } else {
       $("#update-tag-button").prop("disabled", false);
-      $("#warning-text").text("You can enter multiple tags, seperating them by commas.");
+      $("#warning-text").text(
+        "You can enter multiple tags, seperating them by commas."
+      );
+    }
+  });
+
+  // Redirects to photos page when a user logs out
+  $("#flash-message").text(function(e, value) {
+    // console.log("logged out", e, value.trim());
+    if (value.trim() === "You have been logged out.") {
+      // console.log("Refresh page here!")
+      window.location.replace("/");
     }
   });
 });

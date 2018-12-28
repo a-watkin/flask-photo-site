@@ -10,6 +10,7 @@ def url_decode_tag(a_str):
 
 
 def make_decoded(a_str):
+    print('hello from make decoded passed the value, ', a_str)
     if '%' in a_str:
         return url_decode_tag(a_str)
     else:
@@ -25,11 +26,15 @@ def make_encoded(a_str):
     If not return it unencoded.
     """
     # print('hello from check_chars', a_str)
-    forbidden = [";", "/", "?", ":", "@", "=", "&", '"', "'", "<", ">", "%",
-                 "#", "{", "}", "|", "\\", "/", "^", "~", "[", "]", "`"]
+    forbidden = [";", "/", "?", ":", "@", "=", "&", '"', "'", "<", ">",
+                 "#", "{", "}", "|", "\\", "/", "^", "~", "[", "]", "`", " "]
     for char in a_str:
         if char in forbidden:
             # print(a_str, ' needs encoding')
             return url_encode_tag(a_str)
 
     return a_str
+
+
+# print(make_decoded('i%20don%27t%20give%20a%20hoot'))
+print(make_encoded('fuck you'))
