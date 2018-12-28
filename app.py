@@ -814,9 +814,10 @@ def delete_album(album_id):
 
 @app.route('/albums/<int:album_id>', methods=['GET'])
 def get_album_photos(album_id):
-    photo_data = a.get_album_photos(album_id)
-    json_data = photo_data
-    return render_template('album.html', json_data=json_data), 200
+    # photo_data = a.get_album_photos(album_id)
+    # json_data = photo_data
+    photo_data = a.get_album_photos_in_range(album_id)
+    return render_template('album.html', json_data=photo_data), 200
 
 
 @app.route('/add/album', methods=['GET', 'POST'])

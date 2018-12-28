@@ -12,6 +12,21 @@ class Album(object):
     def __init__(self):
         self.db = Database('eigi-data.db')
 
+    def count_photos_in_album(self, album_id):
+        # get count of photos in album
+        num_photos = self.db.make_query(
+            '''
+            select count(photo_id)
+            from photo_album
+            where album_id = "{}"
+            '''.format(album_id)
+        )
+
+        if len(num_photos) > 0:
+            return num_photos[0][0]
+        else:
+            return 0
+
     def increment_views(self, album_id):
         self.db.make_query(
             '''
@@ -50,6 +65,9 @@ class Album(object):
         return rtn_dict
 
     def get_album(self, album_id):
+        """
+        Returns data about the album.
+        """
 
         # update view count
         self.increment_views(album_id)
@@ -60,7 +78,7 @@ class Album(object):
 
         album_data = self.db.get_query_as_list(query)
 
-        print(album_data)
+        # print(album_data)
 
         if len(album_data) > 0 and album_data[0]['photos'] > 0:
             # list index out of range
@@ -75,7 +93,7 @@ class Album(object):
                 album_data[0]['description'] = name_util.make_decoded(
                     album_data[0]['description'])
 
-            print(album_data)
+            # print(album_data)
             return album_data[0]
 
         elif len(album_data) > 0:
@@ -251,6 +269,20 @@ class Album(object):
         Offset is where you want to start from, so 0 would be from the most recent.
         10 from the tenth most recent etc.
         """
+
+        num_photos = self.count_photos_in_album(album_id)
+
+        if offset > num_photos:
+            offset = num_photos - (num_photos % 20)
+
+        page = offset // limit
+
+        pages = num_photos // limit
+
+        # otherwise it starts at 0 and I want it to start at 1
+        page += 1
+        pages += 1
+
         q_data = None
         with sqlite3.connect(self.db.db_name) as connection:
             c = connection.cursor()
@@ -288,16 +320,23 @@ class Album(object):
 
         data = [dict(ix) for ix in q_data]
 
+        # print(data)
+
         a_dict = {}
         count = 0
         for d in data:
             a_dict[count] = d
             count += 1
 
+        # Get data about the album itself
+        album_data = self.get_album(album_id)
         rtn_dict = {'photos': a_dict}
 
+        rtn_dict['album_data'] = album_data
         rtn_dict['limit'] = limit
         rtn_dict['offset'] = offset
+        rtn_dict['page'] = page
+        rtn_dict['pages'] = pages
 
         return rtn_dict
 
@@ -455,7 +494,7 @@ if __name__ == "__main__":
     a = Album()
     # print(a.get_albums_in_range(20, 20))
 
-    print(a.get_album(72157701915517595))
+    # print(a.get_album(72157701915517595))
 
     # print(a.get_album_by_name("test 1"))
 
@@ -470,7 +509,10 @@ if __name__ == "__main__":
 
     # a.get_album_cover('1847925474')
 
-    # print(a.get_album_photos_in_range('72157678080171871'))
+    print()
+    print(a.get_album_photos_in_range('72157701915517595'))
+    print()
+    # print(a.get_album_photos('72157672063116008'))
 
     # print(a.remove_photos_from_album('72157678080171871', ['44692598005']))
 
@@ -483,8 +525,6 @@ if __name__ == "__main__":
     #                             ]))
 
     # print(blah.keys(), blah[0]['large_square'])
-
-    # print(a.get_album_photos('72157650725849398'))
 
     # print(a.delete_album(72157671546432768))
 

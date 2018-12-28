@@ -1,27 +1,27 @@
 {% extends "template.html" %}
 {% block content %}
 
-{% if json_data[0]['photos'] > 0 %}
+{% if json_data['album_data']['photos'] > 0 %}
 
 <div class="row">
     <div id="problem-div" class="col">
         <div class="card" style="width: 18rem;">
             <div class="card-body">
-                <h5 class="card-title text-center">{{json_data[0]['title']}}</h5>
-                <img class="card-img-top img-fluid" src={% if json_data[0]['large_square'] %}
+                <h5 class="card-title text-center">{{json_data['album_data']['title']}}</h5>
+                <img class="card-img-top img-fluid" src={% if json_data['album_data']['large_square'] %}
                     {{
-json_data[0]['large_square']
-}} {% else %} '/static/images/logo.jpg' {% endif %} alt="{{ json_data[0]['title'] }} album">
-                <p class="card-text">{{json_data[0]['description']}}</p>
+json_data['album_data']['large_square']
+}} {% else %} '/static/images/logo.jpg' {% endif %} alt="{{ json_data['album_data']['title'] }} album">
+                <p class="card-text">{{json_data['album_data']['description']}}</p>
                 <div class="row text-center">
                     <div class="col">
                         <p>
-                            views: {{json_data[0]['views']}}
+                            views: {{json_data['album_data']['views']}}
                         </p>
                     </div>
                     <div class="col">
                         <p>
-                            photos: {{json_data[0]['photos']}}
+                            photos: {{json_data['album_data']['photos']}}
                         </p>
                     </div>
                 </div>
@@ -32,17 +32,17 @@ json_data[0]['large_square']
 
 <hr>
 
-{% if json_data[0]['photos'] > 0 %}
+{% if json_data['album_data']['photos'] > 0 %}
 <div class="row text-center">
     <div class="col">
-        <a href="/api/tag/photos?tag_name={{json_data['tag_name']}}&offset={{json_data.offset - 20}}">
+        <a href="">
 
             <button type="button" class="btn btn-secondary btn-block btn-lg">Previous page</button>
 
         </a>
     </div>
     <div class="col">
-        <a href="/api/tag/photos?tag_name={{json_data['tag_name']}}&offset={{json_data.offset + 20}}">
+        <a href="">
 
             <button type="button" class="btn btn-secondary btn-block btn-lg">Next page
             </button>
@@ -54,7 +54,7 @@ json_data[0]['large_square']
 
 
 <div class="row">
-    {% for key, value in json_data.items() %}
+    {% for key, value in json_data['photos'].items() %}
     <div class="col-3">
         <a id="photostream-page" href="{{ url_for('get_photo', photo_id=value['photo_id']) }}">
             <img id="photo-page-image" class="img-fluid" src="{{value['large_square']}}" alt="Responsive image">
@@ -64,11 +64,12 @@ json_data[0]['large_square']
     {% endfor %}
 </div>
 
+<!-- No photos? -->
 {% else %}
 
 <div class="row text-center">
     <div class="col">
-        <h1>The album {{json_data[0]['title']}}</h1>
+        <h1>The album {{json_data['album_data']['title']}}</h1>
     </div>
 </div>
 <hr>
@@ -83,25 +84,25 @@ json_data[0]['large_square']
 <hr>
 <div class="row text-center">
     <div id="selected-album" class="col">
-        <a href="{{url_for('get_album_photos', album_id=json_data[0]['album_id']) }}">
+        <a href="{{url_for('get_album_photos', album_id=json_data['album_data']['album_id']) }}">
             <div class="card" style="width: 18rem;">
                 <div class="card-body">
-                    <h5 class="card-title text-center">{{json_data[0]['title']}}</h5>
-                    <img class="card-img-top img-fluid" src={% if json_data[0]['large_square'] %}
+                    <h5 class="card-title text-center">{{json_data['album_data']['title']}}</h5>
+                    <img class="card-img-top img-fluid" src={% if json_data['album_data']['large_square'] %}
                         {{
-                        json_data[0]['large_square']
+json_data['album_data']['large_square']
                     }} {% else %}
                         '/static/images/logo.jpg' {% endif %} alt="{{ json_data['title'] }} album">
-                    <p class="card-text">{{json_data[0]['description']}}</p>
+                    <p class="card-text">{{json_data['album_data']['description']}}</p>
                     <div class="row">
                         <div class="col">
                             <p>
-                                views: {{json_data[0]['views']}}
+                                views: {{json_data['album_data']['views']}}
                             </p>
                         </div>
                         <div class="col">
                             <p>
-                                photos: {{json_data[0]['photos']}}
+                                photos: {{json_data['album_data']['photos']}}
                             </p>
                         </div>
                     </div>
@@ -116,13 +117,13 @@ json_data[0]['large_square']
 <div class="row text-center">
 
     <div class="col">
-        <a href="{{url_for('add_album_photos', album_id=json_data[0]['album_id'])}}">
+        <a href="{{url_for('add_album_photos', album_id=json_data['album_data']['album_id'])}}">
             <button class="btn btn-success btn-block btn-lg">Add photos</button>
         </a>
     </div>
 
     <div class="col">
-        <a href="{{url_for('edit_album', album_id=json_data[0]['album_id'])}}">
+        <a href="{{url_for('edit_album', album_id=json_data['album_data']['album_id'])}}">
             <button class="btn btn-warning btn-block btn-lg">Edit album</button>
         </a>
     </div>
