@@ -339,8 +339,7 @@ class UploadEditor extends React.Component {
 
     return (
       <div>
-        <h1>Hi from React</h1>
-
+        <h2> There was a problem getting data. </h2>
         {photo}
       </div>
     );

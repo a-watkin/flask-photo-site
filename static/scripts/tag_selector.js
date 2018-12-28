@@ -201,7 +201,7 @@ class TagSelector extends React.Component {
       <div>
         <div className="row">
           <div className="col text-center">
-            <h2>Problem getting data.</h2>
+            <h2>There was a problem getting data.</h2>
           </div>
         </div>
       </div>

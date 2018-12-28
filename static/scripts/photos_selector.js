@@ -259,7 +259,7 @@ class PhotoSelector extends React.Component {
     return (
       <div className="row">
         <div className="col">
-          <h1>Some problem with getting the data.</h1>
+          <h2> There was a problem getting data. </h2>
         </div>
       </div>
     );
