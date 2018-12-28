@@ -62,7 +62,6 @@ jQuery(document).ready(function($) {
 
     if (!safe) {
       $("#update-tag-button").prop("disabled", true);
-      showWarnings();
       $("#warning-text").text(
         "Please enter a valid tag name. The characters: \\, ., /, % are not allowed."
       );
