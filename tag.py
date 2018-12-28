@@ -535,7 +535,7 @@ class Tag(object):
 if __name__ == "__main__":
     t = Tag()
 
-    print(t.get_tag_photos_in_range('i%20don%27t%20give%20a%20hoot'))
+    # print(t.get_tag_photos_in_range('i%20don%27t%20give%20a%20hoot'))
 
     # print(t.get_photos_by_tag('people'))
     # print(t.get_tag_photos_in_range('ardvark'))
