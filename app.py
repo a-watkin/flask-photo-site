@@ -385,7 +385,7 @@ def get_photos():
 
 
 @app.route('/api/getalbums', methods=['GET', 'POST'])
-# @login_required
+@login_required
 def get_albums_json():
     args = request.args.to_dict()
 
