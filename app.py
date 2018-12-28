@@ -876,6 +876,8 @@ def edit_album(album_id):
 
     if request.method == 'POST':
         album_name = name_util.make_encoded(request.form['name'])
+
+        # album_name = request.form['name']
         album_description = name_util.make_encoded(request.form['description'])
         # add the data to the database
 

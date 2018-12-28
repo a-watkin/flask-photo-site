@@ -27,6 +27,16 @@ class Album(object):
         else:
             return 0
 
+    def update_album_photo_count(self, album_id):
+        new_count = self.count_photos_in_album(album_id)
+        self.db.make_query(
+            '''
+            update album
+            set photos = {}
+            where album_id = "{}"
+            '''.format(new_count, album_id)
+        )
+
     def increment_views(self, album_id):
         self.db.make_query(
             '''
@@ -59,6 +69,12 @@ class Album(object):
             if len(album_cover_dict) > 0:
                 album['large_square'] = album_cover_dict[0]['large_square']
 
+            album['human_readable_name'] = name_util.make_decoded(
+                album['title'])
+
+            album['human_readable_description'] = name_util.make_decoded(
+                album['description'])
+
             rtn_dict[count] = album
             count += 1
 
@@ -68,6 +84,9 @@ class Album(object):
         """
         Returns data about the album.
         """
+
+        # make sure album photos count is correct
+        self.update_album_photo_count(album_id)
 
         # update view count
         self.increment_views(album_id)
@@ -351,23 +370,26 @@ class Album(object):
             self.db.make_query(query_string)
 
         # get the number of photos in the album after adding them
-        query_string = '''
-        SELECT COUNT(photo_id)
-        FROM photo_album
-        WHERE album_id='{}';
-        '''.format(album_id)
+        # query_string = '''
+        # SELECT COUNT(photo_id)
+        # FROM photo_album
+        # WHERE album_id='{}';
+        # '''.format(album_id)
         # update the count in album
-        photo_count = self.db.make_query(query_string)[0][0]
-        print(photo_count)
+        # photo_count = self.db.make_query(query_string)[0][0]
+        # print(photo_count)
+
+        # make sure album photos count is correct
+        self.update_album_photo_count(album_id)
 
         # update the count in album
-        query_string = '''
-        UPDATE album
-        SET photos = {}
-        WHERE album_id='{}';
+        # query_string = '''
+        # UPDATE album
+        # SET photos = {}
+        # WHERE album_id='{}';
 
-        '''.format(int(photo_count), album_id)
-        self.db.make_query(query_string)
+        # '''.format(int(photo_count), album_id)
+        # self.db.make_query(query_string)
 
     def create_album(self, user_id, title, description):
         # one of the current ids, a ten digit number
@@ -415,6 +437,10 @@ class Album(object):
         Offset is where you want to start from, so 0 would be from the most recent.
         10 from the tenth most recent etc.
         """
+
+        # make sure album photos count is correct
+        self.update_album_photo_count(album_id)
+
         q_data = None
         with sqlite3.connect(self.db.db_name) as connection:
             c = connection.cursor()
@@ -492,6 +518,9 @@ class Album(object):
 
 if __name__ == "__main__":
     a = Album()
+
+    print(a.get_albums())
+
     # print(a.get_albums_in_range(20, 20))
 
     # print(a.get_album(72157701915517595))
@@ -509,9 +538,9 @@ if __name__ == "__main__":
 
     # a.get_album_cover('1847925474')
 
-    print()
-    print(a.get_album_photos_in_range('72157701915517595'))
-    print()
+    # print()
+    # print(a.get_album_photos_in_range('72157701915517595'))
+    # print()
     # print(a.get_album_photos('72157672063116008'))
 
     # print(a.remove_photos_from_album('72157678080171871', ['44692598005']))
