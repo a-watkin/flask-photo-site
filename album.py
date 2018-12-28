@@ -249,37 +249,14 @@ class Album(object):
         )
 
     def add_photos_to_album(self, album_id, photos):
-        # db.insert_data(
-        #     table='tag',
-        #     tag_name=new_tag,
-        #     user_id='28035310@N00'
-        # )
         for photo in photos:
-
             self.db.insert_data(
                 table='photo_album',
                 photo_id=photo,
                 album_id=album_id
             )
-            # i need to update the photo count in album
 
-        # get the number of photos in the album after adding them
-        query_string = '''
-            SELECT COUNT(photo_id)
-            FROM photo_album
-            WHERE album_id='{}';
-        '''.format(album_id)
-        # update the count in album
-        photo_count = self.db.make_query(query_string)[0][0]
-        print(photo_count)
-
-        # update the count in album
-        query_string = '''
-            UPDATE album
-            SET photos = {}
-            WHERE album_id='{}';
-        '''.format(int(photo_count), album_id)
-        self.db.make_query(query_string)
+        self.update_album_photo_count(album_id)
 
     def get_album_photos_in_range(self, album_id, limit=20, offset=0):
         """
@@ -299,8 +276,12 @@ class Album(object):
         pages = num_photos // limit
 
         # otherwise it starts at 0 and I want it to start at 1
-        page += 1
-        pages += 1
+        if num_photos == 20:
+            page = 1
+            pages = 1
+        else:
+            page += 1
+            pages += 1
 
         q_data = None
         with sqlite3.connect(self.db.db_name) as connection:
@@ -519,7 +500,7 @@ class Album(object):
 if __name__ == "__main__":
     a = Album()
 
-    print(a.get_albums())
+    print(a.get_containing_album(1968247294))
 
     # print(a.get_albums_in_range(20, 20))
 

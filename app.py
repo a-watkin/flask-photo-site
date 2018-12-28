@@ -944,6 +944,12 @@ def get_album_photos_in_pages():
         if offset < 0:
             offset = 0
 
+        # guards against an offset greater than the number of photos
+        if offset >= a.count_photos_in_album(args['album_id']):
+            # ok if you want it to return to the start of the pages
+            # offset = 0
+            pass
+
         album_photos = a.get_album_photos_in_range(
             args['album_id'], 20, offset)
         return render_template('album.html', json_data=album_photos)

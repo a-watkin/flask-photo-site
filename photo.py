@@ -227,8 +227,6 @@ class Photos(object):
         next_photo = self.get_next_photo(photo_id)
         prev_photo = self.get_previous_photo(photo_id)
 
-        print('PHOTO DATA\n', photo_data[0]['photo_id'])
-
         # prevent None being retunred when the last pictures are reached
         if next_photo is None:
             next_photo = photo_data[0]['photo_id']
@@ -236,22 +234,16 @@ class Photos(object):
         if prev_photo is None:
             prev_photo = photo_data[0]['photo_id']
 
-        """
-        Get the tags for the current photo.
-        """
-        tag_data = self.tag.get_photo_tags(photo_id)
         album_data = self.album.get_containing_album(photo_id)
 
-        # print('tags ', tag_data)
-
-        if len(album_data) > 0:
-            # print('album_id', album_data[0]['album_id'])
-            album_id = album_data[0]['album_id']
-            album_cover = self.album.get_album_cover(album_id)
-            # print(album_cover)
-            album_data[0]['large_square'] = album_cover[0]['large_square']
-
-        # print('album_data ', album_data)
+        for album in album_data:
+            album['human_readable_title'] = name_util.make_decoded(
+                album['title'])
+            album['human_readable_description'] = name_util.make_decoded(
+                album['description']
+            )
+            album['large_square'] = self.album.get_album_cover(
+                album['album_id'])[0]['large_square']
 
         if len(photo_data) > 0:
             # becasuse it is a list containing a dict
@@ -261,11 +253,12 @@ class Photos(object):
                 'photo_id': photo_data['photo_id'],
                 'title': self.needs_decode(photo_data['photo_title']),
                 'views': photo_data['views'],
-                'tags': tag_data,
-                'containing_album': album_data,
+                'tags': self.tag.get_photo_tags(photo_id),
+                'album_data': album_data,
                 'original': photo_data['original'],
                 'next': next_photo,
-                'previous': prev_photo
+                'previous': prev_photo,
+                'albums': len(album_data)
             }
 
         return rtn_data
@@ -336,13 +329,13 @@ class Photos(object):
 if __name__ == "__main__":
     p = Photos()
 
-    p.get_photos_in_range(20, 15280)
+    # p.get_photos_in_range(20, 15280)
 
     # p.delete_photo(39974272161)
     # next photo is working
     # print(p.get_next_photo(44692597905))
     # it can't get that photo
-    # print(p.get_photo(3325396595))
+    print(p.get_photo(1968247294))
 
     # print(p.get_photos_in_range())
     # print(p.db.db_name)
