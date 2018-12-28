@@ -455,9 +455,9 @@ if __name__ == "__main__":
     a = Album()
     # print(a.get_albums_in_range(20, 20))
 
-    # print(a.get_album(1621888039))
+    print(a.get_album(72157701915517595))
 
-    print(a.get_album_by_name("test 1"))
+    # print(a.get_album_by_name("test 1"))
 
     # print(a.get_album_cover('72157650725849398'))
     # blah = a.get_albums()
