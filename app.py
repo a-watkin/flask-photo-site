@@ -925,6 +925,27 @@ def get_album_photos_json():
         return redirect("/albums/{}".format(data['albumId']), code=302)
 
 
+@app.route('/api/album/photos', methods=['GET', 'POST'])
+@login_required
+def get_album_photos_in_pages():
+    args = request.args.to_dict()
+
+    print(args)
+
+    if 'offset' in args.keys():
+        offset = int(args['offset'])
+
+        if offset < 0:
+            offset = 0
+
+        album_photos = a.get_album_photos_in_range(
+            args['album_id'], 20, offset)
+        return render_template('album.html', json_data=album_photos)
+
+    album_photos = a.get_album_photos_in_range(args['tag_name'])
+    return render_template('album.html', json_data=album_photos)
+
+
 @app.route('/edit/album/<int:album_id>/remove/photos', methods=['GET'])
 @login_required
 def remove_album_photos(album_id):

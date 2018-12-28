@@ -1,18 +1,37 @@
-jQuery(document).ready(function($) {
+jQuery(document).ready(function ($) {
   $.noConflict();
 
-  console.log('i am alive')
+  // if(!$('#flash-message').text('No file selected')) {
 
-  $("#upload-button").click(function() {
-    // console.log('clicked upload')
-    $('#upload-message').removeAttr('hidden');
-  })
+  //   $("#upload-button").click(function () {
+  //     // console.log('clicked upload')
+  //     $('#upload-message').removeAttr('hidden');
+  //   })
+
+
+  // }
+
+  // $("#upload-button").click(function () {
+  //   // console.log('clicked upload')
+  //   $('#upload-message').removeAttr('hidden');
+  // })
+
+  // $('#upload-info').click(function() {
+  //   console.log($(":file").filestyle('input'));
+  // })
+
+  // $(":file").filestyle({
+  //   'onChange': function (files) {
+  //     console.log(files)
+  //     $('#flash-message').addAttr('hidden');
+  //   }
+  // });
 
 
   if (
-    $("#flash-message").text(function(e, value) {
+    $("#flash-message").text(function (e, value) {
       // console.log("logged out", e, value.trim());
-      if(value.trim() === "You have been logged out.") {
+      if (value.trim() === "You have been logged out.") {
         // console.log("Refresh page here!")
         window.location.replace("/")
       }
@@ -38,7 +57,7 @@ jQuery(document).ready(function($) {
   //   $("#warning-text").text("The characters: \\, / and % are not allowed.");
   // }
 
-  $("#tag-update").keyup(function(e) {
+  $("#tag-update").keyup(function (e) {
     safe = true;
     var arr = e.target.value.split(",");
 
