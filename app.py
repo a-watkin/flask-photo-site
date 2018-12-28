@@ -104,7 +104,7 @@ def upload_file():
 
         # No files selected
         if 'file' not in request.files:
-            flash('No file selected')
+            # flash('No file selected')
             return redirect(request.url)
 
         # Single or multiple files selected

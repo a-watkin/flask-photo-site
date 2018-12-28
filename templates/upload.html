@@ -29,12 +29,32 @@
 <div class="row text-center">
     <div class="col">
 
-        <form method=post enctype=multipart/form-data> <p>Select files to upload</p>
-            <input id="upload-info" type=file name="file" multiple>
-            <input id="upload-button" type="submit" value="Upload">
+        <form method="post" enctype="multipart/form-data">
+            <h2 class="text-left">Select photos to upload. You may select multiple files.</h2>
+
+            <hr>
+            <input id="upload-info" type="file" name="file" multiple>
+
+            <div class="row">
+                <div class="col">
+                    <button id="clear-input" type="button" class="btn btn-warning btn-block btn-lg upload-buttons">Clear</button>
+
+                </div>
+
+                <div class="col">
+
+                    <!-- <input id="upload-button" type="submit" value="Upload"> -->
+
+                    <button id="upload-button" type="submit" class="btn btn-success btn-block btn-lg upload-buttons">Upload</button>
+
+                </div>
+
+
+            </div>
         </form>
 
     </div>
 </div>
+
 
 {% endblock %}

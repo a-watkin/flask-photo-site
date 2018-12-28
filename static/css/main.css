@@ -166,3 +166,8 @@ card:hover {
     -webkit-box-pack: center;
     display: -webkit-box;
 }
+
+
+.upload-buttons {
+    margin-top: 1rem;
+}

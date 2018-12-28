@@ -9,8 +9,13 @@ jQuery(document).ready(function ($) {
   //   })
 
 
+
   // }
 
+  // $(":file").filestyle({
+  //   text: "Select photos"
+  // });
+  
   // $("#upload-button").click(function () {
   //   // console.log('clicked upload')
   //   $('#upload-message').removeAttr('hidden');
@@ -20,12 +25,36 @@ jQuery(document).ready(function ($) {
   //   console.log($(":file").filestyle('input'));
   // })
 
+  // Start the upload button as disabled
+  $('#upload-button').prop('disabled', true);
+
+  // Allows for checking the number of files
+  $(":file").filestyle({
+    'onChange': function (files) {
+      console.log(files)
+
+      if(files.length > 0) {
+        $('#upload-button').prop('disabled', false);
+      }
+    }
+  });
+
+  // Removes selected photos from the upload input
+  $('#clear-input').on('click', function () {
+    $(":file").filestyle('clear');
+    $('#upload-button').prop('disabled', true);
+  })
+  
+
   // $(":file").filestyle({
-  //   'onChange': function (files) {
-  //     console.log(files)
-  //     $('#flash-message').addAttr('hidden');
-  //   }
+  //   text: "Select photos"
   // });
+  $(":file").filestyle('size', 'lg');
+  // $(":file").filestyle('placeholder', '');
+  $(":file").filestyle('buttonBefore', true);
+
+  // $(":file").filestyle('badgeName', 'badge-danger');
+
 
 
   if (
