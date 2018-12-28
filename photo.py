@@ -29,6 +29,20 @@ class Photos(object):
         else:
             return a_str
 
+    def count_photos(self):
+        # get count of photos in album
+        num_photos = self.db.make_query(
+            '''
+            select count(photo_id)
+            from photo
+            '''
+        )
+
+        if len(num_photos) > 0:
+            return num_photos[0][0]
+        else:
+            return 0
+
     def get_photos_in_range(self, limit=20, offset=0):
         """
         Returns the latest 20 photos.
@@ -36,6 +50,19 @@ class Photos(object):
         Offset is where you want to start from, so 0 would be from the most recent.
         10 from the tenth most recent etc.
         """
+
+        num_photos = self.count_photos()
+
+        if offset > num_photos:
+            offset = num_photos - (num_photos % 20)
+
+        page = offset // limit
+
+        pages = num_photos // limit
+
+        # otherwise it starts at 0 and I want it to start at 1
+        page += 1
+        pages += 1
 
         # get number of photos in database total
         num_photos = self.db.make_query(
@@ -94,6 +121,8 @@ class Photos(object):
 
         rtn_dict['limit'] = limit
         rtn_dict['offset'] = offset
+        rtn_dict['page'] = page
+        rtn_dict['pages'] = pages
 
         return rtn_dict
 
