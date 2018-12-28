@@ -16,46 +16,41 @@ jQuery(document).ready(function ($) {
   //   text: "Select photos"
   // });
   
-  // $("#upload-button").click(function () {
-  //   // console.log('clicked upload')
-  //   $('#upload-message').removeAttr('hidden');
-  // })
-
+  
   // $('#upload-info').click(function() {
-  //   console.log($(":file").filestyle('input'));
-  // })
-
+    //   console.log($(":file").filestyle('input'));
+    // })
+    
   // Start the upload button as disabled
   $('#upload-button').prop('disabled', true);
-
+  
   // Allows for checking the number of files
   $(":file").filestyle({
     'onChange': function (files) {
       console.log(files)
-
+      
       if(files.length > 0) {
         $('#upload-button').prop('disabled', false);
       }
     }
   });
-
+  
   // Removes selected photos from the upload input
   $('#clear-input').on('click', function () {
     $(":file").filestyle('clear');
     $('#upload-button').prop('disabled', true);
   })
   
-
-  // $(":file").filestyle({
-  //   text: "Select photos"
-  // });
+  // Change button size on the file input field
   $(":file").filestyle('size', 'lg');
-  // $(":file").filestyle('placeholder', '');
+  // Puts the select photos button on the left
   $(":file").filestyle('buttonBefore', true);
 
-  // $(":file").filestyle('badgeName', 'badge-danger');
-
-
+  
+  // User feedback to say that files are uploading
+  $("#upload-button").click(function () {
+    $('#upload-message').removeAttr('hidden');
+  })
 
   if (
     $("#flash-message").text(function (e, value) {
