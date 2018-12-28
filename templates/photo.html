@@ -51,7 +51,7 @@
         <h2>Tags</h2>
         {% for tag in json_data['tags'] %}
         <!-- <h2>{{tag['human_readable_tag']}}</h2> -->
-        <a href="{{ url_for('photos_by_tag_name', tag_name=tag['tag_name']) }}">
+        <a href="{{ url_for('get_tag_photos', tag_name=tag['tag_name']) }}">
             <button type="button" class="btn btn-outline-success btn-lg">
                 {{tag['human_readable_tag']}}
             </button>

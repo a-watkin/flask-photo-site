@@ -693,6 +693,10 @@ def edit_tag(tag_name):
         print('old_tag', old_tag, 'new_tag', new_tag)
         print()
 
+        if old_tag == new_tag:
+            tag_data = t.get_tag(tag_name)
+            return render_template('edit_tag.html', data=tag_data), 200
+
         update_response = t.update_tag(new_tag, old_tag)
 
         print('\n', update_response, '\n')

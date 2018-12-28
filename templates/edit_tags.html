@@ -29,7 +29,7 @@
                 <tr>
                     <td class="text-left">
 
-                        <a href="{{url_for('photos_by_tag_name', tag_name=value['tag_name'])}}">
+                        <a href="{{url_for('get_tag_photos', tag_name=value['tag_name'])}}">
                             <button type="button" class="btn btn-outline-success btn-lg">
                                 {{ value["human_readable_tag"] }}
                             </button>
