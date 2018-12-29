@@ -103,7 +103,7 @@ class PhotoSelector extends React.Component {
   }
 
   sendData() {
-    // console.log("getting here?", this.state.albumId, this.state.selectedPhotos);
+    console.log("getting here?", this.state.albumId, this.state.selectedPhotos);
     // /api/getphotos
     fetch("/api/getphotos", {
       method: "POST",
