@@ -171,3 +171,8 @@ card:hover {
 .upload-buttons {
     margin-top: 1rem;
 }
+
+
+#test {
+    border: solid red 2px;
+}
