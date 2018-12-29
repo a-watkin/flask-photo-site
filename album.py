@@ -97,7 +97,12 @@ class Album(object):
 
         album_data = self.db.get_query_as_list(query)
 
-        # print(album_data)
+        if len(album_data) > 0:
+            album_data[0]['human_readable_title'] = name_util.make_decoded(
+                album_data[0]['title'])
+
+            album_data[0]['human_readable_description'] = name_util.make_decoded(
+                album_data[0]['description'])
 
         if len(album_data) > 0 and album_data[0]['photos'] > 0:
             # list index out of range
@@ -105,12 +110,6 @@ class Album(object):
             if self.get_album_cover(album_data[0]['album_id']):
                 album_data[0]['large_square'] = self.get_album_cover(
                     album_data[0]['album_id'])[0]['large_square']
-
-                album_data[0]['title'] = name_util.make_decoded(
-                    album_data[0]['title'])
-
-                album_data[0]['description'] = name_util.make_decoded(
-                    album_data[0]['description'])
 
             # print(album_data)
             return album_data[0]
@@ -497,11 +496,11 @@ class Album(object):
 if __name__ == "__main__":
     a = Album()
 
-    print(a.get_containing_album(1968247294))
+    # print(a.get_containing_album(1968247294))
 
     # print(a.get_albums_in_range(20, 20))
 
-    # print(a.get_album(72157701915517595))
+    print(a.get_album(3149315074))
 
     # print(a.get_album_by_name("test 1"))
 

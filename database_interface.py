@@ -67,8 +67,8 @@ class Database(object):
                 query_string = ('INSERT INTO {} VALUES({})'.format(
                     table_name, placeholders), data)
 
-                print('\nInsert datas query to the database is ',
-                      query_string, '\n')
+                # print('\nInsert datas query to the database is ',
+                #       query_string, '\n')
 
                 c = connection.cursor()
                 c.executemany('INSERT INTO {} VALUES({})'.format(
@@ -124,7 +124,7 @@ class Database(object):
     def make_query(self, query_string):
         with sqlite3.connect(self.db_name) as connection:
             c = connection.cursor()
-            print(query_string)
+            # print(query_string)
             return [x for x in c.execute(query_string)]
 
     def delete_rows_where(self, table_name, name, where):
@@ -135,7 +135,7 @@ class Database(object):
             '''.format(table_name, name, where)
 
             try:
-                print(query_string)
+                # print(query_string)
                 c.execute(query_string)
             except Exception as e:
                 print('Problem removing row ', e, query_string)

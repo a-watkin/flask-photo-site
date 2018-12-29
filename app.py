@@ -881,9 +881,11 @@ def edit_album(album_id):
         album_description = name_util.make_encoded(request.form['description'])
         # add the data to the database
 
+        print(' why oh why oh why....', album_name, album_description)
         a.update_album(album_id, album_name, album_description)
         # print('test', album_id, album_name, album_description)
         json_data = a.get_album(album_id)
+        print('what is get album returning? ', json_data)
         return render_template('edit_album.html', json_data=json_data), 200
 
 

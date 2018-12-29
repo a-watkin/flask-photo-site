@@ -10,12 +10,12 @@
     <div id="problem-div" class="col">
         <div class="card" style="width: 18rem;">
             <div class="card-body">
-                <h5 class="card-title text-center">{{json_data['album_data']['title']}}</h5>
+                <h5 class="card-title text-center">{{json_data['album_data']['human_readable_title']}}</h5>
                 <img class="card-img-top img-fluid" src={% if json_data['album_data']['large_square'] %}
                     {{
 json_data['album_data']['large_square']
-}} {% else %} '/static/images/logo.jpg' {% endif %} alt="{{ json_data['album_data']['title'] }} album">
-                <p class="card-text">{{json_data['album_data']['description']}}</p>
+}} {% else %} '/static/images/logo.jpg' {% endif %} alt="{{ json_data['album_data']['human_readable_title'] }} album">
+                <p class="card-text">{{json_data['album_data']['human_readable_description']}}</p>
                 <div class="row text-center">
                     <div class="col">
                         <p>
@@ -80,7 +80,7 @@ json_data['album_data']['large_square']
 
 <div class="row text-center">
     <div class="col">
-        <h1>The album {{json_data['album_data']['title']}}</h1>
+        <h1>The album {{json_data['album_data']['human_readable_title']}}</h1>
     </div>
 </div>
 <hr>
@@ -98,13 +98,13 @@ json_data['album_data']['large_square']
         <a href="{{url_for('get_album_photos', album_id=json_data['album_data']['album_id']) }}">
             <div class="card" style="width: 18rem;">
                 <div class="card-body">
-                    <h5 class="card-title text-center">{{json_data['album_data']['title']}}</h5>
+                    <h5 class="card-title text-center">{{json_data['album_data']['human_readable_title']}}</h5>
                     <img class="card-img-top img-fluid" src={% if json_data['album_data']['large_square'] %}
                         {{
 json_data['album_data']['large_square']
                     }} {% else %}
-                        '/static/images/logo.jpg' {% endif %} alt="{{ json_data['title'] }} album">
-                    <p class="card-text">{{json_data['album_data']['description']}}</p>
+                        '/static/images/logo.jpg' {% endif %} alt="{{ json_data['human_readable_title'] }} album">
+                    <p class="card-text">{{json_data['album_data']['human_readable_description']}}</p>
                     <div class="row">
                         <div class="col text-left">
                             <p>
