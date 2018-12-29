@@ -934,7 +934,6 @@ def get_album_photos_json():
 
 
 @app.route('/api/album/photos', methods=['GET', 'POST'])
-@login_required
 def get_album_photos_in_pages():
     args = request.args.to_dict()
 
@@ -943,7 +942,8 @@ def get_album_photos_in_pages():
     if 'offset' in args.keys():
         offset = int(args['offset'])
 
-        if offset < 0:
+        if offset <= 0:
+            # pass
             offset = 0
 
         # guards against an offset greater than the number of photos
@@ -952,6 +952,7 @@ def get_album_photos_in_pages():
             # offset = 0
             pass
 
+        # else:
         album_photos = a.get_album_photos_in_range(
             args['album_id'], 20, offset)
         return render_template('album.html', json_data=album_photos)
