@@ -5,7 +5,9 @@
         <h1>The album
             <span class="font-italic">
 
-                {{ deleted_album }}
+                <!-- <h1>{{deleted_album}}</h1> -->
+
+                {{ deleted_album['human_readable_title'] }}
 
             </span>
             has been removed.</h1>
