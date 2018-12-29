@@ -249,11 +249,26 @@ class Album(object):
 
     def add_photos_to_album(self, album_id, photos):
         for photo in photos:
-            self.db.insert_data(
-                table='photo_album',
-                photo_id=photo,
-                album_id=album_id
-            )
+            """
+            If the photo is already in the album it will cause an error.
+            """
+            try:
+                self.db.make_query(
+                    '''
+                    insert into photo_album (photo_id, album_id)
+                    values ("{}", "{}")
+                    '''.format(photo, album_id)
+                )
+            except Exception as err:
+                print('add_photos_to_album, problem ', err)
+            else:
+                continue
+
+            # self.db.insert_data(
+            #     table='photo_album',
+            #     photo_id=photo,
+            #     album_id=album_id
+            # )
 
         self.update_album_photo_count(album_id)
 
