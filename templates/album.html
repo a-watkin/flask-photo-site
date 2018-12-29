@@ -1,6 +1,9 @@
 {% extends "template.html" %}
 {% block content %}
 
+
+<!-- <h1>{{json_data}}</h1> -->
+
 {% if json_data['album_data']['photos'] > 0 %}
 
 <div class="row">
@@ -105,12 +108,12 @@ json_data['album_data']['large_square']
                     <div class="row">
                         <div class="col text-left">
                             <p>
-                                views: {{value['views']}}
+                                views: {{json_data['album_data']['views']}}
                             </p>
                         </div>
                         <div class="col text-right">
                             <p>
-                                photos: {{value['photos']}}
+                                photos: {{json_data['album_data']['photos']}}
                             </p>
                         </div>
                     </div>
