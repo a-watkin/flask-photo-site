@@ -118,7 +118,7 @@ class PhotoSelector extends React.Component {
     }).then(() => {
       // redirect after successful post
       console.log(this.state);
-      // window.location.assign(`/albums/${this.state.albumId}`);
+      window.location.assign(`/albums/${this.state.albumId}`);
     });
   }
 
