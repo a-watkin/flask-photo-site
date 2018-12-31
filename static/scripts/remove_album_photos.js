@@ -52,6 +52,7 @@ class SelectPhotos extends React.Component {
   }
 
   getNextPhotos() {
+    console.log("clicked on getNextPhotos");
     // console.log("next called ", this.state.currentOffset);
 
     const albumId = this.state.albumId;
@@ -98,6 +99,7 @@ class SelectPhotos extends React.Component {
   }
 
   getPreviousPhotos() {
+    console.log("clicked on getPreviousPhotos");
     const albumId = this.state.albumId;
 
     if (this.state.currentOffset <= 0) {
