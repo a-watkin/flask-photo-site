@@ -367,7 +367,10 @@ class UploadEditor extends React.Component {
     return (
       <div>
         <h2> There was a problem getting data. </h2> {photo} <hr />
-        <button onClick={() => testMount()}> Click me </button>
+        <button id="test-fetch" onClick={() => testMount()}>
+          {" "}
+          Click me{" "}
+        </button>
       </div>
     );
   }
