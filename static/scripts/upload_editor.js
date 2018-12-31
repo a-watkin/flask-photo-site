@@ -89,7 +89,9 @@ class UploadEditor extends React.Component {
 
     // console.log(test);
 
-    fetch("/discard/photo", {
+    // Firefox esr 60 blocks this as a http request despite the host being https only
+    // so no relative urls apparently...
+    fetch("https://www.photography-by-eigi.com/discard/photo", {
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json"
