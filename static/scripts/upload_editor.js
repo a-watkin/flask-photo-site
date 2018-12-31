@@ -53,7 +53,7 @@ class UploadEditor extends React.Component {
   componentWillMount() {
     console.log("called componentWillMount");
 
-    fetch("https://test", {
+    fetch("https://www.photography-by-eigi.com/test", {
       credentials: "include" // Useful for including session ID (and, IIRC, authorization headers)
     })
       .then(response => response.json())
