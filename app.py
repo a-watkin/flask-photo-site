@@ -85,12 +85,6 @@ def login_required(test):
     return wrap
 
 
-@app.route('/test')
-@login_required
-def test_route():
-    return json.dumps({'success': True}), 200, {'ContentType': 'application/json'}
-
-
 def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
@@ -313,6 +307,13 @@ def get_uploaded_photos():
     # json_data = up.get_uploaded_photos_test()
     print(json_data)
     return jsonify(json_data)
+
+
+@app.route('/test')
+@login_required
+def test_route():
+    json_data = up.get_uploaded_photos()
+    return json.dumps(json_data), 200, {'ContentType': 'application/json'}
 
 
 @app.route('/api/photos/')
