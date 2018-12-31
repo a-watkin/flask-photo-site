@@ -81,7 +81,7 @@ class UploadEditor extends React.Component {
 
     // console.log(test);
 
-    fetch("/api/discard", {
+    fetch("https://www.photography-by-eigi.com/api/discard", {
       method: "GET",
       headers: {
         Accept: "application/json",
@@ -107,7 +107,7 @@ class UploadEditor extends React.Component {
   updateTitle(e, photo_id, key) {
     const new_title = e.target.value;
 
-    fetch("/api/uploaded/title", {
+    fetch("https://www.photography-by-eigi.com/api/uploaded/title", {
       method: "POST",
       headers: {
         Accept: "application/json",
@@ -137,7 +137,7 @@ class UploadEditor extends React.Component {
           allowButtons: true
         });
 
-        fetch("/api/add/tags", {
+        fetch("https://www.photography-by-eigi.com/api/add/tags", {
           method: "POST",
           headers: {
             Accept: "application/json",
@@ -178,7 +178,7 @@ class UploadEditor extends React.Component {
       // console.log("hello from addToPhotoStream");
       // send data to the backend
       // console.log(this.state.items);
-      fetch("/api/upload/photostream", {
+      fetch("https://www.photography-by-eigi.com/api/upload/photostream", {
         method: "POST",
         headers: {
           Accept: "application/json",
