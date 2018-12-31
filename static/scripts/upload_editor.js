@@ -121,6 +121,7 @@ class UploadEditor extends React.Component {
 
     fetch("/api/uploaded/title", {
       method: "POST",
+      credentials: "include",
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json"
@@ -151,6 +152,7 @@ class UploadEditor extends React.Component {
 
         fetch("/api/add/tags", {
           method: "POST",
+          credentials: "include",
           headers: {
             Accept: "application/json",
             "Content-Type": "application/json"
@@ -192,6 +194,7 @@ class UploadEditor extends React.Component {
       // console.log(this.state.items);
       fetch("/api/upload/photostream", {
         method: "POST",
+        credentials: "include",
         headers: {
           Accept: "application/json",
           "Content-Type": "application/json"
