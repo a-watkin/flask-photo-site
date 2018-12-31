@@ -113,26 +113,22 @@ class SelectPhotos extends React.Component {
         credentials: "include"
       }
     )
-      .then(res => res.json())
-      .then(
-        result => {
-          // console.log("result", result);
-          this.setState({
-            isLoaded: true,
-            items: result.photos,
-            currentOffset: result.offset
-          });
-        },
-        // Note: it's important to handle errors here
-        // instead of a catch() block so that we don't swallow
-        // exceptions from actual bugs in components.
-        error => {
-          this.setState({
-            isLoaded: true,
-            error
-          });
-        }
-      );
+      .then(result => result.json())
+      .then(result => {
+        console.log("result", result);
+        this.setState({
+          isLoaded: true,
+          items: result.photos,
+          currentOffset: result.offset
+        });
+      })
+      .catch(error => console.error(error))
+      .then(() => {
+        this.setState({
+          isLoaded: true,
+          error
+        });
+      });
   }
 
   sendData() {
