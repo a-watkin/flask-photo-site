@@ -51,7 +51,8 @@ class UploadEditor extends React.Component {
 
   componentWillMount() {
     console.log("called");
-    fetch("/api/uploaded")
+
+    fetch("https://www.photography-by-eigi.com/uploaded")
       .then(res => res.json())
       .then(
         result => {
@@ -62,7 +63,7 @@ class UploadEditor extends React.Component {
           });
         },
         error => {
-          console.log(error);
+          console.log("problem fetching data, ", error);
           this.setState({
             isLoaded: true,
             error
