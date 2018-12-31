@@ -18,6 +18,7 @@ class UploadEditor extends React.Component {
     this.updateTitle = this.updateTitle.bind(this);
 
     this.componentWillMount = this.componentWillMount.bind(this);
+    this.testMount = this.testMount.bind(this);
   }
 
   checkInput(input_string) {
@@ -52,7 +53,30 @@ class UploadEditor extends React.Component {
   componentWillMount() {
     console.log("called");
 
-    fetch("/api/uploaded")
+    fetch("https:/api/uploaded")
+      .then(res => res.json())
+      .then(
+        result => {
+          console.log("result", result);
+          this.setState({
+            isLoaded: true,
+            items: result.photos
+          });
+        },
+        error => {
+          console.log("problem fetching data, ", error);
+          this.setState({
+            isLoaded: true,
+            error
+          });
+        }
+      );
+  }
+
+  testMount() {
+    console.log("called test mount");
+
+    fetch("https:/api/uploaded")
       .then(res => res.json())
       .then(
         result => {
@@ -228,6 +252,7 @@ class UploadEditor extends React.Component {
     let addToExistingAlbum = this.addToExistingAlbum;
 
     let componentWillMount = this.componentWillMount;
+    let testMount = this.testMount;
 
     // safeguards against wrong input and warnings
     let allowTags = this.state.allowTags;
@@ -342,7 +367,7 @@ class UploadEditor extends React.Component {
     return (
       <div>
         <h2> There was a problem getting data. </h2> {photo} <hr />
-        <button onClick={() => componentWillMount()}>Click me</button>
+        <button onClick={() => testMount()}> Click me </button>
       </div>
     );
   }
