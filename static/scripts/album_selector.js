@@ -23,7 +23,9 @@ class AlbumSelector extends React.Component {
     let splitUrl = currentUrl.split("/");
     // const albumId = splitUrl[5];
 
-    fetch("/api/getalbums")
+    fetch("/api/getalbums", {
+      credentials: "include"
+    })
       .then(res => res.json())
       .then(
         result => {
@@ -49,7 +51,9 @@ class AlbumSelector extends React.Component {
   getNextAlbums() {
     // console.log("next called ", this.state.currentOffset);
 
-    fetch(`/api/getalbums?offset=${this.state.currentOffset + 20}`)
+    fetch(`/api/getalbums?offset=${this.state.currentOffset + 20}`, {
+      credentials: "include"
+    })
       .then(res => res.json())
       .then(
         result => {
@@ -85,7 +89,9 @@ class AlbumSelector extends React.Component {
       return false;
     }
 
-    fetch(`/api/getalbums?offset=${this.state.currentOffset - 20}`)
+    fetch(`/api/getalbums?offset=${this.state.currentOffset - 20}`, {
+      credentials: "include"
+    })
       .then(res => res.json())
       .then(
         result => {
@@ -118,6 +124,7 @@ class AlbumSelector extends React.Component {
     // console.log("getting here?", this.state.selectedAlbum);
     fetch("https://www.photography-by-eigi.com/api/getalbums", {
       method: "POST",
+      credentials: "include",
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json"
