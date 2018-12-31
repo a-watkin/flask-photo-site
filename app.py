@@ -307,9 +307,11 @@ def uploaded_photos_page():
 @app.route('/api/uploaded/')
 @login_required
 def get_uploaded_photos():
+    print('hitting up the server firefox?')
+
     json_data = up.get_uploaded_photos()
     # json_data = up.get_uploaded_photos_test()
-    # print(json_data)
+    print(json_data)
     return jsonify(json_data)
 
 

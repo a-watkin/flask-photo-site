@@ -16,6 +16,8 @@ class UploadEditor extends React.Component {
     this.addToPhotoStream = this.addToPhotoStream.bind(this);
     this.addTags = this.addTags.bind(this);
     this.updateTitle = this.updateTitle.bind(this);
+
+    this.componentWillMount = this.componentWillMount.bind(this);
   }
 
   checkInput(input_string) {
@@ -53,13 +55,14 @@ class UploadEditor extends React.Component {
       .then(res => res.json())
       .then(
         result => {
-          // console.log("result", result);
+          console.log("result", result);
           this.setState({
             isLoaded: true,
             items: result.photos
           });
         },
         error => {
+          console.log(error);
           this.setState({
             isLoaded: true,
             error
@@ -78,14 +81,11 @@ class UploadEditor extends React.Component {
     // console.log(test);
 
     fetch("/api/discard", {
-      method: "POST",
+      method: "GET",
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        photoId: photo_id
-      })
+      }
     }).then(Response => {
       // console.log("Response", Response.status);
 
@@ -208,10 +208,10 @@ class UploadEditor extends React.Component {
       <div className="row">
         <div className="col text-center">
           <div id="warning-text" className="alert alert-warning" role="alert">
-            Tags may not be spaces and may not contain the characters: \ / % .
-            Please check your tags and try again.
-          </div>
-        </div>
+            Tags may not be spaces and may not contain the characters: \/ % .
+            Please check your tags and try again.{" "}
+          </div>{" "}
+        </div>{" "}
       </div>
     );
   }
@@ -225,6 +225,8 @@ class UploadEditor extends React.Component {
     let addToPhotoStream = this.addToPhotoStream;
     let addToNewAlbum = this.addToNewAlbum;
     let addToExistingAlbum = this.addToExistingAlbum;
+
+    let componentWillMount = this.componentWillMount;
 
     // safeguards against wrong input and warnings
     let allowTags = this.state.allowTags;
@@ -247,9 +249,9 @@ class UploadEditor extends React.Component {
                   alt="Uploaded photo"
                   className="img-fluid"
                 />
-              </div>
+              </div>{" "}
               <div className="col text-center my-auto">
-                <h5>Enter a title</h5>
+                <h5> Enter a title </h5>{" "}
                 <input
                   className="input-group input-group-text"
                   type="text"
@@ -260,14 +262,14 @@ class UploadEditor extends React.Component {
                   }
                   onBlur={e => updateTitle(e, photo_id, key)}
                   // disabled={!allowTags}
-                />
+                />{" "}
                 <hr />
-                <h5>Enter tags below</h5>
+                <h5> Enter tags below </h5>{" "}
                 <p>
-                  You can enter multiple tags seperating them with commas. Tags
-                  may contain spaces, but a space itself cannot be a tag.
-                </p>
-                {allowTags === false ? warningArea() : null}
+                  You can enter multiple tags seperating them with commas.Tags
+                  may contain spaces, but a space itself cannot be a tag.{" "}
+                </p>{" "}
+                {allowTags === false ? warningArea() : null}{" "}
                 <input
                   className="input-group input-group-text"
                   type="text"
@@ -279,7 +281,7 @@ class UploadEditor extends React.Component {
                     photos[key]["tags"] === null ? "" : photos[key]["tags"]
                   }
                   // disabled={!allowTitle}
-                />
+                />{" "}
                 <hr />
                 <div className="row">
                   <div className="col">
@@ -287,12 +289,12 @@ class UploadEditor extends React.Component {
                       className="btn btn-danger btn-lg"
                       onClick={() => discardPhoto(photo_id, key)}
                     >
-                      Discard photo
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
+                      Discard photo{" "}
+                    </button>{" "}
+                  </div>{" "}
+                </div>{" "}
+              </div>{" "}
+            </div>{" "}
             <hr />
           </div>
         );
@@ -300,8 +302,8 @@ class UploadEditor extends React.Component {
 
       return (
         <div>
+          {" "}
           {photo}
-
           <div className="row">
             <div className="col text-center">
               <button
@@ -309,30 +311,28 @@ class UploadEditor extends React.Component {
                 className="btn btn-warning btn-block btn-lg"
                 onClick={() => addToNewAlbum()}
               >
-                Add to a new album
-              </button>
+                Add to a new album{" "}
+              </button>{" "}
             </div>
-
             <div className="col text-center">
               <button
                 disabled={!allowButtons}
                 className="btn btn-success btn-block btn-lg"
                 onClick={() => addToPhotoStream()}
               >
-                Add to photostream only
-              </button>
+                Add to photostream only{" "}
+              </button>{" "}
             </div>
-
             <div className="col text-center">
               <button
                 disabled={!allowButtons}
                 className="btn btn-success btn-block btn-lg"
                 onClick={() => addToExistingAlbum()}
               >
-                Add to existing album
-              </button>
-            </div>
-          </div>
+                Add to existing album{" "}
+              </button>{" "}
+            </div>{" "}
+          </div>{" "}
           <hr />
         </div>
       );
@@ -340,9 +340,8 @@ class UploadEditor extends React.Component {
 
     return (
       <div>
-        <h2> There was a problem getting data.</h2>
-        {photo}
-        <hr />
+        <h2> There was a problem getting data. </h2> {photo} <hr />
+        <button onClick={() => componentWillMount()}>Click me</button>
       </div>
     );
   }
