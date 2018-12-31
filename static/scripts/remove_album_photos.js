@@ -65,8 +65,8 @@ class SelectPhotos extends React.Component {
     //     `);
 
     fetch(
-      `/api/albumphotos?album_id=${albumId}&offset=${currentOffset + 20}
-        `,
+      `https://www.photography-by-eigi.com/api/albumphotos?album_id=${albumId}&offset=${currentOffset +
+        20}`,
       {
         credentials: "include"
       }
@@ -105,8 +105,8 @@ class SelectPhotos extends React.Component {
     }
 
     fetch(
-      `/api/albumphotos?album_id=${albumId}&offset=${this.state.currentOffset -
-        20}`,
+      `https://www.photography-by-eigi.com/api/albumphotos?album_id=${albumId}&offset=${this
+        .state.currentOffset - 20}`,
       {
         credentials: "include"
       }
