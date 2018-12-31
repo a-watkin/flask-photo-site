@@ -110,7 +110,12 @@ class SelectPhotos extends React.Component {
       `https://www.photography-by-eigi.com/api/albumphotos?album_id=${albumId}&offset=${this
         .state.currentOffset - 20}`,
       {
-        credentials: "include"
+        method: "GET",
+        credentials: "include",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json"
+        }
       }
     )
       .then(result => result.json())
