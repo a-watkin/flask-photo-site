@@ -211,7 +211,7 @@ def upload_file():
     return render_template('upload.html'), 200
 
 
-@app.route('/api/discard', methods=['GET', 'POST'])
+@app.route('/discard', methods=['GET', 'POST'])
 @login_required
 def discard_photo():
     photo_id = request.get_json()
