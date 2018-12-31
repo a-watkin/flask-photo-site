@@ -414,7 +414,7 @@ def get_albums_json():
             return jsonify(album_data)
 
     if request.method == 'POST':
-
+        print('called api/getalbum with a post request')
         print('test', request.get_json())
 
         data = request.get_json()
