@@ -66,7 +66,10 @@ class SelectPhotos extends React.Component {
 
     fetch(
       `/api/albumphotos?album_id=${albumId}&offset=${currentOffset + 20}
-        `
+        `,
+      {
+        credentials: "include"
+      }
     )
       .then(res => res.json())
       .then(
@@ -103,7 +106,10 @@ class SelectPhotos extends React.Component {
 
     fetch(
       `/api/albumphotos?album_id=${albumId}&offset=${this.state.currentOffset -
-        20}`
+        20}`,
+      {
+        credentials: "include"
+      }
     )
       .then(res => res.json())
       .then(
@@ -130,7 +136,7 @@ class SelectPhotos extends React.Component {
   sendData() {
     // console.log("getting here?", this.state.albumId, this.state.selectedPhotos);
     // /api/getphotos
-    fetch("/api/albumphotos", {
+    fetch("https://www.photography-by-eigi.com/api/albumphotos", {
       method: "POST",
       credentials: "include",
       headers: {
