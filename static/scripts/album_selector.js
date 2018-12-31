@@ -17,7 +17,7 @@ class AlbumSelector extends React.Component {
   }
 
   componentWillMount() {
-    // console.log("hello from componentWillMount");
+    console.log("hello from componentWillMount in album_selector");
     // getting the album id from the URL
     let currentUrl = window.location.href;
     let splitUrl = currentUrl.split("/");
