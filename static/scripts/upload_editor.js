@@ -53,7 +53,7 @@ class UploadEditor extends React.Component {
   componentWillMount() {
     console.log("called componentWillMount");
 
-    fetch("https://www.photography-by-eigi.com/test", {
+    fetch("/test", {
       credentials: "include"
     })
       .then(res => res.json())
@@ -89,13 +89,13 @@ class UploadEditor extends React.Component {
 
     // console.log(test);
 
-    fetch("https://www.photography-by-eigi.com/discard/photo", {
-      method: "POST",
+    fetch("/discard/photo", {
       headers: {
         Accept: "application/json",
-        "Content-Type": "application/json",
-        credentials: "include"
-      }
+        "Content-Type": "application/json"
+      },
+      method: "POST",
+      body: JSON.stringify({ photoId: photo_id })
     }).then(Response => {
       // console.log("Response", Response.status);
 
