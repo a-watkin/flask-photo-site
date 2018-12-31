@@ -56,9 +56,13 @@ class UploadEditor extends React.Component {
     fetch("https://www.photography-by-eigi.com/test", {
       credentials: "include" // Useful for including session ID (and, IIRC, authorization headers)
     })
-      .then(response => response.json())
+      .then(res => res.json())
       .then(data => {
         console.log(data); // Prints result from `response.json()`
+        this.setState({
+          isLoaded: true,
+          items: result.photos
+        });
       })
       .catch(error => console.error(error));
   }
