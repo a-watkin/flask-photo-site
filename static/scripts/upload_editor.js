@@ -90,7 +90,7 @@ class UploadEditor extends React.Component {
     // console.log(test);
 
     fetch("/api/discard", {
-      method: "POST",
+      method: "GET",
       headers: {
         credentials: "include",
         Accept: "application/json",
