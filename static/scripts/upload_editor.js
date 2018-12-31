@@ -48,6 +48,7 @@ class UploadEditor extends React.Component {
   }
 
   componentWillMount() {
+    console.log("called");
     fetch("/api/uploaded")
       .then(res => res.json())
       .then(
@@ -339,8 +340,9 @@ class UploadEditor extends React.Component {
 
     return (
       <div>
-        <h2> There was a problem getting data. </h2>
+        <h2> There was a problem getting data.</h2>
         {photo}
+        <hr />
       </div>
     );
   }
