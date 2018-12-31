@@ -54,7 +54,7 @@ class UploadEditor extends React.Component {
     console.log("called componentWillMount");
 
     fetch("https://www.photography-by-eigi.com/test", {
-      credentials: "include" // Useful for including session ID (and, IIRC, authorization headers)
+      credentials: "include"
     })
       .then(res => res.json())
       .then(res => {
@@ -90,8 +90,9 @@ class UploadEditor extends React.Component {
     // console.log(test);
 
     fetch("/api/discard", {
-      method: "GET",
+      method: "POST",
       headers: {
+        credentials: "include",
         Accept: "application/json",
         "Content-Type": "application/json"
       }
