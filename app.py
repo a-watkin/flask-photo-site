@@ -88,7 +88,7 @@ def login_required(test):
 @app.route('/test')
 @login_required
 def test_route():
-    return 'you should not see this'
+    return json.dumps({'success': True}), 200, {'ContentType': 'application/json'}
 
 
 def allowed_file(filename):
