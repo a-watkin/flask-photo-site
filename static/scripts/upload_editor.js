@@ -96,6 +96,7 @@ class UploadEditor extends React.Component {
         Accept: "application/json",
         "Content-Type": "application/json"
       },
+      credentials: "include",
       method: "POST",
       body: JSON.stringify({ photoId: photo_id })
     }).then(Response => {
