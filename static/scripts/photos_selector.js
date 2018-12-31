@@ -51,7 +51,9 @@ class PhotoSelector extends React.Component {
   getNextPhotos() {
     // console.log("next called ", this.state.currentOffset);
 
-    fetch(`/api/getphotos?offset=${this.state.currentOffset + 20}`)
+    fetch(`/api/getphotos?offset=${this.state.currentOffset + 20}`, {
+      credentials: "include"
+    })
       .then(res => res.json())
       .then(
         result => {
@@ -81,7 +83,9 @@ class PhotoSelector extends React.Component {
       return false;
     }
 
-    fetch(`/api/getphotos?offset=${this.state.currentOffset - 20}`)
+    fetch(`/api/getphotos?offset=${this.state.currentOffset - 20}`, {
+      credentials: "include"
+    })
       .then(res => res.json())
       .then(
         result => {
