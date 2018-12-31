@@ -22,7 +22,9 @@ class PhotoSelector extends React.Component {
     let splitUrl = currentUrl.split("/");
     const albumId = splitUrl[5];
 
-    fetch("/api/getphotos")
+    fetch("/api/getphotos", {
+      credentials: "include"
+    })
       .then(res => res.json())
       .then(
         result => {
@@ -107,6 +109,7 @@ class PhotoSelector extends React.Component {
     // /api/getphotos
     fetch("/api/getphotos", {
       method: "POST",
+      credentials: "include",
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json"

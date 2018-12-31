@@ -24,7 +24,9 @@ class TagSelector extends React.Component {
     let splitUrl = currentUrl.split("=");
     let photoId = splitUrl[1];
 
-    fetch(`/api/get/phototags?photo_id=${photoId}`)
+    fetch(`/api/get/phototags?photo_id=${photoId}`, {
+      credentials: "include"
+    })
       .then(res => res.json())
       .then(
         result => {
@@ -84,6 +86,7 @@ class TagSelector extends React.Component {
     }
     fetch("/api/get/phototags", {
       method: "POST",
+      credentials: "include",
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json"

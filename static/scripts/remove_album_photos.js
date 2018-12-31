@@ -25,7 +25,9 @@ class SelectPhotos extends React.Component {
 
     // console.log(`/api/albumphotos?album_id=${albumId}`);
 
-    fetch(`/api/albumphotos?album_id=${albumId}`)
+    fetch(`/api/albumphotos?album_id=${albumId}`, {
+      credentials: "include"
+    })
       .then(res => res.json())
       .then(
         result => {
@@ -130,6 +132,7 @@ class SelectPhotos extends React.Component {
     // /api/getphotos
     fetch("/api/albumphotos", {
       method: "POST",
+      credentials: "include",
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json"
