@@ -106,6 +106,11 @@ class SelectPhotos extends React.Component {
       return false;
     }
 
+    console.log(
+      `https://www.photography-by-eigi.com/api/albumphotos?album_id=${albumId}&offset=${this
+        .state.currentOffset - 20}`
+    );
+
     fetch(
       `https://www.photography-by-eigi.com/api/albumphotos?album_id=${albumId}&offset=${this
         .state.currentOffset - 20}`,
