@@ -216,16 +216,16 @@ def upload_file():
 def discard_photo():
     return 'test'
 
-    # photo_id = request.get_json()
-    # # print(photo_id)
+    photo_id = request.get_json()
+    # print(photo_id)
 
-    # result = up.discard_photo(photo_id['photoId'])
-    # # print(result)
+    result = up.discard_photo(photo_id['photoId'])
+    # print(result)
 
-    # if up.discard_photo(photo_id['photoId']):
-    #     return json.dumps({'success': True}), 200, {'ContentType': 'application/json'}
-    # else:
-    #     return json.dumps({'success': False}), 500, {'ContentType': 'application/json'}
+    if up.discard_photo(photo_id['photoId']):
+        return json.dumps({'success': True}), 200, {'ContentType': 'application/json'}
+    else:
+        return json.dumps({'success': False}), 500, {'ContentType': 'application/json'}
 
 
 @app.route('/api/select/album')
