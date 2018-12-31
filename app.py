@@ -214,7 +214,7 @@ def upload_file():
 @app.route('/discard/photo', methods=['GET', 'POST'])
 @login_required
 def discard_photo():
-    return 'test'
+    # return 'test'
 
     photo_id = request.get_json()
     # print(photo_id)
