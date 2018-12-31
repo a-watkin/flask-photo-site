@@ -53,7 +53,7 @@ class UploadEditor extends React.Component {
   componentWillMount() {
     console.log("called");
 
-    fetch("https:/api/uploaded")
+    fetch("https://www.photography-by-eigi.com/api/uploaded")
       .then(res => res.json())
       .then(
         result => {
