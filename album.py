@@ -280,6 +280,10 @@ class Album(object):
         10 from the tenth most recent etc.
         """
 
+        # for some reason it was passing a string here
+        # probably from the url
+        offset = int(offset)
+
         num_photos = self.count_photos_in_album(album_id)
 
         if offset > num_photos:

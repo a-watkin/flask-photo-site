@@ -61,17 +61,18 @@ class SelectPhotos extends React.Component {
     // so to safe gaurd against coercion
     let currentOffset = Number(this.state.currentOffset);
 
+    console.log(
+      `/api/albumphotos?album_id=${albumId}&offset=${this.state.currentOffset -
+        20}`
+    );
+
     // console.log(`/api/albumphotos?album_id=${albumId}&offset=${20 +
     //   currentOffset}
     //     `);
 
-    fetch(
-      `https://www.photography-by-eigi.com/api/albumphotos?album_id=${albumId}&offset=${currentOffset +
-        20}`,
-      {
-        credentials: "include"
-      }
-    )
+    fetch(`/api/albumphotos?album_id=${albumId}&offset=${currentOffset + 20}`, {
+      credentials: "include"
+    })
       .then(res => res.json())
       .then(
         result => {
@@ -107,13 +108,13 @@ class SelectPhotos extends React.Component {
     }
 
     console.log(
-      `https://www.photography-by-eigi.com/api/albumphotos?album_id=${albumId}&offset=${this
-        .state.currentOffset - 20}`
+      `/api/albumphotos?album_id=${albumId}&offset=${this.state.currentOffset -
+        20}`
     );
 
     fetch(
-      `https://www.photography-by-eigi.com/api/albumphotos?album_id=${albumId}&offset=${this
-        .state.currentOffset - 20}`,
+      `/api/albumphotos?album_id=${albumId}&offset=${this.state.currentOffset -
+        20}`,
       {
         method: "GET",
         credentials: "include",
