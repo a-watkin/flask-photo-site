@@ -90,7 +90,7 @@ class UploadEditor extends React.Component {
     // console.log(test);
 
     fetch("https://www.photography-by-eigi.com/discard/photo", {
-      method: "GET",
+      method: "POST",
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json",
