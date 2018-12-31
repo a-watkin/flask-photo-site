@@ -109,13 +109,14 @@ class AlbumSelector extends React.Component {
   }
 
   sendData() {
+    // Guards against sending data if no album is selected
     if (this.state.selectedAlbum.length < 1) {
       // console.log("do nothing if no album has been selected");
       return false;
     }
 
     // console.log("getting here?", this.state.selectedAlbum);
-    fetch("/api/getalbums", {
+    fetch("https://www.photography-by-eigi.com/api/getalbums", {
       method: "POST",
       headers: {
         Accept: "application/json",
@@ -124,11 +125,13 @@ class AlbumSelector extends React.Component {
       body: JSON.stringify({
         albumId: this.state.selectedAlbum
       })
-    }).then(() => {
-      // console.log("eh");
-      // redirect after successful post
-      window.location.assign(`/albums/${this.state.selectedAlbum[0]}`);
-    });
+    })
+      .catch(error => console.error(error))
+      .then(() => {
+        // console.log("eh");
+        // redirect after successful post
+        window.location.assign(`/albums/${this.state.selectedAlbum[0]}`);
+      });
   }
 
   albumClick(album_id) {
