@@ -313,7 +313,8 @@ def get_uploaded_photos():
 @login_required
 def test_route():
     json_data = up.get_uploaded_photos()
-    return json.dumps(json_data), 200, {'ContentType': 'application/json'}
+    # return json.dumps(json_data), 200, {'ContentType': 'application/json'}
+    return jsonify(json_data)
 
 
 @app.route('/api/photos/')

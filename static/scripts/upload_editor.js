@@ -66,24 +66,14 @@ class UploadEditor extends React.Component {
   testMount() {
     console.log("called test mount");
 
-    fetch("https://www.photography-by-eigi.com/api/uploaded")
-      .then(res => res.json())
-      .then(
-        result => {
-          console.log("result", result);
-          this.setState({
-            isLoaded: true,
-            items: result.photos
-          });
-        },
-        error => {
-          console.log("problem fetching data, ", error);
-          this.setState({
-            isLoaded: true,
-            error
-          });
-        }
-      );
+    fetch("https://www.photography-by-eigi.com/test", {
+      credentials: "include" // Useful for including session ID (and, IIRC, authorization headers)
+    })
+      .then(response => response.json())
+      .then(data => {
+        console.log(data); // Prints result from `response.json()`
+      })
+      .catch(error => console.error(error));
   }
 
   discardPhoto(photo_id, key) {
