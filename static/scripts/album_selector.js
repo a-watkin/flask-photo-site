@@ -135,7 +135,7 @@ class AlbumSelector extends React.Component {
     })
       .catch(error => console.error(error))
       .then(() => {
-        // console.log("eh");
+        // console.log("test");
         // redirect after successful post
         window.location.assign(`/albums/${this.state.selectedAlbum[0]}`);
       });

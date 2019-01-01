@@ -75,6 +75,22 @@ class Tag(object):
 
         print('\nDONE NO PROBLEMS!')
 
+    def remove_zero_photo_tags(self):
+        self.check_all_tag_photo_counts()
+
+        zero_photos = self.db.make_query(
+            '''
+            delete from tag where photos = 0
+            '''
+        )
+
+    def get_zero_photo_tag_count(self):
+        return self.db.make_query(
+            '''
+            select count(photos) from tag where photos = 0
+            '''
+        )[0][0]
+
     def check_forbidden(self, tag_name):
         print('hello from check_forbidden')
         print(tag_name)
@@ -453,8 +469,23 @@ class Tag(object):
         pages = num_photos // limit
 
         # otherwise it starts at 0 and I want it to start at 1
-        page += 1
-        pages += 1
+        if num_photos == 20:
+            page = 1
+            pages = 1
+
+        elif num_photos > 20 and num_photos % 20 == 0:
+            page += 1
+
+        else:
+            page += 1
+            pages += 1
+
+        # guards against page being grater than pages
+        if page > pages:
+            print('STAHP!', offset, num_photos)
+            # prevents an empty set being returned
+            offset = offset - 20
+            page = pages
 
         q_data = None
         with sqlite3.connect(self.db.db_name) as connection:
@@ -516,7 +547,8 @@ class Tag(object):
         rtn_dict['pages'] = pages
 
         rtn_dict['tag_info'] = {
-            'number_of_photos': self.get_photo_count_by_tag(tag_name)}
+            'number_of_photos': self.get_photo_count_by_tag(tag_name)
+        }
 
         return rtn_dict
 
@@ -524,13 +556,15 @@ class Tag(object):
 if __name__ == "__main__":
     t = Tag()
 
-    print(t.add_tags_to_photo('3103763624', ['test']))
+    # print(t.get_zero_photo_tag_count())
+
+    # print(t.add_tags_to_photo('3103763624', ['test']))
     # print(t.clean_tags())
 
     # print(t.get_tag_photos_in_range('i%20don%27t%20give%20a%20hoot'))
 
     # print(t.get_photos_by_tag('people'))
-    # print(t.get_tag_photos_in_range('ardvark'))
+    print(t.get_tag_photos_in_range('anna', 20, 60))
 
     # print(t.get_photo_count_by_tag('flowers'))
 

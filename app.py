@@ -393,6 +393,7 @@ def get_photos():
 @app.route('/api/getalbums', methods=['GET', 'POST'])
 @login_required
 def get_albums_json():
+    print('get_albums_json called')
     args = request.args.to_dict()
 
     # print(args)
@@ -437,6 +438,9 @@ def get_albums_json():
 @app.route('/api/getphotos', methods=['GET', 'POST'])
 @login_required
 def get_photos_json():
+    # print()
+    # print('hello from get_photos_json')
+    # print()
     args = request.args.to_dict()
 
     # print(args)
@@ -463,7 +467,7 @@ def get_photos_json():
 
     if request.method == 'POST':
 
-        # print('test', request.get_json())
+        print('hello from get_photos_json, data passed is ', request.get_json())
 
         data = request.get_json()
         a.add_photos_to_album(data['albumId'], data['photos'])
@@ -623,7 +627,7 @@ def photos_by_tag_name(tag_name):
 def get_tag_photos():
     args = request.args.to_dict()
 
-    print(args)
+    print('get_tag_photos args, ', args)
 
     if 'offset' in args.keys():
         offset = int(args['offset'])
@@ -633,6 +637,11 @@ def get_tag_photos():
 
         tag_photos_data = t.get_tag_photos_in_range(
             args['tag_name'], 20, offset)
+
+        if offset >= tag_photos_data['tag_info']['number_of_photos']:
+            offset = tag_photos_data['tag_info']['number_of_photos']
+            pass
+
         return render_template('tag_photos.html', json_data=tag_photos_data)
 
     tag_photos_data = t.get_tag_photos_in_range(args['tag_name'])

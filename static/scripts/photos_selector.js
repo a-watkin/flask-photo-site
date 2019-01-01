@@ -111,7 +111,7 @@ class PhotoSelector extends React.Component {
   sendData() {
     console.log("getting here?", this.state.albumId, this.state.selectedPhotos);
     // /api/getphotos
-    fetch("https://www.photography-by-eigi.com/api/getphotos", {
+    fetch("/api/getphotos", {
       method: "POST",
       credentials: "include",
       headers: {
@@ -127,7 +127,7 @@ class PhotoSelector extends React.Component {
       .then(() => {
         // redirect after successful post
         console.log(this.state);
-        window.location.assign(`/albums/${this.state.albumId}`);
+        // window.location.assign(`/albums/${this.state.albumId}`);
       });
   }
 
