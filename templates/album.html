@@ -125,6 +125,8 @@ json_data['album_data']['large_square']
 </div>
 
 <hr>
+
+{% if session %}
 <div class="row text-center">
 
     <div class="col">
@@ -139,7 +141,22 @@ json_data['album_data']['large_square']
         </a>
     </div>
 </div>
+<hr>
+{% else %}
 
+<div class="row">
+    <div class="col text-center">
+        <a href="{{url_for('get_albums')}}">
+
+            <button class="btn btn-primary btn-lg btn-block">Back to albums</button>
+
+        </a>
+    </div>
+</div>
+
+<hr>
+
+{% endif %}
 
 
 {% endif %}
