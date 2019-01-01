@@ -303,12 +303,14 @@ class Tag(object):
             self.update_photo_count(tag)
 
     def add_tags_to_photo(self, photo_id, tag_list):
-        print('\nHello from add_tags_to_photo, the tag list is: ', tag_list)
+        """
+        Adds tags to a photo.
 
-        # for i in range(len(tag_list)):
-        #     tag_list[i] = urllib.parse.quote(tag_list[i], safe='')
-        #     print(tag_list[i],
-        #           'parsed', urllib.parse.unquote(tag_list[i]), tag_list)
+        First checking if the tag is already in the tag table, if not it adds it.
+
+        Then it adds the tag to photo_tag which links the photo and tag tables.
+        """
+        print('\nHello from add_tags_to_photo, the tag list is: ', tag_list)
 
         # for each tag
         # check if the tag is in the database already
@@ -336,36 +338,23 @@ class Tag(object):
                     )
                 )
 
-                # self.db.insert_data(
-                #     table='tag',
-                #     tag_name=tag,
-                #     user_id='28035310@N00',
-                #     photos=self.get_photo_count_by_tag(tag)
-                # )
-
                 print('\nshould be added now...\n')
 
                 if self.db.get_row('tag', 'tag_name', tag):
                     print('\nadded tag, ', tag, '\n')
 
-            # The tag is now in the database.
-
-            # Does return 0 if there are no pictures using the tag.
-            # print(self.get_photo_count_by_tag(tag))
-
-            # add the tag to the table photo_tag
-            # resp = self.db.insert_data(
-            #     table='photo_tag',
-            #     photo_id=photo_id,
-            #     tag_name=tag,
-            # )
-
-            self.db.make_query(
-                '''
-                insert into photo_tag (photo_id, tag_name)
-                values ({}, "{}")
-                '''.format(photo_id, tag)
-            )
+            # UNIQUE constraint can cause problems here
+            # so catch any exceptions
+            try:
+                # The tag is now in the database.
+                self.db.make_query(
+                    '''
+                    insert into photo_tag (photo_id, tag_name)
+                    values ({}, "{}")
+                    '''.format(photo_id, tag)
+                )
+            except Exception as e:
+                print('Problem adding tag to photo_tag ', e)
 
         data = self.db.make_query(
             '''
@@ -535,7 +524,8 @@ class Tag(object):
 if __name__ == "__main__":
     t = Tag()
 
-    print(t.clean_tags())
+    print(t.add_tags_to_photo('3103763624', ['test']))
+    # print(t.clean_tags())
 
     # print(t.get_tag_photos_in_range('i%20don%27t%20give%20a%20hoot'))
 
@@ -599,8 +589,6 @@ if __name__ == "__main__":
     # print(t.get_photo_count_by_tag('vienna'))
 
     # t.clean_tags()
-
-    # print(t.add_tags_to_photo('3400128875', ['test tag name', 'test tag two']))
 
     # print(t.get_photo_tags('5052576689'))
 
