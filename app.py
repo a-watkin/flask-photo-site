@@ -1039,6 +1039,11 @@ def account():
     return render_template('account.html'), 200
 
 
+@app.route('/account', methods=['GET', 'POST'])
+def about():
+    render_template('about.html'), 200
+
+
 if __name__ == '__main__':
     app.run(
         host='0.0.0.0',
