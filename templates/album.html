@@ -4,6 +4,7 @@
 
 <!-- <h1>{{json_data}}</h1> -->
 
+
 {% if json_data['album_data']['photos'] > 0 %}
 
 <div class="row">
@@ -35,22 +36,7 @@ json_data['album_data']['large_square']
 
 <hr>
 
-{% if json_data['album_data']['photos'] > 0 %}
-<div class="row text-center">
-    <div class="col">
-        <a href="/api/album/photos?album_id={{json_data['album_data']['album_id']}}&offset={{json_data.offset - 20}}">
-            <button type="button" class="btn btn-secondary btn-block btn-lg">Previous page</button>
-        </a>
-    </div>
-    <div class="col">
-        <a href="/api/album/photos?album_id={{json_data['album_data']['album_id']}}&offset={{json_data.offset + 20}}">
-            <button type="button" class="btn btn-secondary btn-block btn-lg">Next page
-            </button>
-        </a>
-    </div>
-</div>
-<hr>
-{% endif %}
+
 
 
 <div class="row">
@@ -64,7 +50,28 @@ json_data['album_data']['large_square']
     {% endfor %}
 </div>
 
+
+
 <hr>
+{% if json_data['album_data']['photos'] > 0 %}
+<div class="row text-center">
+    <div class="col">
+        <a href="/api/album/photos?album_id={{json_data['album_data']['album_id']}}&offset={{json_data.offset - 20}}">
+            <button type="button" class="btn btn-secondary btn-block btn-lg">Newer</button>
+        </a>
+    </div>
+    <div class="col">
+        <a href="/api/album/photos?album_id={{json_data['album_data']['album_id']}}&offset={{json_data.offset + 20}}">
+            <button type="button" class="btn btn-secondary btn-block btn-lg">Older
+            </button>
+        </a>
+    </div>
+</div>
+<hr>
+{% endif %}
+
+
+
 
 <div class="row">
     <div class="col text-center">
@@ -73,6 +80,7 @@ json_data['album_data']['large_square']
 
     </div>
 </div>
+
 <hr>
 
 <!-- If there are no photos in the album -->
@@ -160,5 +168,8 @@ json_data['album_data']['large_square']
 
 
 {% endif %}
+
+
+
 
 {% endblock %}
