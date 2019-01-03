@@ -27,26 +27,7 @@
     </div>
 </div>
 
-{% if json_data['tag_info']['number_of_photos'] > 0 %}
 <hr>
-<div class="row text-center">
-    <div class="col">
-        <a href="/api/tag/photos?tag_name={{json_data['tag_name']}}&offset={{json_data.offset - 20}}">
-
-            <button type="button" class="btn btn-secondary btn-block btn-lg">Previous page</button>
-
-        </a>
-    </div>
-    <div class="col">
-        <a href="/api/tag/photos?tag_name={{json_data['tag_name']}}&offset={{json_data.offset + 20}}">
-
-            <button type="button" class="btn btn-secondary btn-block btn-lg">Next page
-            </button>
-        </a>
-    </div>
-</div>
-<hr>
-{% endif %}
 
 {% if json_data['tag_info']['number_of_photos'] < 1 %} <hr>
     <div class="row">
@@ -90,6 +71,28 @@
         {% endfor %}
 
     </div>
+
+
+    {% if json_data['tag_info']['number_of_photos'] > 0 %}
+    <hr>
+    <div class="row text-center">
+        <div class="col">
+            <a href="/api/tag/photos?tag_name={{json_data['tag_name']}}&offset={{json_data.offset - 20}}">
+
+                <button type="button" class="btn btn-secondary btn-block btn-lg">Newer</button>
+
+            </a>
+        </div>
+        <div class="col">
+            <a href="/api/tag/photos?tag_name={{json_data['tag_name']}}&offset={{json_data.offset + 20}}">
+
+                <button type="button" class="btn btn-secondary btn-block btn-lg">Older
+                </button>
+            </a>
+        </div>
+    </div>
+    {% endif %}
+
 
     <hr>
     {% if json_data['tag_info']['number_of_photos'] > 0 %}
