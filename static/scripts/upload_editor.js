@@ -22,30 +22,38 @@ class UploadEditor extends React.Component {
   }
 
   checkInput(input_string) {
+    console.log("checkInput called");
     function checkTags(tags) {
-      const forbidden = ["\\", "/", "%", "."];
       let arr = tags.split(",");
+      console.log("arr is, ", arr);
       let safe = true;
 
-      // for each value in arr check each char against the forbidden values
-      for (var i = 0; i < arr.length; i++) {
-        // console.log(arr[i]);
-        forbidden.forEach(char => {
-          if (arr[i].includes(char)) {
+      if (arr.length == 0) {
+        this.allowButtons = true;
+        return safe;
+      } else {
+        const forbidden = ["\\", "/", "%", "."];
+
+        // for each value in arr check each char against the forbidden values
+        for (var i = 0; i < arr.length; i++) {
+          // console.log(arr[i]);
+          forbidden.forEach(char => {
+            if (arr[i].includes(char)) {
+              safe = false;
+            }
+          });
+
+          if (arr[i].replace(/ /g, "").length < 1) {
             safe = false;
           }
-        });
+        }
 
-        if (arr[i].replace(/ /g, "").length < 1) {
+        if (arr.join("").replace(/,/g, "") < 1) {
           safe = false;
         }
-      }
 
-      if (arr.join("").replace(/,/g, "") < 1) {
-        safe = false;
+        return safe;
       }
-
-      return safe;
     }
     return checkTags(input_string);
   }
@@ -130,19 +138,22 @@ class UploadEditor extends React.Component {
         photoId: photo_id,
         title: new_title
       })
-    }).then(Response => {
-      // console.log(Response.status);
-      if (Response.status === 200) {
-        let objectCopy = this.state.items;
-        objectCopy[key]["photo_title"] = new_title;
-        this.setState({
-          items: objectCopy
-        });
-      }
-    });
+    })
+      .then(Response => {
+        // console.log(Response.status);
+        if (Response.status === 200) {
+          let objectCopy = this.state.items;
+          objectCopy[key]["photo_title"] = new_title;
+          this.setState({
+            items: objectCopy
+          });
+        }
+      })
+      .catch(error => console.error("updateTitle,", error));
   }
 
   addTags(e, photo_id) {
+    console.log("addTags, ", e.target.value);
     if (e.target.value) {
       if (this.checkInput(e.target.value)) {
         this.setState({
@@ -179,10 +190,10 @@ class UploadEditor extends React.Component {
         });
       }
     } else {
-      // console.log("no tag value?");
+      // At this point the tags field should be empty
       this.setState({
         allowTags: true,
-        allowButtons: false
+        allowButtons: true
       });
     }
   }
