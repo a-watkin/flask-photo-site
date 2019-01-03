@@ -262,7 +262,7 @@ class AlbumSelector extends React.Component {
                 className="btn btn-block btn-lg"
                 onClick={() => this.getPreviousAlbums()}
               >
-                Next{" "}
+                Newer{" "}
               </button>{" "}
             </div>{" "}
             <div className="col">
@@ -270,7 +270,7 @@ class AlbumSelector extends React.Component {
                 className="btn btn-block btn-lg"
                 onClick={() => this.getNextAlbums()}
               >
-                Previous{" "}
+                Older{" "}
               </button>{" "}
             </div>{" "}
           </div>

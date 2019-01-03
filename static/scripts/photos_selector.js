@@ -226,7 +226,7 @@ class PhotoSelector extends React.Component {
                 className="btn btn-block btn-lg"
                 onClick={() => this.getPreviousPhotos()}
               >
-                Next
+                Newer
               </button>
             </div>
             <div className="col">
@@ -234,7 +234,7 @@ class PhotoSelector extends React.Component {
                 className="btn btn-block btn-lg"
                 onClick={() => this.getNextPhotos()}
               >
-                Previous
+                Older
               </button>
             </div>
           </div>
