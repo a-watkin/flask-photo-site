@@ -17,7 +17,7 @@ class Database(object):
         if os.path.isfile(name):
             return True
         else:
-            print('Databse not created.')
+            print('Database not created.')
             return False
 
     @classmethod
