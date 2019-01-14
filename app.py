@@ -1014,6 +1014,9 @@ def logout():
 @app.route('/account', methods=['GET', 'POST'])
 @login_required
 def account():
+    """
+    Endpoint to change password.
+    """
     if request.method == 'POST':
 
         username = request.form.get("username")
