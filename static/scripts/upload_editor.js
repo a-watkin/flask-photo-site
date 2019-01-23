@@ -18,7 +18,6 @@ class UploadEditor extends React.Component {
     this.updateTitle = this.updateTitle.bind(this);
 
     this.componentWillMount = this.componentWillMount.bind(this);
-    this.testMount = this.testMount.bind(this);
   }
 
   checkInput(input_string) {
@@ -75,31 +74,14 @@ class UploadEditor extends React.Component {
       .catch(error => console.error(error));
   }
 
-  testMount() {
-    console.log("called test mount");
-
-    fetch("https://www.photography-by-eigi.com/test", {
-      credentials: "include" // Useful for including session ID (and, IIRC, authorization headers)
-    })
-      .then(response => response.json())
-      .then(data => {
-        console.log(data); // Prints result from `response.json()`
-      })
-      .catch(error => console.error(error));
-  }
-
   discardPhoto(photo_id, key) {
-    // console.log("clicked discard", photo_id);
+    console.log("clicked discard", photo_id);
 
     let test = JSON.stringify({
       photoId: photo_id
     });
 
-    // console.log(test);
-
-    // Firefox esr 60 blocks this as a http request despite the host being https only
-    // so no relative urls apparently...
-    fetch("https://www.photography-by-eigi.com/discard/photo", {
+    fetch("/discard/photo", {
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json"
@@ -254,7 +236,6 @@ class UploadEditor extends React.Component {
     let addToExistingAlbum = this.addToExistingAlbum;
 
     let componentWillMount = this.componentWillMount;
-    let testMount = this.testMount;
 
     // safeguards against wrong input and warnings
     let allowTags = this.state.allowTags;
@@ -369,10 +350,6 @@ class UploadEditor extends React.Component {
     return (
       <div>
         <h2> There was a problem getting data. </h2> {photo} <hr />
-        <button id="test-fetch" onClick={() => testMount()}>
-          {" "}
-          Click me{" "}
-        </button>
       </div>
     );
   }

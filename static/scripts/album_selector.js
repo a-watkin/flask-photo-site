@@ -20,8 +20,6 @@ class AlbumSelector extends React.Component {
     console.log("hello from componentWillMount in album_selector");
     // getting the album id from the URL
     let currentUrl = window.location.href;
-    let splitUrl = currentUrl.split("/");
-    // const albumId = splitUrl[5];
 
     fetch("/api/getalbums", {
       credentials: "include"
@@ -29,16 +27,12 @@ class AlbumSelector extends React.Component {
       .then(res => res.json())
       .then(
         result => {
-          // console.log("result", result);
           this.setState({
             isLoaded: true,
             albums: result.albums,
             currentOffset: result.offset
           });
         },
-        // Note: it's important to handle errors here
-        // instead of a catch() block so that we don't swallow
-        // exceptions from actual bugs in components.
         error => {
           this.setState({
             isLoaded: true,
@@ -50,7 +44,6 @@ class AlbumSelector extends React.Component {
 
   getNextAlbums() {
     // console.log("next called ", this.state.currentOffset);
-
     fetch(`/api/getalbums?offset=${this.state.currentOffset + 20}`, {
       credentials: "include"
     })
@@ -70,9 +63,6 @@ class AlbumSelector extends React.Component {
             currentOffset: result.offset
           });
         },
-        // Note: it's important to handle errors here
-        // instead of a catch() block so that we don't swallow
-        // exceptions from actual bugs in components.
         error => {
           this.setState({
             isLoaded: true,
@@ -84,7 +74,6 @@ class AlbumSelector extends React.Component {
 
   getPreviousAlbums() {
     // console.log("previous called ", this.state.currentOffset);
-
     if (this.state.currentOffset <= 0) {
       return false;
     }
@@ -121,8 +110,7 @@ class AlbumSelector extends React.Component {
       return false;
     }
 
-    // console.log("getting here?", this.state.selectedAlbum);
-    fetch("https://www.photography-by-eigi.com/api/getalbums", {
+    fetch("/api/getalbums", {
       method: "POST",
       credentials: "include",
       headers: {
@@ -135,7 +123,6 @@ class AlbumSelector extends React.Component {
     })
       .catch(error => console.error(error))
       .then(() => {
-        // console.log("test");
         // redirect after successful post
         window.location.assign(`/albums/${this.state.selectedAlbum[0]}`);
       });
