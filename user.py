@@ -52,20 +52,7 @@ class User(object):
 
 
 def main():
-    # existing user
-    u = User('eigi', 'test')
-    print(u.check_for_username())
-
-    # print('eigi' == u.check_for_username())
-    # print(u.check_password())
-
-    # non-existant user
-    # u = User('adam', 'blah')
-    # print(u.check_for_username())
-    # print(u.check_password('test'))
-    # print(u.get_hashed_password('eigi'))
-    # print(u.insert_hased_password('test'))
-    # print(u.check_password('test'))
+    pass
 
 
 if __name__ == '__main__':
