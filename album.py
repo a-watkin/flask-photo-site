@@ -470,6 +470,9 @@ class Album(object):
         # print(data)
 
         for album in data:
+
+            print(album)
+            print()
             album_id = album['album_id']
             album_cover = self.get_album_cover(album_id)
             # print()
@@ -479,6 +482,18 @@ class Album(object):
             else:
                 # placeholder image
                 album['large_square'] = '/static/images/logo.jpg'
+
+            # adding human readable title
+            album['human_readable_title'] = name_util.make_decoded(
+                album['title'])
+
+            album['human_readable_description'] = name_util.make_decoded(
+                album['description'])
+
+            print()
+            print(album)
+            print()
+
             # print()
             # print(album)
 
@@ -517,9 +532,9 @@ if __name__ == "__main__":
 
     # print(a.get_containing_album(1968247294))
 
-    # print(a.get_albums_in_range(20, 20))
+    print(a.get_albums_in_range(20, 0))
 
-    print(a.get_album(3149315074))
+    # print(a.get_album(3149315074))
 
     # print(a.get_album_by_name("test 1"))
 

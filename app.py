@@ -228,6 +228,7 @@ def discard_photo():
         return json.dumps({'success': False}), 500, {'ContentType': 'application/json'}
 
 
+# route that loads the script to select an album
 @app.route('/api/select/album')
 @login_required
 def upload_select_album():

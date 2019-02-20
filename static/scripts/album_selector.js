@@ -211,7 +211,7 @@ class AlbumSelector extends React.Component {
                     id="album-links"
                     href={`/albums/${albums[key]["album_id"]}`}
                   >
-                    {albums[key]["title"]}{" "}
+                    {albums[key]["human_readable_title"]}{" "}
                   </a>
                 </h5>{" "}
               </div>
@@ -223,7 +223,8 @@ class AlbumSelector extends React.Component {
                 />
                 <p className="card-text text-left">
                   {" "}
-                  {albums[key]["description"]}{" "}
+                  {console.log(albums[key])}
+                  {albums[key]["human_readable_description"]}{" "}
                 </p>
               </div>{" "}
               <div className="row">
