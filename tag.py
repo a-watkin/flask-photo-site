@@ -24,6 +24,7 @@ class Tag(object):
             return photo_count[0]['count(photo_id)']
 
     def update_photo_count(self, tag_name):
+        print('tag_name ', tag_name)
         """
         Updates the photo count for the given tag.
         """
@@ -36,6 +37,17 @@ class Tag(object):
             where tag_name = "{}"
             '''.format(count, tag_name)
         )
+
+        """
+        Check if the tag count is zero here?
+        """
+        count = self.get_photo_count_by_tag(tag_name)
+        if count <= 0:
+            self.db.make_query(
+                '''
+            delete from tag where tag_name = {}
+            '''.format(tag_name)
+            )
 
     def check_all_tag_photo_counts(self):
         """
@@ -107,6 +119,10 @@ class Tag(object):
         return urllib.parse.unquote(tag_name)
 
     def get_all_tags(self):
+        # Remove orphaned tags
+        # this is too slow
+        # self.remove_zero_photo_tags()
+
         # as a list of dict values
         tag_data = self.db.get_query_as_list(
             "SELECT tag_name, photos FROM tag order by tag_name"
@@ -244,6 +260,9 @@ class Tag(object):
         self.update_photo_count(tag_name)
 
     def delete_tag(self, tag_name):
+        """
+        Deletes the tag name specified
+        """
         # you have to remove the tag from the tag table
         self.db.delete_rows_where('tag', 'tag_name', tag_name)
         # and also in photo_tag
@@ -272,6 +291,9 @@ class Tag(object):
                 self.remove_tag_name(tag['tag_name'])
 
     def remove_tags_from_photo(self, photo_id, tag_list):
+        """
+        do you need to encode the tag list?
+        """
         for tag in tag_list:
             print(tag)
 
@@ -286,6 +308,10 @@ class Tag(object):
             print(resp)
 
             self.update_photo_count(tag)
+
+            """
+            check tag count here
+            """
 
     def replace_tags(self, photo_id, tag_list):
         """
@@ -393,6 +419,9 @@ class Tag(object):
         return True
 
     def update_tag(self, new_tag, old_tag):
+        """
+        Problem here when updating a tag to one that already exists
+        """
         print('hello from update_tag - passed values, ', new_tag, old_tag)
         # check if new tag exists
         test = self.db.make_query(
@@ -547,7 +576,7 @@ class Tag(object):
         rtn_dict['pages'] = pages
 
         rtn_dict['tag_info'] = {
-            'number_of_photos': self.get_photo_count_by_tag(tag_name)
+            'number_of_photos': self.get_photo_count_by_tag(tag_name)f
         }
 
         return rtn_dict
@@ -555,6 +584,8 @@ class Tag(object):
 
 if __name__ == "__main__":
     t = Tag()
+
+    print(t.get_zero_photo_tag_count())
 
     # print(t.get_zero_photo_tag_count())
 
@@ -564,7 +595,7 @@ if __name__ == "__main__":
     # print(t.get_tag_photos_in_range('i%20don%27t%20give%20a%20hoot'))
 
     # print(t.get_photos_by_tag('people'))
-    print(t.get_tag_photos_in_range('anna', 20, 60))
+    # print(t.get_tag_photos_in_range('anna', 20, 60))
 
     # print(t.get_photo_count_by_tag('flowers'))
 
