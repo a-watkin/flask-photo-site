@@ -11,7 +11,11 @@ class Tag(object):
     def __init__(self):
         self.db = Database('eigi-data.db')
 
+    # get count of photos using tag
     def get_photo_count_by_tag(self, tag_name):
+        if '%' in tag_name:
+            tag_name = urllib.parse.quote(tag_name, safe='')
+
         query_string = '''
             select count(photo_id) from photo
             join photo_tag using(photo_id)
@@ -20,8 +24,39 @@ class Tag(object):
 
         photo_count = self.db.get_query_as_list(query_string)
 
-        if len(photo_count) > 0:
-            return photo_count[0]['count(photo_id)']
+        return photo_count[0]['count(photo_id)']
+
+    def remove_tag_name(self, tag_name):
+        if '%' in tag_name:
+            tag_name = urllib.parse.quote(tag_name, safe='')
+
+        # tag_name = name_util.url_encode_tag(tag_name)
+
+        self.db.make_query(
+            '''
+            delete from tag where tag_name = "{}"
+            '''.format(tag_name)
+        )
+
+        self.db.make_query(
+            '''
+            delete from photo_tag where tag_name = "{}"
+            '''.format(tag_name)
+        )
+
+    def delete_tag(self, tag_name):
+        """
+        Deletes the tag name specified
+        """
+        # you have to remove the tag from the tag table
+        self.db.delete_rows_where('tag', 'tag_name', tag_name)
+        # and also in photo_tag
+        self.db.delete_rows_where('photo_tag', 'tag_name', tag_name)
+
+        if not self.get_tag(tag_name) and not self.check_photo_tag(tag_name):
+            return True
+        else:
+            return False
 
     def update_photo_count(self, tag_name):
         print('tag_name ', tag_name)
@@ -30,23 +65,13 @@ class Tag(object):
         """
         count = self.get_photo_count_by_tag(tag_name)
 
-        self.db.make_query(
-            '''
-            update tag
-            set photos = {}
-            where tag_name = "{}"
-            '''.format(count, tag_name)
-        )
-
-        """
-        Check if the tag count is zero here?
-        """
-        count = self.get_photo_count_by_tag(tag_name)
-        if count <= 0:
+        if count > 0:
             self.db.make_query(
                 '''
-            delete from tag where tag_name = {}
-            '''.format(tag_name)
+                update tag
+                set photos = {}
+                where tag_name = "{}"
+                '''.format(count, tag_name)
             )
 
     def check_all_tag_photo_counts(self):
@@ -119,10 +144,6 @@ class Tag(object):
         return urllib.parse.unquote(tag_name)
 
     def get_all_tags(self):
-        # Remove orphaned tags
-        # this is too slow
-        # self.remove_zero_photo_tags()
-
         # as a list of dict values
         tag_data = self.db.get_query_as_list(
             "SELECT tag_name, photos FROM tag order by tag_name"
@@ -235,43 +256,12 @@ class Tag(object):
             '''select * from photo_tag where tag_name = "{}" '''
             .format(tag_name))
 
+        # remove any tags that have zero photos
+        self.get_photo_count_by_tag(tag_name)
+
         if len(data) > 0:
             return True
         return False
-
-    def remove_tag_name(self, tag_name):
-        if '%' in tag_name:
-            tag_name = urllib.parse.quote(tag_name, safe='')
-
-        # tag_name = name_util.url_encode_tag(tag_name)
-
-        self.db.make_query(
-            '''
-            delete from tag where tag_name = "{}"
-            '''.format(tag_name)
-        )
-
-        self.db.make_query(
-            '''
-            delete from photo_tag where tag_name = "{}"
-            '''.format(tag_name)
-        )
-
-        self.update_photo_count(tag_name)
-
-    def delete_tag(self, tag_name):
-        """
-        Deletes the tag name specified
-        """
-        # you have to remove the tag from the tag table
-        self.db.delete_rows_where('tag', 'tag_name', tag_name)
-        # and also in photo_tag
-        self.db.delete_rows_where('photo_tag', 'tag_name', tag_name)
-
-        if not self.get_tag(tag_name) and not self.check_photo_tag(tag_name):
-            return True
-        else:
-            return False
 
     def clean_tags(self):
         forbidden = ['.', ';', '%']
@@ -280,14 +270,14 @@ class Tag(object):
         for tag in tag_data:
             print(tag['tag_name'], tag['tag_name'] in forbidden)
             if tag['tag_name'] in forbidden:
-                print('please just ket me die already, ', tag['tag_name'])
+                print('tag to remove, ', tag['tag_name'])
                 self.remove_tag_name(tag['tag_name'])
 
         tag_data = self.db.get_query_as_list("SELECT * FROM photo_tag")
         for tag in tag_data:
             print(tag['tag_name'], tag['tag_name'] in forbidden)
             if tag['tag_name'] in forbidden:
-                print('please just ket me die already, ', tag['tag_name'])
+                print('tag to remove, ', tag['tag_name'])
                 self.remove_tag_name(tag['tag_name'])
 
     def remove_tags_from_photo(self, photo_id, tag_list):
@@ -307,15 +297,19 @@ class Tag(object):
             )
             print(resp)
 
-            self.update_photo_count(tag)
-
             """
             check tag count here
             """
+            if self.get_photo_count_by_tag(tag) <= 0:
+                # remove the tag if it has no photos associated with it
+                self.delete_tag(tag)
+            else:
+                # only update if you're not removing it
+                self.update_photo_count(tag)
 
     def replace_tags(self, photo_id, tag_list):
         """
-        Replaes the tags attached to a photo with new tags.
+        Replaces the tags attached to a photo with new tags.
         """
         # get all the tags attached to the photo
         current_tags = self.db.make_query(
@@ -430,7 +424,7 @@ class Tag(object):
             '''.format(new_tag)
         )
 
-        # print(test)
+        print(test)
 
         if not test:
             # if the tag doesn't exist already then update it
@@ -443,21 +437,42 @@ class Tag(object):
                 '''.format(new_tag, old_tag)
             )
 
-        # if new tag exists or not you have to update photo_tag
-        self.db.make_query(
-            '''
-            update photo_tag
-            set tag_name = "{}"
-            where tag_name = "{}"
-            '''.format(new_tag, old_tag)
-        )
+        try:
+            # Tag ecists
+            photos = self.get_photos_by_tag(old_tag)
+
+            for photo in photos:
+                print('photo data ', photo, photos)
+
+                if photo:
+
+                    # if new tag exists or not you have to update photo_tag
+                    self.db.make_query(
+                        '''
+                        update photo_tag
+                        set tag_name = "{}"
+                        where tag_name = "{}"
+                        '''.format(new_tag, old_tag)
+                    )
+
+            self.delete_tag(old_tag)
+        except Exception as e:
+            print('problem updating tag name, ', e)
+        finally:
+            # tag already exists on photo
+            self.delete_tag(old_tag)
+            return True
+
+        # update all photo_tag entries to the new tag
 
         # update the photo count for the tag table
         self.update_photo_count(new_tag)
 
         if self.get_tag(new_tag) and not self.get_tag(old_tag):
+            print('returning true')
             return True
         else:
+            print('returning false')
             return False
 
     def count_photos_by_tag_name(self, tag_name):
@@ -576,7 +591,7 @@ class Tag(object):
         rtn_dict['pages'] = pages
 
         rtn_dict['tag_info'] = {
-            'number_of_photos': self.get_photo_count_by_tag(tag_name)f
+            'number_of_photos': self.get_photo_count_by_tag(tag_name)
         }
 
         return rtn_dict
@@ -584,91 +599,6 @@ class Tag(object):
 
 if __name__ == "__main__":
     t = Tag()
+    print(t.get_photo_count_by_tag('test'))
 
-    print(t.get_zero_photo_tag_count())
-
-    # print(t.get_zero_photo_tag_count())
-
-    # print(t.add_tags_to_photo('3103763624', ['test']))
-    # print(t.clean_tags())
-
-    # print(t.get_tag_photos_in_range('i%20don%27t%20give%20a%20hoot'))
-
-    # print(t.get_photos_by_tag('people'))
-    # print(t.get_tag_photos_in_range('anna', 20, 60))
-
-    # print(t.get_photo_count_by_tag('flowers'))
-
-    # t.get_tag('some%20tag')
-    # t.get_tag('test')
-
-    # print(t.get_photos_by_tag(
-    #     '/tags/but%2520when%2520i%2520try%2520to%2520i%2520never%2520get%2520far'))
-
-    # t.replace_tags(1038492826, ['tag1, tag3'])
-
-    # t.clean_tags()
-
-    # t.get_photo_tags(31734289038)
-
-    # t.update_photo_count('365')
-
-    # print(t.update_tag('mars', 'aberdeen'))
-
-    # print(t.get_all_tags())
-
-    # print(t.add_tags_to_photo(44692598005, ['cheese']))
-
-    # print(t.get_all_tags())
-
-    # t.update_tag('%23%london', "london")
-    # t.update_tag_test('%23london', '#london')
-
-    # t.get_photos_by_tag("21erh'aus")
-
-    # this is now really slow?
-    # cascade on update also means that if you don't add back for some reason you will lose all those tags
-    # so it's way more dangerous
-    # new tag, old tag
-    # print(t.update_tag("test", "london"))
-    # print(t.update_photo_count('london'))
-
-    # print(t.update_tag())
-    # t.update_tag('london', 'cheese')
-
-    # t.tag_photo_count()
-    # t.check_tag_photo_count()
-
-    # t.update_photo_count('manchester')
-    # t.get_all_tags()
-
-    # {'photoId': '31734289628', 'selectedTags': ['donaupark']}
-    # t.remove_tags_from_photo('31734289628', ['donaupark', 'cheese'])
-
-    # print(t.get_photo_count_by_tag('people'))
-
-    # print(t.get_all_tags())
-
-    # print(t.get_all_tags_without_count())
-
-    # print(t.get_photo_count_by_tag('vienna'))
-
-    # t.clean_tags()
-
-    # print(t.get_photo_tags('5052576689'))
-
-    # print(t.get_all_tags())
-
-    # This is actually a special case as the new_name is for an existing tag
-
-    # new then old
-    # print(t.update_tag('cafe shop', 'cafe'))
-
-    # print(t.delete_tag('test'))
-
-    # print(t.check_photo_tag('test'))
-
-    # print(t.get_photos_by_tag('apples'))
-    # print(t.get_photo_tags(5052580779))
-
-    # print(t.get_photo_count_by_tag('apples'))
+    print(t.get_photos_by_tag('lindon'))
