@@ -322,8 +322,9 @@ class Photos(object):
 
         # update photo_tag count after deleting the photo
         for tag in tags:
-            print('tag name', tag['tag_name'])
-            self.tag.update_photo_count(tag['tag_name'])
+            if tag['tag_name']:
+                print('tag name', tag['tag_name'])
+                self.tag.update_photo_count(tag['tag_name'])
 
 
 if __name__ == "__main__":

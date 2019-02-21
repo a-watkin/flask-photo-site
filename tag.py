@@ -73,6 +73,8 @@ class Tag(object):
                 where tag_name = "{}"
                 '''.format(count, tag_name)
             )
+        else:
+            self.delete_tag(tag_name)
 
     def check_all_tag_photo_counts(self):
         """

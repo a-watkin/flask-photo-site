@@ -520,7 +520,7 @@ def edit_photo(photo_id):
         return render_template('edit_photo.html', json_data=photo_data), 200
 
 
-@app.route('/delete/photo<int:photo_id>', methods=['GET', 'POST'])
+@app.route('/delete/photo/<int:photo_id>', methods=['GET', 'POST'])
 @login_required
 def delete_photo(photo_id):
     if request.method == 'GET':
