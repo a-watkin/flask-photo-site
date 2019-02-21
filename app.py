@@ -253,6 +253,7 @@ def update_title():
 def to_photostream():
     # print('hello from to_photostream')
     data = request.get_json()
+    print('\n data ', data)
     up.add_to_photostream(data['photos'])
     return json.dumps({'success': False}), 200, {'ContentType': 'application/json'}
 

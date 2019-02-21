@@ -143,3 +143,6 @@ FLICKR_API_KEYS.py
 
 # server env directory
 /photo
+
+*.png
+*.jpg

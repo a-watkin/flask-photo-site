@@ -59,7 +59,7 @@ class Tag(object):
             return False
 
     def update_photo_count(self, tag_name):
-        print('tag_name ', tag_name)
+        print('update photo count tag_name ', tag_name)
         """
         Updates the photo count for the given tag.
         """

@@ -376,6 +376,14 @@ class UploadedPhotos(object):
                     '''.format(photo['photo_id'])
                 )
 
+                t = Tag()
+                tags = t.get_photo_tags(photo['photo_id'])
+                for tag in tags:
+                    if tag['tag_name']:
+                        print('wtf ', tag, photo['photo_id'])
+                        Tag.update_photo_count(
+                            name_util.make_encoded(tag['tag_name']))
+
     def add_all_to_album(self, album_id):
         # get all uploaded photos
         uploaded_photos = self.db.make_query(
