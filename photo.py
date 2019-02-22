@@ -312,9 +312,17 @@ class Photos(object):
             '''.format(photo_id)
         )
 
+        # delete the photo itself
         self.db.make_query(
             '''
             delete from photo where photo_id = '{}'
+            '''.format(photo_id)
+        )
+
+        # remove exif data
+        self.db.make_query(
+            '''
+            delete from exif where photo_id = '{}'
             '''.format(photo_id)
         )
 
