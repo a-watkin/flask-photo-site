@@ -48,17 +48,23 @@ class ExifUtil(object):
 
     @staticmethod
     def get_datetime_taken(fn):
-        # print('hello from get_datetime_taken', fn)
+        print('hello from get_datetime_taken', fn)
         with open(fn, 'rb') as f:
             exif = exifread.process_file(f)
 
         for k in sorted(exif.keys()):
             if k not in ['JPEGThumbnail', 'TIFFThumbnail', 'Filename', 'EXIF MakerNote']:
                 # print(k)
-                # print('%s = %s' % (k, exif[k]))
+                print('\n')
+                print('%s = %s' % (k, exif[k]))
+                if '%s' % k == 'EXIF DateTimeOriginal':
+                    print('%s' % exif[k])
+                    return '%s' % exif[k]
+                # print()
 
-                if k == 'Image DateTime':
-                    return exif[k]
+                # if k == 'Image DateTime':
+                #     print('datetime taken, ', exif[k])
+                #     return exif[k]
 
 
 def main():

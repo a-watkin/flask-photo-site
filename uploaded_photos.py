@@ -26,6 +26,7 @@ class UploadedPhotos(object):
         self.tag = Tag()
 
     def save_photo(self, photo_id, date_uploaded, original, large_square, exif_data, date_taken):
+        print('save photo, datetime taken ', date_taken)
         # print('original', original)
         # print('original file path', os.path.join(original))
         # print()

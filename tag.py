@@ -541,11 +541,11 @@ class Tag(object):
 
             query_string = (
                 '''
-                select photo_id, photo_title, views, tag_name, large_square from photo
+                select photo_id, photo_title, views, date_taken, tag_name, large_square from photo
                 join photo_tag using(photo_id)
                 join images using(photo_id)
                 where tag_name = "{}"
-                order by views
+                order by date_taken
                 desc limit {} offset {}
                 '''
             ).format(tag_name, limit, offset)
