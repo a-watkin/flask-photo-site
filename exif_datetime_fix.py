@@ -153,7 +153,7 @@ class DateTimeFix(object):
         #     except Exception as e:
         #         print(x, '\n', e)
 
-    def read_exif_data(self):
+    def remove_invalid_exif_rows(self):
         exif_data = self.db.get_query_as_list(
             '''
             select * from exif
@@ -168,11 +168,7 @@ class DateTimeFix(object):
         exif data is always long
         """
         for d in exif_data:
-
-            # if len(d['exif_id']) > 10:
-            #     print(d)
-            #     break
-
+            # Removing exif rows not associated with photos
             if len(d['photo_id']) > 11:
                 print()
                 print(d['exif_data'])
@@ -184,13 +180,41 @@ class DateTimeFix(object):
                         delete from exif where photo_id = '{}'
                         '''.format(d['photo_id'])
                     )
+
+            # these records also had no photos associated with them
+            if '{' in d['exif_id']:
                 print()
-                # print(d['photo_id'])
-                # print(d['photo_id'])
-                print()
+                print(d['photo_id'])
+                if self.get_photo_by_id(d['photo_id']):
+                    print(self.get_photo_by_id(d['photo_id']))
+                else:
+                    self.db.make_query(
+                        '''
+                        delete from exif where photo_id = '{}'
+                        '''.format(d['photo_id'])
+                    )
+
+            # records where exif data is empty
+            if len(d['exif_data']) < 10:
+                if self.get_photo_by_id(d['photo_id']):
+                    print(self.get_photo_by_id(d['photo_id']))
+                else:
+                    self.db.make_query(
+                        '''
+                        delete from exif where photo_id = '{}'
+                        '''.format(d['photo_id'])
+                    )
+
+    def check_exif_photo(self):
+        pass
 
 
 if __name__ == "__main__":
     dtf = DateTimeFix()
     # dtf.read_exif_datetime()
-    dtf.read_exif_data()
+
+    # remove invalid exif data, invalid format and not associated with a photo
+    # dtf.remove_invalid_exif_rows()
+
+    # check that exif data related to a photo
+    dtf.check_exif_photo()
