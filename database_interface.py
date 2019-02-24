@@ -109,17 +109,17 @@ class Database(object):
             # print(row)
 
     def get_query_as_list(self, query_string):
-        q_data = None
-        with sqlite3.connect(self.db_name) as connection:
-            c = connection.cursor()
+        try:
+            q_data = None
+            with sqlite3.connect(self.db_name) as connection:
+                c = connection.cursor()
+                c.row_factory = sqlite3.Row
+                q_data = c.execute(query_string)
 
-            c.row_factory = sqlite3.Row
+            return [dict(ix) for ix in q_data]
 
-            query_string = (query_string)
-
-            q_data = c.execute(query_string)
-
-        return [dict(ix) for ix in q_data]
+        except Exception as e:
+            print('Problem with query\n', query_string, e)
 
     def make_query(self, query_string):
         with sqlite3.connect(self.db_name) as connection:
