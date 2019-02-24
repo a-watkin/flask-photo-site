@@ -206,7 +206,157 @@ class DateTimeFix(object):
                     )
 
     def check_exif_photo(self):
-        pass
+        exif_data = self.db.get_query_as_list(
+            '''
+            select * from exif
+            '''
+        )
+
+        for d in exif_data:
+            if self.get_photo_by_id(d['photo_id']):
+                pass
+                # print(self.get_photo_by_id(d['photo_id']))
+            else:
+                print(d['photo_id'])
+                print(self.get_photo_by_id(d['photo_id']))
+                self.db.make_query(
+                    '''
+                        delete from exif where photo_id = '{}'
+                        '''.format(d['photo_id'])
+                )
+
+    def check_photos(self):
+        photos = self.db.get_query_as_list(
+            '''
+            select * from photo
+            '''
+        )
+
+        count = 0
+        no_exif_count = 0
+        for p in photos:
+            # print(p['photo_id'])
+            exif_data = self.db.get_query_as_list('''
+            select exif_id from exif where photo_id = {}
+            '''.format(p['photo_id']))
+
+            if not exif_data:
+                print(p['photo_id'])
+                print(exif_data)
+                no_exif = self.db.get_query_as_list(
+                    '''
+                    select * from photo where photo_id = {}
+                    '''.format(p['photo_id'])
+                )
+                print(no_exif[0]['date_uploaded'])
+                no_exif_count += 1
+            count += 1
+
+        print(count, no_exif_count)
+
+    def get_exif_data_by_id(self, exif_id):
+        try:
+            exif_data = self.db.get_query_as_list(
+                '''
+                select * from exif where exif_id = {}
+                '''.format(exif_id)
+            )
+            print()
+            print(exif_data)
+            print()
+            if exif_data:
+                return exif_data
+
+        except Exception as e:
+            return []
+
+    def check_column_values(self):
+        exif_data = self.db.get_query_as_list(
+            '''
+            select * from exif
+            '''
+        )
+
+        # determine photo_id and exif_data forget the exif_id
+        for d in exif_data:
+            exif_id = len(d['exif_id'])
+            data_len = len(d['exif_data'])
+            photo_id = len(d['photo_id'])
+
+            # photo_id is always 10
+            if photo_id == 11:
+                photo_data = self.get_photo_by_id(d['photo_id'])
+                if photo_data:
+                    print(photo_data)
+
+            import string
+
+            if len(d['exif_id']) > 11:
+                pass
+
+            else:
+                if any(c.isalpha() for c in d['exif_id']):
+                    pass
+                else:
+
+                    photo_data = self.get_photo_by_id(d['exif_id'])
+                    if photo_data:
+                        print(photo_data)
+
+                        if self.get_exif_data_by_id(d['photo_id']):
+                            print('photo_id is exif_id')
+                        else:
+                            # exif_id is photo_id
+                            self.db.make_query(
+                                '''
+                                update exif
+                                set exif_id = {}, photo_id = {}
+                                where exif_id = {}
+                                '''.format(d['photo_id'], d['exif_id'], d['exif_id'])
+                            )
+
+    def test_photo_id(self):
+        """
+        prints a photo_id if it does not correspond to a photo
+        """
+        exif_data = self.db.get_query_as_list(
+            '''
+            select * from exif
+            '''
+        )
+
+        for d in exif_data:
+            if not self.get_photo_by_id(d['photo_id']):
+                print(d['photo_id'])
+
+    def three_problems(self):
+        exif_data = self.db.get_query_as_list(
+            '''
+            select * from exif
+            '''
+        )
+
+        for d in exif_data:
+            # if longer than 11 it's the exif_data
+            if len(d['exif_data']) > 12:
+                pass
+
+            if len(d['exif_id']) > 12:
+                print('problem')
+
+                if any(c.isalpha() for c in d['exif_data']):
+                    self.db.make_sanitized_query(
+                        '''
+                        update exif
+                        set exif_id = ? exif_data = ?
+                        where photo_id = ?
+                        ''', (d['exif_data'], d['exif_id'], d['photo_id'])
+                    )
+
+                elif self.get_photo_by_id(d['photo_id']):
+                    print('\neh?')
+
+            # if 10 to 11 it's either exif_id or photo_id
 
 
 if __name__ == "__main__":
@@ -217,4 +367,12 @@ if __name__ == "__main__":
     # dtf.remove_invalid_exif_rows()
 
     # check that exif data related to a photo
-    dtf.check_exif_photo()
+    # dtf.check_exif_photo()
+    # dtf.check_photos()
+
+    # some column values are in the wrong order
+    # dtf.check_column_values()
+
+    # dtf.test_photo_id()
+
+    dtf.three_problems()

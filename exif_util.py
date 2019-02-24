@@ -29,7 +29,9 @@ class ExifUtil(object):
 
     @staticmethod
     def test_exifread(fn):
-        import exifread
+        """
+        Gets exif data, there may be a problem with this.
+        """
         print('\n<< Test of exifread >>\n')
 
         rtn_dict = {}

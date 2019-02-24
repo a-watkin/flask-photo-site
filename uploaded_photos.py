@@ -58,13 +58,32 @@ class UploadedPhotos(object):
         #     exif_data = json.dumps(exif_data)
         #     # print(exif_data)
 
+        """
+        insert data may be causing problem
+        """
         # insert exif data
-        self.db.insert_data(
-            exif_id=exif_id,
-            exif_data=exif_data,
-            photo_id=photo_id,
-            table='exif'
+        # self.db.insert_data(
+        #     exif_id=exif_id,
+        #     exif_data=exif_data,
+        #     photo_id=photo_id,
+        #     table='exif'
+        # )
+
+        self.db.make_sanitized_query(
+            '''
+            insert into exif (exif_id, exif_data, photo_id)
+            values (?,?,?)
+            ''', (exif_id, exif_data, photo_id)
         )
+
+        # exif_data = json.dumps(exif_data)
+        # print('\n', exif_data)
+        # self.db.make_query(
+        #     '''
+        #     insert into exif (exif_id, exif_data, photo_id)
+        #     values ({}, "{}", {})
+        #     '''.format(exif_id, exif_data, photo_id)
+        # )
 
         # print(original)
         # get_datetime_taken(os.getcwd() + original)

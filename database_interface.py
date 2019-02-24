@@ -127,6 +127,14 @@ class Database(object):
             # print(query_string)
             return [x for x in c.execute(query_string)]
 
+    def make_sanitized_query(self, query_string, data=None):
+        try:
+            with sqlite3.connect(os.path.join(self.db_name)) as connection:
+                c = connection.cursor()
+                return [x for x in c.execute(query_string, data)]
+        except Exception as e:
+            print('make_sanitized_query ', e)
+
     def delete_rows_where(self, table_name, name, where):
         with sqlite3.connect(self.db_name) as connection:
             c = connection.cursor()

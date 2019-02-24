@@ -177,21 +177,6 @@ def upload_file():
                     large_square_path = '/static/images/{}/{}/{}'.format(
                         created.year, created.month, thumbnail_filename)
 
-                    # print('\n TEST OF PATHS', original_path,
-                    #       large_square_path, '\nTEST OF PATHS')
-
-                    # print()
-                    # print(
-                    #     photo_id,
-                    #     str(created),
-                    #     original_path,
-                    #     large_square_path
-                    # )
-                    # print()
-
-                    # getting a missing arg error
-                    # it expects 4 args and i'm passing 4
-                    # was using the class name instead of the instance name...:(
                     up.save_photo(
                         photo_id,
                         str(created),
