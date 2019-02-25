@@ -7,32 +7,51 @@ class DateTimeFix(object):
     def __init__(self):
         self.db = Database('eigi-data.db')
 
-    def get_photo_by_id(self, photo_id):
+    def get_exif_rows(self):
+        """
+        Returns all the exif rows as a list of dicts.
+        """
         return self.db.get_query_as_list(
             '''
-            select * from photo where photo_id = "{}"
-            '''.format(photo_id)
+            select * from exif
+            '''
         )
 
-    def get_exif_data_by_id(self, exif_id):
+    def get_photo_by_id(self, photo_id):
+        """
+        Returns all the photo rows that correspond to the given photo_id.
+        """
         try:
-            exif_data = self.db.get_query_as_list(
+            return self.db.get_query_as_list(
+                '''
+            select * from photo where photo_id = "{}"
+            '''.format(photo_id)
+            )
+        except Exception as e:
+            print('No photo data found for this photo_id ', e)
+            return []
+
+    def get_exif_data_by_id(self, exif_id):
+        """
+        Returns all the exif rows that correspond to the given exif_id.
+        """
+        try:
+            return self.db.get_query_as_list(
                 '''
                 select * from exif where exif_id = {}
                 '''.format(exif_id)
             )
 
-            if exif_data:
-                return exif_data
-
         except Exception as e:
+            print('No exif value found for this exif_id ', e)
             return []
 
-    def test_row(self):
+    def switich_exif_data_id(self):
+        """
+        Switches exif_data and exif_id if they are in the wrong order.
+        """
         # 2600028293
         # photo id is ok, but exif_data and id are switched
-        # print(self.get_photo_by_id(2600028293))
-
         exif_data = self.db.get_query_as_list(
             '''
             select * from exif
@@ -52,34 +71,6 @@ class DateTimeFix(object):
                     where photo_id = ?
                     ''', (exif_id, exif_data, d['photo_id'])
                 )
-
-    def check_photo_id(self):
-        exif_data = self.db.get_query_as_list(
-            '''
-            select * from exif
-            '''
-        )
-
-        for d in exif_data:
-            try:
-                print('trying with value ', d['photo_id'])
-                photo_data = self.get_photo_by_id(d['photo_id'])
-                print('\n', photo_data)
-            except Exception as e:
-                print('problem ', e)
-                print(d['photo_id'], '\n', d['exif_data'], '\n', d['exif_id'])
-
-                if len(d['exif_id']) > 11:
-                    exif_id = d['exif_data']
-                    exif_data = d['exif_id']
-
-                    self.db.make_sanitized_query(
-                        '''
-                        update exif
-                        set exif_id = ?, exif_data = ?
-                        where photo_id = ?
-                        ''', (exif_id, exif_data, d['photo_id'])
-                    )
 
     def check_len_exif_id(self):
         exif_data = self.db.get_query_as_list(
@@ -109,7 +100,7 @@ class DateTimeFix(object):
                 probs.append(d['photo_id'])
 
         print()
-        print(probs)
+        print('check photo id probs, ', probs)
         print(len(probs))
 
     def check_len_photo_id(self):
@@ -174,12 +165,28 @@ class DateTimeFix(object):
         # if self.get_photo_by_id(d['exif_id']):
         #     print(self.get_photo_by_id(d['exif_id']))
 
+    def update_photo_taken(self):
+        exif_data = self.db.get_query_as_list(
+            '''
+            select * from exif
+            '''
+        )
+
+        for d in exif_data:
+            try:
+                e_data = json.loads(d['exif_data'])
+                print(e_data.keys())
+            except Exception as e:
+                print(d['exif_id'])
+
 
 if __name__ == "__main__":
     dtf = DateTimeFix()
+    dtf.switich_exif_data_id()
+
     # dtf.test_row()
-    dtf.check_photo_id()
+    # dtf.check_photo_id()
     # dtf.check_len_exif_id()
     # dtf.check_len_photo_id()
-
     # dtf.check_photo_exif_ids()
+    # dtf.update_photo_taken()
