@@ -152,36 +152,56 @@ class DateTimeFix(object):
         # if self.get_photo_by_id(d['exif_id']):
         #     print(self.get_photo_by_id(d['exif_id']))
 
-    def update_photo_taken(self):
-        exif_data = self.db.get_query_as_list(
-            '''
-            select * from exif
-            '''
-        )
+    def update_photo_datetime_taken(self):
+        exif_data = self.get_exif_rows()
 
         for d in exif_data:
+            print(d['photo_id'])
             try:
                 e_data = json.loads(d['exif_data'])
-                print(e_data.keys())
+                # print(e_data.keys())
+                for x in e_data['photo']['exif']:
+                    if 'DateTimeOriginal' in x.values():
+                        print(x['raw']['_content'], '\n')
+                        datetime_taken = x['raw']['_content']
+                        print(self.update_date_taken(
+                            d['photo_id'], datetime_taken))
+
             except Exception as e:
-                print(d['exif_id'])
+                e_data = json.loads(d['exif_data'])
+                # print(e_data.keys())
+                print(e_data['EXIF DateTimeOriginal'])
+
+                print(self.update_date_taken(
+                    d['photo_id'], e_data['EXIF DateTimeOriginal']))
+
+    def update_date_taken(self, photo_id, datetime_string):
+        return self.db.make_sanitized_query(
+            '''
+            update photo
+            set date_taken = ?
+            where photo_id = ?
+            ''', (datetime_string, photo_id)
+        )
 
 
 if __name__ == "__main__":
     dtf = DateTimeFix()
     # swtich exif_id and exif_data if in incorrect order
-    dtf.switich_exif_data_id()
+    # dtf.switich_exif_data_id()
 
     # try both exif_id and photo_id against photo table
     # if nothing found remove exif recrod
-    dtf.check_photo_exif_ids()
+    # dtf.check_photo_exif_ids()
 
     # this seems sort of pointless? it's ok as a final check
-    dtf.check_photo_id()
+    # dtf.check_photo_id()
 
     # check the length of exif_id, there's one row that has a longer than usual exif_id that was causing a problem
     # now resolved
-    dtf.check_len_exif_id()
+    # dtf.check_len_exif_id()
+
+    dtf.update_photo_datetime_taken()
 
     # dtf.check_len_photo_id()
     # dtf.check_photo_exif_ids()
