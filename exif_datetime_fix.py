@@ -49,17 +49,15 @@ class DateTimeFix(object):
     def switich_exif_data_id(self):
         """
         Switches exif_data and exif_id if they are in the wrong order.
+
+        This only works if the exif_data is in exif_id column.
         """
         # 2600028293
         # photo id is ok, but exif_data and id are switched
-        exif_data = self.db.get_query_as_list(
-            '''
-            select * from exif
-            '''
-        )
+        exif_data = self.get_exif_rows()
 
         for d in exif_data:
-            if len(d['exif_id']) > 11:
+            if len(d['exif_id']) > len(d['exif_data']):
                 # print('probs')
                 exif_id = d['exif_data']
                 exif_data = d['exif_id']
@@ -73,22 +71,15 @@ class DateTimeFix(object):
                 )
 
     def check_len_exif_id(self):
-        exif_data = self.db.get_query_as_list(
-            '''
-            select * from exif
-            '''
-        )
+        exif_data = self.get_exif_rows()
 
         for d in exif_data:
             if len(d['exif_id']) > 11:
-                print(d['exif_id'], d['photo_id'])
+                print(d['exif_id'], '\n', d['photo_id'], '\n', d['exif_data'])
 
     def check_photo_id(self):
-        exif_data = self.db.get_query_as_list(
-            '''
-            select * from exif
-            '''
-        )
+        # get all exif rows
+        exif_data = self.get_exif_rows()
 
         probs = []
         for d in exif_data:
@@ -129,11 +120,7 @@ class DateTimeFix(object):
         print(count)
 
     def check_photo_exif_ids(self):
-        exif_data = self.db.get_query_as_list(
-            '''
-            select * from exif
-            '''
-        )
+        exif_data = self.get_exif_rows()
 
         problems = []
         for d in exif_data:
@@ -182,11 +169,20 @@ class DateTimeFix(object):
 
 if __name__ == "__main__":
     dtf = DateTimeFix()
+    # swtich exif_id and exif_data if in incorrect order
     dtf.switich_exif_data_id()
 
-    # dtf.test_row()
-    # dtf.check_photo_id()
-    # dtf.check_len_exif_id()
+    # try both exif_id and photo_id against photo table
+    # if nothing found remove exif recrod
+    dtf.check_photo_exif_ids()
+
+    # this seems sort of pointless? it's ok as a final check
+    dtf.check_photo_id()
+
+    # check the length of exif_id, there's one row that has a longer than usual exif_id that was causing a problem
+    # now resolved
+    dtf.check_len_exif_id()
+
     # dtf.check_len_photo_id()
     # dtf.check_photo_exif_ids()
     # dtf.update_photo_taken()
