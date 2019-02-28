@@ -1,0 +1,7 @@
+select * from photo where photo_id = "2600028293"
+
+select * from exif where exif_id = "4079820479"
+
+select * from exif where photo_id = "2600028293"
+
+select * from upload_photo where photo_id = "1904217027"
