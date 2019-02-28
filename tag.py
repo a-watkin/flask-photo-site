@@ -203,11 +203,11 @@ class Tag(object):
         # q_data = None
 
         query_string = '''
-            select photo_id, photo_title, views, tag_name, large_square from photo
+            select photo_id, photo_title, views, tag_name, large_square, date_taken from photo
             join photo_tag using(photo_id)
             join images using(photo_id)
             where tag_name = "{}"
-            order by views desc
+            order by date_taken desc
         '''.format(tag_name)
 
         tag_data = self.db.get_query_as_list(query_string)

@@ -169,7 +169,7 @@ class Album(object):
                 join photo on(photo_album.photo_id=photo.photo_id)
                 join images on(images.photo_id=photo.photo_id)
                 where album.album_id={}
-                order by photo.date_uploaded asc
+                order by photo.date_taken asc
                 '''.format(album_id)
 
         album_data = self.db.get_query_as_list(
@@ -317,7 +317,7 @@ class Album(object):
                 join album on(photo_album.album_id=album.album_id)
                 join images on(photo.photo_id=images.photo_id)
                 where album.album_id='{}'
-                order by date_uploaded
+                order by date_taken
                 desc limit {} offset {}
                 '''
             ).format(album_id, limit, offset)
