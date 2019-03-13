@@ -4,10 +4,9 @@ from password_util import PasswordUtil
 
 
 class User(object):
-    def __init__(self, username, password, _id=None):
+    def __init__(self, username, password):
         self.username = username
         self.password = password
-        # the dot hex makes it a string
         self.user_id = None
         # init database
         self.db = Database('eigi-data.db')

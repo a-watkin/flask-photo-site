@@ -85,5 +85,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
-# print(get_datetime_taken('test_portrait.jpg'))
