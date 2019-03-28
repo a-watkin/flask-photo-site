@@ -8,7 +8,6 @@ from database_interface import Database
 from tag import Tag
 import name_util
 from exif_util import ExifUtil
-# from exif_util import ExifUtil
 
 
 class UploadedPhotos(object):
@@ -26,49 +25,9 @@ class UploadedPhotos(object):
         self.tag = Tag()
 
     def save_photo(self, photo_id, date_uploaded, original, large_square, exif_data, date_taken):
-        print('save photo, datetime taken ', date_taken)
-        # print('original', original)
-        # print('original file path', os.path.join(original))
-        # print()
-        # print(os.getcwd() + original)
-        # print()
-
-        # print(ExifUtil.read_exif('test_portrait.jpg'))
-        # print(ExifUtil.get_datetime_taken('test_portrait.jpg'))
-
-        # date_taken = None
         exif_id = str(int(uuid.uuid4()))[0:10]
 
-        # a photo may not have any exif data
-        # try:
-
-        #     date_taken = ExifUtil.get_datetime_taken(os.getcwd() + original)
-        #     # exif_data = ExifUtil.read_exif(os.getcwd() + original)
-
-        #     # print()
-        #     # print(exif_data)
-        #     # print('date_taken', date_taken)
-        #     # print()
-
-        # except Exception as e:
-        #     print('problem reading exif data ', e)
-
-        # if exif_data is not None:
-        #     # make into a blob
-        #     exif_data = json.dumps(exif_data)
-        #     # print(exif_data)
-
-        """
-        insert data may be causing problem
-        """
-        # insert exif data
-        # self.db.insert_data(
-        #     exif_id=exif_id,
-        #     exif_data=exif_data,
-        #     photo_id=photo_id,
-        #     table='exif'
-        # )
-
+        # Write to EXIF table.
         self.db.make_sanitized_query(
             '''
             insert into exif (exif_id, exif_data, photo_id)
@@ -76,29 +35,15 @@ class UploadedPhotos(object):
             ''', (exif_id, exif_data, photo_id)
         )
 
-        # exif_data = json.dumps(exif_data)
-        # print('\n', exif_data)
-        # self.db.make_query(
-        #     '''
-        #     insert into exif (exif_id, exif_data, photo_id)
-        #     values ({}, "{}", {})
-        #     '''.format(exif_id, exif_data, photo_id)
-        # )
-
-        # print(original)
-        # get_datetime_taken(os.getcwd() + original)
-        # print(photo_id, self.user_id)
-        # write to the uploaded_photo table
+        # Write to the uploaded_photo table.
         query_string = '''
         insert into upload_photo(photo_id, user_id)
         values('{}', '{}')
         '''.format(photo_id, self.user_id)
 
-        # print(query_string)
-
         self.db.make_query(query_string)
 
-        # write to the photo table
+        # Write to the photo table.
         self.db.make_query(
             '''
             insert into photo(photo_id, user_id, views, date_uploaded, date_taken)
@@ -106,15 +51,13 @@ class UploadedPhotos(object):
             '''.format(int(photo_id), self.user_id, 0, date_uploaded, str(date_taken))
         )
 
-        # write to images
+        # Write to images table.
         self.db.make_query(
             '''
             insert into images(photo_id, original, large_square)
             values({},'{}','{}')
             '''.format(int(photo_id), original, large_square)
         )
-
-        # should probably get and store exif data
 
     def get_photos_in_range(self, limit=20, offset=0):
         """
@@ -166,8 +109,6 @@ class UploadedPhotos(object):
         return rtn_dict
 
     def get_uploaded_photos(self):
-        # photo_id
-        # from image the original size
         q_data = None
         with sqlite3.connect(self.db.db_name) as connection:
             c = connection.cursor()
@@ -186,23 +127,14 @@ class UploadedPhotos(object):
 
         data = [dict(ix) for ix in q_data]
 
-        print(data)
-
-        # print((self.tag.get_photo_tags(data[0]['photo_id'])))
-
-        # fix this later so that it doesn't suck
         for photo in data:
-            # print(self.tag.get_photo_tags(photo['photo_id']))
             photo['tags'] = []
             if photo['photo_title']:
                 photo['photo_title'] = name_util.make_decoded(
                     photo['photo_title'])
             for tag in self.tag.get_photo_tags(photo['photo_id']):
                 for key, value in tag.items():
-                    print()
-                    print('key', key, 'value', value)
                     if key == 'human_readable_tag':
-                        print('wtf', value, photo['tags'])
                         photo['tags'].append(value)
 
         a_dict = {}
@@ -216,8 +148,6 @@ class UploadedPhotos(object):
         return rtn_dict
 
     def get_uploaded_photos_test(self):
-        # photo_id
-        # from image the original size
         q_data = None
         with sqlite3.connect(self.db.db_name) as connection:
             c = connection.cursor()
@@ -236,23 +166,7 @@ class UploadedPhotos(object):
 
         data = [dict(ix) for ix in q_data]
 
-        print(data)
-
         return {'photos': data}
-
-        # cur_dir = os.getcwd()
-
-        # a_dict = {}
-        # count = 0
-        # for d in data:
-        #     a_dict[count] = d
-        #     count += 1
-        #     # d['original'] = cur_dir + d['original']
-        #     # d['large_square'] = cur_dir + d['large_square']
-
-        # rtn_dict = {'photos': a_dict}
-
-        # return rtn_dict
 
     def discard_photo(self, photo_id):
         """
@@ -288,15 +202,12 @@ class UploadedPhotos(object):
         else:
             print('no data')
 
-        # remove photo from table photo
+        # Remove photo from table photo.
         self.db.make_query(
             '''
             delete from photo where photo_id = {}
             '''.format(photo_id)
         )
-
-        # images should cascade delete, but check
-        # Seems so
 
         # remove from upload_photo table
         self.db.make_query(
@@ -346,7 +257,7 @@ class UploadedPhotos(object):
 
     def add_to_photostream(self, data):
         print('PROBLEM DATA ', data)
-        # get the photo_id for eatch photo
+        # get the photo_id for each photo
         for photo in data.values():
             # set the date_posted to the current datetime
             date_posted = datetime.datetime.now()
@@ -426,13 +337,6 @@ class UploadedPhotos(object):
                 where photo_id = {}
                 '''.format(date_posted, photo_id)
             )
-
-            print(photo_id)
-            # db.insert_data(
-            #     table='tag',
-            #     tag_name=new_tag,
-            #     user_id='28035310@N00'
-            # )
 
             self.db.make_query(
                 '''
