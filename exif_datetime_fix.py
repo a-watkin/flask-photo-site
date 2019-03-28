@@ -1,5 +1,7 @@
-from database_interface import Database
 import json
+
+
+from common.database_interface import Database
 
 
 class DateTimeFix(object):
@@ -58,7 +60,6 @@ class DateTimeFix(object):
 
         for d in exif_data:
             if len(d['exif_id']) > len(d['exif_data']):
-                # print('probs')
                 exif_id = d['exif_data']
                 exif_data = d['exif_id']
 

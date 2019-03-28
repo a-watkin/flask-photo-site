@@ -9,16 +9,19 @@ from functools import wraps
 from flask import Flask, render_template, request, session, flash, redirect, url_for, g, jsonify
 from flask import json
 from werkzeug.utils import secure_filename
-# from wtforms import Form, BooleanField, StringField, PasswordField, validators
 
 # my modules
-from database_interface import Database
+
+# From common package.
+from common.database_interface import Database
+from common import name_util
+
+
 from photo import Photos
 from album import Album
 from tag import Tag
 from uploaded_photos import UploadedPhotos
 
-import name_util
 from user import User
 from resize_photo import PhotoUtil
 
@@ -32,13 +35,7 @@ app = Flask('app')
 app = Flask(__name__.split('.')[0])
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
-# some change with flask?
-# for some reason it accepts secret_key but nothing else
-# without doing this
-# app.config['USERNAME'] = 'admin'
-# app.config['PASSWORD'] = 'admin'
-# so secret key is built in from the get go
-# app.config['SECRET_KEY'] = 'secret'
+
 app.config['SECRET_KEY'] = b'\xef\x03\xc8\x96\xb7\xf9\xf3^\x16\xcbz\xd7\x83K\xfa\xcf'
 """
 $ python -c 'import os; print(os.urandom(16))'

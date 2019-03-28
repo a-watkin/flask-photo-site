@@ -32,7 +32,4 @@ class PasswordUtil(object):
 
 
 if __name__ == '__main__':
-    # blah = PasswordUtil()
-    # print(blah.hash_password("test"))
-
-    print()
+    pass

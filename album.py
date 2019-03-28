@@ -3,8 +3,8 @@ import datetime
 import uuid
 
 
-from database_interface import Database
-import name_util
+from common.database_interface import Database
+from common import name_util
 
 
 class Album(object):

@@ -4,10 +4,10 @@ import sqlite3
 import json
 import datetime
 
-from database_interface import Database
-from tag import Tag
-import name_util
+from common.database_interface import Database
+from common import name_util
 from exif_util import ExifUtil
+from tag import Tag
 
 
 class UploadedPhotos(object):
@@ -329,7 +329,7 @@ class UploadedPhotos(object):
             photo_id = photo[0]
 
             date_posted = datetime.datetime.now()
-            # set published datetime
+            # Set published datetime.
             self.db.make_query(
                 '''
                 update photo

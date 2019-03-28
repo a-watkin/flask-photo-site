@@ -1,6 +1,5 @@
-from database_interface import Database
-
-from password_util import PasswordUtil
+from common.database_interface import Database
+from common.password_util import PasswordUtil
 
 
 class User(object):

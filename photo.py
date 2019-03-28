@@ -1,11 +1,11 @@
-from database_interface import Database
 import sqlite3
 import urllib.parse
 
 
+from common.database_interface import Database
+from common import name_util
 from tag import Tag
 from album import Album
-import name_util
 
 
 class Photos(object):

@@ -2,7 +2,7 @@ import os
 import datetime
 
 
-from database_interface import Database
+from common.database_interface import Database
 from resize_photo import PhotoUtil
 
 db = Database('eigi-data.db')

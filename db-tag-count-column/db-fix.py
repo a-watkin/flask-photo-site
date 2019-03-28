@@ -2,7 +2,7 @@ import sqlite3
 import pickle
 import os
 
-from database_interface import Database
+from common.database_interface import Database
 
 
 class AlterDB(object):
