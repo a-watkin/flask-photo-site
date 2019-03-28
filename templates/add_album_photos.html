@@ -1,55 +1,58 @@
 {% extends "template.html" %} {% block content %}
 
 <div class="row text-center">
-    <div class="col">
-        <h1>Add photos to the album</h1>
-        <!-- <h2>{{json_data['album_data']['album_id']}}</h2> -->
-    </div>
+  <div class="col">
+    <h1>Add photos to the album</h1>
+    <!-- <h2>{{json_data['album_data']['album_id']}}</h2> -->
+  </div>
 </div>
 
-<hr>
+<hr />
 
 <div class="row text-center">
-    <div id="selected-album" class="col">
-
-        <a href="/albums/{{json_data['album_data']['album_id']}}">
-            <div class="card" style="width: 18rem;">
-                <div class="card-body">
-                    <h5 class="card-title text-center">{{json_data['album_data']['human_readable_title']}}</h5>
-                    <img class="card-img-top img-fluid" src={% if json_data['album_data']['large_square'] %}
-                        {{
-                        json_data['album_data']['large_square']
-                    }} {%
-                        else %} '/static/images/logo.jpg' {% endif %} alt="{{ json_data['human_readable_title'] }} album">
-                    <p class="card-text">{{json_data['album_data']['human_readable_description']}}</p>
-                    <div class="row">
-                        <div class="col">
-                            <p>
-                                views: {{json_data['album_data']['views']}}
-                            </p>
-                        </div>
-                        <div class="col">
-                            <p>
-                                photos: {{json_data['album_data']['photos']}}
-                            </p>
-                        </div>
-                    </div>
-                </div>
+  <div id="selected-album" class="col">
+    <a href="/albums/{{ json_data['album_data']['album_id'] }}">
+      <div class="card" style="width: 18rem;">
+        <div class="card-body">
+          <h5 class="card-title text-center">
+            {{ json_data["album_data"]["human_readable_title"] }}
+          </h5>
+          <img class="card-img-top img-fluid" src={% if
+          json_data['album_data']['large_square'] %}
+          {{ json_data["album_data"]["large_square"] }} {% else %}
+          '/static/images/logo.jpg' {% endif %} alt="{{
+            json_data["human_readable_title"]
+          }}
+          album">
+          <p class="card-text">
+            {{ json_data["album_data"]["human_readable_description"] }}
+          </p>
+          <div class="row">
+            <div class="col">
+              <p>views: {{ json_data["album_data"]["views"] }}</p>
             </div>
-        </a>
-    </div>
-
+            <div class="col">
+              <p>photos: {{ json_data["album_data"]["photos"] }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </a>
+  </div>
 </div>
-<hr>
+<hr />
 
 <!-- entry point for React components to select photos to add to the album -->
 <div id="photos-selector"></div>
 
-<hr>
+<hr />
 
 <!-- Scripts for React -->
 
 <!-- React script -->
-<script type="text/babel" src="{{ url_for('static', filename='scripts/photos_selector.js') }}"></script>
+<script
+  type="text/babel"
+  src="{{ url_for('static', filename='scripts/photos_selector.js') }}"
+></script>
 
 {% endblock %}

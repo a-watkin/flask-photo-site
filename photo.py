@@ -15,13 +15,12 @@ class Photos(object):
         self.tag = Tag()
         self.album = Album()
 
-    @classmethod
-    def url_decode_tag(cls, tag_name):
+    @staticmethod
+    def url_decode_tag(tag_name):
         return urllib.parse.unquote(tag_name)
 
-    @classmethod
-    def needs_decode(cls, a_str):
-        # print(a_str)
+    @staticmethod
+    def needs_decode(a_str):
         if a_str is None:
             return ""
         if '%' in a_str:
@@ -30,7 +29,6 @@ class Photos(object):
             return a_str
 
     def count_photos(self):
-        # get count of photos in album
         num_photos = self.db.make_query(
             '''
             select count(photo_id)
@@ -60,11 +58,11 @@ class Photos(object):
 
         pages = num_photos // limit
 
-        # otherwise it starts at 0 and I want it to start at 1
+        # Ensure pages start at 1 rather than 0.
         page += 1
         pages += 1
 
-        # get number of photos in database total
+        # Get number of photos in database total.
         num_photos = self.db.make_query(
             '''
             select count(photo_id)
@@ -96,20 +94,12 @@ class Photos(object):
             'photos': []
         }
 
-        """
-        I think it may actually be better to layout what fields you want here.
-
-        And maybe include all sizes.
-        """
-
+        # I think it may actually be better to layout what fields you want here.
+        # And maybe include all sizes.
         data = [dict(ix) for ix in q_data]
 
-        # print()
         for photo in data:
-            # print('HERE', photo)
             photo['photo_title'] = self.needs_decode(photo['photo_title'])
-            # print(photo)
-            # print()
 
         a_dict = {}
         count = 0
@@ -168,13 +158,9 @@ class Photos(object):
             except Exception as e:
                 print('Problem in getting next photo, ', e)
 
-        # print(photo_data)
-
         if len(photo_data) < 1:
             return None
         else:
-            # print(photo_data)
-            # the photo_id of the next photo
             return photo_data[0][0]
 
     def get_previous_photo(self, photo_id):
@@ -187,7 +173,7 @@ class Photos(object):
         with sqlite3.connect(self.db.db_name) as connection:
             c = connection.cursor()
 
-            # Problem here was that it was treating datetime as something other than a string
+            # Problem here was that it was treating datetime as something other than a string.
             next_string = (
                 '''
                 select * from photo join images using(photo_id)
@@ -204,7 +190,7 @@ class Photos(object):
             return photo_data[0][0]
 
     def get_photo(self, photo_id):
-        # update view count
+        # Update view count.
         self.db.make_query(
             '''
             update photo
@@ -227,7 +213,7 @@ class Photos(object):
         next_photo = self.get_next_photo(photo_id)
         prev_photo = self.get_previous_photo(photo_id)
 
-        # prevent None being retunred when the last pictures are reached
+        # Prevent None being returned when the last pictures are reached.
         if next_photo is None:
             next_photo = photo_data[0]['photo_id']
 
@@ -246,7 +232,7 @@ class Photos(object):
                 album['album_id'])[0]['large_square']
 
         if len(photo_data) > 0:
-            # becasuse it is a list containing a dict
+            # Because it is a list containing a dict.
             photo_data = photo_data[0]
 
             rtn_data = {
@@ -276,13 +262,11 @@ class Photos(object):
         '''.format(new_title, photo_id)
         )
 
-        # print(resp)
-
     def delete_photo(self, photo_id):
-        # Update tag count, data for later update
+        # Update tag count, data for later update.
         tags = self.tag.get_photo_tags(photo_id)
 
-        # check if photo is in an album
+        # Check if photo is in an album.
         album_check = self.db.make_query(
             '''
             select * from photo_album where photo_id = '{}'
@@ -291,12 +275,9 @@ class Photos(object):
 
         print(album_check)
 
-        # # if the photo is in an album decrement the value
-        # # decrement the value of the album count
+        # If the photo is in an album decrement the photos count.
         if len(album_check) > 0:
             for album in album_check:
-                print(album[1])
-
                 self.db.make_query(
                     '''
                     update album
@@ -305,30 +286,28 @@ class Photos(object):
                     '''.format(album[1])
                 )
 
-        # delete photo from photo_album
+        # Delete photo from photo_album.
         self.db.make_query(
             '''
             delete from photo_album where photo_id = '{}'
             '''.format(photo_id)
         )
 
-        # delete the photo itself
+        # Delete the photo itself.
         self.db.make_query(
             '''
             delete from photo where photo_id = '{}'
             '''.format(photo_id)
         )
 
-        # remove exif data
+        # Remove EXIF data.
         self.db.make_query(
             '''
             delete from exif where photo_id = '{}'
             '''.format(photo_id)
         )
 
-        print(album_check)
-
-        # update photo_tag count after deleting the photo
+        # Update photo_tag count after deleting the photo.
         for tag in tags:
             if tag['tag_name']:
                 print('tag name', tag['tag_name'])
