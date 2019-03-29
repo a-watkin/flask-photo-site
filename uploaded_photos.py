@@ -117,9 +117,9 @@ class UploadedPhotos(object):
 
             query_string = (
                 '''
-                select * from upload_photo
-                join photo on(photo.photo_id=upload_photo.photo_id)
-                join images on(images.photo_id=upload_photo.photo_id)
+                SELECT * FROM upload_photo
+                JOIN photo ON(photo.photo_id=upload_photo.photo_id)
+                JOIN images ON(images.photo_id=upload_photo.photo_id)
                 '''
             )
 
@@ -147,26 +147,27 @@ class UploadedPhotos(object):
 
         return rtn_dict
 
-    def get_uploaded_photos_test(self):
-        q_data = None
-        with sqlite3.connect(self.db.db_name) as connection:
-            c = connection.cursor()
+    # def get_uploaded_photos_test(self):
+    #     # Is this still used?
+    #     q_data = None
+    #     with sqlite3.connect(self.db.db_name) as connection:
+    #         c = connection.cursor()
 
-            c.row_factory = sqlite3.Row
+    #         c.row_factory = sqlite3.Row
 
-            query_string = (
-                '''
-                select * from upload_photo
-                join photo on(photo.photo_id=upload_photo.photo_id)
-                join images on(images.photo_id=upload_photo.photo_id)
-                '''
-            )
+    #         query_string = (
+    #             '''
+    #             SELECT * FROM upload_photo
+    #             JOIN photo ON(photo.photo_id=upload_photo.photo_id)
+    #             JOIN images ON(images.photo_id=upload_photo.photo_id)
+    #             '''
+    #         )
 
-            q_data = c.execute(query_string)
+    #         q_data = c.execute(query_string)
 
-        data = [dict(ix) for ix in q_data]
+    #     data = [dict(ix) for ix in q_data]
 
-        return {'photos': data}
+    #     return {'photos': data}
 
     def discard_photo(self, photo_id):
         """
