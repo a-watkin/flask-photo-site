@@ -15,19 +15,6 @@ class Photos(object):
         self.tag = Tag()
         self.album = Album()
 
-    @staticmethod
-    def url_decode_tag(tag_name):
-        return urllib.parse.unquote(tag_name)
-
-    @staticmethod
-    def needs_decode(a_str):
-        if a_str is None:
-            return ""
-        if '%' in a_str:
-            return cls.url_decode_tag(a_str)
-        else:
-            return a_str
-
     def count_photos(self):
         num_photos = self.db.make_query(
             '''
@@ -99,7 +86,7 @@ class Photos(object):
         data = [dict(ix) for ix in q_data]
 
         for photo in data:
-            photo['photo_title'] = self.needs_decode(photo['photo_title'])
+            photo['photo_title'] = name_util.make_decoded(photo['photo_title'])
 
         a_dict = {}
         count = 0
@@ -237,7 +224,7 @@ class Photos(object):
 
             rtn_data = {
                 'photo_id': photo_data['photo_id'],
-                'title': self.needs_decode(photo_data['photo_title']),
+                'title': name_util.make_decoded(photo_data['photo_title']),
                 'views': photo_data['views'],
                 'tags': self.tag.get_photo_tags(photo_id),
                 'album_data': album_data,
