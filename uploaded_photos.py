@@ -16,7 +16,7 @@ class UploadedPhotos(object):
 
     These represent recently uploaded files that have not had values set for things like title, tags etc.
 
-    They will be stored in the table until they are saved.
+    Photos are stored in the table until they are saved.
     """
 
     def __init__(self):
@@ -30,15 +30,15 @@ class UploadedPhotos(object):
         # Write to EXIF table.
         self.db.make_sanitized_query(
             '''
-            insert into exif (exif_id, exif_data, photo_id)
-            values (?,?,?)
+            INSERT INTO exif(exif_id, exif_data, photo_id)
+            VALUES (?,?,?)
             ''', (exif_id, exif_data, photo_id)
         )
 
         # Write to the uploaded_photo table.
         query_string = '''
-        insert into upload_photo(photo_id, user_id)
-        values('{}', '{}')
+        INSERT INTO upload_photo(photo_id, user_id)
+        VALUES('{}', '{}')
         '''.format(photo_id, self.user_id)
 
         self.db.make_query(query_string)
@@ -46,67 +46,18 @@ class UploadedPhotos(object):
         # Write to the photo table.
         self.db.make_query(
             '''
-            insert into photo(photo_id, user_id, views, date_uploaded, date_taken)
-            values({},'{}', {}, '{}', '{}')
+            INSERT INTO photo(photo_id, user_id, views, date_uploaded, date_taken)
+            VALUES({},'{}', {}, '{}', '{}')
             '''.format(int(photo_id), self.user_id, 0, date_uploaded, str(date_taken))
         )
 
         # Write to images table.
         self.db.make_query(
             '''
-            insert into images(photo_id, original, large_square)
-            values({},'{}','{}')
+            INSERT INTO images(photo_id, original, large_square)
+            VALUES({},'{}','{}')
             '''.format(int(photo_id), original, large_square)
         )
-
-    def get_photos_in_range(self, limit=20, offset=0):
-        """
-        Returns the latest 10 photos.
-
-        Offset is where you want to start from, so 0 would be from the most recent.
-        10 from the tenth most recent etc.
-        """
-        q_data = None
-        with sqlite3.connect(self.db.db_name) as connection:
-            c = connection.cursor()
-
-            c.row_factory = sqlite3.Row
-
-            query_string = (
-                '''select photo_id, views, photo_title, date_uploaded, date_taken, images.original, images.large_square from photo
-                join images using(photo_id)
-                order by date_uploaded
-                desc limit {} offset {}'''
-            ).format(limit, offset)
-
-            q_data = c.execute(query_string)
-
-        rtn_dict = {
-            'limit': limit,
-            'offset': offset,
-            'photos': []
-        }
-
-        """
-        I think it may actually be better to layout what fields you want here.
-
-        And maybe include all sizes.
-        """
-
-        data = [dict(ix) for ix in q_data]
-
-        a_dict = {}
-        count = 0
-        for d in data:
-            a_dict[count] = d
-            count += 1
-
-        rtn_dict = {'photos': a_dict}
-
-        rtn_dict['limit'] = limit
-        rtn_dict['offset'] = offset
-
-        return rtn_dict
 
     def get_uploaded_photos(self):
         q_data = None
@@ -146,28 +97,6 @@ class UploadedPhotos(object):
         rtn_dict = {'photos': a_dict}
 
         return rtn_dict
-
-    # def get_uploaded_photos_test(self):
-    #     # Is this still used?
-    #     q_data = None
-    #     with sqlite3.connect(self.db.db_name) as connection:
-    #         c = connection.cursor()
-
-    #         c.row_factory = sqlite3.Row
-
-    #         query_string = (
-    #             '''
-    #             SELECT * FROM upload_photo
-    #             JOIN photo ON(photo.photo_id=upload_photo.photo_id)
-    #             JOIN images ON(images.photo_id=upload_photo.photo_id)
-    #             '''
-    #         )
-
-    #         q_data = c.execute(query_string)
-
-    #     data = [dict(ix) for ix in q_data]
-
-    #     return {'photos': data}
 
     def discard_photo(self, photo_id):
         """
@@ -376,8 +305,6 @@ def main():
     # up.save_photo(
     #     2429676854, '2018-12-09 21:16:43.708922', '/2018/12/test_landscape_3400128875_lg_sqaure.jpg', '/2018/12/test_landscape_3400128875_lg_sqaure.jpg'
     # )
-
-    # print(up.get_uploaded_photos_test())
 
 
 if __name__ == "__main__":
