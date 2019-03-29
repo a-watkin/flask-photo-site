@@ -316,14 +316,11 @@ class UploadedPhotos(object):
                             name_util.make_encoded(tag['tag_name']))
 
     def add_all_to_album(self, album_id):
-        # get all uploaded photos
         uploaded_photos = self.db.make_query(
             '''
-            select * from upload_photo
+            SELECT * FROM upload_photo
             '''
         )
-
-        print(uploaded_photos)
 
         for photo in uploaded_photos:
             photo_id = photo[0]
@@ -332,34 +329,33 @@ class UploadedPhotos(object):
             # Set published datetime.
             self.db.make_query(
                 '''
-                update photo
-                set date_posted = "{}"
-                where photo_id = {}
+                UPDATE photo
+                SET date_posted = "{}"
+                WHERE photo_id = {}
                 '''.format(date_posted, photo_id)
             )
 
             self.db.make_query(
                 '''
-                insert into photo_album (photo_id, album_id)
-                values ('{}', '{}')
+                INSERT INTO photo_album(photo_id, album_id)
+                VALUES ('{}', '{}')
                 '''.format(photo_id, album_id)
             )
 
-            # get photo count for album
+            # Get photo count for album.
             photo_count = self.db.make_query(
                 '''
-                select photos from album where album_id = '{}'
+                SELECT photos FROM album WHERE album_id = '{}'
                 '''.format(album_id)
             )
 
-            print(photo_count)
             photo_count = int(photo_count[0][0]) + 1
 
             self.db.make_query(
                 '''
-                update album
-                set photos = {}
-                where album_id = '{}'
+                UPDATE album
+                SET photos = {}
+                WHERE album_id = '{}'
                 '''.format(photo_count, album_id)
             )
 
