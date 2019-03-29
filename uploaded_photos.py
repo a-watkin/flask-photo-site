@@ -274,7 +274,7 @@ class UploadedPhotos(object):
         # Remove all rows from upload_photo table.
         self.db.make_query(
             '''
-            delete from upload_photo
+            DELETE FROM upload_photo
             '''
         )
 
