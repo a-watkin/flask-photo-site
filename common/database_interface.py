@@ -127,7 +127,6 @@ class Database(object):
 
     def insert_tag_data(self, table_name, *args):
         for x in args[0]:
-
             try:
                 with sqlite3.connect(self.db_name) as connection:
                     c = connection.cursor()
