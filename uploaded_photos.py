@@ -170,61 +170,54 @@ class UploadedPhotos(object):
 
     def discard_photo(self, photo_id):
         """
-        Removes the specified photo from photo, upload_photo tables.
-        Also deletes the files from the disk.
+        Removes the specified photo from the photo and upload_photo tables.
+
+        Also deletes the file from the disk.
 
         Returns True if the photo is not in the upload_photo table.
         """
-        # delete the files from the disk, you need to know the path to do this
-        # which you should get from images
+        # Gets the relative path for the photo from the database.
         images_data = self.db.make_query(
             '''
-            select * from images where photo_id = {}
+            SELECT * FROM images WHERE photo_id = {}
             '''.format(photo_id)
         )
 
+        # Uses the above relative path to get the path to the photo and remove it from the disk.
         if len(images_data) > 0:
-            print(images_data[0][0:len(images_data[0]) - 1])
-
             current_path = os.getcwd()
             photos_on_disk = []
-            # the last returned element is the photo_id so to avoid that
-            # I took the slice of everything up to that
+            # The last returned element is the photo_id so to avoid that
+            # I took the slice of everything up to that.
             for image in images_data[0][0:len(images_data[0]) - 1]:
                 if image is not None:
-                    photos_on_disk.append(current_path + image)
+                    photos_on_disk.append(os.path.join(current_path, image))
 
             for photo in photos_on_disk:
                 try:
-                    os.remove(photo)
+                    if os.path.isfile(photo):
+                        os.remove(photo)
                 except Exception as e:
                     print('Problem removing file ', e)
-        else:
-            print('no data')
 
         # Remove photo from table photo.
         self.db.make_query(
             '''
-            delete from photo where photo_id = {}
+            DELETE FROM photo WHERE photo_id = {}
             '''.format(photo_id)
         )
 
-        # remove from upload_photo table
+        # Remove photo from upload_photo table.
         self.db.make_query(
             '''
-            delete from upload_photo where photo_id = {}
+            DELETE FROM upload_photo WHERE photo_id = {}
             '''.format(photo_id)
         )
 
         upload_photos = self.get_uploaded_photos()
-        # print(upload_photos['photos'])
 
         for photo in upload_photos['photos']:
-            # print()
-            # print(upload_photos['photos'][photo])
-
             if photo_id in upload_photos['photos'][photo]:
-                print('PROBLEM?')
                 return False
 
         return True
