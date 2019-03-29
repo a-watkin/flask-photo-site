@@ -49,9 +49,5 @@ class User(object):
         return PasswordUtil.check_hashed_password(self.password, hashed_password)
 
 
-def main():
-    pass
-
-
 if __name__ == '__main__':
-    main()
+    pass
