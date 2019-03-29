@@ -32,8 +32,8 @@ class Database(object):
             print('Database not found')
             return False
 
-    @classmethod
-    def get_placeholders(cls, num):
+    @staticmethod
+    def get_placeholders(num):
         return ','.join(['?' for x in list(range(num))])
 
     def insert_data(self, **kwargs):
