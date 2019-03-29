@@ -29,10 +29,13 @@ def url_decode_tag(a_str):
 
 
 def make_decoded(a_str):
-    if '%' in a_str:
-        return url_decode_tag(a_str)
+    if a_str is None:
+        return ''
     else:
-        return a_str
+        if '%' in a_str:
+            return url_decode_tag(a_str)
+        else:
+            return a_str
 
 
 def make_encoded(a_str):

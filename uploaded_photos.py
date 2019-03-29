@@ -30,15 +30,15 @@ class UploadedPhotos(object):
         # Write to EXIF table.
         self.db.make_sanitized_query(
             '''
-            INSERT INTO exif (exif_id, exif_data, photo_id)
-            VALUES (?,?,?)
+            insert into exif (exif_id, exif_data, photo_id)
+            values (?,?,?)
             ''', (exif_id, exif_data, photo_id)
         )
 
         # Write to the uploaded_photo table.
         query_string = '''
-        INSERT INTO upload_photo(photo_id, user_id)
-        VALUES('{}', '{}')
+        insert into upload_photo(photo_id, user_id)
+        values('{}', '{}')
         '''.format(photo_id, self.user_id)
 
         self.db.make_query(query_string)
@@ -46,7 +46,7 @@ class UploadedPhotos(object):
         # Write to the photo table.
         self.db.make_query(
             '''
-            INSERT into photo(photo_id, user_id, views, date_uploaded, date_taken)
+            insert into photo(photo_id, user_id, views, date_uploaded, date_taken)
             values({},'{}', {}, '{}', '{}')
             '''.format(int(photo_id), self.user_id, 0, date_uploaded, str(date_taken))
         )
@@ -54,8 +54,8 @@ class UploadedPhotos(object):
         # Write to images table.
         self.db.make_query(
             '''
-            INSERT INTO images(photo_id, original, large_square)
-            VALUES({},'{}','{}')
+            insert into images(photo_id, original, large_square)
+            values({},'{}','{}')
             '''.format(int(photo_id), original, large_square)
         )
 
@@ -73,10 +73,10 @@ class UploadedPhotos(object):
             c.row_factory = sqlite3.Row
 
             query_string = (
-                '''SELECT photo_id, views, photo_title, date_uploaded, date_taken, images.original, images.large_square FROM photo
-                JOIN images USING(photo_id)
-                ORDER BY date_uploaded
-                DESC LIMIT {} OFFSET {}'''
+                '''select photo_id, views, photo_title, date_uploaded, date_taken, images.original, images.large_square from photo
+                join images using(photo_id)
+                order by date_uploaded
+                desc limit {} offset {}'''
             ).format(limit, offset)
 
             q_data = c.execute(query_string)
@@ -87,9 +87,12 @@ class UploadedPhotos(object):
             'photos': []
         }
 
-        # I think it may actually be better to layout what fields you want here.
-        #
-        # And maybe include all sizes.
+        """
+        I think it may actually be better to layout what fields you want here.
+
+        And maybe include all sizes.
+        """
+
         data = [dict(ix) for ix in q_data]
 
         a_dict = {}
@@ -114,9 +117,9 @@ class UploadedPhotos(object):
 
             query_string = (
                 '''
-                SELECT * FROM upload_photo
-                JOIN photo ON(photo.photo_id=upload_photo.photo_id)
-                JOIN images ON(images.photo_id=upload_photo.photo_id)
+                select * from upload_photo
+                join photo on(photo.photo_id=upload_photo.photo_id)
+                join images on(images.photo_id=upload_photo.photo_id)
                 '''
             )
 
@@ -153,9 +156,9 @@ class UploadedPhotos(object):
 
             query_string = (
                 '''
-                SELECT * FROM upload_photo
-                JOIN photo ON(photo.photo_id=upload_photo.photo_id)
-                JOIN images ON(images.photo_id=upload_photo.photo_id)
+                select * from upload_photo
+                join photo on(photo.photo_id=upload_photo.photo_id)
+                join images on(images.photo_id=upload_photo.photo_id)
                 '''
             )
 
@@ -176,15 +179,17 @@ class UploadedPhotos(object):
         # which you should get from images
         images_data = self.db.make_query(
             '''
-            SELECT * FROM images WHERE photo_id = {}
+            select * from images where photo_id = {}
             '''.format(photo_id)
         )
 
         if len(images_data) > 0:
+            print(images_data[0][0:len(images_data[0]) - 1])
+
             current_path = os.getcwd()
             photos_on_disk = []
-            # The last returned element is the photo_id so to avoid that
-            # I took the slice of everything up to that.
+            # the last returned element is the photo_id so to avoid that
+            # I took the slice of everything up to that
             for image in images_data[0][0:len(images_data[0]) - 1]:
                 if image is not None:
                     photos_on_disk.append(current_path + image)
@@ -194,41 +199,53 @@ class UploadedPhotos(object):
                     os.remove(photo)
                 except Exception as e:
                     print('Problem removing file ', e)
+        else:
+            print('no data')
 
-        # Remove photo from photo table.
+        # Remove photo from table photo.
         self.db.make_query(
             '''
-            DELETE FROM photo WHERE photo_id = {}
+            delete from photo where photo_id = {}
             '''.format(photo_id)
         )
 
-        # Remove photo from upload_photo table.
+        # remove from upload_photo table
         self.db.make_query(
             '''
-            DELETE FROM upload_photo WHERE photo_id = {}
+            delete from upload_photo where photo_id = {}
             '''.format(photo_id)
         )
 
         upload_photos = self.get_uploaded_photos()
+        # print(upload_photos['photos'])
 
         for photo in upload_photos['photos']:
+            # print()
+            # print(upload_photos['photos'][photo])
+
             if photo_id in upload_photos['photos'][photo]:
+                print('PROBLEM?')
                 return False
 
         return True
 
+        # IMPORTANT!
+        # you should test this later after implementing adding tags to uploaded photos
+        # remove from tags? i don't think you need to? you can have orphaned tags
+
     def update_title(self, photo_id, new_title):
         self.db.make_query(
             '''
-            INSERT photo
-            SET photo_title = '{}'
-            WHERE photo_id = {}
+            update photo
+            set photo_title = '{}'
+            where photo_id = {}
             '''.format(new_title, photo_id)
         )
 
+        # check title has been updated
         data = self.db.make_query(
             '''
-            SELECT * FROM photo WHERE photo_id = {}
+            select * from photo where photo_id = {}
             '''.format(photo_id)
         )
 
@@ -239,48 +256,54 @@ class UploadedPhotos(object):
         return False
 
     def add_to_photostream(self, data):
+        print('PROBLEM DATA ', data)
+        # get the photo_id for each photo
         for photo in data.values():
-            # Set the date_posted to the current datetime.
+            # set the date_posted to the current datetime
             date_posted = datetime.datetime.now()
+            # get the photo_id
+            print(photo['photo_id'], date_posted)
 
             if photo['photo_title'] is None:
                 check_title = self.db.make_query(
                     '''
-                    SELECT photo_title FROM photo WHERE photo_id = {}
+                    select photo_title from photo where photo_id = {}
                     '''.format(photo['photo_id'])
                 )
 
                 if len(check_title) < 1:
+
+                    print('here be problems?')
                     self.db.make_query(
                         '''
-                        UPDATE photo
-                        SET photo_title = ''
-                        WHERE photo_id = {}
+                        update photo
+                        set photo_title = ''
+                        where photo_id = {}
                         '''.format(photo['photo_id'])
                     )
 
-            # Update the date_posted column in the table photo.
+            # update the date_posted column in the table photo
             self.db.make_query(
                 '''
-                INSERT photo
-                SET date_posted = '{}'
-                WHERE photo_id = {}
+                update photo
+                set date_posted = '{}'
+                where photo_id = {}
                 '''.format(date_posted, photo['photo_id'])
             )
 
             test_data = self.db.make_query(
                 '''
-                SELECT date_posted FROM photo
-                WHERE photo_id = {}
+                select date_posted from photo
+                where photo_id = {}
                 '''.format(photo['photo_id'])
             )
 
             if test_data:
-                # Remove the photo from the table upload_photo.
+                # remove the photo from the table upload_photo
                 self.db.make_query(
                     '''
-                    DELETE FROM upload_photo
-                    WHERE photo_id = {}
+                    delete from upload_photo
+                    where photo_id = {}
                     '''.format(photo['photo_id'])
                 )
 
@@ -288,15 +311,19 @@ class UploadedPhotos(object):
                 tags = t.get_photo_tags(photo['photo_id'])
                 for tag in tags:
                     if tag['tag_name']:
+                        print('wtf ', tag, photo['photo_id'])
                         Tag.update_photo_count(
                             name_util.make_encoded(tag['tag_name']))
 
     def add_all_to_album(self, album_id):
+        # get all uploaded photos
         uploaded_photos = self.db.make_query(
             '''
-            SELECT * FROM upload_photo
+            select * from upload_photo
             '''
         )
+
+        print(uploaded_photos)
 
         for photo in uploaded_photos:
             photo_id = photo[0]
@@ -305,23 +332,23 @@ class UploadedPhotos(object):
             # Set published datetime.
             self.db.make_query(
                 '''
-                INSERT photo
-                SET date_posted = "{}"
-                WHERE photo_id = {}
+                update photo
+                set date_posted = "{}"
+                where photo_id = {}
                 '''.format(date_posted, photo_id)
             )
 
             self.db.make_query(
                 '''
-                INSERT into photo_album (photo_id, album_id)
-                VALUES ('{}', '{}')
+                insert into photo_album (photo_id, album_id)
+                values ('{}', '{}')
                 '''.format(photo_id, album_id)
             )
 
-            # Get photo count for album.
+            # get photo count for album
             photo_count = self.db.make_query(
                 '''
-                SELECT photos FROM album WHERE album_id = '{}'
+                select photos from album where album_id = '{}'
                 '''.format(album_id)
             )
 
@@ -330,16 +357,16 @@ class UploadedPhotos(object):
 
             self.db.make_query(
                 '''
-                INSERT album
-                SET photos = {}
-                WHERE album_id = '{}'
+                update album
+                set photos = {}
+                where album_id = '{}'
                 '''.format(photo_count, album_id)
             )
 
         # Remove all rows from upload_photo table.
         self.db.make_query(
             '''
-            DELETE FROM upload_photo
+            delete from upload_photo
             '''
         )
 
@@ -347,7 +374,7 @@ class UploadedPhotos(object):
 def main():
     up = UploadedPhotos()
 
-    # print(len(up.get_uploaded_photos()['photos']))
+    print(len(up.get_uploaded_photos()['photos']))
 
     # print(up.add_all_to_album('eh'))
 
