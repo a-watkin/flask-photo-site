@@ -18,10 +18,6 @@ class Admin(object):
         )
 
 
-def main():
+if __name__ == "__main__":
     a = Admin()
     a.make_account('', '')
-
-
-if __name__ == "__main__":
-    main()
