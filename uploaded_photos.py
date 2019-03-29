@@ -229,23 +229,19 @@ class UploadedPhotos(object):
 
         return True
 
-        # IMPORTANT!
-        # you should test this later after implementing adding tags to uploaded photos
-        # remove from tags? i don't think you need to? you can have orphaned tags
-
     def update_title(self, photo_id, new_title):
         self.db.make_query(
             '''
-            update photo
-            set photo_title = '{}'
-            where photo_id = {}
+            UPDATE photo
+            SET photo_title = '{}'
+            WHERE photo_id = {}
             '''.format(new_title, photo_id)
         )
 
-        # check title has been updated
+        # Check if title has been updated.
         data = self.db.make_query(
             '''
-            select * from photo where photo_id = {}
+            SELECT * FROM photo WHERE photo_id = {}
             '''.format(photo_id)
         )
 
