@@ -37,9 +37,9 @@ class UploadedPhotos(object):
 
         # Write to the uploaded_photo table.
         query_string = '''
-        INSERT INTO upload_photo(photo_id, user_id)
-        VALUES('{}', '{}')
-        '''.format(photo_id, self.user_id)
+            INSERT INTO upload_photo(photo_id, user_id)
+            VALUES('{}', '{}')
+            '''.format(photo_id, self.user_id)
 
         self.db.make_query(query_string)
 
