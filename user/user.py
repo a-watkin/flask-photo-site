@@ -10,7 +10,20 @@ class User(object):
         # init database
         self.db = Database('eigi-data.db')
 
-    # check if username exists
+    def __str__(self):
+        return """
+        A user: \n
+        username: {}\n
+        user_id: {}\n
+        password: {}\n
+        using db: {}\n
+        """.format(
+            self.username,
+            self.user_id,
+            self.password,
+            self.db.db_name
+        )
+
     def check_for_username(self):
         """
         Checks if the username is in the database.
@@ -33,7 +46,6 @@ class User(object):
 
         Replaces password if already there.
         """
-        # get hashed version
         hased_password = PasswordUtil.hash_password(password)
         self.db.make_query(
             '''
@@ -42,7 +54,6 @@ class User(object):
             where username = "{}"
             '''.format(hased_password, self.username)
         )
-        print(hased_password)
 
     def check_password(self):
         hashed_password = self.get_hashed_password(self.username)

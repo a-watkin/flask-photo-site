@@ -120,19 +120,19 @@
         </li>
         {% endif %} {% if session %}
         <li class="nav-item mx-auto">
-          <a class="nav-link" href="{{ url_for('account') }}">Account</a>
+          <a class="nav-link" href="{{ url_for('user.account') }}">Account</a>
         </li>
         {% endif%}
 
         <!-- Login/logout -->
         {% if session %}
         <li class="nav-item mx-auto">
-          <a class="nav-link" href="{{ url_for('logout') }}">Logout</a>
+          <a class="nav-link" href="{{ url_for('user.logout') }}">Logout</a>
         </li>
         {% else %}
 
         <li class="nav-item mx-auto">
-          <a class="nav-link" href="{{ url_for('login') }}">Login</a>
+          <a class="nav-link" href="{{ url_for('user.login') }}">Login</a>
         </li>
         {% endif %}
       </ul>

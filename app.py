@@ -15,6 +15,7 @@ from werkzeug.utils import secure_filename
 # From common package.
 from common.database_interface import Database
 from common import name_util
+from common.name_util import login_required
 
 
 from photo import Photos
@@ -22,10 +23,13 @@ from album import Album
 from tag import Tag
 from uploaded_photos import UploadedPhotos
 
-from user import User
 from resize_photo import PhotoUtil
 
 from exif_util import ExifUtil
+
+# User route import.
+from user.user_routes import user_blueprint
+
 
 
 UPLOAD_FOLDER = os.getcwd() + '/static/images'
@@ -41,6 +45,11 @@ app.config['SECRET_KEY'] = b'\xef\x03\xc8\x96\xb7\xf9\xf3^\x16\xcbz\xd7\x83K\xfa
 $ python -c 'import os; print(os.urandom(16))'
 b'_5#y2L"F4Q8z\n\xec]/'
 """
+
+# Register blueprints.
+
+# Login, logout, changing password
+app.register_blueprint(user_blueprint, url_prefix="/user")
 
 db = Database('eigi-data.db')
 p = Photos()
@@ -69,17 +78,6 @@ def show_uplaoded(json_data):
         json_data['show_session'] = True
 
     return json_data
-
-
-def login_required(test):
-    @wraps(test)
-    def wrap(*args, **kwargs):
-        if 'logged_in' in session:
-            return test(*args, **kwargs)
-        else:
-            flash('You need to log in first.')
-            return redirect(url_for('login'))
-    return wrap
 
 
 def allowed_file(filename):
@@ -963,67 +961,6 @@ def remove_album_photos(album_id):
     photo_data['album_data'] = album_data
     return render_template('remove_album_photos.html', json_data=photo_data), 200
 
-
-@app.route('/login', methods=['GET', 'POST'])
-def login():
-    error = None
-    status_code = 200
-
-    if request.method == 'POST':
-        username = request.form.get('username', None)
-        password = request.form.get('password', None)
-        # new instance of User
-        user = User(username, password)
-        current_user = user
-
-        if user.check_for_username() and user.check_password():
-            flash('Welcome back {}'.format(username))
-            session['logged_in'] = True
-            return redirect(url_for('get_photos'))
-        else:
-            status_code = 401
-            flash('Wrong username and/or password', error)
-    return render_template('login.html')
-
-
-@app.route('/logout')
-@login_required
-def logout():
-    session.pop('logged_in', None)
-    # flash('You have been logged out.')
-    # return render_template('login.html')
-    return redirect(url_for('get_photos'))
-
-
-@app.route('/account', methods=['GET', 'POST'])
-@login_required
-def account():
-    """
-    Endpoint to change password.
-    """
-    if request.method == 'POST':
-
-        username = request.form.get("username")
-        old_pass = request.form.get("old-password")
-        new_password = request.form.get("new-password")
-        new_pass_confirm = request.form.get("new-password-confirm")
-
-        user = User(username, old_pass)
-
-        # print(old_pass, user.check_password(),
-        #       old_pass == user.check_password())
-
-        if new_password != new_pass_confirm:
-            flash('Your passwords do not match.')
-
-        if not user.check_password():
-            flash('Incorrect password.')
-
-        if user.check_password() and user.password == old_pass:
-            user.insert_hased_password(new_password)
-            flash('Password changed.')
-
-    return render_template('account.html'), 200
 
 
 @app.route('/account', methods=['GET', 'POST'])
