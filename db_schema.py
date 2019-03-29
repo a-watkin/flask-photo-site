@@ -80,4 +80,4 @@ def create_database(db_name):
 
 
 if __name__ == "__main__":
-    create_database('eigi-data-2.db')
+    create_database('eigi-data.db')
