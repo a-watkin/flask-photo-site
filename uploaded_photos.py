@@ -256,62 +256,55 @@ class UploadedPhotos(object):
         return False
 
     def add_to_photostream(self, data):
-        print('PROBLEM DATA ', data)
-        # get the photo_id for each photo
         for photo in data.values():
-            # set the date_posted to the current datetime
             date_posted = datetime.datetime.now()
-            # get the photo_id
-            print(photo['photo_id'], date_posted)
 
             if photo['photo_title'] is None:
                 check_title = self.db.make_query(
                     '''
-                    select photo_title from photo where photo_id = {}
+                    SELECT photo_title FROM photo WHERE photo_id = {}
                     '''.format(photo['photo_id'])
                 )
 
                 if len(check_title) < 1:
-
-                    print('here be problems?')
                     self.db.make_query(
                         '''
-                        update photo
-                        set photo_title = ''
-                        where photo_id = {}
+                        UPDATE photo
+                        SET photo_title = ''
+                        WHERE photo_id = {}
                         '''.format(photo['photo_id'])
                     )
 
-            # update the date_posted column in the table photo
+            # Update the date_posted column in the table photo.
             self.db.make_query(
                 '''
-                update photo
-                set date_posted = '{}'
-                where photo_id = {}
+                UPDATE photo
+                SET date_posted = '{}'
+                WHERE photo_id = {}
                 '''.format(date_posted, photo['photo_id'])
             )
 
             test_data = self.db.make_query(
                 '''
-                select date_posted from photo
+                SELECT date_posted from photo
                 where photo_id = {}
                 '''.format(photo['photo_id'])
             )
 
             if test_data:
-                # remove the photo from the table upload_photo
+                # Remove the photo from the table upload_photo/
                 self.db.make_query(
                     '''
-                    delete from upload_photo
-                    where photo_id = {}
+                    DELETE FROM upload_photo
+                    WHERE photo_id = {}
                     '''.format(photo['photo_id'])
                 )
 
+                # Add the new tags.
                 t = Tag()
                 tags = t.get_photo_tags(photo['photo_id'])
                 for tag in tags:
                     if tag['tag_name']:
-                        print('wtf ', tag, photo['photo_id'])
                         Tag.update_photo_count(
                             name_util.make_encoded(tag['tag_name']))
 
@@ -369,8 +362,6 @@ class UploadedPhotos(object):
 
 def main():
     up = UploadedPhotos()
-
-    print(len(up.get_uploaded_photos()['photos']))
 
     # print(up.add_all_to_album('eh'))
 
