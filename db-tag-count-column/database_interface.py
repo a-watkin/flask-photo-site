@@ -11,7 +11,6 @@ class Database(object):
 
     def make_db(cls, name):
         from db_schema import create_database
-        # db_schema.create_database(name)
         create_database(name)
         cls.db_name = name
         if os.path.isfile(name):

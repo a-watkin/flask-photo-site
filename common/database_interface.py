@@ -11,7 +11,6 @@ class Database(object):
 
     def make_db(cls, name):
         from db_schema import create_database
-        # db_schema.create_database(name)
         create_database(name)
         cls.db_name = name
         if os.path.isfile(name):
@@ -33,8 +32,8 @@ class Database(object):
             print('Database not found')
             return False
 
-    @classmethod
-    def get_placeholders(cls, num):
+    @staticmethod
+    def get_placeholders(num):
         return ','.join(['?' for x in list(range(num))])
 
     def insert_data(self, **kwargs):
@@ -57,11 +56,6 @@ class Database(object):
 
         placeholders = self.get_placeholders(len(kwargs))
 
-        # print(data, placeholders, table_name)
-
-        # print('INSERT INTO {} VALUES({})'.format(
-        #     table_name, placeholders))
-
         try:
             with sqlite3.connect(self.db_name) as connection:
                 query_string = ('INSERT INTO {} VALUES({})'.format(
@@ -76,29 +70,16 @@ class Database(object):
         except Exception as e:
             print('insert_data problem ', e)
 
-    # def execute_query(self, query):
-    #     with sqlite3.connect(self.db_name) as connection:
-    #         c = connection.cursor()
-    #         return [x for x in c.execute(query)]
-    #         # print(row)
-
     def select_from_column(self, table_name, table_column):
         with sqlite3.connect(self.db_name) as connection:
             c = connection.cursor()
-            # Like this because it was returning a list of tuples with trailing commas
             return [list(x)[0] for x in c.execute(
                 "SELECT {} FROM {}".format(table_column, table_name))]
-
-            # print(row)
 
     def get_rows(self, table_name):
         with sqlite3.connect(self.db_name) as connection:
             c = connection.cursor()
             return [x for x in c.execute("SELECT * FROM {}".format(table_name))]
-
-            # return [list(x)[0] for x in c.execute("SELECT * FROM {}".format(table_name))]
-
-            # print(row)
 
     def get_row(self, table_name, id_name, id_value):
         with sqlite3.connect(self.db_name) as connection:
@@ -106,7 +87,6 @@ class Database(object):
             for row in c.execute('''SELECT * FROM {} WHERE {} = "{}" '''.format(
                     table_name, id_name, id_value)):
                 return list(row)
-            # print(row)
 
     def get_query_as_list(self, query_string):
         try:
@@ -124,7 +104,6 @@ class Database(object):
     def make_query(self, query_string):
         with sqlite3.connect(self.db_name) as connection:
             c = connection.cursor()
-            # print(query_string)
             return [x for x in c.execute(query_string)]
 
     def make_sanitized_query(self, query_string, data=None):
@@ -144,7 +123,6 @@ class Database(object):
             '''.format(table_name, name, where)
 
             try:
-                # print(query_string)
                 c.execute(query_string)
             except Exception as e:
                 print('Problem removing row ', e, query_string)
@@ -155,14 +133,10 @@ class Database(object):
             try:
                 with sqlite3.connect(self.db_name) as connection:
                     c = connection.cursor()
-                    # INSERT INTO photo_tag VALUES(5052580779, 'london')
                     insert_string = '''
                                     INSERT INTO photo_tag VALUES({}, "{}")
-                                    '''.format(
-                        int(x[0]), x[1])
-
+                                    '''.format(int(x[0]), x[1])
                     c.execute(insert_string)
-
             except Exception as e:
                 print('Problem ', e, x)
 
