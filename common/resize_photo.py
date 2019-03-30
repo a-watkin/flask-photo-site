@@ -21,11 +21,18 @@ class PhotoUtil(object):
 
     @staticmethod
     def orientate_save(path, file_name):
+        """
+        This is supposed to save a photo in the correct orientation.
+
+        I'm not convinced it actually works.
+        """
+        # Catch NoneType error when a photo does not contain any EXIF data.
         try:
             image = Image.open(os.path.join(path, file_name))
             for orientation in ExifTags.TAGS.keys():
                 if ExifTags.TAGS[orientation] == 'Orientation':
                     break
+
             exif = dict(image._getexif().items())
 
             if exif[orientation] == 3:
