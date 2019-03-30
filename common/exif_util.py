@@ -48,7 +48,7 @@ class ExifUtil(object):
 
     @staticmethod
     def get_datetime_taken(fn):
-        print('hello from get_datetime_taken', fn)
+        # print('hello from get_datetime_taken', fn)
         with open(fn, 'rb') as f:
             exif = exifread.process_file(f)
 
