@@ -283,7 +283,7 @@ def edit_photo(photo_id):
         # get the value from the form
         new_title = request.form['new_photo_name']
 
-        new_title = check_chars(new_title)
+        new_title = name_util.make_encoded(new_title)
 
         print(new_title)
         # update the name in the database
@@ -304,42 +304,6 @@ def delete_photo(photo_id):
         # delete the photo
         p.delete_photo(photo_id)
         return render_template('deleted_photo.html', json_data=photo_data), 200
-
-# def check_forbidden(tag_name):
-#     """
-#     Nothing seems to use this
-#     """
-#     print('hello from check_forbidden')
-#     print(tag_name)
-
-#     forbidden = [";", "/", "?", ":", "@", "=", "&", '"', "'", "<", ">",
-#                  "#", "%", "{", "}", "|", "\\", "^", "~", "[", "]", "`"]
-#     for char in tag_name:
-#         if char in forbidden:
-#             tag_data = t.get_photos_by_tag(
-#                 urllib.parse.quote(tag_name, safe=''))
-#             tag_data['human_readable_tag'] = tag_name
-#             return tag_data
-
-#     tag_data = t.get_photos_by_tag(tag_name)
-#     tag_data['human_readable_tag'] = tag_name
-
-#     return tag_data
-
-
-def check_chars(tag_name):
-    """
-    This does the same as make_encoded from name_utils
-    """
-    print('hello from check_chars', tag_name)
-    forbidden = [";", "/", "?", ":", "@", "=", "&", '"', "'", "<", ">", " ",
-                 "#", "{", "}", "|", "\\", "/", "^", "~", "[", "]", "`"]
-    for char in tag_name:
-        if char in forbidden:
-            print(tag_name, ' needs encoding')
-            return name_util.url_encode_tag(tag_name)
-
-    return tag_name
 
 
 @app.route('/api/add/tags', methods=['GET', 'POST'])
@@ -466,8 +430,8 @@ def edit_tag(tag_name):
 
         # IF THE THING YOU'RE TRYING TO CHANGE IS IN AN INVALID FORMAT THEN YOU NEED
         # ENCODE THAT instead of its replacement
-        old_tag = check_chars(tag_name)
-        new_tag = check_chars(new_tag_name)
+        old_tag = name_util.make_encoded(tag_name)
+        new_tag = name_util.make_encoded(new_tag_name)
 
         print()
         print('old_tag', old_tag, 'new_tag', new_tag)
@@ -513,7 +477,7 @@ def add_tag():
         tag_data = tag_data.split(',')
         for i in range(len(tag_data)):
             tag_data[i] = tag_data[i].strip()
-            tag_data[i] = check_chars(tag_data[i])
+            tag_data[i] = name_util.make_encoded(tag_data[i])
 
         print('nope', tag_data)
 
@@ -552,12 +516,6 @@ def get_photo_tag_data():
         return jsonify(photo_data)
     else:
         data = request.get_json()
-        print(data)
-        # remove tags here
-        print(data['photoId'], data['selectedTags'])
-
-        # for i in range(len(data['selectedTags'])):
-        #     data['selectedTags'][i] = check_chars(data['selectedTags'][i])
 
         t.remove_tags_from_photo(data['photoId'], data['selectedTags'])
         return json.dumps({'success': True}), 200, {'ContentType': 'application/json'}
