@@ -35,7 +35,7 @@ class User(object):
 
     def get_hashed_password(self, username):
         """
-        Returns the hasehd password from the database for the given username.
+        Returns the hashed password from the database for the given username.
         """
         db_resp = self.db.get_row('user', 'username', self.username)
         return db_resp[2]
