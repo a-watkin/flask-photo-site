@@ -21,7 +21,7 @@ from common.name_util import login_required
 from photo import Photos
 from album import Album
 from tag import Tag
-from uploaded_photos import UploadedPhotos
+from upload.uploaded_photos import UploadedPhotos
 
 from resize_photo import PhotoUtil
 
@@ -276,9 +276,7 @@ def to_new_album():
 @app.route('/uploaded')
 @login_required
 def uploaded_photos_page():
-    """
-    React gets the data for this.
-    """
+    # React gets the data for this.
     return render_template('uploaded_photos.html'), 200
 
 

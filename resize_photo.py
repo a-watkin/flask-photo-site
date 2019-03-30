@@ -1,22 +1,20 @@
 import os
 
 from PIL import Image, ImageOps, ExifTags
-"""
-sizes that flickr used:
-700x467
-500x334
-240x160
-75x75
-100x66
-500x334
+# sizes that flickr used:
+# 700x467
+# 500x334
+# 240x160
+# 75x75
+# 100x66
+# 500x334
 
-# actually useful
-large_square
-150x150
+# # actually useful
+# large_square
+# 150x150
 
-original
-700x467
-"""
+# original
+# 700x467
 
 
 class PhotoUtil(object):
