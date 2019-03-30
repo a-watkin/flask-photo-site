@@ -33,15 +33,9 @@ from upload.upload_routes import upload_blueprint
 app = Flask('app')
 app = Flask(__name__.split('.')[0])
 
-# Directory for saving photos.
-UPLOAD_FOLDER = os.getcwd() + '/static/images'
 
 # app config
-app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['SECRET_KEY'] = b'\xef\x03\xc8\x96\xb7\xf9\xf3^\x16\xcbz\xd7\x83K\xfa\xcf'
-
-# $ python -c 'import os; print(os.urandom(16))'
-# b'_5#y2L"F4Q8z\n\xec]/'
 
 
 # Register blueprints.

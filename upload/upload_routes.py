@@ -130,14 +130,13 @@ def upload_file():
 
             return redirect(url_for('upload.uploaded_photos_page'), code=302)
 
-    # Get request and initial loading of the upload page
+    # Get request and initial loading of the upload page.
     return render_template('upload/upload.html'), 200
 
 
 def show_uploaded(json_data):
     up = UploadedPhotos()
     if session and len(up.get_uploaded_photos()['photos']) > 0:
-        print('\n session present \n')
         json_data['show_session'] = True
 
     return json_data
@@ -170,11 +169,8 @@ def uploaded_photos_page():
 @upload_blueprint.route('/api/uploaded/')
 @login_required
 def get_uploaded_photos():
-    print('hitting up the server firefox?')
     up = UploadedPhotos()
     json_data = up.get_uploaded_photos()
-    # json_data = up.get_uploaded_photos_test()
-    print(json_data)
     return jsonify(json_data)
 
 
@@ -200,12 +196,8 @@ def discard_photo():
     Deletes a photo from the upload editor.
     """
     photo_id = request.get_json()
-    # print('getting here?')
-    # print(photo_id)
-    # print(photo_id)
     up = UploadedPhotos()
     result = up.discard_photo(photo_id['photoId'])
-    # print(result)
 
     if up.discard_photo(photo_id['photoId']):
         return json.dumps({'success': True}), 200, {'ContentType': 'application/json'}
