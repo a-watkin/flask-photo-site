@@ -48,20 +48,6 @@ db = Database('eigi-data.db')
 p = Photos()
 a = Album()
 t = Tag()
-# up = UploadedPhotos()
-
-
-# $ export FLASK_APP=app.py
-# $ export FLASK_ENV=development
-# Make it reload on changes:
-# $ export FLASK_DEBUG=1
-# $ flask run
-
-
-# lsof -w -n -i tcp:5000
-# kill -9 processId
-
-current_user = None
 
 
 @app.route('/create/album', methods=['GET', 'POST'])
@@ -288,7 +274,7 @@ def edit_photo(photo_id):
     if request.method == 'GET':
         print(10*'\n')
         photo_data = p.get_photo(photo_id)
-        photo_data['title'] = needs_decode(photo_data['title'])
+        photo_data['title'] = name_util.make_decoded(photo_data['title'])
 
         print('get_photo', photo_data)
         print(10*'\n')
@@ -303,7 +289,7 @@ def edit_photo(photo_id):
         # update the name in the database
         p.update_title(photo_id, new_title)
         photo_data = p.get_photo(photo_id)
-        photo_data['title'] = needs_decode(photo_data['title'])
+        photo_data['title'] = name_util.make_decoded(photo_data['title'])
         return render_template('edit_photo.html', json_data=photo_data), 200
 
 
@@ -328,11 +314,6 @@ def url_decode_tag(tag_name):
     return urllib.parse.unquote(tag_name)
 
 
-def needs_decode(a_str):
-    if '%' in a_str:
-        return url_decode_tag(a_str)
-    else:
-        return a_str
 
 
 def check_forbidden(tag_name):
