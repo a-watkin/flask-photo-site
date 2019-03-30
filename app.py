@@ -305,17 +305,6 @@ def delete_photo(photo_id):
         p.delete_photo(photo_id)
         return render_template('deleted_photo.html', json_data=photo_data), 200
 
-
-def url_encode_tag(tag_name):
-    return urllib.parse.quote(tag_name, safe='')
-
-
-def url_decode_tag(tag_name):
-    return urllib.parse.unquote(tag_name)
-
-
-
-
 def check_forbidden(tag_name):
     print('hello from check_forbidden')
     print(tag_name)
@@ -342,7 +331,7 @@ def check_chars(tag_name):
     for char in tag_name:
         if char in forbidden:
             print(tag_name, ' needs encoding')
-            return url_encode_tag(tag_name)
+            return name_util.url_encode_tag(tag_name)
 
     return tag_name
 
@@ -363,7 +352,7 @@ def add_uploaded_tags():
         # remove whitespace from front and back of element
         tags[i] = tags[i].strip()
         # make it url safe
-        tags[i] = url_encode_tag(tags[i])
+        tags[i] = name_util.url_encode_tag(tags[i])
 
     print(tags)
 
