@@ -60,7 +60,7 @@ class UploadEditor extends React.Component {
   componentWillMount() {
     console.log("called componentWillMount");
 
-    fetch("/test", {
+    fetch("/upload/test", {
       credentials: "include"
     })
       .then(res => res.json())
@@ -81,7 +81,7 @@ class UploadEditor extends React.Component {
       photoId: photo_id
     });
 
-    fetch("/discard/photo", {
+    fetch("/upload/discard/photo", {
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json"
@@ -109,7 +109,7 @@ class UploadEditor extends React.Component {
   updateTitle(e, photo_id, key) {
     const new_title = e.target.value;
 
-    fetch("/api/uploaded/title", {
+    fetch("/upload/api/uploaded/title", {
       method: "POST",
       credentials: "include",
       headers: {
@@ -185,7 +185,7 @@ class UploadEditor extends React.Component {
       // console.log("hello from addToPhotoStream");
       // send data to the backend
       // console.log(this.state.items);
-      fetch("/api/upload/photostream", {
+      fetch("/upload/photostream", {
         method: "POST",
         credentials: "include",
         headers: {
@@ -204,7 +204,7 @@ class UploadEditor extends React.Component {
   addToNewAlbum() {
     // console.log("hello from addToNewAlbum");
     // it just needs to direct to a new page
-    window.location.assign(`/api/create/album`);
+    window.location.assign(`/create/album`);
   }
 
   addToExistingAlbum() {

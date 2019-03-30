@@ -8,7 +8,7 @@ from functools import wraps
 
 from flask import Flask, render_template, request, session, flash, redirect, url_for, g, jsonify
 from flask import json
-from werkzeug.utils import secure_filename
+
 
 # my modules
 
@@ -22,223 +22,55 @@ from photo import Photos
 from album import Album
 from tag import Tag
 from upload.uploaded_photos import UploadedPhotos
+from upload.upload_routes import show_uploaded
 
-from resize_photo import PhotoUtil
-
-from exif_util import ExifUtil
 
 # User route import.
 from user.user_routes import user_blueprint
+from upload.upload_routes import upload_blueprint
 
-
-
-UPLOAD_FOLDER = os.getcwd() + '/static/images'
-ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg', 'gif'])
 
 app = Flask('app')
 app = Flask(__name__.split('.')[0])
+
+# Directory for saving photos.
+UPLOAD_FOLDER = os.getcwd() + '/static/images'
+
+# app config
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
-
-
 app.config['SECRET_KEY'] = b'\xef\x03\xc8\x96\xb7\xf9\xf3^\x16\xcbz\xd7\x83K\xfa\xcf'
-"""
-$ python -c 'import os; print(os.urandom(16))'
-b'_5#y2L"F4Q8z\n\xec]/'
-"""
+
+# $ python -c 'import os; print(os.urandom(16))'
+# b'_5#y2L"F4Q8z\n\xec]/'
+
 
 # Register blueprints.
 
 # Login, logout, changing password
 app.register_blueprint(user_blueprint, url_prefix="/user")
+app.register_blueprint(upload_blueprint, url_prefix="/upload")
 
 db = Database('eigi-data.db')
 p = Photos()
 a = Album()
 t = Tag()
-up = UploadedPhotos()
+# up = UploadedPhotos()
 
 
-"""
-$ export FLASK_APP=app.py
-$ export FLASK_ENV=development
-Make it reload on changes:
-$ export FLASK_DEBUG=1
-$ flask run
+# $ export FLASK_APP=app.py
+# $ export FLASK_ENV=development
+# Make it reload on changes:
+# $ export FLASK_DEBUG=1
+# $ flask run
 
 
-lsof -w -n -i tcp:5000
-kill -9 processId
-"""
+# lsof -w -n -i tcp:5000
+# kill -9 processId
+
 current_user = None
 
 
-def show_uplaoded(json_data):
-    if session and len(up.get_uploaded_photos()['photos']) > 0:
-        print('\n session present \n')
-        json_data['show_session'] = True
-
-    return json_data
-
-
-def allowed_file(filename):
-    return '.' in filename and \
-           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
-
-
-@app.route('/upload', methods=['GET', 'POST'])
-@login_required
-def upload_file():
-    if request.method == 'POST':
-        files = request.files.getlist('file')
-
-        # No files selected
-        if 'file' not in request.files:
-            # flash('No file selected')
-            return redirect(request.url)
-
-        # Single or multiple files selected
-        elif len(files) >= 1:
-            created = datetime.datetime.now()
-            print('MULTIPLE FILES')
-            for file in files:
-                photo_id = str(int(uuid.uuid4()))[0:10]
-                if allowed_file(file.filename):
-                    filename = secure_filename(file.filename)
-                    # where the file will be saved
-                    save_directory = UPLOAD_FOLDER + \
-                        '/{}/{}'.format(created.year, created.month)
-                    # check if directory exists if not create it
-                    if not os.path.exists(save_directory):
-                        os.makedirs(save_directory)
-                    # Get all files in the save_directory
-                    file_in_dir = os.listdir(save_directory)
-                    # this guards against multiple files having the same name
-                    # a problem here is that it also allows the same file to be uploaded
-                    # multiple times
-                    # identifier = str(uuid.uuid1()).split('-')[0]
-                    if filename in file_in_dir:
-                        temp = filename.split('.')
-
-                        temp[0] = temp[0] + "_" + photo_id + '_o'
-
-                        filename = '.'.join(temp)
-
-                    # save the file in the path
-                    file.save(
-                        os.path.join(
-                            save_directory, filename))
-
-                    print('here', save_directory, filename)
-
-                    date_taken = ExifUtil.get_datetime_taken(
-                        os.path.join(save_directory, filename))
-
-                    try:
-                        exif_data = ExifUtil.test_exifread(
-                            os.path.join(save_directory, filename))
-                    except Exception as e:
-                        exif_data = None
-                        print('problem reading exif data', e)
-
-                    PhotoUtil.orientate_save(save_directory, filename)
-                    # save path to the photo
-                    file_path = save_directory + '/' + filename
-
-                    # print(file_path)
-
-                    # add idenfitying name to file
-                    thumbnail_name = filename.split('.')
-                    thumbnail_name[0] = thumbnail_name[0] + '_lg_sqaure'
-
-                    thumbnail_filename = '.'.join(thumbnail_name)
-
-                    # construct path to save thumbnail file to
-                    save_path = save_directory + '/'
-                    # print(os.listdir(save_path), filename,
-                    #       filename in os.listdir(save_path), '\n',
-                    #       save_path)
-
-                    print()
-                    print(save_path)
-                    print(thumbnail_filename)
-                    print()
-
-                    PhotoUtil.square_thumbnail(
-                        filename, thumbnail_filename, save_path)
-
-                    # path for the database
-                    original_path = '/static/images/{}/{}/{}'.format(
-                        created.year, created.month, filename)
-                    large_square_path = '/static/images/{}/{}/{}'.format(
-                        created.year, created.month, thumbnail_filename)
-
-                    up.save_photo(
-                        photo_id,
-                        str(created),
-                        original_path,
-                        large_square_path,
-                        exif_data,
-                        date_taken
-                    )
-
-                else:
-                    flash('Incorrect file type.')
-                    return redirect(request.url)
-
-            return redirect(url_for('uploaded_photos_page'), code=302)
-
-    # Get request and initial loading of the upload page
-    return render_template('upload.html'), 200
-
-
-@app.route('/discard/photo', methods=['GET', 'POST'])
-@login_required
-def discard_photo():
-    photo_id = request.get_json()
-    # print('getting here?')
-    # print(photo_id)
-    # print(photo_id)
-
-    result = up.discard_photo(photo_id['photoId'])
-    # print(result)
-
-    if up.discard_photo(photo_id['photoId']):
-        return json.dumps({'success': True}), 200, {'ContentType': 'application/json'}
-    else:
-        return json.dumps({'success': False}), 500, {'ContentType': 'application/json'}
-
-
-# route that loads the script to select an album
-@app.route('/api/select/album')
-@login_required
-def upload_select_album():
-    return render_template('upload_select_album.html'), 200
-
-
-@app.route('/api/uploaded/title', methods=['GET', 'POST'])
-@login_required
-def update_title():
-    d = request.get_json()
-    title = d['title'].strip()
-    title = name_util.make_encoded(title)
-
-    if up.update_title(d['photoId'], title):
-        return json.dumps({'success': True}), 200, {'ContentType': 'application/json'}
-    else:
-        return json.dumps({'success': False}), 500, {'ContentType': 'application/json'}
-
-
-@app.route('/api/upload/photostream', methods=['GET', 'POST'])
-@login_required
-def to_photostream():
-    # print('hello from to_photostream')
-    data = request.get_json()
-    print('\n data ', data)
-    up.add_to_photostream(data['photos'])
-    return json.dumps({'success': False}), 200, {'ContentType': 'application/json'}
-
-
-@app.route('/api/create/album', methods=['GET', 'POST'])
+@app.route('/create/album', methods=['GET', 'POST'])
 @login_required
 def to_new_album():
     # print('hello from to_new_album')
@@ -266,6 +98,7 @@ def to_new_album():
                 '28035310@N00', album_title, album_description)
 
             # use album_id to add all uploaded photos to the album
+            up = UploadedPhotos()
             up.add_all_to_album(album_id)
 
             album_data = a.get_album(album_id)
@@ -273,30 +106,11 @@ def to_new_album():
             return redirect('/albums/{}'.format(album_id)), 302
 
 
-@app.route('/uploaded')
+# route that loads the script to select an album
+@app.route('/api/select/album')
 @login_required
-def uploaded_photos_page():
-    # React gets the data for this.
-    return render_template('uploaded_photos.html'), 200
-
-
-@app.route('/api/uploaded/')
-@login_required
-def get_uploaded_photos():
-    print('hitting up the server firefox?')
-
-    json_data = up.get_uploaded_photos()
-    # json_data = up.get_uploaded_photos_test()
-    print(json_data)
-    return jsonify(json_data)
-
-
-@app.route('/test')
-@login_required
-def test_route():
-    json_data = up.get_uploaded_photos()
-    # return json.dumps(json_data), 200, {'ContentType': 'application/json'}
-    return jsonify(json_data)
+def upload_select_album():
+    return render_template('upload_select_album.html'), 200
 
 
 @app.route('/api/photos/')
@@ -321,7 +135,7 @@ def get_photos():
             json_data = photo_data
 
             # print('args are ', args)
-            json_data = show_uplaoded(json_data)
+            json_data = show_uploaded(json_data)
             return render_template('photos.html', json_data=json_data), 200
         elif 'offset' not in args.keys() and 'limit' in args.keys():
             # print(9 * '\n')
@@ -329,7 +143,7 @@ def get_photos():
             photo_data = p.get_photos_in_range(int(args['limit']))
             json_data = photo_data
 
-            json_data = show_uplaoded(json_data)
+            json_data = show_uploaded(json_data)
             return render_template('photos.html', json_data=json_data), 200
 
         else:
@@ -348,7 +162,7 @@ def get_photos():
 
             json_data = photo_data
 
-            json_data = show_uplaoded(json_data)
+            json_data = show_uploaded(json_data)
             return render_template('photos.html', json_data=json_data), 200
 
     else:
@@ -366,7 +180,7 @@ def get_photos():
         # print(json_data)
         # print(10*'\n')
 
-        json_data = show_uplaoded(json_data)
+        json_data = show_uploaded(json_data)
         return render_template('photos.html', json_data=json_data), 200
 
 
@@ -402,7 +216,8 @@ def get_albums_json():
 
         album_id = data['albumId'][0]
 
-        # add all the uplaoded photos to the album
+        # add all the uploaded photos to the album
+        up = UploadedPhotos()
         up.add_all_to_album(album_id)
 
         return redirect("/albums/{}".format(album_id), code=302)
@@ -469,7 +284,7 @@ def get_photo(photo_id):
 def home():
     photo_data = p.get_photos_in_range()
     json_data = photo_data
-    json_data = show_uplaoded(json_data)
+    json_data = show_uploaded(json_data)
     return render_template('photos.html', json_data=json_data), 200
 
 
@@ -560,9 +375,9 @@ def check_chars(tag_name):
 @app.route('/api/add/tags', methods=['GET', 'POST'])
 @login_required
 def add_uploaded_tags():
-    """
-    gets data from react
-    """
+    print('ADD TAGS METHOD CALLED?')
+    # gets data from react
+
     tag_data = request.get_json()
     print('tags from react ', tag_data)
     # tags are a string when they come in here,
@@ -958,12 +773,6 @@ def remove_album_photos(album_id):
     photo_data = a.get_album_photos_in_range(album_id)
     photo_data['album_data'] = album_data
     return render_template('remove_album_photos.html', json_data=photo_data), 200
-
-
-
-@app.route('/account', methods=['GET', 'POST'])
-def about():
-    render_template('about.html'), 200
 
 
 if __name__ == '__main__':

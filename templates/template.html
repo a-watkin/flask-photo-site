@@ -116,9 +116,14 @@
         </li>
         {% endif %} {% if session %}
         <li class="nav-item mx-auto">
-          <a class="nav-link" href="{{ url_for('upload_file') }}">Upload</a>
+          <a class="nav-link" href="{{ url_for('upload.upload_file') }}"
+            >Upload</a
+          >
         </li>
-        {% endif %} {% if session %}
+        {% endif %}
+
+        <!-- User account -->
+        {% if session %}
         <li class="nav-item mx-auto">
           <a class="nav-link" href="{{ url_for('user.account') }}">Account</a>
         </li>

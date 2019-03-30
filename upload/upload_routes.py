@@ -1,6 +1,33 @@
+import os
+import json
+import datetime
 
 
-@app.route('/upload', methods=['GET', 'POST'])
+from flask import Blueprint, jsonify, request, render_template, redirect, url_for, flash, session
+from werkzeug.utils import secure_filename
+
+from common import name_util
+from common.name_util import login_required
+from common.exif_util import ExifUtil
+from common.resize_photo import PhotoUtil
+
+from upload.uploaded_photos import UploadedPhotos
+
+
+upload_blueprint = Blueprint('upload', __name__)
+
+
+ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg', 'gif'])
+# Directory for saving photos.
+UPLOAD_FOLDER = os.getcwd() + '/static/images'
+
+
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+
+@upload_blueprint.route('/', methods=['GET', 'POST'])
 @login_required
 def upload_file():
     if request.method == 'POST':
@@ -16,7 +43,7 @@ def upload_file():
             created = datetime.datetime.now()
             print('MULTIPLE FILES')
             for file in files:
-                photo_id = str(int(uuid.uuid4()))[0:10]
+                photo_id = name_util.get_id()
                 if allowed_file(file.filename):
                     filename = secure_filename(file.filename)
                     # where the file will be saved
@@ -34,7 +61,7 @@ def upload_file():
                     if filename in file_in_dir:
                         temp = filename.split('.')
 
-                        temp[0] = temp[0] + "_" + photo_id + '_o'
+                        temp[0] = temp[0] + "_" + str(photo_id) + '_o'
 
                         filename = '.'.join(temp)
 
@@ -87,6 +114,7 @@ def upload_file():
                     large_square_path = '/static/images/{}/{}/{}'.format(
                         created.year, created.month, thumbnail_filename)
 
+                    up = UploadedPhotos()
                     up.save_photo(
                         photo_id,
                         str(created),
@@ -100,7 +128,86 @@ def upload_file():
                     flash('Incorrect file type.')
                     return redirect(request.url)
 
-            return redirect(url_for('uploaded_photos_page'), code=302)
+            return redirect(url_for('upload.uploaded_photos_page'), code=302)
 
     # Get request and initial loading of the upload page
-    return render_template('upload.html'), 200
+    return render_template('upload/upload.html'), 200
+
+
+def show_uploaded(json_data):
+    up = UploadedPhotos()
+    if session and len(up.get_uploaded_photos()['photos']) > 0:
+        print('\n session present \n')
+        json_data['show_session'] = True
+
+    return json_data
+
+
+@upload_blueprint.route('/test')
+@login_required
+def test_route():
+    up = UploadedPhotos()
+    json_data = up.get_uploaded_photos()
+    return jsonify(json_data)
+
+
+@upload_blueprint.route('/photostream', methods=['GET', 'POST'])
+@login_required
+def to_photostream():
+    data = request.get_json()
+    up = UploadedPhotos()
+    up.add_to_photostream(data['photos'])
+    return json.dumps({'success': False}), 200, {'ContentType': 'application/json'}
+
+
+@upload_blueprint.route('/uploaded')
+@login_required
+def uploaded_photos_page():
+    # React gets the data for this.
+    return render_template('upload/uploaded_photos.html'), 200
+
+
+@upload_blueprint.route('/api/uploaded/')
+@login_required
+def get_uploaded_photos():
+    print('hitting up the server firefox?')
+    up = UploadedPhotos()
+    json_data = up.get_uploaded_photos()
+    # json_data = up.get_uploaded_photos_test()
+    print(json_data)
+    return jsonify(json_data)
+
+
+@upload_blueprint.route('/api/uploaded/title', methods=['GET', 'POST'])
+@login_required
+def update_title():
+    d = request.get_json()
+    title = d['title'].strip()
+    title = name_util.make_encoded(title)
+
+    up = UploadedPhotos()
+
+    if up.update_title(d['photoId'], title):
+        return json.dumps({'success': True}), 200, {'ContentType': 'application/json'}
+    else:
+        return json.dumps({'success': False}), 500, {'ContentType': 'application/json'}
+
+
+@upload_blueprint.route('/discard/photo', methods=['GET', 'POST'])
+@login_required
+def discard_photo():
+    """
+    Deletes a photo from the upload editor.
+    """
+    photo_id = request.get_json()
+    # print('getting here?')
+    # print(photo_id)
+    # print(photo_id)
+    up = UploadedPhotos()
+    result = up.discard_photo(photo_id['photoId'])
+    # print(result)
+
+    if up.discard_photo(photo_id['photoId']):
+        return json.dumps({'success': True}), 200, {'ContentType': 'application/json'}
+    else:
+        return json.dumps({'success': False}), 500, {'ContentType': 'application/json'}

@@ -1,95 +1,77 @@
-{% extends "template.html" %}
-{% block content %}
+{% extends "template.html" %} {% block content %} {% if session %} {% if
+json_data['show_session'] %}
 
-
-{% if session %}
-{% if json_data['show_session'] %}
-
-<hr>
-
+<hr />
 
 <div class="row">
-    <div class="col">
-
-        <h1>You have uploaded photos waiting to be published</h1>
-
-
-
-    </div>
+  <div class="col">
+    <h1>You have uploaded photos waiting to be published</h1>
+  </div>
 </div>
 
 <div class="row">
-
-    <div class="col">
-        <a href="{{url_for('uploaded_photos_page')}}">
-
-            <button class="btn btn-primary btn-block btn-lg">
-                Go to uploaded photos
-            </button>
-
-        </a>
-    </div>
+  <div class="col">
+    <a href="{{ url_for('upload.uploaded_photos_page') }}">
+      <button class="btn btn-primary btn-block btn-lg">
+        Go to uploaded photos
+      </button>
+    </a>
+  </div>
 </div>
 
-
-
-{% endif %}
-{% endif %}
+{% endif %} {% endif %}
 
 <!-- <h1 class="text-center">Photos page</h1> -->
 
-<hr>
-
+<hr />
 
 <!-- <h1>{{json_data.photos.items()}}</h1> -->
 <div id="photos-page-container" class="row mx-auto">
+  {% for key, value in json_data.photos.items() %}
 
-    {% for key, value in json_data.photos.items() %}
+  <div class="col-3 text-center">
+    <!-- <h3>{{key}}</h3> -->
+    <a id="photostream-page" href="/api/photos/{{ value['photo_id'] }}">
+      <img
+        id="photo-page-image"
+        class="img-fluid"
+        src="{{ value['large_square'] }}"
+        alt="Responsive image"
+      />
+      <!-- <h2>{{value.photo_id}}</h2> -->
+    </a>
+  </div>
 
-    <div class="col-3 text-center">
-
-        <!-- <h3>{{key}}</h3> -->
-        <a id="photostream-page" href="/api/photos/{{ value['photo_id'] }}">
-            <img id="photo-page-image" class="img-fluid" src="{{value['large_square']}}" alt="Responsive image">
-            <!-- <h2>{{value.photo_id}}</h2> -->
-        </a>
-
-    </div>
-
-    {% endfor %}
-
+  {% endfor %}
 </div>
 
-<hr>
+<hr />
 
 <div class="row text-center">
-    <div class="col">
-        <a href="/api/photos?offset={{ json_data.offset - 20 }}">
-
-            <button type="button" class="btn btn-secondary btn-block btn-lg">Newer</button>
-
-        </a>
-    </div>
-    <div class="col">
-        <a href="/api/photos?offset={{ json_data.offset + 20 }}">
-
-            <button type="button" class="btn btn-secondary btn-block btn-lg">Older
-            </button>
-        </a>
-    </div>
+  <div class="col">
+    <a href="/api/photos?offset={{ json_data.offset - 20 }}">
+      <button type="button" class="btn btn-secondary btn-block btn-lg">
+        Newer
+      </button>
+    </a>
+  </div>
+  <div class="col">
+    <a href="/api/photos?offset={{ json_data.offset + 20 }}">
+      <button type="button" class="btn btn-secondary btn-block btn-lg">
+        Older
+      </button>
+    </a>
+  </div>
 </div>
 
-<hr>
-
+<hr />
 
 <div class="row">
-    <div class="col text-center">
-
-        <h3>Showing page {{json_data['page']}} of {{json_data['pages']}}</h3>
-
-    </div>
+  <div class="col text-center">
+    <h3>Showing page {{ json_data["page"] }} of {{ json_data["pages"] }}</h3>
+  </div>
 </div>
-<hr>
+<hr />
 
 <!-- <h1 class="text-center">{{json_data.offset, json_data.offset + 20}}</h1> -->
 
