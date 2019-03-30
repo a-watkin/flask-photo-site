@@ -59,7 +59,7 @@ def account():
             flash('Incorrect password.')
 
         if user.check_password() and user.password == old_pass:
-            user.insert_hased_password(new_password)
+            user.insert_hashed_password(new_password)
             flash('Password changed.')
 
     return render_template('user/account.html'), 200
