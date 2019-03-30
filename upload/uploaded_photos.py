@@ -22,7 +22,6 @@ class UploadedPhotos(object):
     def __init__(self):
         self.db = Database('eigi-data.db')
         self.user_id = '28035310@N00'
-        self.tag = Tag()
 
     def save_photo(self, photo_id, date_uploaded, original, large_square, exif_data, date_taken):
         exif_id = str(int(uuid.uuid4()))[0:10]
@@ -78,12 +77,14 @@ class UploadedPhotos(object):
 
         data = [dict(ix) for ix in q_data]
 
+        t = Tag()
+
         for photo in data:
             photo['tags'] = []
             if photo['photo_title']:
                 photo['photo_title'] = name_util.make_decoded(
                     photo['photo_title'])
-            for tag in self.tag.get_photo_tags(photo['photo_id']):
+            for tag in t.get_photo_tags(photo['photo_id']):
                 for key, value in tag.items():
                     if key == 'human_readable_tag':
                         photo['tags'].append(value)
@@ -224,8 +225,8 @@ class UploadedPhotos(object):
                 tags = t.get_photo_tags(photo['photo_id'])
                 for tag in tags:
                     if tag['tag_name']:
-                        Tag.update_photo_count(
-                            name_util.make_encoded(tag['tag_name']))
+                        tag_name = name_util.make_encoded(tag['tag_name'])
+                        t.update_photo_count(tag_name)
 
     def add_all_to_album(self, album_id):
         uploaded_photos = self.db.make_query(
@@ -279,33 +280,5 @@ class UploadedPhotos(object):
         )
 
 
-def main():
-    up = UploadedPhotos()
-
-    # print(up.add_all_to_album('eh'))
-
-    # up.add_to_photostream(
-    #     {'0': {'date_posted': None, 'date_taken': None, 'date_updated': None, 'date_uploaded': '2018-12-11 08:21:10.870694', 'images_id': None, 'large': None, 'large_square': '/static/images/2018/12/test_landscape_1125251958_lg_sqaure.jpg', 'medium': None, 'medium_640': None,
-    #            'original': '/static/images/2018/12/test_landscape_1125251958.jpg', 'photo_id': 1125251958, 'photo_title': None, 'small': None, 'small_320': None, 'square': None, 'tags': ['twat', 'slut'], 'thumbnail': None, 'user_id': '28035310@N00', 'views': 0}}
-    # )
-
-    # print(up.update_title(1269676143, 'test title'))
-
-    # print(up.get_uploaded_photos())
-
-    # 1326226897
-    # print(up.discard_photo(1326226897))
-
-    # up.save_photo('1234', '2018-12-09 03:52:57.905416')
-    # up.save_photo(
-    #     '0001',
-    #     '2018-12-09 03:52:57.905416',
-    #     '/home/a/projects/flask-photo-site/static/images/2018/12/test_portrait_resized.jpg')
-
-    # up.save_photo(
-    #     2429676854, '2018-12-09 21:16:43.708922', '/2018/12/test_landscape_3400128875_lg_sqaure.jpg', '/2018/12/test_landscape_3400128875_lg_sqaure.jpg'
-    # )
-
-
 if __name__ == "__main__":
-    main()
+    pass

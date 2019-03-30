@@ -30,6 +30,7 @@ def url_decode_tag(a_str):
 
 def make_decoded(a_str):
     if a_str is None:
+        # this might be a problem
         return ''
     else:
         if '%' in a_str:
@@ -48,6 +49,7 @@ def make_encoded(a_str):
     """
     forbidden = [";", "/", "?", ":", "@", "=", "&", '"', "'", "<", ">",
                  "#", "{", "}", "|", "\\", "/", "^", "~", "[", "]", "`", " "]
+
     for char in a_str:
         if char in forbidden:
             return url_encode_tag(a_str)
