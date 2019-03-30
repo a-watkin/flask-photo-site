@@ -33,7 +33,8 @@ def upload_file():
     if request.method == 'POST':
         files = request.files.getlist('file')
 
-        # No files selected
+        # No files selected.
+        # This is now prevented on the frontend.
         if 'file' not in request.files:
             # flash('No file selected')
             return redirect(request.url)
@@ -65,13 +66,12 @@ def upload_file():
 
                         filename = '.'.join(temp)
 
-                    # save the file in the path
+                    # Save the original photo.
                     file.save(
                         os.path.join(
                             save_directory, filename))
 
-                    print('here', save_directory, filename)
-
+                    # Try to set the datetime value from the EXIF data.
                     date_taken = ExifUtil.get_datetime_taken(
                         os.path.join(save_directory, filename))
 
@@ -82,33 +82,23 @@ def upload_file():
                         exif_data = None
                         print('problem reading exif data', e)
 
+                    # Makes sure the image is the right orientation.
                     PhotoUtil.orientate_save(save_directory, filename)
-                    # save path to the photo
-                    file_path = save_directory + '/' + filename
 
-                    # print(file_path)
-
-                    # add idenfitying name to file
+                    # Adds identifying name to the thumbnail file.
                     thumbnail_name = filename.split('.')
                     thumbnail_name[0] = thumbnail_name[0] + '_lg_sqaure'
 
                     thumbnail_filename = '.'.join(thumbnail_name)
 
-                    # construct path to save thumbnail file to
+                    # Construct path to save thumbnail file to.
                     save_path = save_directory + '/'
-                    # print(os.listdir(save_path), filename,
-                    #       filename in os.listdir(save_path), '\n',
-                    #       save_path)
 
-                    print()
-                    print(save_path)
-                    print(thumbnail_filename)
-                    print()
-
+                    # Creates the thumbnail image.
                     PhotoUtil.square_thumbnail(
                         filename, thumbnail_filename, save_path)
 
-                    # path for the database
+                    # Store the path to the photos in the db.
                     original_path = '/static/images/{}/{}/{}'.format(
                         created.year, created.month, filename)
                     large_square_path = '/static/images/{}/{}/{}'.format(
