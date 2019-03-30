@@ -40,19 +40,19 @@ class User(object):
         db_resp = self.db.get_row('user', 'username', self.username)
         return db_resp[2]
 
-    def insert_hased_password(self, password):
+    def insert_hashed_password(self, password):
         """
         Inserts hashed password into the database.
 
         Replaces password if already there.
         """
-        hased_password = PasswordUtil.hash_password(password)
+        hashed_password = PasswordUtil.hash_password(password)
         self.db.make_query(
             '''
             update user 
             set hash_value = "{}"
             where username = "{}"
-            '''.format(hased_password, self.username)
+            '''.format(hashed_password, self.username)
         )
 
     def check_password(self):
