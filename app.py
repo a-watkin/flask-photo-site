@@ -305,26 +305,32 @@ def delete_photo(photo_id):
         p.delete_photo(photo_id)
         return render_template('deleted_photo.html', json_data=photo_data), 200
 
-def check_forbidden(tag_name):
-    print('hello from check_forbidden')
-    print(tag_name)
+# def check_forbidden(tag_name):
+#     """
+#     Nothing seems to use this
+#     """
+#     print('hello from check_forbidden')
+#     print(tag_name)
 
-    forbidden = [";", "/", "?", ":", "@", "=", "&", '"', "'", "<", ">",
-                 "#", "%", "{", "}", "|", "\\", "^", "~", "[", "]", "`"]
-    for char in tag_name:
-        if char in forbidden:
-            tag_data = t.get_photos_by_tag(
-                urllib.parse.quote(tag_name, safe=''))
-            tag_data['human_readable_tag'] = tag_name
-            return tag_data
+#     forbidden = [";", "/", "?", ":", "@", "=", "&", '"', "'", "<", ">",
+#                  "#", "%", "{", "}", "|", "\\", "^", "~", "[", "]", "`"]
+#     for char in tag_name:
+#         if char in forbidden:
+#             tag_data = t.get_photos_by_tag(
+#                 urllib.parse.quote(tag_name, safe=''))
+#             tag_data['human_readable_tag'] = tag_name
+#             return tag_data
 
-    tag_data = t.get_photos_by_tag(tag_name)
-    tag_data['human_readable_tag'] = tag_name
+#     tag_data = t.get_photos_by_tag(tag_name)
+#     tag_data['human_readable_tag'] = tag_name
 
-    return tag_data
+#     return tag_data
 
 
 def check_chars(tag_name):
+    """
+    This does the same as make_encoded from name_utils
+    """
     print('hello from check_chars', tag_name)
     forbidden = [";", "/", "?", ":", "@", "=", "&", '"', "'", "<", ">", " ",
                  "#", "{", "}", "|", "\\", "/", "^", "~", "[", "]", "`"]
@@ -629,7 +635,6 @@ def add_album_photos(album_id):
     album_data = a.get_album(album_id)
     photo_data = p.get_photos_in_range(20, 0)
     photo_data['album_data'] = album_data
-    # print('Hello from add_album_photos ', photo_data)
     return render_template('add_album_photos.html', json_data=photo_data), 200
 
 
