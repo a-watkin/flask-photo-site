@@ -30,6 +30,7 @@ def allowed_file(filename):
 @upload_blueprint.route('/', methods=['GET', 'POST'])
 @login_required
 def upload_file():
+    # This really needs to be decomposed, it's not ideal.
     if request.method == 'POST':
         files = request.files.getlist('file')
         # No files selected.
