@@ -16,15 +16,12 @@ class UploadEditor extends React.Component {
     this.addToPhotoStream = this.addToPhotoStream.bind(this);
     this.addTags = this.addTags.bind(this);
     this.updateTitle = this.updateTitle.bind(this);
-
     this.componentWillMount = this.componentWillMount.bind(this);
   }
 
   checkInput(input_string) {
-    console.log("checkInput called");
     function checkTags(tags) {
       let arr = tags.split(",");
-      console.log("arr is, ", arr);
       let safe = true;
 
       if (arr.length == 0) {
@@ -32,10 +29,7 @@ class UploadEditor extends React.Component {
         return safe;
       } else {
         const forbidden = ["\\", "/", "%", "."];
-
-        // for each value in arr check each char against the forbidden values
         for (var i = 0; i < arr.length; i++) {
-          // console.log(arr[i]);
           forbidden.forEach(char => {
             if (arr[i].includes(char)) {
               safe = false;
@@ -65,18 +59,20 @@ class UploadEditor extends React.Component {
     })
       .then(res => res.json())
       .then(res => {
-        console.log(res); // Prints result from `response.json()`
         this.setState({
           isLoaded: true,
           items: res.photos
         });
+        // Redirect if no files present.
+        // This is really a niche thing it shouldn't ever happen.
+        if (Object.keys(this.state.items).length < 1) {
+          window.location.assign(`/`);
+        }
       })
       .catch(error => console.error(error));
   }
 
   discardPhoto(photo_id, key) {
-    console.log("clicked discard", photo_id);
-
     let test = JSON.stringify({
       photoId: photo_id
     });
@@ -90,8 +86,6 @@ class UploadEditor extends React.Component {
       method: "POST",
       body: JSON.stringify({ photoId: photo_id })
     }).then(Response => {
-      // console.log("Response", Response.status);
-
       if (Response.status === 200) {
         let objectCopy = this.state.items;
         delete objectCopy[key];
@@ -122,7 +116,6 @@ class UploadEditor extends React.Component {
       })
     })
       .then(Response => {
-        // console.log(Response.status);
         if (Response.status === 200) {
           let objectCopy = this.state.items;
           objectCopy[key]["photo_title"] = new_title;
@@ -135,7 +128,6 @@ class UploadEditor extends React.Component {
   }
 
   addTags(e, photo_id) {
-    console.log("addTags, ", e.target.value);
     if (e.target.value) {
       if (this.checkInput(e.target.value)) {
         this.setState({
@@ -155,24 +147,14 @@ class UploadEditor extends React.Component {
             tagValues: e.target.value
           })
         });
-
-        // .then(Response => {
-        //   // console.log("Response", Response.status);
-
-        //   if (Response.status === 200) {
-        //     console.log(Response);
-        //     // let objectCopy = this.state.items;
-        //   }
-        // });
       } else {
-        // console.log("checkTags returned False");
         this.setState({
           allowTags: false,
           allowButtons: false
         });
       }
     } else {
-      // At this point the tags field should be empty
+      // At this point the tags field should be empty.
       this.setState({
         allowTags: true,
         allowButtons: true
@@ -182,9 +164,6 @@ class UploadEditor extends React.Component {
 
   addToPhotoStream() {
     if (this.state.allowButtons) {
-      // console.log("hello from addToPhotoStream");
-      // send data to the backend
-      // console.log(this.state.items);
       fetch("/upload/photostream", {
         method: "POST",
         credentials: "include",
@@ -202,14 +181,11 @@ class UploadEditor extends React.Component {
   }
 
   addToNewAlbum() {
-    // console.log("hello from addToNewAlbum");
-    // it just needs to direct to a new page
-    window.location.assign(`/create/album`);
+    window.location.assign(`/album/create`);
   }
 
   addToExistingAlbum() {
-    // console.log("hello from addToExistingAlbum");
-    window.location.assign(`/api/select/album`);
+    window.location.assign(`/album/api/select/album`);
   }
 
   warningArea() {
@@ -230,25 +206,23 @@ class UploadEditor extends React.Component {
     let discardPhoto = this.discardPhoto;
     let updateTitle = this.updateTitle;
     let addTags = this.addTags;
-    // onClick handlers for buttons
+
+    // onClick handlers for buttons.
     let addToPhotoStream = this.addToPhotoStream;
     let addToNewAlbum = this.addToNewAlbum;
     let addToExistingAlbum = this.addToExistingAlbum;
 
     let componentWillMount = this.componentWillMount;
 
-    // safeguards against wrong input and warnings
+    // Safeguards against wrong input and warnings.
     let allowTags = this.state.allowTags;
     let allowButtons = this.state.allowButtons;
     const warningArea = this.warningArea;
 
     if (this.state.items) {
       let photos = this.state.items;
-      // console.log(photos);
       let photo = Object.keys(photos).map(function(key) {
-        // let photo_url = photos[key]["original"];
         let photo_id = photos[key]["photo_id"];
-        // console.log(photo_url);
         return (
           <div key={photos[key]["photo_id"]}>
             <div className="row">
@@ -270,7 +244,6 @@ class UploadEditor extends React.Component {
                       : photos[key]["photo_title"]
                   }
                   onBlur={e => updateTitle(e, photo_id, key)}
-                  // disabled={!allowTags}
                 />{" "}
                 <hr />
                 <h5> Enter tags below </h5>{" "}
@@ -289,7 +262,6 @@ class UploadEditor extends React.Component {
                   defaultValue={
                     photos[key]["tags"] === null ? "" : photos[key]["tags"]
                   }
-                  // disabled={!allowTitle}
                 />{" "}
                 <hr />
                 <div className="row">

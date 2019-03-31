@@ -17,11 +17,10 @@ class AlbumSelector extends React.Component {
   }
 
   componentWillMount() {
-    console.log("hello from componentWillMount in album_selector");
-    // getting the album id from the URL
+    // Getting the album id from the URL.
     let currentUrl = window.location.href;
 
-    fetch("/api/getalbums", {
+    fetch("/album/api/getalbums", {
       credentials: "include"
     })
       .then(res => res.json())
@@ -43,17 +42,13 @@ class AlbumSelector extends React.Component {
   }
 
   getNextAlbums() {
-    // console.log("next called ", this.state.currentOffset);
-    fetch(`/api/getalbums?offset=${this.state.currentOffset + 20}`, {
+    fetch(`/album/api/getalbums?offset=${this.state.currentOffset + 20}`, {
       credentials: "include"
     })
       .then(res => res.json())
       .then(
         result => {
-          // console.log("result", result, Object.keys(result["albums"]).length);
-
           if (Object.keys(result["albums"]).length === 0) {
-            // console.log("no more albums");
             return false;
           }
 
@@ -73,27 +68,22 @@ class AlbumSelector extends React.Component {
   }
 
   getPreviousAlbums() {
-    // console.log("previous called ", this.state.currentOffset);
     if (this.state.currentOffset <= 0) {
       return false;
     }
 
-    fetch(`/api/getalbums?offset=${this.state.currentOffset - 20}`, {
+    fetch(`/album/api/getalbums?offset=${this.state.currentOffset - 20}`, {
       credentials: "include"
     })
       .then(res => res.json())
       .then(
         result => {
-          // console.log("result", result);
           this.setState({
             isLoaded: true,
             albums: result.albums,
             currentOffset: result.offset
           });
         },
-        // Note: it's important to handle errors here
-        // instead of a catch() block so that we don't swallow
-        // exceptions from actual bugs in components.
         error => {
           this.setState({
             isLoaded: true,
@@ -104,13 +94,12 @@ class AlbumSelector extends React.Component {
   }
 
   sendData() {
-    // Guards against sending data if no album is selected
+    // Guards against sending data if no album is selected.
     if (this.state.selectedAlbum.length < 1) {
-      // console.log("do nothing if no album has been selected");
       return false;
     }
 
-    fetch("/api/getalbums", {
+    fetch("/album/api/getalbums", {
       method: "POST",
       credentials: "include",
       headers: {
@@ -123,39 +112,31 @@ class AlbumSelector extends React.Component {
     })
       .catch(error => console.error(error))
       .then(() => {
-        // redirect after successful post
-        window.location.assign(`/albums/${this.state.selectedAlbum[0]}`);
+        window.location.assign(`/album/${this.state.selectedAlbum[0]}`);
       });
   }
 
   albumClick(album_id) {
-    // console.log("Greetings from albumClick the album_id is ", album_id);
-    // console.log(this.state.selectedAlbum);
-
     if (
       this.state.selectedAlbum.length === 1 &&
       this.state.selectedAlbum[0] === album_id
     ) {
-      // console.log("deselect it?");
       let tempArray = [...this.state.selectedAlbum];
       tempArray.splice(0, 1);
-      // console.log(tempArray);
       this.setState({
         selectedAlbum: tempArray
       });
-
-      // console.log(this.state.selectedAlbum);
     } else {
       let tempArray = [];
       tempArray.push(album_id);
 
-      // i only want this to allow one item in the array
+      // I only want this to allow one item in the array.
       this.setState({
         selectedAlbum: tempArray
       });
     }
 
-    // also not ideal but good enough for now
+    // Not ideal but good enough for now.
     this.forceUpdate();
   }
 
@@ -178,23 +159,19 @@ class AlbumSelector extends React.Component {
 
     let selectedAlbum = this.state.selectedAlbum;
     let large_square = "";
-    // it doesn't seemt to be able to get this reference
-    // without delaring it here from the Objct.keys reurn statment
-    // also passing it and invoking leads to it being executed twice?
+
     let albumClick = this.albumClick;
 
     if (this.state.albums) {
       large_square = this.state.albums[0]["large_square"];
       const albums = this.state.albums;
 
-      // console.log(this.state.items[0]["large_square"]);
       let test = Object.keys(albums).map(function(key) {
         return (
           <div key={albums[key]["album_id"]} className="col text-right">
             <div
               id="photo-select"
               className="card"
-              // not ideal right here...but it works
               onClick={function(event) {
                 albumClick(albums[key]["album_id"]);
               }}
@@ -209,7 +186,7 @@ class AlbumSelector extends React.Component {
                   {" "}
                   <a
                     id="album-links"
-                    href={`/albums/${albums[key]["album_id"]}`}
+                    href={`/album/${albums[key]["album_id"]}`}
                   >
                     {albums[key]["human_readable_title"]}{" "}
                   </a>
@@ -222,8 +199,6 @@ class AlbumSelector extends React.Component {
                   className="card-img-top img-fluid"
                 />
                 <p className="card-text text-left">
-                  {" "}
-                  {console.log(albums[key])}
                   {albums[key]["human_readable_description"]}{" "}
                 </p>
               </div>{" "}
@@ -267,7 +242,7 @@ class AlbumSelector extends React.Component {
           <hr />
           <div className="row">
             <div className="col text-left">
-              <a href="/uploaded">
+              <a href="/upload/uploaded">
                 <button className="btn btn-success btn-block btn-lg">
                   Return to uploaded photos{" "}
                 </button>{" "}

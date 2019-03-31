@@ -5,7 +5,7 @@ import urllib.parse
 from common.database_interface import Database
 from common import name_util
 from tag import Tag
-from album import Album
+from album.album import Album
 
 
 class Photos(object):

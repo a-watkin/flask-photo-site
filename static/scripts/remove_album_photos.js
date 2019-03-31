@@ -18,20 +18,17 @@ class SelectPhotos extends React.Component {
   }
 
   componentWillMount() {
-    // getting the album id from the URL
+    // Getting the album id from the URL.
     let currentUrl = window.location.href;
     let splitUrl = currentUrl.split("/");
     const albumId = splitUrl[5];
 
-    // console.log(`/api/albumphotos?album_id=${albumId}`);
-
-    fetch(`/api/albumphotos?album_id=${albumId}`, {
+    fetch(`/album/api/albumphotos?album_id=${albumId}`, {
       credentials: "include"
     })
       .then(res => res.json())
       .then(
         result => {
-          // console.log("result", result);
           this.setState({
             isLoaded: true,
             items: result.photos,
@@ -39,9 +36,6 @@ class SelectPhotos extends React.Component {
             albumId: albumId
           });
         },
-        // Note: it's important to handle errors here
-        // instead of a catch() block so that we don't swallow
-        // exceptions from actual bugs in components.
         error => {
           this.setState({
             isLoaded: true,
@@ -52,33 +46,20 @@ class SelectPhotos extends React.Component {
   }
 
   getNextPhotos() {
-    console.log("clicked on getNextPhotos");
-    // console.log("next called ", this.state.currentOffset);
-
     const albumId = this.state.albumId;
 
-    // had a problem here with the nubmer being treated as a string
-    // so to safe gaurd against coercion
+    // I had a problem here with the number being treated as a string
+    // so to safe guard against coercion.
     let currentOffset = Number(this.state.currentOffset);
-
-    console.log(
-      `/api/albumphotos?album_id=${albumId}&offset=${this.state.currentOffset -
-        20}`
-    );
-
-    // console.log(`/api/albumphotos?album_id=${albumId}&offset=${20 +
-    //   currentOffset}
-    //     `);
-
-    fetch(`/api/albumphotos?album_id=${albumId}&offset=${currentOffset + 20}`, {
-      credentials: "include"
-    })
+    fetch(
+      `/album/api/albumphotos?album_id=${albumId}&offset=${currentOffset + 20}`,
+      {
+        credentials: "include"
+      }
+    )
       .then(res => res.json())
       .then(
         result => {
-          // console.log("result", result);
-          // console.log(result.photos, Object.keys(result.photos).length);
-
           if ((result.photos, Object.keys(result.photos).length > 0)) {
             this.setState({
               isLoaded: true,
@@ -87,9 +68,6 @@ class SelectPhotos extends React.Component {
             });
           }
         },
-        // Note: it's important to handle errors here
-        // instead of a catch() block so that we don't swallow
-        // exceptions from actual bugs in components.
         error => {
           this.setState({
             isLoaded: true,
@@ -100,21 +78,15 @@ class SelectPhotos extends React.Component {
   }
 
   getPreviousPhotos() {
-    console.log("clicked on getPreviousPhotos");
     const albumId = this.state.albumId;
 
     if (this.state.currentOffset <= 0) {
       return false;
     }
 
-    console.log(
-      `/api/albumphotos?album_id=${albumId}&offset=${this.state.currentOffset -
-        20}`
-    );
-
     fetch(
-      `/api/albumphotos?album_id=${albumId}&offset=${this.state.currentOffset -
-        20}`,
+      `/album/api/albumphotos?album_id=${albumId}&offset=${this.state
+        .currentOffset - 20}`,
       {
         method: "GET",
         credentials: "include",
@@ -126,7 +98,6 @@ class SelectPhotos extends React.Component {
     )
       .then(result => result.json())
       .then(result => {
-        console.log("result", result);
         this.setState({
           isLoaded: true,
           items: result.photos,
@@ -143,9 +114,7 @@ class SelectPhotos extends React.Component {
   }
 
   sendData() {
-    // console.log("getting here?", this.state.albumId, this.state.selectedPhotos);
-    // /api/getphotos
-    fetch("/api/albumphotos", {
+    fetch(`/album/edit/${this.state.albumId}/remove/photos`, {
       method: "POST",
       credentials: "include",
       headers: {
@@ -159,19 +128,16 @@ class SelectPhotos extends React.Component {
     })
       .catch(error => console.error(error))
       .then(() => {
-        // redirect after successful post
-        window.location.assign(`/albums/${this.state.albumId}`);
+        // Redirect after successful post.
+        window.location.assign(`/album/${this.state.albumId}`);
       });
   }
 
   photoClick(photo_id) {
-    // console.log("Greetings from photoClick the photo_id is ", photo_id);
-
-    // only add the photo_id if it's not in the array
     if (!this.state.selectedPhotos.includes(photo_id)) {
       this.state.selectedPhotos.push(photo_id);
     } else {
-      // remove the photo from the array
+      // Remove the photo from the array.
       let tempAray = [...this.state.selectedPhotos];
       let index = tempAray.indexOf(photo_id);
       if (index !== -1) {
@@ -182,8 +148,7 @@ class SelectPhotos extends React.Component {
       }
     }
 
-    // console.log("state of selectedPhotos ", this.state.selectedPhotos);
-    // also not ideal but good enough for now
+    // Not ideal but good enough for now.
     this.forceUpdate();
   }
 
@@ -205,23 +170,18 @@ class SelectPhotos extends React.Component {
 
     let selectedPhotos = this.state.selectedPhotos;
     let large_square = "";
-    // it doesn't seemt to be able to get this reference
-    // without delaring it here from the Objct.keys reurn statment
-    // also passing it and invoking leads to it being executed twice?
     let photoClick = this.photoClick;
 
     if (this.state.items) {
       large_square = this.state.items[0]["large_square"];
       const photos = this.state.items;
 
-      // console.log(this.state.items[0]["large_square"]);
       let test = Object.keys(photos).map(function(key, index) {
         return (
           <div key={photos[key]["photo_id"]} className="col text-right">
             <div
               id="photo-select"
               className="card"
-              // not ideal right here...but it works
               onClick={function(event) {
                 photoClick(photos[key]["photo_id"]);
               }}
@@ -248,8 +208,6 @@ class SelectPhotos extends React.Component {
           </div>
         );
       });
-
-      // console.log("what is?", selectedPhotos);
 
       return (
         <div>
@@ -278,7 +236,7 @@ class SelectPhotos extends React.Component {
 
           <div className="row">
             <div className="col text-left">
-              <a href="/edit/albums">
+              <a href="/album/edit/albums">
                 <button className="btn btn-success btn-block btn-lg">
                   Return to edit albums
                 </button>

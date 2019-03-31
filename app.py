@@ -19,7 +19,7 @@ from common.name_util import login_required
 
 
 from photo import Photos
-from album import Album
+from album.album import Album
 from tag import Tag
 from upload.uploaded_photos import UploadedPhotos
 from upload.upload_routes import show_uploaded
@@ -28,6 +28,7 @@ from upload.upload_routes import show_uploaded
 # User route import.
 from user.user_routes import user_blueprint
 from upload.upload_routes import upload_blueprint
+from album.album_routes import album_blueprint
 
 
 app = Flask('app')
@@ -43,54 +44,11 @@ app.config['SECRET_KEY'] = b'\xef\x03\xc8\x96\xb7\xf9\xf3^\x16\xcbz\xd7\x83K\xfa
 # Login, logout, changing password
 app.register_blueprint(user_blueprint, url_prefix="/user")
 app.register_blueprint(upload_blueprint, url_prefix="/upload")
+app.register_blueprint(album_blueprint, url_prefix="/album")
 
 db = Database('eigi-data.db')
 p = Photos()
-a = Album()
 t = Tag()
-
-
-@app.route('/create/album', methods=['GET', 'POST'])
-@login_required
-def to_new_album():
-    # print('hello from to_new_album')
-    if request.method == 'GET':
-        return render_template('upload_new_album.html'), 200
-
-    if request.method == 'POST':
-        album_title = request.form['title']
-        album_description = request.form['description']
-
-        if a.get_album_by_name(album_title):
-            new_album_data = {
-                'album_title': album_title,
-                'album_description': album_description
-            }
-
-            flash(
-                'An album with this name already exists. Please enter a different name.')
-
-            return render_template('create_album.html', data=new_album_data), 200
-
-        else:
-
-            album_id = a.create_album(
-                '28035310@N00', album_title, album_description)
-
-            # use album_id to add all uploaded photos to the album
-            up = UploadedPhotos()
-            up.add_all_to_album(album_id)
-
-            album_data = a.get_album(album_id)
-
-            return redirect('/albums/{}'.format(album_id)), 302
-
-
-# route that loads the script to select an album
-@app.route('/api/select/album')
-@login_required
-def upload_select_album():
-    return render_template('upload_select_album.html'), 200
 
 
 @app.route('/api/photos/')
@@ -164,55 +122,12 @@ def get_photos():
         return render_template('photos.html', json_data=json_data), 200
 
 
-@app.route('/api/getalbums', methods=['GET', 'POST'])
-@login_required
-def get_albums_json():
-    print('get_albums_json called')
-    args = request.args.to_dict()
-
-    # print(args)
-    if request.method == 'GET':
-        if len(args) > 0:
-
-            if 'offset' in args.keys() and 'limit' not in args.keys():
-                if int(args['offset']) <= 0:
-                    args['offset'] = 0
-                # gotta make this an int
-                album_data = a.get_albums_in_range(20, int(args['offset']))
-                json_data = album_data
-                return jsonify(json_data)
-
-        else:
-            args['offset'] = 0
-            album_data = a.get_albums_in_range(20, int(args['offset']))
-            json_data = album_data
-            return jsonify(album_data)
-
-    if request.method == 'POST':
-        print('called api/getalbum with a post request')
-        print('test', request.get_json())
-
-        data = request.get_json()
-
-        album_id = data['albumId'][0]
-
-        # add all the uploaded photos to the album
-        up = UploadedPhotos()
-        up.add_all_to_album(album_id)
-
-        return redirect("/albums/{}".format(album_id), code=302)
-
-        # add_all_to_album
-
-        #     data = request.get_json()
-        #     a.add_photos_to_album(data['albumId'], data['photos'])
-
-        #     return redirect("/albums/{}".format(data['albumId']), code=302)
-
-
-@app.route('/api/getphotos', methods=['GET', 'POST'])
+@app.route('/api/getphotos', methods=['GET'])
 @login_required
 def get_photos_json():
+    """
+    Gets photo data for us in React to select photos for albums.
+    """
     # print()
     # print('hello from get_photos_json')
     # print()
@@ -239,15 +154,6 @@ def get_photos_json():
             photo_data = p.get_photos_in_range(20, int(args['offset']))
             json_data = photo_data
             return jsonify(json_data)
-
-    if request.method == 'POST':
-
-        print('hello from get_photos_json, data passed is ', request.get_json())
-
-        data = request.get_json()
-        a.add_photos_to_album(data['albumId'], data['photos'])
-
-        return redirect("/albums/{}".format(data['albumId']), code=302)
 
 
 @app.route('/api/photos/<int:photo_id>', methods=['GET'])
@@ -519,187 +425,6 @@ def get_photo_tag_data():
 
         t.remove_tags_from_photo(data['photoId'], data['selectedTags'])
         return json.dumps({'success': True}), 200, {'ContentType': 'application/json'}
-
-
-@app.route('/albums')
-def get_albums():
-    albums_data = a.get_albums()
-    # print(albums_data)
-    json_data = albums_data
-    # print(json_data[0]['large_square'])
-    return render_template('albums.html', json_data=json_data), 200
-
-
-@app.route('/delete/album/<string:album_id>', methods=['GET', 'POST'])
-@login_required
-def delete_album(album_id):
-    if request.method == 'GET':
-        # get data for that album
-        album_data = a.get_album(album_id)
-        # print(album_data)
-        return render_template('delete_album.html', json_data=album_data)
-
-    if request.method == 'POST':
-        album_data = a.get_album(album_id)
-        album_title = album_data['title']
-
-        a.delete_album(album_id)
-
-        if a.delete_album(album_id):
-            return render_template('deleted_album.html', deleted_album=album_data), 200
-
-
-@app.route('/albums/<int:album_id>', methods=['GET'])
-def get_album_photos(album_id):
-    # photo_data = a.get_album_photos(album_id)
-    # json_data = photo_data
-    photo_data = a.get_album_photos_in_range(album_id)
-    return render_template('album.html', json_data=photo_data), 200
-
-
-@app.route('/add/album', methods=['GET', 'POST'])
-@login_required
-def create_album():
-    if request.method == 'GET':
-        return render_template('create_album.html'), 200
-    if request.method == 'POST':
-        album_title = request.form['title']
-        album_description = request.form['description']
-
-        if a.get_album_by_name(album_title):
-            new_album_data = {
-                'album_title': album_title,
-                'album_description': album_description
-            }
-
-            flash(
-                'An album with this name already exists. Please enter a different name.')
-
-            return render_template('create_album.html', data=new_album_data), 200
-
-        else:
-
-            album_id = a.create_album(
-                '28035310@N00', album_title, album_description)
-
-            album_data = a.get_album(album_id)
-
-            return redirect('/edit/album/{}/photos'.format(album_id)), 302
-
-
-@app.route('/edit/album/<int:album_id>/photos')
-@login_required
-def add_album_photos(album_id):
-    album_data = a.get_album(album_id)
-    photo_data = p.get_photos_in_range(20, 0)
-    photo_data['album_data'] = album_data
-    return render_template('add_album_photos.html', json_data=photo_data), 200
-
-
-@app.route('/edit/album/<int:album_id>', methods=['GET', 'POST'])
-@login_required
-def edit_album(album_id):
-    """
-    Updates the name and description of an album.
-    """
-    if request.method == 'GET':
-        json_data = a.get_album(album_id)
-        return render_template('edit_album.html', json_data=json_data), 200
-
-    if request.method == 'POST':
-        album_name = name_util.make_encoded(request.form['name'])
-
-        # album_name = request.form['name']
-        album_description = name_util.make_encoded(request.form['description'])
-        # add the data to the database
-
-        print(' why oh why oh why....', album_name, album_description)
-        a.update_album(album_id, album_name, album_description)
-        # print('test', album_id, album_name, album_description)
-        json_data = a.get_album(album_id)
-        print('what is get album returning? ', json_data)
-        return render_template('edit_album.html', json_data=json_data), 200
-
-
-@app.route('/edit/albums')
-@login_required
-def edit_albums():
-    """
-    Lists all the albums.
-    """
-    print('hello from edit albums')
-    albums_data = a.get_albums()
-    print(albums_data)
-    return render_template('edit_albums.html', json_data=albums_data), 200
-
-
-@app.route('/api/albumphotos', methods=['GET', 'POST'])
-@login_required
-def get_album_photos_json():
-    """
-    Used to pass data to React.
-    """
-    args = request.args.to_dict()
-    # print(args)
-    if request.method == 'GET':
-        if len(args) > 0:
-
-            if 'limit' not in args.keys():
-                args['limit'] = 20
-
-            if 'offset' not in args.keys():
-                args['offset'] = 0
-
-            album_data = a.get_album_photos_in_range(
-                args['album_id'],
-                args['limit'],
-                args['offset']
-            )
-            json_data = album_data
-            return jsonify(json_data)
-
-    if request.method == 'POST':
-        # print('test', request.get_json())
-        data = request.get_json()
-        a.remove_photos_from_album(data['albumId'], data['photos'])
-        return redirect("/albums/{}".format(data['albumId']), code=302)
-
-
-@app.route('/api/album/photos', methods=['GET', 'POST'])
-def get_album_photos_in_pages():
-    args = request.args.to_dict()
-
-    print(args)
-
-    if 'offset' in args.keys():
-        offset = int(args['offset'])
-
-        if offset <= 0:
-            # pass
-            offset = 0
-
-        # guards against an offset greater than the number of photos
-        if offset >= a.count_photos_in_album(args['album_id']):
-            # ok if you want it to return to the start of the pages
-            # offset = 0
-            pass
-
-        # else:
-        album_photos = a.get_album_photos_in_range(
-            args['album_id'], 20, offset)
-        return render_template('album.html', json_data=album_photos)
-
-    album_photos = a.get_album_photos_in_range(args['tag_name'])
-    return render_template('album.html', json_data=album_photos)
-
-
-@app.route('/edit/album/<int:album_id>/remove/photos', methods=['GET'])
-@login_required
-def remove_album_photos(album_id):
-    album_data = a.get_album(album_id)
-    photo_data = a.get_album_photos_in_range(album_id)
-    photo_data['album_data'] = album_data
-    return render_template('remove_album_photos.html', json_data=photo_data), 200
 
 
 if __name__ == '__main__':

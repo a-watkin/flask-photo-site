@@ -13,7 +13,7 @@
 {% if session %}
 <div class="row">
   <div class="col text-center">
-    <a href="{{ url_for('create_album') }}">
+    <a href="{{ url_for('album.create_album') }}">
       <button class="btn btn-primary btn-block btn-lg">
         Create a new album
       </button>
@@ -27,7 +27,9 @@
   {% for key, value in json_data.items() %}
   <div class="col albums-card">
     <div class="card" style="width: 18rem;">
-      <a href="{{url_for('get_album_photos', album_id=value['album_id']) }}">
+      <a
+        href="{{url_for('album.get_album_photos', album_id=value['album_id']) }}"
+      >
         <div class="card-body">
           <h5 class="card-title text-center">
             {{ value["human_readable_name"] }}
