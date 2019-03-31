@@ -32,17 +32,15 @@ def allowed_file(filename):
 def upload_file():
     if request.method == 'POST':
         files = request.files.getlist('file')
-
         # No files selected.
         # This is now prevented on the frontend.
         if 'file' not in request.files:
             # flash('No file selected')
             return redirect(request.url)
 
-        # Single or multiple files selected
+        # Handles single or multiple files selected.
         elif len(files) >= 1:
             created = datetime.datetime.now()
-            print('MULTIPLE FILES')
             for file in files:
                 photo_id = name_util.get_id()
                 if allowed_file(file.filename):
@@ -55,10 +53,7 @@ def upload_file():
                         os.makedirs(save_directory)
                     # Get all files in the save_directory
                     file_in_dir = os.listdir(save_directory)
-                    # this guards against multiple files having the same name
-                    # a problem here is that it also allows the same file to be uploaded
-                    # multiple times
-                    # identifier = str(uuid.uuid1()).split('-')[0]
+                    # Guards against multiple files having the same name.
                     if filename in file_in_dir:
                         temp = filename.split('.')
 
@@ -80,7 +75,7 @@ def upload_file():
                             os.path.join(save_directory, filename))
                     except Exception as e:
                         exif_data = None
-                        print('problem reading exif data', e)
+                        print('problem reading exif data ', e)
 
                     # Makes sure the image is the right orientation.
                     PhotoUtil.orientate_save(save_directory, filename)
