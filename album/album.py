@@ -276,8 +276,7 @@ class Album(object):
         """
         Returns the latest 20 photos.
 
-        Offset is where you want to start from, so 0 would be from the most recent.
-        10 from the tenth most recent etc.
+        Offset is where results start from.
         """
 
         # for some reason it was passing a string here
@@ -368,27 +367,8 @@ class Album(object):
 
             self.db.make_query(query_string)
 
-        # get the number of photos in the album after adding them
-        # query_string = '''
-        # SELECT COUNT(photo_id)
-        # FROM photo_album
-        # WHERE album_id='{}';
-        # '''.format(album_id)
-        # update the count in album
-        # photo_count = self.db.make_query(query_string)[0][0]
-        # print(photo_count)
-
-        # make sure album photos count is correct
+        # Make sure album photos count is correct.
         self.update_album_photo_count(album_id)
-
-        # update the count in album
-        # query_string = '''
-        # UPDATE album
-        # SET photos = {}
-        # WHERE album_id='{}';
-
-        # '''.format(int(photo_count), album_id)
-        # self.db.make_query(query_string)
 
     def create_album(self, user_id, title, description):
         # one of the current ids, a ten digit number
