@@ -100,7 +100,7 @@
 
         <div class="col d-flex justify-content-center"">
             <a href="
-            {{url_for('get_album_photos', album_id=album['album_id']) }}">
+            {{url_for('album.get_album_photos', album_id=album['album_id']) }}">
                 <div class=" card" style="width: 18rem;">
             <div class="card-body">
                 <h5 class="card-title text-center">{{album['human_readable_title']}}</h5>
