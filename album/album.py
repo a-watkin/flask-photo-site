@@ -81,16 +81,15 @@ class Album(object):
         """
         Returns data about the album.
         """
-
-        # make sure album photos count is correct
+        # Makes sure album photos count is correct.
         self.update_album_photo_count(album_id)
 
-        # update view count
+        # Update view count.
         self.increment_views(album_id)
 
         query = '''
-        select * from album where album_id = {}
-        '''.format(album_id)
+                select * from album where album_id = {}
+                '''.format(album_id)
 
         album_data = self.db.get_query_as_list(query)
 
@@ -102,13 +101,9 @@ class Album(object):
                 album_data[0]['description'])
 
         if len(album_data) > 0 and album_data[0]['photos'] > 0:
-            # list index out of range
-            # setting large square in the return data to the value returned by self.get_album_cover
             if self.get_album_cover(album_data[0]['album_id']):
                 album_data[0]['large_square'] = self.get_album_cover(
                     album_data[0]['album_id'])[0]['large_square']
-
-            # print(album_data)
             return album_data[0]
 
         elif len(album_data) > 0:
@@ -121,12 +116,10 @@ class Album(object):
         Get the album that a photo belongs to.
         """
         query_string = '''
-
-                select album.album_id, album.title, album.views, album.description, album.photos, date_created
-                from photo_album
-                join album on(photo_album.album_id=album.album_id)
-                where photo_album.photo_id={}
-
+                SELECT album.album_id, album.title, album.views, album.description, album.photos, date_created
+                FROM photo_album
+                JOIN album ON(photo_album.album_id=album.album_id)
+                WHERE photo_album.photo_id={}
         '''.format(photo_id)
 
         album_data = self.db.get_query_as_list(
@@ -137,10 +130,10 @@ class Album(object):
 
     def get_album_cover(self, album_id):
         query_string = '''
-                select images.large_square from album
-                join photo_album on(album.album_id=photo_album.album_id)
-                join photo on(photo_album.photo_id=photo.photo_id)
-                join images on(images.photo_id=photo.photo_id)
+                SELECT images.large_square FROM album
+                JOIN photo_album on(album.album_id=photo_album.album_id)
+                JOIN photo on(photo_album.photo_id=photo.photo_id)
+                JOIN images on(images.photo_id=photo.photo_id)
                 where album.album_id={}
                 order by photo.date_uploaded asc limit 1
 
@@ -162,9 +155,9 @@ class Album(object):
                 photo.photo_id, photo.date_taken,
                 photo.photo_title, photo.date_uploaded,  photo.views
                 from album
-                join photo_album on(album.album_id=photo_album.album_id)
-                join photo on(photo_album.photo_id=photo.photo_id)
-                join images on(images.photo_id=photo.photo_id)
+                JOIN photo_album on(album.album_id=photo_album.album_id)
+                JOIN photo on(photo_album.photo_id=photo.photo_id)
+                JOIN images on(images.photo_id=photo.photo_id)
                 where album.album_id={}
                 order by photo.date_taken asc
                 '''.format(album_id)
@@ -252,8 +245,8 @@ class Album(object):
             try:
                 self.db.make_query(
                     '''
-                    insert into photo_album (photo_id, album_id)
-                    values ("{}", "{}")
+                    INSERT INTO photo_album (photo_id, album_id)
+                    VALUES ("{}", "{}")
                     '''.format(photo, album_id)
                 )
             except Exception as err:
@@ -269,9 +262,6 @@ class Album(object):
 
         Offset is where results start from.
         """
-
-        # for some reason it was passing a string here
-        # probably from the url
         offset = int(offset)
 
         num_photos = self.count_photos_in_album(album_id)
@@ -283,7 +273,7 @@ class Album(object):
 
         pages = num_photos // limit
 
-        # otherwise it starts at 0 and I want it to start at 1
+        # Make the pages count start at 1.
         if num_photos == 20:
             page = 1
             pages = 1
@@ -303,9 +293,9 @@ class Album(object):
                 album.title, photo.views, photo.date_uploaded, photo.date_taken,
                 images.original, images.large_square
                 from photo_album
-                join photo on(photo.photo_id=photo_album.photo_id)
-                join album on(photo_album.album_id=album.album_id)
-                join images on(photo.photo_id=images.photo_id)
+                JOIN photo on(photo.photo_id=photo_album.photo_id)
+                JOIN album on(photo_album.album_id=album.album_id)
+                JOIN images on(photo.photo_id=images.photo_id)
                 where album.album_id='{}'
                 order by date_taken
                 desc limit {} offset {}
@@ -362,23 +352,10 @@ class Album(object):
         self.update_album_photo_count(album_id)
 
     def create_album(self, user_id, title, description):
-        # one of the current ids, a ten digit number
-        # 5053198694
         created = datetime.datetime.now()
 
-        identifier = str(int(uuid.uuid4()))[0:10]
-
-        # self.db.insert_data(
-        #     table='album',
-        #     album_id=identifier,
-        #     user_id='28035310@N00',
-        #     views=0,
-        #     title=title,
-        #     description=description,
-        #     photos=0,
-        #     date_created=(str(created)),
-        #     date_updated=(str(created))
-        # )
+        # identifier = str(int(uuid.uuid4()))[0:10]
+        identifier = name_util.get_id()
 
         self.db.make_query(
             '''
@@ -395,8 +372,6 @@ class Album(object):
                 str(created)
             )
         )
-
-        print('album created with identifier ', identifier)
 
         return identifier
 
@@ -416,9 +391,9 @@ class Album(object):
 
             query_string = (
                 '''
-                select * from album
-                order by date_created
-                desc limit {} offset {}
+                SELECT * FROM album
+                ORDER BY date_created
+                DESC LIMIT {} OFFSET {}
                 '''
             ).format(limit, offset)
 
@@ -435,43 +410,22 @@ class Album(object):
 
         And maybe include all sizes.
         """
-
         data = [dict(ix) for ix in q_data]
 
-        # print(data)
-
         for album in data:
-
-            print(album)
-            print()
             album_id = album['album_id']
             album_cover = self.get_album_cover(album_id)
-            # print()
             if len(album_cover) > 0:
-                # print(album_cover[0]['large_square'])
                 album['large_square'] = album_cover[0]['large_square']
             else:
-                # placeholder image
+                # Image preview for the album.
                 album['large_square'] = '/static/images/logo.jpg'
-
-            # adding human readable title
+            # Adding human readable title.
             album['human_readable_title'] = name_util.make_decoded(
                 album['title'])
 
             album['human_readable_description'] = name_util.make_decoded(
                 album['description'])
-
-            print()
-            print(album)
-            print()
-
-            # print()
-            # print(album)
-
-            # album['large_square'] = self.get_album_cover(album['album_id'])[
-            #     0]['large_square']
-            # print()
-            # print(album)
 
         a_dict = {}
         count = 0
@@ -493,7 +447,6 @@ class Album(object):
             '''.format(album_name)
         )
 
-        # album with this title exists
         if len(data) > 0:
             return data
 
