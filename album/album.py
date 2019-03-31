@@ -10,15 +10,16 @@ from common import name_util
 class Album(object):
 
     def __init__(self):
+        # Remove this later.
         self.db = Database('eigi-data.db')
 
     def count_photos_in_album(self, album_id):
-        # get count of photos in album
+        # Get count of photos in album.
         num_photos = self.db.make_query(
             '''
-            select count(photo_id)
-            from photo_album
-            where album_id = "{}"
+            SELECT COUNT(photo_id)
+            FROM photo_album
+            WHERE album_id = "{}"
             '''.format(album_id)
         )
 
@@ -31,18 +32,18 @@ class Album(object):
         new_count = self.count_photos_in_album(album_id)
         self.db.make_query(
             '''
-            update album
-            set photos = {}
-            where album_id = "{}"
+            UPDATE album
+            SET photos = {}
+            WHERE album_id = "{}"
             '''.format(new_count, album_id)
         )
 
     def increment_views(self, album_id):
         self.db.make_query(
             '''
-            update album
-            set views = views + 1
-            where album_id = "{}"
+            UPDATE album
+            SET views = views + 1
+            WHERE album_id = "{}"
             '''.format(album_id)
         )
 
@@ -54,18 +55,14 @@ class Album(object):
             "select * from album order by date_created desc;"
         )
 
-        # I also need an image to represent the album
         rtn_dict = {
 
         }
 
         count = 0
         for album in album_data:
-            print('\n', 'album_id', album['album_id'])
             album_cover_dict = self.get_album_cover(album['album_id'])
-
-            print(album_cover_dict)
-            # a new album may not have this yet so check that there is a value first
+            # A new album may not have a preview image yet, this checks for it.
             if len(album_cover_dict) > 0:
                 album['large_square'] = album_cover_dict[0]['large_square']
 
@@ -263,12 +260,6 @@ class Album(object):
                 print('add_photos_to_album, problem ', err)
             else:
                 continue
-
-            # self.db.insert_data(
-            #     table='photo_album',
-            #     photo_id=photo,
-            #     album_id=album_id
-            # )
 
         self.update_album_photo_count(album_id)
 
