@@ -129,37 +129,38 @@ class Album(object):
         return album_data
 
     def get_album_cover(self, album_id):
+        """
+        Returns a photo in an album for use as a preview image.
+        """
         query_string = '''
                 SELECT images.large_square FROM album
-                JOIN photo_album on(album.album_id=photo_album.album_id)
-                JOIN photo on(photo_album.photo_id=photo.photo_id)
-                JOIN images on(images.photo_id=photo.photo_id)
-                where album.album_id={}
-                order by photo.date_uploaded asc limit 1
+                JOIN photo_album ON(album.album_id=photo_album.album_id)
+                JOIN photo ON(photo_album.photo_id=photo.photo_id)
+                JOIN images ON(images.photo_id=photo.photo_id)
+                WHERE album.album_id={}
+                ORDER BY photo.date_uploaded ASC LIMIT 1
 
                         '''.format(album_id)
 
         album_cover = self.db.get_query_as_list(query_string)
-        # print(album_cover)
         return album_cover
 
     def get_album_photos(self, album_id):
-        # increment the view count
         self.increment_views(album_id)
 
         query_string = '''
-                select album.title, album.album_id,
+                SELECT album.title, album.album_id,
                 album.description, album.views, album.photos,
                 images.large_square,
                 images.original,
                 photo.photo_id, photo.date_taken,
                 photo.photo_title, photo.date_uploaded,  photo.views
-                from album
-                JOIN photo_album on(album.album_id=photo_album.album_id)
-                JOIN photo on(photo_album.photo_id=photo.photo_id)
-                JOIN images on(images.photo_id=photo.photo_id)
-                where album.album_id={}
-                order by photo.date_taken asc
+                FROM album
+                JOIN photo_album ON(album.album_id=photo_album.album_id)
+                JOIN photo ON(photo_album.photo_id=photo.photo_id)
+                JOIN images ON(images.photo_id=photo.photo_id)
+                WHERE album.album_id={}
+                ORDER BY photo.date_taken ASC
                 '''.format(album_id)
 
         album_data = self.db.get_query_as_list(
@@ -175,14 +176,8 @@ class Album(object):
             rtn_dict[count] = d
             count += 1
 
-        print()
-        print('here be dragons')
-        print('\n', rtn_dict)
-
         if not rtn_dict:
-            print(10 * '\nnope')
             album_data = self.get_album(album_id)
-            print(album_data)
             rtn_dict = {
                 0: album_data
             }
@@ -192,10 +187,10 @@ class Album(object):
 
     def get_photo_album(self, album_id):
         """
-        used to getting albums when deleting them
+        Get and return photo album data.
         """
         query = '''
-        select * from photo_album where album_id = {}
+        SELECT * from photo_album WHERE album_id = {}
         '''.format(album_id)
 
         photo_album_data = self.db.make_query(query)
@@ -203,25 +198,19 @@ class Album(object):
         return photo_album_data
 
     def delete_album(self, album_id):
-        # you have to delete from photo_album first
-        # then from album, this is due to database constraints
+        # Values must be deleted from photo_album first
+        # then from album, this is due to database constraints.
         delete_from_photo_album = '''
-        delete from photo_album where album_id = {}
-        '''.format(album_id)
+                                DELETE FROM photo_album WHERE album_id = {}
+                                '''.format(album_id)
 
         resp = self.db.make_query(delete_from_photo_album)
-        print(resp)
 
         delete_from_album = '''
-        delete from album where album_id = {}
-        '''.format(album_id)
+                            DELETE FROM album WHERE album_id = {}
+                            '''.format(album_id)
 
         self.db.make_query(delete_from_album)
-
-        # print()
-        # print(self.get_album(album_id))
-        # print(self.get_photo_album(album_id))
-        # print()
 
         if not self.get_album(album_id) and not self.get_photo_album(album_id):
             return True
@@ -229,19 +218,16 @@ class Album(object):
         return False
 
     def update_album(self, album_id, new_title, new_description):
-        # you already know that it exists because otherwise the user wouldn't see it
         self.db.make_query('''
-            update album
-            set title = '{}', description = '{}'
-            where album_id = '{}'
+            UPDATE album
+            SET title = '{}', description = '{}'
+            WHERE album_id = '{}'
         '''.format(new_title, new_description, album_id)
         )
 
     def add_photos_to_album(self, album_id, photos):
         for photo in photos:
-            """
-            If the photo is already in the album it will cause an error.
-            """
+            # If the photo is already in the album it will cause an error.
             try:
                 self.db.make_query(
                     '''
@@ -289,16 +275,16 @@ class Album(object):
 
             query_string = (
                 '''
-                select photo.photo_title, photo.photo_id, album.album_id,
+                SELECT photo.photo_title, photo.photo_id, album.album_id,
                 album.title, photo.views, photo.date_uploaded, photo.date_taken,
                 images.original, images.large_square
-                from photo_album
-                JOIN photo on(photo.photo_id=photo_album.photo_id)
-                JOIN album on(photo_album.album_id=album.album_id)
-                JOIN images on(photo.photo_id=images.photo_id)
-                where album.album_id='{}'
-                order by date_taken
-                desc limit {} offset {}
+                FROM photo_album
+                JOIN photo ON(photo.photo_id=photo_album.photo_id)
+                JOIN album ON(photo_album.album_id=album.album_id)
+                JOIN images ON(photo.photo_id=images.photo_id)
+                WHERE album.album_id='{}'
+                ORDER BY date_taken
+                DESC LIMIT {} OFFSET {}
                 '''
             ).format(album_id, limit, offset)
 
@@ -310,15 +296,7 @@ class Album(object):
             'photos': []
         }
 
-        """
-        I think it may actually be better to layout what fields you want here.
-
-        And maybe include all sizes.
-        """
-
         data = [dict(ix) for ix in q_data]
-
-        # print(data)
 
         a_dict = {}
         count = 0
@@ -326,7 +304,7 @@ class Album(object):
             a_dict[count] = d
             count += 1
 
-        # Get data about the album itself
+        # Get data about the album.
         album_data = self.get_album(album_id)
         rtn_dict = {'photos': a_dict}
 
@@ -341,9 +319,9 @@ class Album(object):
     def remove_photos_from_album(self, album_id, photos):
         for photo_id in photos:
             query_string = '''
-                delete from photo_album
-                where(photo_id='{}'
-                and album_id='{}')
+                DELETE FROM photo_album
+                WHERE(photo_id='{}'
+                AND album_id='{}')
                 '''.format(photo_id, album_id)
 
             self.db.make_query(query_string)
@@ -353,13 +331,12 @@ class Album(object):
 
     def create_album(self, user_id, title, description):
         created = datetime.datetime.now()
-
-        # identifier = str(int(uuid.uuid4()))[0:10]
+        # Get album id.
         identifier = name_util.get_id()
 
         self.db.make_query(
             '''
-            insert into album (album_id, user_id, views, title, description, photos, date_created, date_updated)
+            INSERT INTO album (album_id, user_id, views, title, description, photos, date_created, date_updated)
             values ("{}", "{}", {}, "{}", "{}", {}, "{}", "{}")
             '''.format(
                 identifier,
@@ -379,8 +356,9 @@ class Album(object):
         """
         Returns the latest 20 albums.
 
-        Offset is where you want to start from, so 0 would be from the most recent.
-        10 from the tenth most recent etc.
+        Offset is where the photos start from.
+
+        Limit is the number of albums returned.
         """
 
         q_data = None
@@ -405,11 +383,6 @@ class Album(object):
             'photos': []
         }
 
-        """
-        I think it may actually be better to layout what fields you want here.
-
-        And maybe include all sizes.
-        """
         data = [dict(ix) for ix in q_data]
 
         for album in data:
@@ -443,7 +416,7 @@ class Album(object):
     def get_album_by_name(self, album_name):
         data = self.db.make_query(
             '''
-            select * from album where title = "{}"
+            SELECT * FROM album WHERE title = "{}"
             '''.format(album_name)
         )
 
