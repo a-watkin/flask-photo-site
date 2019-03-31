@@ -89,7 +89,7 @@ def get_photos():
             return render_template('photos.html', json_data=json_data), 200
 
     else:
-        # No arguments.
+        # If the request has no arguments.
         photo_data = p.get_photos_in_range()
         json_data = photo_data
         json_data = show_uploaded(json_data)
@@ -260,8 +260,7 @@ def edit_tag(tag_name):
 
     if request.method == 'POST':
         new_tag_name = request.form['new_tag_name']
-        # IF THE THING YOU'RE TRYING TO CHANGE IS IN AN INVALID FORMAT THEN YOU NEED
-        # ENCODE THAT instead of its replacement
+        # Encode the tags.
         old_tag = name_util.make_encoded(tag_name)
         new_tag = name_util.make_encoded(new_tag_name)
 
@@ -282,7 +281,6 @@ def edit_tag(tag_name):
 @app.route('/add/tag/', methods=['GET', 'POST'])
 @login_required
 def add_tag():
-    print('\nHello from add_tag \n')
     args = request.args.to_dict()
 
     if request.method == 'GET':
@@ -290,19 +288,17 @@ def add_tag():
         return render_template('add_tag.html', json_data=photo_data), 200
 
     if request.method == 'POST':
-        # get the photo_id
         photo_id = args['photo_id']
-        # get the new tags from the form
+        # Get the new tags from the form.
         tag_data = request.form['new_tag_name']
-        # This is a string of values
         tag_data = tag_data.split(',')
         for i in range(len(tag_data)):
+            # Remove starting and trailing whitespace.
             tag_data[i] = tag_data[i].strip()
             tag_data[i] = name_util.make_encoded(tag_data[i])
 
-        # add tags to the tag table if needed and associated them with the photo
+        # Associate the tags with the photo.
         t.add_tags_to_photo(photo_id, tag_data)
-        # data on the photo to render the view
         photo_data = p.get_photo(args['photo_id'])
         return render_template('photo.html', json_data=photo_data), 200
 
