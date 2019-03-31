@@ -123,14 +123,18 @@ def get_album_photos_in_pages():
             offset = 0
 
         a = Album()
+
         # Guards against an offset greater than the number of photos.
         if offset >= a.count_photos_in_album(args['album_id']):
-            # If you want it to return to the start of the pages use offset = 0
-            pass
-
-        album_photos = a.get_album_photos_in_range(
-            args['album_id'], 20, offset)
-        return render_template('album/album.html', json_data=album_photos)
+            # 20 here is the limit of the photos returned.
+            # offset - 20 means the offset is not incremented.
+            album_photos = a.get_album_photos_in_range(
+                args['album_id'], 20, offset - 20)
+            return render_template('album/album.html', json_data=album_photos)
+        else:
+            album_photos = a.get_album_photos_in_range(
+                args['album_id'], 20, offset)
+            return render_template('album/album.html', json_data=album_photos)
 
     a = Album()
     album_photos = a.get_album_photos_in_range(args['tag_name'])

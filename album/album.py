@@ -274,7 +274,7 @@ class Album(object):
 
     def get_album_photos_in_range(self, album_id, limit=20, offset=0):
         """
-        Returns the latest 10 photos.
+        Returns the latest 20 photos.
 
         Offset is where you want to start from, so 0 would be from the most recent.
         10 from the tenth most recent etc.
