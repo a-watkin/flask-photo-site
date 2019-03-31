@@ -22,9 +22,9 @@ class PhotoUtil(object):
     @staticmethod
     def orientate_save(path, file_name):
         """
-        This is supposed to save a photo in the correct orientation.
+        Checks the orientation of a photo and saves it to disk with the correct orientation.
 
-        I'm not convinced it actually works.
+        Will not work for photos without EXIF data.
         """
         # Catch NoneType error when a photo does not contain any EXIF data.
         try:
@@ -45,7 +45,8 @@ class PhotoUtil(object):
             image.save(os.path.join(path, file_name))
 
         except Exception as error:
-            print('Orientate_save problem ', error)
+            pass
+            # print('Orientate_save problem ', error)
 
     @staticmethod
     def resize_photo(infile, outfile, base_size):
