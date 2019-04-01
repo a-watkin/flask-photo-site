@@ -312,6 +312,25 @@ class Tag(object):
 
             self.update_photo_count(tag)
 
+    def get_photo_tag_list(self, photo_id):
+        """
+        Returns a list with only the tag names for the given photo.
+        """
+        tag_data = self.db.get_query_as_list(
+            '''
+            SELECT tag_name FROM photo_tag
+            WHERE photo_id = {}
+            ORDER BY tag_name ASC
+            '''.format(photo_id)
+        )
+
+        tags = []
+        if tag_data:
+            for tag in tag_data:
+                tags.append(list(tag.values())[0])
+
+        return tags
+
     def add_tags_to_photo(self, photo_id, tag_list):
         """
         Adds tags to a photo.
@@ -320,69 +339,52 @@ class Tag(object):
 
         Then it adds the tag to photo_tag which links the photo and tag tables.
         """
-        print('\nHello from add_tags_to_photo, the tag list is: ', tag_list)
-
-        # for each tag
-        # check if the tag is in the database already
-        # if it is not then add it to the tag table
         for tag in tag_list:
+            if len(tag) > 0:
+                # Remove starting and trailing whitespace.
+                tag = tag.strip()
+                # Encode tag to a safe version.
+                tag = name_util.make_encoded(tag)
 
-            # will return None if the tag is not in the tag table
-            # tag_name is the column name
-            data = self.db.get_row('tag', 'tag_name', tag)
+                # Check if tag is in the tag table.
+                # Data will be None if the tag is not in the tag table.
+                data = self.db.get_row('tag', 'tag_name', tag)
 
-            print('data is', data)
-
-            if data is None:
-
-                print('\nthat value {} is not in the db\n'.format(tag))
-
-                self.db.make_query(
-                    '''
-                    insert into tag (tag_name, user_id, photos)
-                    values ("{}", "{}", {})
-                    '''.format(
-                        tag,
-                        '28035310@N00',
-                        self.get_photo_count_by_tag(tag)
+                if data is None:
+                    # Add tag to the tag table.
+                    self.db.make_query(
+                        '''
+                        insert into tag (tag_name, user_id, photos)
+                        values ("{}", "{}", {})
+                        '''.format(
+                            tag,
+                            '28035310@N00',
+                            self.get_photo_count_by_tag(tag)
+                        )
                     )
-                )
 
-                print('\nshould be added now...\n')
+                # UNIQUE constraints can cause problems here
+                # so catch any exceptions.
+                try:
+                    # Associate the tag with a photo.
+                    self.db.make_query(
+                        '''
+                        INSERT INTO photo_tag (photo_id, tag_name)
+                        VALUES ({}, "{}")
+                        '''.format(photo_id, tag)
+                    )
 
-                if self.db.get_row('tag', 'tag_name', tag):
-                    print('\nadded tag, ', tag, '\n')
+                    # For checks later.
+                    added_tags.append(tag)
+                except Exception as e:
+                    print('Problem adding tag to photo_tag ', e)
 
-            # UNIQUE constraint can cause problems here
-            # so catch any exceptions.
-            try:
-                # The tag is now in the database.
-                self.db.make_query(
-                    '''
-                    insert into photo_tag (photo_id, tag_name)
-                    values ({}, "{}")
-                    '''.format(photo_id, tag)
-                )
-            except Exception as e:
-                print('Problem adding tag to photo_tag ', e)
+        photo_tags = self.get_photo_tag_list(photo_id)
 
-        data = self.db.make_query(
-            '''
-            SELECT * FROM photo_tag WHERE photo_id = {}
-            '''.format(photo_id)
-        )
-
-        tags_in_data = []
-        if len(data) > 0:
-            for tag in data:
-                tags_in_data.append(tag[1])
-
-        for tag in tag_list:
-            if tag not in tags_in_data:
+        # Check added tags are in photo_tags
+        for tag in added_tags:
+            if tag not in photo_id:
                 return False
-            else:
-                self.update_photo_count(tag)
-
         return True
 
     def update_tag(self, new_tag, old_tag):
@@ -402,8 +404,8 @@ class Tag(object):
             # existing tag to the new tag
             self.db.make_query(
                 '''
-                update tag
-                set tag_name = "{}"
+                UPDATE tag
+                SET tag_name = "{}"
                 WHERE tag_name = "{}"
                 '''.format(new_tag, old_tag)
             )

@@ -275,22 +275,16 @@ def edit_tag(tag_name):
 @app.route('/add/tag/', methods=['GET', 'POST'])
 @login_required
 def add_tag():
+    print('hello from add_tag')
     args = request.args.to_dict()
-
     if request.method == 'GET':
         photo_data = p.get_photo(args['photo_id'])
         return render_template('add_tag.html', json_data=photo_data), 200
-
     if request.method == 'POST':
         photo_id = args['photo_id']
         # Get the new tags from the form.
         tag_data = request.form['new_tag_name']
         tag_data = tag_data.split(',')
-        for i in range(len(tag_data)):
-            # Remove starting and trailing whitespace.
-            tag_data[i] = tag_data[i].strip()
-            tag_data[i] = name_util.make_encoded(tag_data[i])
-
         # Associate the tags with the photo.
         t.add_tags_to_photo(photo_id, tag_data)
         photo_data = p.get_photo(args['photo_id'])
