@@ -11,6 +11,20 @@ class Tag(object):
     def __init__(self):
         self.db = Database('eigi-data.db')
 
+    def count_photos_by_tag_name(self, tag_name):
+        count = self.db.make_query(
+            '''
+            SELECT count(tag_name)
+            FROM photo_tag
+            WHERE tag_name = "{}"
+            '''.format(tag_name)
+        )
+
+        if len(count) > 0:
+            return count[0][0]
+        else:
+            return 0
+
     # get count of photos using tag
     def get_photo_count_by_tag(self, tag_name):
         if '%' in tag_name:
@@ -70,12 +84,15 @@ class Tag(object):
                 '''.format(count, tag_name)
             )
         else:
+            # Should be removing tags that have zero photos associated with them.
             self.delete_tag(tag_name)
 
     def check_all_tag_photo_counts(self):
         """
         Gets a count of all the photos associated with a tag.
-        Checks that the photos column in tag is up to date.
+
+        Checks that the photos column which counts photos associated with 
+        the in tag is up to date.
         """
         data = self.db.get_query_as_list(
             '''
@@ -244,9 +261,7 @@ class Tag(object):
         do you need to encode the tag list?
         """
         for tag in tag_list:
-            print(tag)
-
-            # if the tag isn't present it will just fail silently
+            # If the tag isn't present it fails silently.
             resp = self.db.make_query(
                 '''
                 DELETE FROM photo_tag
@@ -254,30 +269,30 @@ class Tag(object):
                 AND tag_name = "{}"
                 '''.format(photo_id, tag)
             )
-            print(resp)
 
             """
             check tag count here
             """
             if self.get_photo_count_by_tag(tag) <= 0:
-                # remove the tag if it has no photos associated with it
+                # IS THIS ACTUALLY WORKING?
+                # Remove the tag if it has no photos associated with it.
                 self.delete_tag(tag)
             else:
-                # only update if you're not removing it
+                # Update the tag count.
                 self.update_photo_count(tag)
 
     def replace_tags(self, photo_id, tag_list):
         """
-        Replaces the tags attached to a photo with new tags.
+        Replaces the tags associated with a specific photo with new tags.
         """
-        # get all the tags attached to the photo
+        # Get all the tags attached to the photo.
         current_tags = self.db.make_query(
             '''
             SELECT * FROM photo_tag WHERE photo_id = {}
             '''.format(photo_id)
         )
 
-        # remove the current tags
+        # Remove the current tags.
         self.db.make_query(
             '''
             DELETE FROM photo_tag WHERE photo_id = {}
@@ -285,7 +300,7 @@ class Tag(object):
         )
 
         for tag in tag_list:
-            # add tags in the tag_list
+            # Add the tags in the tag_list.
             self.db.make_query(
                 '''
                 insert into photo_tag (photo_id, tag_name)
@@ -373,14 +388,12 @@ class Tag(object):
         Problem here when updating a tag to one that already exists
         """
         print('hello from update_tag - passed values, ', new_tag, old_tag)
-        # check if new tag exists
+        # Check if new tag is already in the tag table.
         test = self.db.make_query(
             '''
             SELECT * FROM tag WHERE tag_name = "{}"
             '''.format(new_tag)
         )
-
-        print(test)
 
         if not test:
             # if the tag doesn't exist already then update it
@@ -428,20 +441,6 @@ class Tag(object):
             return True
         else:
             return False
-
-    def count_photos_by_tag_name(self, tag_name):
-        count = self.db.make_query(
-            '''
-            SELECT count(tag_name)
-            FROM photo_tag
-            WHERE tag_name = "{}"
-            '''.format(tag_name)
-        )
-
-        if len(count) > 0:
-            return count[0][0]
-        else:
-            return 0
 
     def get_tag_photos_in_range(self, tag_name, limit=20, offset=0):
         # I think flask is passing decoded values in.
@@ -531,5 +530,7 @@ class Tag(object):
 
 if __name__ == "__main__":
     t = Tag()
-    print(t.get_photo_count_by_tag('test'))
-    print(t.get_photos_by_tag('lindon'))
+    # print(t.get_photo_count_by_tag('test'))
+    # print(t.get_photos_by_tag('lindon'))
+
+    t.remove_tag_name('br')
