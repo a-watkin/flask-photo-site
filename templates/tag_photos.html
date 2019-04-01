@@ -49,7 +49,7 @@
   {% for key, value in json_data['photos'].items() %} {% if value['photo_id'] %}
 
   <div class="col-3 text-center">
-    <a id="photostream-page" href="/photo/tags/{{ value['photo_id'] }}">
+    <a id="photostream-page" href="/photo/{{ value['photo_id'] }}">
       <img
         id="photo-page-image"
         class="img-fluid"
