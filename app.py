@@ -1,22 +1,15 @@
 import json
 import os
 import datetime
-import uuid
-import urllib.parse
-from functools import wraps
-
 
 from flask import Flask, render_template, request, session, flash, redirect, url_for, g, jsonify
 from flask import json
 
-
 # my modules
-
 # From common package.
 from common.database_interface import Database
 from common import name_util
 from common.name_util import login_required
-
 
 from photo import Photos
 from album.album import Album
@@ -167,6 +160,7 @@ def delete_photo(photo_id):
         return render_template('deleted_photo.html', json_data=photo_data), 200
 
 
+# Tags
 @app.route('/api/add/tags', methods=['GET', 'POST'])
 @login_required
 def add_uploaded_tags():

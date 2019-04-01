@@ -18,8 +18,8 @@ class Photos(object):
     def count_photos(self):
         num_photos = self.db.make_query(
             '''
-            select count(photo_id)
-            from photo
+            SELECT COUNT(photo_id)
+            FROM photo
             '''
         )
 
@@ -32,8 +32,9 @@ class Photos(object):
         """
         Returns the latest 20 photos.
 
-        Offset is where you want to start from, so 0 would be from the most recent.
-        10 from the tenth most recent etc.
+        Limit is the number of results returned.
+
+        Offset is that start position of the returned results.
         """
 
         num_photos = self.count_photos()
@@ -52,8 +53,8 @@ class Photos(object):
         # Get number of photos in database total.
         num_photos = self.db.make_query(
             '''
-            select count(photo_id)
-            from photo
+            SELECT COUNT(photo_id)
+            FROM photo
             '''
         )[0][0]
 
@@ -67,10 +68,12 @@ class Photos(object):
             c.row_factory = sqlite3.Row
 
             query_string = (
-                '''select photo_id, views, photo_title, date_posted, date_taken, images.original, images.large_square from photo
-                join images using(photo_id)
-                order by date_posted
-                desc limit {} offset {}'''
+                '''
+                SELECT photo_id, views, photo_title, date_posted, date_taken, images.original, images.large_square FROM photo
+                JOIN images USING(photo_id)
+                ORDER BY date_posted
+                DESC LIMIT {} OFFSET {}
+                '''
             ).format(limit, offset)
 
             q_data = c.execute(query_string)
@@ -81,8 +84,6 @@ class Photos(object):
             'photos': []
         }
 
-        # I think it may actually be better to layout what fields you want here.
-        # And maybe include all sizes.
         data = [dict(ix) for ix in q_data]
 
         for photo in data:
@@ -110,8 +111,8 @@ class Photos(object):
 
             query_string = (
                 '''
-                select date_posted from photo
-                where photo_id={}
+                SELECT date_posted FROM photo
+                WHERE photo_id={}
                 '''.format(photo_id)
             )
 
@@ -123,9 +124,6 @@ class Photos(object):
             return photo_data[0][0]
 
     def get_next_photo(self, photo_id):
-        """
-        you need the date that the current was uploaded
-        """
         date_posted = self.get_date_posted(photo_id)
 
         photo_data = None
@@ -134,9 +132,9 @@ class Photos(object):
 
             query_string = (
                 '''
-                select * from photo join images using(photo_id)
-                where date_posted > '{}'
-                order by date_posted asc limit 1
+                SELECT * FROM photo JOIN images USING(photo_id)
+                WHERE date_posted > '{}'
+                ORDER BY date_posted ASC LIMIT 1
                 '''.format(date_posted)
             )
 
@@ -151,21 +149,16 @@ class Photos(object):
             return photo_data[0][0]
 
     def get_previous_photo(self, photo_id):
-
         date_posted = self.get_date_posted(photo_id)
-
-        print(date_posted)
 
         photo_data = None
         with sqlite3.connect(self.db.db_name) as connection:
             c = connection.cursor()
-
-            # Problem here was that it was treating datetime as something other than a string.
             next_string = (
                 '''
-                select * from photo join images using(photo_id)
-                where date_posted < '{}'
-                order by date_posted desc limit 1
+                SELECT * FROM photo JOIN images USING(photo_id)
+                WHERE date_posted < '{}'
+                ORDER BY date_posted DESC LIMIT 1
                 '''.format(date_posted)
             )
 
@@ -180,9 +173,9 @@ class Photos(object):
         # Update view count.
         self.db.make_query(
             '''
-            update photo
-            set views = views + 1
-            where photo_id = {}
+            UPDATE photo
+            SET views = views + 1
+            WHERE photo_id = {}
             '''.format(photo_id)
         )
 
@@ -193,7 +186,9 @@ class Photos(object):
             c.row_factory = sqlite3.Row
 
             query_string = (
-                "select * from photo join images using(photo_id) where photo_id={}".format(photo_id))
+                '''
+                SELECT * FROM photo JOIN images USING(photo_id) WHERE photo_id={}
+                '''.format(photo_id))
 
             photo_data = [dict(x) for x in c.execute(query_string)]
 
@@ -243,9 +238,9 @@ class Photos(object):
 
     def update_title(self, photo_id, new_title):
         resp = self.db.make_query('''
-        update photo
-        set photo_title = '{}'
-        where photo_id = '{}'
+        UPDATE photo
+        SET photo_title = '{}'
+        WHERE photo_id = '{}'
         '''.format(new_title, photo_id)
         )
 
@@ -256,41 +251,39 @@ class Photos(object):
         # Check if photo is in an album.
         album_check = self.db.make_query(
             '''
-            select * from photo_album where photo_id = '{}'
+            SELECT * FROM photo_album WHERE photo_id = '{}'
             '''.format(photo_id)
         )
-
-        print(album_check)
 
         # If the photo is in an album decrement the photos count.
         if len(album_check) > 0:
             for album in album_check:
                 self.db.make_query(
                     '''
-                    update album
-                    set photos = photos - 1
-                    where album_id = '{}'
+                    UPDATE album
+                    SET photos = photos - 1
+                    WHERE album_id = '{}'
                     '''.format(album[1])
                 )
 
         # Delete photo from photo_album.
         self.db.make_query(
             '''
-            delete from photo_album where photo_id = '{}'
+            DELETE FROM photo_album WHERE photo_id = '{}'
             '''.format(photo_id)
         )
 
         # Delete the photo itself.
         self.db.make_query(
             '''
-            delete from photo where photo_id = '{}'
+            DELETE FROM photo WHERE photo_id = '{}'
             '''.format(photo_id)
         )
 
         # Remove EXIF data.
         self.db.make_query(
             '''
-            delete from exif where photo_id = '{}'
+            DELETE FROM exif WHERE photo_id = '{}'
             '''.format(photo_id)
         )
 
@@ -302,25 +295,4 @@ class Photos(object):
 
 
 if __name__ == "__main__":
-    p = Photos()
-
-    # p.get_photos_in_range(20, 15280)
-
-    # p.delete_photo(39974272161)
-    # next photo is working
-    # print(p.get_next_photo(44692597905))
-    # it can't get that photo
-    print(p.get_photo(1968247294))
-
-    # print(p.get_photos_in_range())
-    # print(p.db.db_name)
-
-    # p.update_title('30081941117', 'tenticles title')
-
-    # p.delete_photo('5052578527')
-
-    # not in an album
-    # 43917844765
-    # p.delete_photo('43917844765')
-
-    # print(p.get_photo(1125251958))
+    pass
