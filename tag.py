@@ -43,11 +43,11 @@ class Tag(object):
 
     def delete_tag(self, tag_name):
         """
-        Deletes the tag name specified
+        Deletes the specified tag from the database.
         """
-        # you have to remove the tag from the tag table
+        # Remove tag from tag table.
         self.db.delete_rows_where('tag', 'tag_name', tag_name)
-        # and also in photo_tag
+        # Remove photo from photo_tag.
         self.db.delete_rows_where('photo_tag', 'tag_name', tag_name)
 
         if not self.get_tag(tag_name) and not self.check_photo_tag(tag_name):
@@ -56,7 +56,6 @@ class Tag(object):
             return False
 
     def update_photo_count(self, tag_name):
-        print('update photo count tag_name ', tag_name)
         """
         Updates the photo count for the given tag.
         """
@@ -65,8 +64,8 @@ class Tag(object):
         if count > 0:
             self.db.make_query(
                 '''
-                update tag
-                set photos = {}
+                UPDATE tag
+                SET photos = {}
                 WHERE tag_name = "{}"
                 '''.format(count, tag_name)
             )
@@ -85,8 +84,6 @@ class Tag(object):
         )
 
         for tag in data:
-            print()
-            print(tag)
             # query for the number of photos using the tag
             # compare it to the number in the photos column
             # update if necessary
@@ -128,7 +125,7 @@ class Tag(object):
         )[0][0]
 
     def get_all_tags(self):
-        # as a list of dict values
+        # Tags as a list of dict values.
         tag_data = self.db.get_query_as_list(
             "SELECT tag_name, photos FROM tag ORDER BY tag_name"
         )
@@ -141,7 +138,7 @@ class Tag(object):
         for tag in tag_data:
             rtn_dict[count] = tag
             tag_name = tag['tag_name']
-            # adding the number of photos with the tag
+            # Adding the number of photos with the tag.
             rtn_dict[count]['photos'] = tag['photos']
             rtn_dict[count]['human_readable_tag'] = name_util.make_decoded(
                 tag['tag_name'])
@@ -212,7 +209,11 @@ class Tag(object):
 
     def check_photo_tag(self, tag_name):
         """
-        Check that a tag has been added.
+        Checks that a tag has been added.
+
+        Returns true if the tag is in photo_tag.
+
+        Returns false if the tag is not in photo_tag.
         """
         data = self.db.make_query(
             '''SELECT * FROM photo_tag WHERE tag_name = "{}" '''
@@ -225,22 +226,18 @@ class Tag(object):
             return True
         return False
 
-    def clean_tags(self):
-        forbidden = ['.', ';', '%']
-        # as a list of dict values
-        tag_data = self.db.get_query_as_list("SELECT * FROM tag")
-        for tag in tag_data:
-            print(tag['tag_name'], tag['tag_name'] in forbidden)
-            if tag['tag_name'] in forbidden:
-                print('tag to remove, ', tag['tag_name'])
-                self.remove_tag_name(tag['tag_name'])
+    # def clean_tags(self):
+    #     forbidden = ['.', ';', '%']
+    #     # Tags as a list of dict values.
+    #     tag_data = self.db.get_query_as_list("SELECT * FROM tag")
+    #     for tag in tag_data:
+    #         if tag['tag_name'] in forbidden:
+    #             self.remove_tag_name(tag['tag_name'])
 
-        tag_data = self.db.get_query_as_list("SELECT * FROM photo_tag")
-        for tag in tag_data:
-            print(tag['tag_name'], tag['tag_name'] in forbidden)
-            if tag['tag_name'] in forbidden:
-                print('tag to remove, ', tag['tag_name'])
-                self.remove_tag_name(tag['tag_name'])
+    #     tag_data = self.db.get_query_as_list("SELECT * FROM photo_tag")
+    #     for tag in tag_data:
+    #         if tag['tag_name'] in forbidden:
+    #             self.remove_tag_name(tag['tag_name'])
 
     def remove_tags_from_photo(self, photo_id, tag_list):
         """
@@ -340,7 +337,7 @@ class Tag(object):
                     print('\nadded tag, ', tag, '\n')
 
             # UNIQUE constraint can cause problems here
-            # so catch any exceptions
+            # so catch any exceptions.
             try:
                 # The tag is now in the database.
                 self.db.make_query(
@@ -363,7 +360,6 @@ class Tag(object):
             for tag in data:
                 tags_in_data.append(tag[1])
 
-        print(tags_in_data)
         for tag in tag_list:
             if tag not in tags_in_data:
                 return False
@@ -429,18 +425,11 @@ class Tag(object):
         self.update_photo_count(new_tag)
 
         if self.get_tag(new_tag) and not self.get_tag(old_tag):
-            print('returning true')
             return True
         else:
-            print('returning false')
             return False
 
     def count_photos_by_tag_name(self, tag_name):
-        """
-
-        """
-        print('count_photos_by_tag_name, passed ', tag_name)
-
         count = self.db.make_query(
             '''
             SELECT count(tag_name)
@@ -455,24 +444,19 @@ class Tag(object):
             return 0
 
     def get_tag_photos_in_range(self, tag_name, limit=20, offset=0):
-        print('hello from get_tag_photos_in_range passed the tag ', tag_name)
-
         # I think flask is passing decoded values in.
         tag_name = name_util.make_encoded(tag_name)
 
-        # get number of photos in database total
+        # Get all photos associated with the tag name.
         num_photos = self.count_photos_by_tag_name(tag_name)
-
-        print(num_photos)
 
         if offset > num_photos:
             offset = num_photos - (num_photos % 20)
 
         page = offset // limit
-
         pages = num_photos // limit
 
-        # otherwise it starts at 0 and I want it to start at 1
+        # Ensure the starting page is 1 instead of 0.
         if num_photos == 20:
             page = 1
             pages = 1
@@ -484,10 +468,9 @@ class Tag(object):
             page += 1
             pages += 1
 
-        # guards against page being grater than pages
+        # Guards against page being grater than the number of pages.
         if page > pages:
-            print('STAHP!', offset, num_photos)
-            # prevents an empty set being returned
+            # Prevents an empty set from being returned.
             offset = offset - 20
             page = pages
 
