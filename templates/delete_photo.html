@@ -2,61 +2,56 @@
 
 <!-- {{json_data}} -->
 <div class="row">
-    <div class="col">
-        <h1>Are you sure you want to delete the photo
-            <span class="font-italic">
-
-                {{json_data['title']}} ?
-
-            </span>
-        </h1>
-    </div>
+  <div class="col">
+    <h1>
+      Are you sure you want to delete the photo
+      <span class="font-italic"> {{ json_data["title"] }} ? </span>
+    </h1>
+  </div>
 </div>
 
 <div class="row text-center">
-    <div class="col">
-        <img class="img-fluid" src="{{json_data['original']}}" alt="">
-    </div>
+  <div class="col">
+    <img class="img-fluid" src="{{ json_data['original'] }}" alt="" />
+  </div>
 </div>
 
-<hr>
+<hr />
 <div class="row">
-    <div class="col">
-
-        <div class="alert alert-danger text-center" role="alert">
-            Deleting a photo cannot be undone.
-        </div>
-
+  <div class="col">
+    <div class="alert alert-danger text-center" role="alert">
+      Deleting a photo cannot be undone.
     </div>
+  </div>
 </div>
 
-
-<hr>
+<hr />
 <div class="row">
-    <div class="col">
+  <div class="col">
+    <a href="{{url_for('photo.get_photo', photo_id=json_data['photo_id'])}}">
+      <button type="button" class="btn btn-success btn-block btn-lg">
+        Return to photo
+      </button>
+    </a>
+  </div>
 
-        <a href="{{url_for('get_photo', photo_id=json_data['photo_id'])}}">
-            <button type="button" class="btn btn-success btn-block btn-lg">
-                Return to photo
-            </button>
-        </a>
-
-
-    </div>
-
-    <div class="col">
-        <form method="post">
-            <a href="{{url_for('delete_photo', photo_id=json_data['photo_id'])}}">
-                <button type="submit" type="button" class="btn btn-danger btn-block btn-lg">
-                    Delete the photo
-                </button>
-            </a>
-        </form>
-    </div>
+  <div class="col">
+    <form method="post">
+      <a
+        href="{{url_for('photo.delete_photo', photo_id=json_data['photo_id'])}}"
+      >
+        <button
+          type="submit"
+          type="button"
+          class="btn btn-danger btn-block btn-lg"
+        >
+          Delete the photo
+        </button>
+      </a>
+    </form>
+  </div>
 </div>
 
-<hr>
-
-
+<hr />
 
 {% endblock %}

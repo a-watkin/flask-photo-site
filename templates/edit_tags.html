@@ -22,7 +22,7 @@
                 {% for key, value in json_data.items() %}
                 <tr>
                     <td class="text-left">
-                        <a href="{{url_for('get_tag_photos', tag_name=value['tag_name'])}}">
+                        <a href="{{url_for('photo_tag.get_tag_photos', tag_name=value['tag_name'])}}">
                             <button type="button" class="btn btn-outline-success btn-lg">
                                 {{ value["human_readable_tag"] }}
                             </button>
@@ -33,10 +33,10 @@
                         <h2>{{value["photos"]}}</h2>
                     </td>
                     <td>
-                        <a href="{{ url_for('edit_tag', tag_name=value["tag_name"]) }}">
+                        <a href="{{ url_for('photo_tag.edit_tag', tag_name=value["tag_name"]) }}">
                             <button id="edit-buttons" class="btn btn-warning btn-block">Edit tag</button>
                         </a>
-                        <a href="{{url_for('delete_tag', tag_name=value["tag_name"])}}">
+                        <a href="{{url_for('photo_tag.delete_tag', tag_name=value["tag_name"])}}">
                             <button class="btn btn-danger btn-block">Delete tag</button>
                         </a>
                     </td>

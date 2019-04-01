@@ -1,28 +1,28 @@
 {% extends "template.html" %} {% block content %}
 
 <div class="row text-center">
-    <div class="col">
-        <h1>The photo
+  <div class="col">
+    <h1>
+      The photo
 
-            <span class="font-italic">
-
-                {{json_data['title']}}
-
-            </span>
-            has been deleted.</h1>
-    </div>
+      <span class="font-italic">
+        {{ json_data["title"] }}
+      </span>
+      has been deleted.
+    </h1>
+  </div>
 </div>
 
-<hr>
+<hr />
 
 <div class="row text-center">
-    <div class="col">
-        <a href="{{url_for('get_photos')}}">
-            <button class="btn btn-primary btn-block btn-lg">
-                Go to photos
-            </button>
-        </a>
-    </div>
+  <div class="col">
+    <a href="{{ url_for('photo.get_photos') }}">
+      <button class="btn btn-primary btn-block btn-lg">
+        Go to photos
+      </button>
+    </a>
+  </div>
 </div>
 
 {% endblock %}

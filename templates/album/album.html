@@ -41,7 +41,7 @@
   <div class="col-3">
     <a
       id="photostream-page"
-      href="{{ url_for('get_photo', photo_id=value['photo_id']) }}"
+      href="{{ url_for('photo.get_photo', photo_id=value['photo_id']) }}"
     >
       <img
         id="photo-page-image"
@@ -49,7 +49,6 @@
         src="{{ value['large_square'] }}"
         alt="Responsive image"
       />
-      <!-- <h2>{{value.photo_id}}</h2> -->
     </a>
   </div>
   {% endfor %}

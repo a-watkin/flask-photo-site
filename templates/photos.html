@@ -21,11 +21,8 @@ json_data['show_session'] %}
 
 {% endif %} {% endif %}
 
-<!-- <h1 class="text-center">Photos page</h1> -->
-
 <hr />
 
-<!-- <h1>{{json_data.photos.items()}}</h1> -->
 <div id="photos-page-container" class="row mx-auto">
   {% for key, value in json_data.photos.items() %}
 
@@ -38,7 +35,6 @@ json_data['show_session'] %}
         src="{{ value['large_square'] }}"
         alt="Responsive image"
       />
-      <!-- <h2>{{value.photo_id}}</h2> -->
     </a>
   </div>
 
@@ -72,7 +68,5 @@ json_data['show_session'] %}
   </div>
 </div>
 <hr />
-
-<!-- <h1 class="text-center">{{json_data.offset, json_data.offset + 20}}</h1> -->
 
 {% endblock %}

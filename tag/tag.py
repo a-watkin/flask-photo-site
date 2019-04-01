@@ -1,10 +1,10 @@
-import os
-import sys
 
 try:
     # Running as flask app.
     from common.database_interface import Database
 except Exception as e:
+    import os
+    import sys
     # Running as module.
     sys.path.append(os.getcwd())
     from common.database_interface import Database
@@ -12,9 +12,9 @@ except Exception as e:
 
 class Tag(object):
 
-    def __init__(self):
+    def __init__(self, username=None):
         self.db = Database()
-        self.username = 'a'
+        self.username = username or 'a'
 
     def get_tag(self, tag_name):
         return self.db.get_query_as_list(

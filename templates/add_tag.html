@@ -30,7 +30,7 @@
   <div class="col">
     <form
       method="POST"
-      action="{{ url_for('add_tag', photo_id=json_data['photo_id']) }}"
+      action="{{ url_for('photo_tag.add_tag', photo_id=json_data['photo_id']) }}"
     >
       <div class="form-group">
         <label for="renaming-tag">Add additional tags below.</label>
@@ -46,7 +46,9 @@
       <hr />
       <div class="row">
         <div class="col text-left">
-          <a href="{{ url_for('get_photo', photo_id=json_data['photo_id']) }}">
+          <a
+            href="{{ url_for('photo.get_photo', photo_id=json_data['photo_id']) }}"
+          >
             <button type="button" class="btn btn-success btn-block btn-lg">
               Go back to the photo
             </button>

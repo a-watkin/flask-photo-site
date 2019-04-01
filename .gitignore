@@ -147,3 +147,6 @@ FLICKR_API_KEYS.py
 *.png
 *.jpg
 *.jpeg
+
+
+*.idea

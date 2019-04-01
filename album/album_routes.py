@@ -6,7 +6,7 @@ from flask import json
 
 from album.album import Album
 from upload.uploaded_photos import UploadedPhotos
-from photo import Photos
+from photo.photo import Photo
 
 from common.name_util import login_required
 from common import name_util

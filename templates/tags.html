@@ -1,23 +1,25 @@
-{% extends "template.html" %}
-{% block content %}
+{% extends "template.html" %} {% block content %}
 
-<!-- <h1>{{json_data}}</h1> -->
 <div class="row text-center">
-    <div class="col">
-        <h1>Tags</h1>
-    </div>
+  <div class="col">
+    <h1>Tags</h1>
+  </div>
 </div>
 
-<hr>
+<hr />
 
 <div class="row">
-    <div class="col text-center">
-        {% for key, value in json_data.items() %}
-        <a href="{{ url_for('get_tag_photos', tag_name=value['tag_name']) }}">
-            <button type="button" class="btn btn-outline-success btn-lg">{{value['human_readable_tag']}}</button>
-        </a>
-        {% endfor %}
-    </div>
+  <div class="col text-center">
+    {% for key, value in json_data.items() %}
+    <a
+      href="{{ url_for('photo_tag.get_tag_photos', tag_name=value['tag_name']) }}"
+    >
+      <button type="button" class="btn btn-outline-success btn-lg">
+        {{ value["human_readable_tag"] }}
+      </button>
+    </a>
+    {% endfor %}
+  </div>
 </div>
 
 {% endblock %}

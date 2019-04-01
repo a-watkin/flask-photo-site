@@ -109,12 +109,16 @@
         {% endif %}
 
         <li class="nav-item mx-auto">
-          <a class="nav-link" href="{{ url_for('get_tags') }}">Tags</a>
+          <a class="nav-link" href="{{ url_for('photo_tag.get_tags') }}"
+            >Tags</a
+          >
         </li>
 
         {% if session %}
         <li class="nav-item mx-auto">
-          <a class="nav-link" href="{{ url_for('edit_tags') }}">Edit tags</a>
+          <a class="nav-link" href="{{ url_for('photo_tag.edit_tags') }}"
+            >Edit tags</a
+          >
         </li>
         {% endif %} {% if session %}
         <li class="nav-item mx-auto">

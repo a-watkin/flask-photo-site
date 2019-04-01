@@ -1,111 +1,103 @@
-{% extends "template.html" %}
-{% block content %}
-
-
+{% extends "template.html" %} {% block content %}
 
 <div class="row">
-    <!-- <h1>{{ json_data }}</h1> -->
-    <div class="col">
+  <div class="col">
+    <h1 class="text-center">
+      <!-- So checking for the key doesn't work, but checking for not the key does...ok-->
+      {% if json_data['tag_info']['number_of_photos'] < 1 %} No photos found for
+      the tag:
+      <button class="btn btn-outline-success btn-lg">
+        {{ json_data["human_readable_name"] }}
+      </button>
 
-        <h1 class="text-center">
-            <!-- So cehcking for the key doesn't work, but checking for not the key does...ok-->
-            {% if json_data['tag_info']['number_of_photos'] < 1 %} No photos found for the tag: <button class="btn btn-outline-success btn-lg">
-                {{json_data['human_readable_name']}}
-                </button>
+      {% else %}
 
-                {% else %}
+      {{ json_data["tag_info"]["number_of_photos"] }} photos for tag:
+      <button class="btn btn-outline-success btn-lg">
+        {{ json_data["human_readable_name"] }}
+      </button>
 
-                {{json_data['tag_info']['number_of_photos']}} photos for tag:
-                <button class="btn btn-outline-success btn-lg">
-                    {{json_data['human_readable_name']}}
-                </button>
-
-                {% endif %}
-
-        </h1>
-
-    </div>
+      {% endif %}
+    </h1>
+  </div>
 </div>
 
-<hr>
+<hr />
 
-{% if json_data['tag_info']['number_of_photos'] < 1 %} <hr>
-    <div class="row">
-        <div class="col text-center">
-            <a href="{{url_for('get_tags')}}">
-                <button class="btn btn-primary btn-block btn-lg">
-                    Go to tags page
-                </button>
-            </a>
-        </div>
+{% if json_data['tag_info']['number_of_photos'] < 1 %}
+<hr />
+<div class="row">
+  <div class="col text-center">
+    <a href="{{ url_for('photo_tag.get_tags') }}">
+      <button class="btn btn-primary btn-block btn-lg">
+        Go to tags page
+      </button>
+    </a>
+  </div>
 
-        <div class="col text-center">
-            <a href="{{url_for('edit_tags')}}">
-                <button class="btn btn-primary btn-block btn-lg">
-                    Go to edit tags
-                </button>
-            </a>
-        </div>
-    </div>
-    {% endif %}
+  <div class="col text-center">
+    <a href="{{ url_for('photo_tag.edit_tags') }}">
+      <button class="btn btn-primary btn-block btn-lg">
+        Go to edit tags
+      </button>
+    </a>
+  </div>
+</div>
+{% endif %}
 
+<div id="photos-page-container" class="row mx-auto">
+  {% for key, value in json_data['photos'].items() %} {% if value['photo_id'] %}
 
-    <div id="photos-page-container" class="row mx-auto">
+  <div class="col-3 text-center">
+    <a id="photostream-page" href="/api/photos/{{ value['photo_id'] }}">
+      <img
+        id="photo-page-image"
+        class="img-fluid"
+        src="{{ value['large_square'] }}"
+        alt="Responsive image"
+      />
+    </a>
+  </div>
 
-        {% for key, value in json_data['photos'].items() %}
+  {% endif %} {% endfor %}
+</div>
 
-        {% if value['photo_id'] %}
+{% if json_data['tag_info']['number_of_photos'] > 0 %}
+<hr />
+<div class="row text-center">
+  <div class="col">
+    <a
+      href="/api/tag/photos?tag_name={{ json_data['tag_name'] }}&offset={{
+        json_data.offset - 20
+      }}"
+    >
+      <button type="button" class="btn btn-secondary btn-block btn-lg">
+        Newer
+      </button>
+    </a>
+  </div>
+  <div class="col">
+    <a
+      href="/api/tag/photos?tag_name={{ json_data['tag_name'] }}&offset={{
+        json_data.offset + 20
+      }}"
+    >
+      <button type="button" class="btn btn-secondary btn-block btn-lg">
+        Older
+      </button>
+    </a>
+  </div>
+</div>
+{% endif %}
 
-        <div class="col-3 text-center">
+<hr />
+{% if json_data['tag_info']['number_of_photos'] > 0 %}
 
-            <!-- <h3>{{key}}</h3> -->
-            <a id="photostream-page" href="/api/photos/{{ value['photo_id'] }}">
-                <img id="photo-page-image" class="img-fluid" src="{{value['large_square']}}" alt="Responsive image">
-                <!-- <h2>{{value.photo_id}}</h2> -->
-            </a>
+<div class="row">
+  <div class="col text-center">
+    <h3>Showing page {{ json_data["page"] }} of {{ json_data["pages"] }}</h3>
+  </div>
+</div>
 
-        </div>
-
-        {% endif %}
-
-        {% endfor %}
-
-    </div>
-
-
-    {% if json_data['tag_info']['number_of_photos'] > 0 %}
-    <hr>
-    <div class="row text-center">
-        <div class="col">
-            <a href="/api/tag/photos?tag_name={{json_data['tag_name']}}&offset={{json_data.offset - 20}}">
-
-                <button type="button" class="btn btn-secondary btn-block btn-lg">Newer</button>
-
-            </a>
-        </div>
-        <div class="col">
-            <a href="/api/tag/photos?tag_name={{json_data['tag_name']}}&offset={{json_data.offset + 20}}">
-
-                <button type="button" class="btn btn-secondary btn-block btn-lg">Older
-                </button>
-            </a>
-        </div>
-    </div>
-    {% endif %}
-
-
-    <hr>
-    {% if json_data['tag_info']['number_of_photos'] > 0 %}
-
-    <div class="row">
-
-        <div class="col text-center">
-
-            <h3>Showing page {{json_data['page']}} of {{json_data['pages']}}</h3>
-        </div>
-    </div>
-
-    <hr>
-    {% endif %}
-
-    {% endblock %}
+<hr />
+{% endif %} {% endblock %}

@@ -7,7 +7,7 @@ import datetime
 from common.database_interface import Database
 from common import name_util
 from common.exif_util import ExifUtil
-from tag import Tag
+from photo_tag.photo_tag import PhotoTag
 
 
 class UploadedPhotos(object):
@@ -77,7 +77,7 @@ class UploadedPhotos(object):
 
         data = [dict(ix) for ix in q_data]
 
-        t = Tag()
+        t = PhotoTag()
 
         for photo in data:
             photo['tags'] = []
@@ -221,7 +221,7 @@ class UploadedPhotos(object):
                 )
 
                 # Add the new tags.
-                t = Tag()
+                t = PhotoTag()
                 tags = t.get_photo_tags(photo['photo_id'])
                 for tag in tags:
                     if tag['tag_name']:

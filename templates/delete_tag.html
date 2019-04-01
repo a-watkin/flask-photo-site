@@ -1,46 +1,54 @@
-{% extends "template.html" %}
-{% block content %}
+{% extends "template.html" %} {% block content %}
 <!-- <h1>{{data}}</h1> -->
 <div class="row">
-    <div class="col">
-        <h1>Are you sure you want to delete the tag:
-            <a id="no-underline" href="{{url_for('photos_by_tag_name', tag_name=data['tag_name'])}}">
-                <button type="button" class="btn btn-outline-success btn-lg">
-                    {{data['human_readable_name']}}
-                </button>
-            </a>
-            ?</h1>
-    </div>
+  <div class="col">
+    <h1>
+      Are you sure you want to delete the tag:
+      <a
+        id="no-underline"
+        href="{{url_for('photo_tag.photos_by_tag_name', tag_name=data['tag_name'])}}"
+      >
+        <button type="button" class="btn btn-outline-success btn-lg">
+          {{ data["human_readable_name"] }}
+        </button>
+      </a>
+      ?
+    </h1>
+  </div>
 </div>
 
-<hr>
+<hr />
 
 <div class="row">
-    <div class="col">
-
-        <div class="alert alert-danger text-center" role="alert">
-            Deleting a tag cannot be undone.
-        </div>
-
+  <div class="col">
+    <div class="alert alert-danger text-center" role="alert">
+      Deleting a tag cannot be undone.
     </div>
+  </div>
 </div>
 
-<hr>
+<hr />
 
 <div class="row">
-    <div class="col">
-        <a href="{{url_for('edit_tags')}}">
-            <button type="button" class="btn btn-success btn-block btn-lg">
-                Return to edit tags
-            </button>
-        </a>
-    </div>
+  <div class="col">
+    <a href="{{ url_for('photo_tag.edit_tags') }}">
+      <button type="button" class="btn btn-success btn-block btn-lg">
+        Return to edit tags
+      </button>
+    </a>
+  </div>
 
-    <div class="col">
-        <form method="post">
-            <button type="submit" type="button" class="btn btn-danger btn-block btn-lg">Delete the tag</button>
-        </form>
-    </div>
+  <div class="col">
+    <form method="post">
+      <button
+        type="submit"
+        type="button"
+        class="btn btn-danger btn-block btn-lg"
+      >
+        Delete the tag
+      </button>
+    </form>
+  </div>
 </div>
 
 {% endblock %}

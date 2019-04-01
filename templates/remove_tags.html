@@ -1,20 +1,22 @@
 {% extends "template.html" %} {% block content %}
 
 <div class="row text-center">
-    <div class="col">
-        <h1>Remove tags</h1>
-    </div>
+  <div class="col">
+    <h1>Remove tags</h1>
+  </div>
 </div>
 
-<hr>
+<hr />
 
 <!-- Entry point for react -->
 <div id="tag-selector"></div>
 
-<hr>
+<hr />
 
 <!-- React script -->
-<script type="text/babel" src="{{ url_for('static', filename='scripts/tag_selector.js') }}">
-</script>
+<script
+  type="text/babel"
+  src="{{ url_for('static', filename='scripts/tag_selector.js') }}"
+></script>
 
 {% endblock %}

@@ -5,7 +5,7 @@
 
     {% if session %}
     <div class="col">
-        <a href="{{url_for('edit_photo', photo_id=json_data['photo_id'])}}">
+        <a href="{{url_for('photo.edit_photo', photo_id=json_data['photo_id'])}}">
             <button class="btn btn-warning btn-block btn-lg">Edit title</button></h1>
         </a>
     </div>
@@ -17,7 +17,7 @@
 
     {% if session %}
     <div class="col">
-        <a href="{{url_for('delete_photo', photo_id=json_data['photo_id'])}}">
+        <a href="{{url_for('photo.delete_photo', photo_id=json_data['photo_id'])}}">
             <button class="btn btn-danger btn-block btn-lg">Delete photo</button>
         </a>
     </div>
@@ -51,7 +51,7 @@
         <h2>Tags</h2>
         {% for tag in json_data['tags'] %}
         <!-- <h2>{{tag['human_readable_tag']}}</h2> -->
-        <a href="{{ url_for('get_tag_photos', tag_name=tag['tag_name']) }}">
+        <a href="{{ url_for('photo_tag.get_tag_photos', tag_name=tag['tag_name']) }}">
             <button type="button" class="btn btn-outline-success btn-lg">
                 {{tag['human_readable_tag']}}
             </button>
@@ -65,7 +65,7 @@
 
         <div class="row">
             <div class="col text-center">
-                <a href="{{ url_for( 'add_tag', photo_id = json_data['photo_id'] ) }}">
+                <a href="{{ url_for( 'photo_tag.add_tag', photo_id = json_data['photo_id'] ) }}">
                     <button class="btn btn-warning btn-block btn-lg">
                         Add a tag
                     </button>
@@ -73,7 +73,7 @@
             </div>
 
             <div class="col text-center">
-                <a href="{{ url_for( 'remove_tag', photo_id = json_data['photo_id'] ) }}">
+                <a href="{{ url_for( 'photo_tag.remove_tag', photo_id = json_data['photo_id'] ) }}">
                     <button class="btn btn-danger btn-block btn-lg">
                         Remove a tag
                     </button>
@@ -87,10 +87,6 @@
     <div class="col-2">
         <p>Views: {{ json_data["views"] }}</p>
     </div>
-
-    <!-- Photo album -->
-    <!-- <h3>{{json_data['album_data']}}</h3> -->
-
 
     {% if json_data['albums'] > 1 %}
 
