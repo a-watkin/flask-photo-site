@@ -73,11 +73,13 @@
             </div>
 
             <div class="col text-center">
+                {% if json_data['tags'] %}
                 <a href="{{ url_for( 'photo_tag.remove_tag', photo_id = json_data['photo_id'] ) }}">
                     <button class="btn btn-danger btn-block btn-lg">
                         Remove a tag
                     </button>
                 </a>
+                {% endif %}
             </div>
         </div>
         {% endif %}

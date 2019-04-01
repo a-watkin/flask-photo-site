@@ -135,7 +135,7 @@ class UploadEditor extends React.Component {
           allowButtons: true
         });
 
-        fetch("/api/add/tags", {
+        fetch("/photo/tag/api/add/tags", {
           method: "POST",
           credentials: "include",
           headers: {

@@ -1,7 +1,10 @@
-from flask import Blueprint, jsonify, request, render_template, redirect, url_for, flash, session
+import json
+
+from flask import Blueprint, jsonify, request, render_template, redirect, url_for, flash, session, jsonify
 
 
 from common.name_util import login_required
+from common import name_util
 from photo.photo import Photo
 from photo_tag.photo_tag import PhotoTag
 
@@ -165,12 +168,6 @@ def add_uploaded_tags():
     pt = PhotoTag()
     tag_data = request.get_json()
     tags = tag_data['tagValues'].split(',')
-
-    for i in range(len(tags)):
-        # Remove whitespace from front and back of tags.
-        tags[i] = tags[i].strip()
-        # Make it url safe.
-        tags[i] = name_util.url_encode_tag(tags[i])
 
     resp = pt.add_tags_to_photo(tag_data['photoId'], tags)
 

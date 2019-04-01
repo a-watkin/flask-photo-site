@@ -13,6 +13,12 @@ class PhotoTag(object):
         self.db = Database()
 
     def remove_zero_photo_tags(self):
+        """
+        Checks tag counts - this doesn't work.
+
+        Deletes tags with zero counts.
+
+        """
         self.check_all_tag_photo_counts()
 
         zero_photos = self.db.make_query(
@@ -93,8 +99,6 @@ class PhotoTag(object):
 
     def add_tags_to_photo(self, photo_id, tag_list):
         """
-        THIS IS FUCKING GARBAGE CODE
-
         Adds tags to a photo.
 
         First checking if the tag is already in the tag table, if not it adds it.
@@ -131,7 +135,7 @@ class PhotoTag(object):
                 # UNIQUE constraints can cause problems here
                 # so catch any exceptions.
                 try:
-                    # Associate the tag with a photo.
+                    # Associate the tag with the specified photo.
                     self.db.make_query(
                         '''
                         INSERT INTO photo_tag (photo_id, tag_name)
@@ -141,6 +145,14 @@ class PhotoTag(object):
 
                 except Exception as e:
                     print('Problem adding tag to photo_tag ', e)
+
+        # Confirming the tags have been added.
+        photo_tags = self.get_photo_tag_list(photo_id)
+        for tag in added_tags:
+            if tag not in photo_tags:
+                return False
+
+        return True
 
     def remove_tag_name(self, tag_name):
         tag_name = name_util.make_encoded(tag_name)
