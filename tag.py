@@ -17,9 +17,9 @@ class Tag(object):
             tag_name = urllib.parse.quote(tag_name, safe='')
 
         query_string = '''
-            select count(photo_id) from photo
-            join photo_tag using(photo_id)
-            where tag_name = "{}"
+            SELECT count(photo_id) FROM photo
+            JOIN photo_tag USING(photo_id)
+            WHERE tag_name = "{}"
         '''.format(tag_name)
 
         photo_count = self.db.get_query_as_list(query_string)
@@ -27,20 +27,17 @@ class Tag(object):
         return photo_count[0]['count(photo_id)']
 
     def remove_tag_name(self, tag_name):
-        if '%' in tag_name:
-            tag_name = urllib.parse.quote(tag_name, safe='')
-
-        # tag_name = name_util.url_encode_tag(tag_name)
+        tag_name = name_util.make_encoded(tag_name)
 
         self.db.make_query(
             '''
-            delete from tag where tag_name = "{}"
+            DELETE FROM tag WHERE tag_name = "{}"
             '''.format(tag_name)
         )
 
         self.db.make_query(
             '''
-            delete from photo_tag where tag_name = "{}"
+            DELETE FROM photo_tag WHERE tag_name = "{}"
             '''.format(tag_name)
         )
 
@@ -70,7 +67,7 @@ class Tag(object):
                 '''
                 update tag
                 set photos = {}
-                where tag_name = "{}"
+                WHERE tag_name = "{}"
                 '''.format(count, tag_name)
             )
         else:
@@ -83,7 +80,7 @@ class Tag(object):
         """
         data = self.db.get_query_as_list(
             '''
-            select * from tag
+            SELECT * FROM tag
             '''
         )
 
@@ -95,9 +92,9 @@ class Tag(object):
             # update if necessary
             query_count = self.db.get_query_as_list(
                 '''
-                select count(tag_name)
-                from photo_tag
-                where tag_name = "{}"
+                SELECT count(tag_name)
+                FROM photo_tag
+                WHERE tag_name = "{}"
                 '''.format(tag['tag_name'])
             )
 
@@ -119,36 +116,21 @@ class Tag(object):
 
         zero_photos = self.db.make_query(
             '''
-            delete from tag where photos = 0
+            DELETE FROM tag WHERE photos = 0
             '''
         )
 
     def get_zero_photo_tag_count(self):
         return self.db.make_query(
             '''
-            select count(photos) from tag where photos = 0
+            SELECT COUNT(photos) FROM tag WHERE photos = 0
             '''
         )[0][0]
-
-    def check_forbidden(self, tag_name):
-        print('hello from check_forbidden')
-        print(tag_name)
-
-        forbidden = [";", "/", "?", ":", "@", "=", "&", '"', "'", "<", ">",
-                     "#", "%", "{", "}", "|", "\\", "/", "^", "~", "[", "]", "`"]
-        for char in tag_name:
-            if char in forbidden:
-                return urllib.parse.quote(tag_name, safe='')
-
-        return tag_name
-
-    def decode_tag(self, tag_name):
-        return urllib.parse.unquote(tag_name)
 
     def get_all_tags(self):
         # as a list of dict values
         tag_data = self.db.get_query_as_list(
-            "SELECT tag_name, photos FROM tag order by tag_name"
+            "SELECT tag_name, photos FROM tag ORDER BY tag_name"
         )
 
         rtn_dict = {
@@ -161,7 +143,7 @@ class Tag(object):
             tag_name = tag['tag_name']
             # adding the number of photos with the tag
             rtn_dict[count]['photos'] = tag['photos']
-            rtn_dict[count]['human_readable_tag'] = self.decode_tag(
+            rtn_dict[count]['human_readable_tag'] = name_util.make_decoded(
                 tag['tag_name'])
             count += 1
 
@@ -170,49 +152,32 @@ class Tag(object):
     def get_photo_tags(self, photo_id):
         """
         Get the tags for a single photo.
-
-            select photo.photo_id, photo.photo_title, photo_tag.tag_name from photo
-            join photo_tag on(photo_tag.photo_id=photo.photo_id)
-            where photo.photo_id={}
-
         """
-
         query_string = '''
-            select photo_tag.tag_name from photo
-            join photo_tag on(photo_tag.photo_id=photo.photo_id)
-            where photo.photo_id={}
+            SELECT photo_tag.tag_name FROM photo
+            JOIN photo_tag ON(photo_tag.photo_id=photo.photo_id)
+            WHERE photo.photo_id={}
         '''.format(photo_id)
 
-        # so an array of tags would be ok
         tag_data = self.db.get_query_as_list(query_string)
         for tag in tag_data:
-            # print(self.decode_tag(tag['tag_name']))
-
-            tag['human_readable_tag'] = self.decode_tag(tag['tag_name'])
-
-        # print(tag_data)
+            tag['human_readable_tag'] = name_util.make_decoded(tag['tag_name'])
 
         return tag_data
 
     def get_photos_by_tag(self, tag_name):
         """
         Get all the photos that are associated with a particular tag.
-
-        I will need to handle spaces.
         """
-        # q_data = None
-
         query_string = '''
-            select photo_id, photo_title, views, tag_name, large_square, date_taken from photo
-            join photo_tag using(photo_id)
-            join images using(photo_id)
-            where tag_name = "{}"
-            order by date_taken desc
+            SELECT photo_id, photo_title, views, tag_name, large_square, date_taken FROM photo
+            JOIN photo_tag USING(photo_id)
+            JOIN images USING(photo_id)
+            WHERE tag_name = "{}"
+            ORDER BY date_taken DESC
         '''.format(tag_name)
 
         tag_data = self.db.get_query_as_list(query_string)
-
-        # print(tag_data)
 
         rtn_dict = {
             'tag_info': {'number_of_photos': self.get_photo_count_by_tag(tag_name)}
@@ -228,14 +193,9 @@ class Tag(object):
         return rtn_dict
 
     def get_tag(self, tag_name):
-        """
-        Changed to return human_readable_tag
-
-        Might cause problems because before it was pointlesly returning none.
-        """
         tag_data = self.db.make_query(
             '''
-            select tag_name from tag where tag_name = "{}"
+            SELECT tag_name FROM tag WHERE tag_name = "{}"
             '''.format(tag_name)
         )
 
@@ -255,10 +215,10 @@ class Tag(object):
         Check that a tag has been added.
         """
         data = self.db.make_query(
-            '''select * from photo_tag where tag_name = "{}" '''
+            '''SELECT * FROM photo_tag WHERE tag_name = "{}" '''
             .format(tag_name))
 
-        # remove any tags that have zero photos
+        # Remove any tags that have zero photos.
         self.get_photo_count_by_tag(tag_name)
 
         if len(data) > 0:
@@ -292,9 +252,9 @@ class Tag(object):
             # if the tag isn't present it will just fail silently
             resp = self.db.make_query(
                 '''
-                delete from photo_tag
-                where photo_id = {}
-                and tag_name = "{}"
+                DELETE FROM photo_tag
+                WHERE photo_id = {}
+                AND tag_name = "{}"
                 '''.format(photo_id, tag)
             )
             print(resp)
@@ -316,16 +276,14 @@ class Tag(object):
         # get all the tags attached to the photo
         current_tags = self.db.make_query(
             '''
-            select * from photo_tag where photo_id = {}
+            SELECT * FROM photo_tag WHERE photo_id = {}
             '''.format(photo_id)
         )
-
-        print(current_tags)
 
         # remove the current tags
         self.db.make_query(
             '''
-            delete from photo_tag where photo_id = {}
+            DELETE FROM photo_tag WHERE photo_id = {}
             '''.format(photo_id)
         )
 
@@ -396,7 +354,7 @@ class Tag(object):
 
         data = self.db.make_query(
             '''
-            select * from photo_tag where photo_id = {}
+            SELECT * FROM photo_tag WHERE photo_id = {}
             '''.format(photo_id)
         )
 
@@ -422,7 +380,7 @@ class Tag(object):
         # check if new tag exists
         test = self.db.make_query(
             '''
-            select * from tag where tag_name = "{}"
+            SELECT * FROM tag WHERE tag_name = "{}"
             '''.format(new_tag)
         )
 
@@ -435,12 +393,12 @@ class Tag(object):
                 '''
                 update tag
                 set tag_name = "{}"
-                where tag_name = "{}"
+                WHERE tag_name = "{}"
                 '''.format(new_tag, old_tag)
             )
 
         try:
-            # Tag ecists
+            # Tag exists.
             photos = self.get_photos_by_tag(old_tag)
 
             for photo in photos:
@@ -453,7 +411,7 @@ class Tag(object):
                         '''
                         update photo_tag
                         set tag_name = "{}"
-                        where tag_name = "{}"
+                        WHERE tag_name = "{}"
                         '''.format(new_tag, old_tag)
                     )
 
@@ -485,9 +443,9 @@ class Tag(object):
 
         count = self.db.make_query(
             '''
-            select count(tag_name)
-            from photo_tag
-            where tag_name = "{}"
+            SELECT count(tag_name)
+            FROM photo_tag
+            WHERE tag_name = "{}"
             '''.format(tag_name)
         )
 
@@ -541,12 +499,12 @@ class Tag(object):
 
             query_string = (
                 '''
-                select photo_id, photo_title, views, date_taken, tag_name, large_square from photo
-                join photo_tag using(photo_id)
-                join images using(photo_id)
-                where tag_name = "{}"
-                order by date_taken
-                desc limit {} offset {}
+                SELECT photo_id, photo_title, views, date_taken, tag_name, large_square FROM photo
+                JOIN photo_tag USING(photo_id)
+                JOIN images USING(photo_id)
+                WHERE tag_name = "{}"
+                ORDER BY date_taken
+                DESC LIMIT {} OFFSET {}
                 '''
             ).format(tag_name, limit, offset)
 
@@ -558,15 +516,9 @@ class Tag(object):
             'photos': []
         }
 
-        """
-        I think it may actually be better to layout what fields you want here.
-
-        And maybe include all sizes.
-        """
-
         data = [dict(ix) for ix in q_data]
 
-        # Do I really need to decode the title?
+        # Decode the title.
         for photo in data:
             if photo['photo_title'] is not None:
                 photo['photo_title'] = name_util.make_decoded(
@@ -579,11 +531,6 @@ class Tag(object):
             count += 1
 
         rtn_dict = {'photos': a_dict}
-
-        print('\n why?')
-        # not making it this far
-        print('should be passing tag_name the value of ',
-              tag_name, name_util.make_decoded(tag_name))
 
         rtn_dict['limit'] = limit
         rtn_dict['offset'] = offset
@@ -602,5 +549,4 @@ class Tag(object):
 if __name__ == "__main__":
     t = Tag()
     print(t.get_photo_count_by_tag('test'))
-
     print(t.get_photos_by_tag('lindon'))
