@@ -19,16 +19,9 @@
                 </tr>
             </thead>
             <tbody class="align-items-center">
-
                 {% for key, value in json_data.items() %}
-
-                <!-- <h2>{{json_data[key]['tag_name']}}</h2> -->
-                <!-- <h3>{{value['tag_name']}}</h3>
-                <h4>{{url_for('photos_by_tag_name', tag_name=value['tag_name'])}}</h4> -->
-
                 <tr>
                     <td class="text-left">
-
                         <a href="{{url_for('get_tag_photos', tag_name=value['tag_name'])}}">
                             <button type="button" class="btn btn-outline-success btn-lg">
                                 {{ value["human_readable_tag"] }}
@@ -36,31 +29,22 @@
                         </a>
 
                     </td>
-
                     <td>
                         <h2>{{value["photos"]}}</h2>
                     </td>
                     <td>
                         <a href="{{ url_for('edit_tag', tag_name=value["tag_name"]) }}">
-
                             <button id="edit-buttons" class="btn btn-warning btn-block">Edit tag</button>
-
                         </a>
-
-                        <!-- <h2>{{value["tag_name"]}}</h2> -->
-
                         <a href="{{url_for('delete_tag', tag_name=value["tag_name"])}}">
                             <button class="btn btn-danger btn-block">Delete tag</button>
+                        </a>
                     </td>
-
-                    </a>
                 </tr>
-
                 {% endfor %}
-
             </tbody>
         </table>
     </div>
 </div>
-
+<!-- end page content -->
 {% endblock %}

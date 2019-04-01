@@ -9,7 +9,7 @@ from common import name_util
 class Tag(object):
 
     def __init__(self):
-        self.db = Database('eigi-data.db')
+        self.db = Database()
 
     def count_photos_by_tag_name(self, tag_name):
         count = self.db.make_query(
@@ -25,10 +25,8 @@ class Tag(object):
         else:
             return 0
 
-    # get count of photos using tag
     def get_photo_count_by_tag(self, tag_name):
-        if '%' in tag_name:
-            tag_name = urllib.parse.quote(tag_name, safe='')
+        tag_name = name_util.make_decoded(tag_name)
 
         query_string = '''
             SELECT count(photo_id) FROM photo

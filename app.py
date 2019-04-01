@@ -249,10 +249,10 @@ def edit_tag(tag_name):
     """
     if request.method == 'GET':
         tag_data = t.get_tag(tag_name)
-
         return render_template('edit_tag.html', data=tag_data), 200
 
     if request.method == 'POST':
+        print('right here')
         new_tag_name = request.form['new_tag_name']
         # Encode the tags.
         old_tag = name_util.make_encoded(tag_name)
