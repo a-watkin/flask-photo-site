@@ -20,7 +20,7 @@ app.register_blueprint(photo_blueprint, url_prefix="/")
 app.register_blueprint(user_blueprint, url_prefix="/user")
 app.register_blueprint(upload_blueprint, url_prefix="/upload")
 app.register_blueprint(album_blueprint, url_prefix="/album")
-app.register_blueprint(photo_tag_blueprint, url_prefix="/photo/tags")
+app.register_blueprint(photo_tag_blueprint, url_prefix="/photo/tag")
 
 
 if __name__ == '__main__':
