@@ -7,7 +7,7 @@ import subprocess
 class Database(object):
 
     def __init__(self, db_name=None):
-        self.db_name = db_name
+        self.db_name = db_name or 'eigi-data.db'
 
     def make_db(cls, name):
         from db_schema import create_database

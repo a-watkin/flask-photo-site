@@ -284,6 +284,7 @@ def add_tag():
         photo_id = args['photo_id']
         # Get the new tags from the form.
         tag_data = request.form['new_tag_name']
+        # tag_data is a str and so needs splitting into a list.
         tag_data = tag_data.split(',')
         # Associate the tags with the photo.
         t.add_tags_to_photo(photo_id, tag_data)

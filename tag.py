@@ -339,6 +339,9 @@ class Tag(object):
 
         Then it adds the tag to photo_tag which links the photo and tag tables.
         """
+
+        # Keep track of which tags have been added.
+        added_tags = []
         for tag in tag_list:
             if len(tag) > 0:
                 # Remove starting and trailing whitespace.
