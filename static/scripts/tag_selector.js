@@ -23,7 +23,7 @@ class TagSelector extends React.Component {
     let splitUrl = currentUrl.split("=");
     let photoId = splitUrl[1];
 
-    fetch(`/photo/tags/api/get/phototags?photo_id=${photoId}`, {
+    fetch(`/photo/tag/api/get/phototags?photo_id=${photoId}`, {
       credentials: "include"
     })
       .then(res => res.json())
@@ -67,7 +67,7 @@ class TagSelector extends React.Component {
     if (this.state.selectedTags.length < 1) {
       return false;
     }
-    fetch("/photo/tags/api/get/phototags", {
+    fetch("/photo/tag/api/get/phototags", {
       method: "POST",
       credentials: "include",
       headers: {

@@ -8,24 +8,7 @@ from photo_tag.photo_tag import PhotoTag
 # /photo/tags
 photo_tag_blueprint = Blueprint('photo_tag', __name__)
 
-# Tags
 
-
-# @photo_tag_blueprint.route('/<string:tag_name>')
-# def photos_by_tag_name(tag_name):
-#     pt = PhotoTag()
-#     json_data = pt.get_photos_by_tag(tag_name)
-#     print(json_data)
-
-#     if json_data['tag_info']['number_of_photos'] == 0:
-#         tag_data = pt.get_tag(tag_name)
-
-#         return render_template('tag_photos.html', json_data=tag_data)
-
-#     return render_template('tag_photos.html', json_data=json_data)
-
-
-# @photo_tag_blueprint.route('/api/tag/photos', methods=['GET', 'POST'])
 @photo_tag_blueprint.route('/<string:tag_name>', methods=['GET', 'POST'])
 def get_tag_photos(tag_name=None):
     args = request.args.to_dict()
@@ -49,7 +32,6 @@ def get_tag_photos(tag_name=None):
 
         return render_template('tag_photos.html', json_data=tag_photos_data)
 
-    # tag_photos_data = pt.get_tag_photos_in_range(args['tag_name'])
     tag_photos_data = pt.get_tag_photos_in_range(tag_name)
     return render_template('tag_photos.html', json_data=tag_photos_data)
 
@@ -78,6 +60,7 @@ def get_tags():
 @photo_tag_blueprint.route('/edit/tags')
 @login_required
 def edit_tags():
+    print('edit tags called')
     pt = PhotoTag()
     tag_data = pt.get_all_tags()
     return render_template('edit_tags.html', json_data=tag_data), 200
@@ -87,7 +70,9 @@ def edit_tags():
 @login_required
 def edit_tag(tag_name):
     """
-    Change tag name.
+    A GET request returns a form to edit the tag name.
+
+    A POST request changes the given tag name to the one provided in the form data.
     """
     if request.method == 'GET':
         pt = PhotoTag()
@@ -99,14 +84,14 @@ def edit_tag(tag_name):
         new_tag_name = request.form['new_tag_name']
         old_tag = tag_name
 
-        update_response = pt.update_tag(new_tag, old_tag)
+        update_response = pt.update_tag(new_tag_name, old_tag)
 
         if update_response:
-            return redirect(url_for('edit_tag', tag_name=new_tag))
+            return redirect(url_for('photo_tag.edit_tag', tag_name=new_tag_name))
 
         else:
             flash('There was a problem updating the tag, please contact support.')
-            return render_template('edit_tag.html', tag_name=new_tag_name), 200
+            return render_template('photo_tag.edit_tag.html', tag_name=old_tag)
 
 
 @photo_tag_blueprint.route('/add', methods=['GET', 'POST'])
