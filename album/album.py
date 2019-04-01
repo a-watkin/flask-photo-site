@@ -10,8 +10,7 @@ from common import name_util
 class Album(object):
 
     def __init__(self):
-        # Remove this later.
-        self.db = Database('eigi-data.db')
+        self.db = Database()
 
     def count_photos_in_album(self, album_id):
         # Get count of photos in album.
