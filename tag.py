@@ -57,6 +57,8 @@ class Tag(object):
 
     def delete_tag(self, tag_name):
         """
+        THIS DOES NOT SEEM TO WORK.
+
         Deletes the specified tag from the database.
         """
         # Remove tag from tag table.

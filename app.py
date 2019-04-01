@@ -312,13 +312,19 @@ def remove_tag():
 @app.route('/api/get/phototags', methods=['GET', 'POST'])
 @login_required
 def get_photo_tag_data():
+    """
+    Used by tag_selector.js
+
+    Returns tag data for a specific photo in JSON format in response to a GET request.
+
+    Removes the specified tags in response to a POST request.
+    """
     if request.method == 'GET':
         args = request.args.to_dict()
         photo_data = p.get_photo(args['photo_id'])
         return jsonify(photo_data)
     else:
         data = request.get_json()
-
         t.remove_tags_from_photo(data['photoId'], data['selectedTags'])
         return json.dumps({'success': True}), 200, {'ContentType': 'application/json'}
 
