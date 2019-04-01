@@ -11,23 +11,29 @@ photo_tag_blueprint = Blueprint('photo_tag', __name__)
 # Tags
 
 
-@photo_tag_blueprint.route('/<string:tag_name>')
-def photos_by_tag_name(tag_name):
-    pt = PhotoTag()
-    json_data = pt.get_photos_by_tag(tag_name)
+# @photo_tag_blueprint.route('/<string:tag_name>')
+# def photos_by_tag_name(tag_name):
+#     pt = PhotoTag()
+#     json_data = pt.get_photos_by_tag(tag_name)
+#     print(json_data)
 
-    if json_data['tag_info']['number_of_photos'] == 0:
-        tag_data = pt.get_tag(tag_name)
+#     if json_data['tag_info']['number_of_photos'] == 0:
+#         tag_data = pt.get_tag(tag_name)
 
-        return render_template('tag_photos.html', json_data=tag_data)
+#         return render_template('tag_photos.html', json_data=tag_data)
 
-    return render_template('tag_photos.html', json_data=json_data)
+#     return render_template('tag_photos.html', json_data=json_data)
 
 
-@photo_tag_blueprint.route('/api/tag/photos', methods=['GET', 'POST'])
-def get_tag_photos():
+# @photo_tag_blueprint.route('/api/tag/photos', methods=['GET', 'POST'])
+@photo_tag_blueprint.route('/<string:tag_name>', methods=['GET', 'POST'])
+def get_tag_photos(tag_name=None):
     args = request.args.to_dict()
     pt = PhotoTag()
+
+    if tag_name is None:
+        tag_name = args['tag_name']
+
     if 'offset' in args.keys():
         offset = int(args['offset'])
 
@@ -43,7 +49,8 @@ def get_tag_photos():
 
         return render_template('tag_photos.html', json_data=tag_photos_data)
 
-    tag_photos_data = pt.get_tag_photos_in_range(args['tag_name'])
+    # tag_photos_data = pt.get_tag_photos_in_range(args['tag_name'])
+    tag_photos_data = pt.get_tag_photos_in_range(tag_name)
     return render_template('tag_photos.html', json_data=tag_photos_data)
 
 

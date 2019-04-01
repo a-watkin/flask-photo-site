@@ -49,7 +49,7 @@
   {% for key, value in json_data['photos'].items() %} {% if value['photo_id'] %}
 
   <div class="col-3 text-center">
-    <a id="photostream-page" href="/api/photos/{{ value['photo_id'] }}">
+    <a id="photostream-page" href="/photo/tags/{{ value['photo_id'] }}">
       <img
         id="photo-page-image"
         class="img-fluid"
@@ -67,7 +67,7 @@
 <div class="row text-center">
   <div class="col">
     <a
-      href="/api/tag/photos?tag_name={{ json_data['tag_name'] }}&offset={{
+      href="/photo/tags/photos?tag_name={{ json_data['tag_name'] }}&offset={{
         json_data.offset - 20
       }}"
     >
@@ -78,7 +78,7 @@
   </div>
   <div class="col">
     <a
-      href="/api/tag/photos?tag_name={{ json_data['tag_name'] }}&offset={{
+      href="/photo/tags/photos?tag_name={{ json_data['tag_name'] }}&offset={{
         json_data.offset + 20
       }}"
     >
