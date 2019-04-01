@@ -5,32 +5,13 @@ from common.name_util import login_required
 from photo.photo import Photo
 from photo_tag.photo_tag import PhotoTag
 
-
+# /photo/tags
 photo_tag_blueprint = Blueprint('photo_tag', __name__)
 
 # Tags
-@photo_tag_blueprint.route('/api/add/tags', methods=['GET', 'POST'])
-@login_required
-def add_uploaded_tags():
-    pt = PhotoTag()
-    tag_data = request.get_json()
-    tags = tag_data['tagValues'].split(',')
-
-    for i in range(len(tags)):
-        # Remove whitespace from front and back of tags.
-        tags[i] = tags[i].strip()
-        # Make it url safe.
-        tags[i] = name_util.url_encode_tag(tags[i])
-
-    resp = pt.add_tags_to_photo(tag_data['photoId'], tags)
-
-    if resp:
-        return json.dumps({'success': True}), 200, {'ContentType': 'application/json'}
-    else:
-        return json.dumps({'success': False}), 500, {'ContentType': 'application/json'}
 
 
-@photo_tag_blueprint.route('/tags/<string:tag_name>')
+@photo_tag_blueprint.route('/<string:tag_name>')
 def photos_by_tag_name(tag_name):
     pt = PhotoTag()
     json_data = pt.get_photos_by_tag(tag_name)
@@ -80,7 +61,7 @@ def delete_tag(tag_name):
             return render_template('deleted_tag.html', data=deleted_tag), 200
 
 
-@photo_tag_blueprint.route('/tags/')
+@photo_tag_blueprint.route('/')
 def get_tags():
     pt = PhotoTag()
     tag_data = pt.get_all_tags()
@@ -95,7 +76,7 @@ def edit_tags():
     return render_template('edit_tags.html', json_data=tag_data), 200
 
 
-@photo_tag_blueprint.route('/edit/tag/<string:tag_name>', methods=['GET', 'POST'])
+@photo_tag_blueprint.route('/edit/<string:tag_name>', methods=['GET', 'POST'])
 @login_required
 def edit_tag(tag_name):
     """
@@ -121,7 +102,7 @@ def edit_tag(tag_name):
             return render_template('edit_tag.html', tag_name=new_tag_name), 200
 
 
-@photo_tag_blueprint.route('/add/tag/', methods=['GET', 'POST'])
+@photo_tag_blueprint.route('/add', methods=['GET', 'POST'])
 @login_required
 def add_tag():
     print('hello from add_tag')
@@ -146,7 +127,7 @@ def add_tag():
         return render_template('photo.html', json_data=photo_data), 200
 
 
-@photo_tag_blueprint.route('/remove/tag/', methods=['GET', 'POST'])
+@photo_tag_blueprint.route('/remove', methods=['GET', 'POST'])
 @login_required
 def remove_tag():
     """
@@ -154,6 +135,7 @@ def remove_tag():
     """
     if request.method == 'GET':
         args = request.args.to_dict()
+        p = Photo()
         photo_data = p.get_photo(args['photo_id'])
         return render_template('remove_tags.html', json_data=photo_data), 200
 
@@ -170,6 +152,7 @@ def get_photo_tag_data():
     """
     if request.method == 'GET':
         args = request.args.to_dict()
+        p = Photo()
         photo_data = p.get_photo(args['photo_id'])
         return jsonify(photo_data)
     else:
@@ -177,3 +160,29 @@ def get_photo_tag_data():
         data = request.get_json()
         pt.remove_tags_from_photo(data['photoId'], data['selectedTags'])
         return json.dumps({'success': True}), 200, {'ContentType': 'application/json'}
+
+
+@photo_tag_blueprint.route('/api/add/tags', methods=['GET', 'POST'])
+@login_required
+def add_uploaded_tags():
+    """
+    Gets tag data from React.
+
+    Used by upload_editor.js
+    """
+    pt = PhotoTag()
+    tag_data = request.get_json()
+    tags = tag_data['tagValues'].split(',')
+
+    for i in range(len(tags)):
+        # Remove whitespace from front and back of tags.
+        tags[i] = tags[i].strip()
+        # Make it url safe.
+        tags[i] = name_util.url_encode_tag(tags[i])
+
+    resp = pt.add_tags_to_photo(tag_data['photoId'], tags)
+
+    if resp:
+        return json.dumps({'success': True}), 200, {'ContentType': 'application/json'}
+    else:
+        return json.dumps({'success': False}), 500, {'ContentType': 'application/json'}

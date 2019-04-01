@@ -12,9 +12,10 @@ except Exception as e:
 
 class Tag(object):
 
-    def __init__(self, username=None):
+    def __init__(self, username=None, user_id=None):
         self.db = Database()
         self.username = username or 'a'
+        self.user_id = user_id or '28035310@N00'
 
     def get_tag(self, tag_name):
         return self.db.get_query_as_list(
@@ -25,13 +26,13 @@ class Tag(object):
 
     def add_tag(self, tag_name):
         query_string = '''
-        insert into tag (tag_name, username)
+        insert into tag (tag_name, user_id)
         values (?,?)
         '''
 
         data = (
             tag_name,
-            self.username
+            self.user_id
         )
 
         self.db.make_sanitized_query(query_string, data)

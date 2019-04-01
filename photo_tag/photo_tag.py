@@ -12,6 +12,22 @@ class PhotoTag(object):
     def __init__(self):
         self.db = Database()
 
+    def remove_zero_photo_tags(self):
+        self.check_all_tag_photo_counts()
+
+        zero_photos = self.db.make_query(
+            '''
+            DELETE FROM tag WHERE photos = 0
+            '''
+        )
+
+    def get_zero_photo_tag_count(self):
+        return self.db.make_query(
+            '''
+            SELECT COUNT(photos) FROM tag WHERE photos = 0
+            '''
+        )[0][0]
+
     def count_photos_by_tag_name(self, tag_name):
         count = self.db.make_query(
             '''
@@ -38,6 +54,93 @@ class PhotoTag(object):
         photo_count = self.db.get_query_as_list(query_string)
 
         return photo_count[0]['count(photo_id)']
+
+    def get_photo_tag_list(self, photo_id):
+        """
+        Returns a list with tag values for the given photo.
+        """
+        tag_data = self.db.get_query_as_list(
+            '''
+            SELECT tag_name FROM photo_tag
+            WHERE photo_id = {}
+            ORDER BY tag_name ASC
+            '''.format(photo_id)
+        )
+
+        tags = []
+        if tag_data:
+            for tag in tag_data:
+                tags.append(list(tag.values())[0])
+
+        return tags
+
+    def get_all_photo_tags(self):
+        """
+        Returns a list of all the photo tags.
+        """
+        tag_data = self.db.get_query_as_list(
+            '''
+            SELECT tag_name FROM photo_tag ORDER BY tag_name ASC
+            '''
+        )
+
+        tags = []
+        for tag in tag_data:
+            if tag['tag_name'] not in tags:
+                tags.append(tag['tag_name'])
+
+        return tags
+
+    def add_tags_to_photo(self, photo_id, tag_list):
+        """
+        THIS IS FUCKING GARBAGE CODE
+
+        Adds tags to a photo.
+
+        First checking if the tag is already in the tag table, if not it adds it.
+
+        Then it adds the tag to photo_tag which links the photo and tag tables.
+        """
+
+        # Keep track of which tags have been added.
+        added_tags = []
+        for tag in tag_list:
+            if len(tag) > 0:
+                # Remove starting and trailing whitespace.
+                tag = tag.strip()
+                # Encode tag to a safe version.
+                tag = name_util.make_encoded(tag)
+
+                # Check if tag is in the tag table.
+                # Data will be None if the tag is not in the tag table.
+                data = self.db.get_row('tag', 'tag_name', tag)
+
+                if data is None:
+                    # Add tag to the tag table.
+                    self.db.make_query(
+                        '''
+                        insert into tag (tag_name, user_id, photos)
+                        values ("{}", "{}", {})
+                        '''.format(
+                            tag,
+                            '28035310@N00',
+                            self.get_photo_count_by_tag(tag)
+                        )
+                    )
+
+                # UNIQUE constraints can cause problems here
+                # so catch any exceptions.
+                try:
+                    # Associate the tag with a photo.
+                    self.db.make_query(
+                        '''
+                        INSERT INTO photo_tag (photo_id, tag_name)
+                        VALUES ({}, "{}")
+                        '''.format(photo_id, tag)
+                    )
+
+                except Exception as e:
+                    print('Problem adding tag to photo_tag ', e)
 
     def remove_tag_name(self, tag_name):
         tag_name = name_util.make_encoded(tag_name)
@@ -126,22 +229,6 @@ class PhotoTag(object):
                 break
 
         print('\nDONE NO PROBLEMS!')
-
-    def remove_zero_photo_tags(self):
-        self.check_all_tag_photo_counts()
-
-        zero_photos = self.db.make_query(
-            '''
-            DELETE FROM tag WHERE photos = 0
-            '''
-        )
-
-    def get_zero_photo_tag_count(self):
-        return self.db.make_query(
-            '''
-            SELECT COUNT(photos) FROM tag WHERE photos = 0
-            '''
-        )[0][0]
 
     def get_all_tags(self):
         # Tags as a list of dict values.
@@ -245,19 +332,6 @@ class PhotoTag(object):
             return True
         return False
 
-    # def clean_tags(self):
-    #     forbidden = ['.', ';', '%']
-    #     # Tags as a list of dict values.
-    #     tag_data = self.db.get_query_as_list("SELECT * FROM tag")
-    #     for tag in tag_data:
-    #         if tag['tag_name'] in forbidden:
-    #             self.remove_tag_name(tag['tag_name'])
-
-    #     tag_data = self.db.get_query_as_list("SELECT * FROM photo_tag")
-    #     for tag in tag_data:
-    #         if tag['tag_name'] in forbidden:
-    #             self.remove_tag_name(tag['tag_name'])
-
     def remove_tags_from_photo(self, photo_id, tag_list):
         """
         do you need to encode the tag list?
@@ -312,92 +386,7 @@ class PhotoTag(object):
 
             self.update_photo_count(tag)
 
-    def get_photo_tag_list(self, photo_id):
-        """
-        Returns a list with only the tag names for the given photo.
-        """
-        tag_data = self.db.get_query_as_list(
-            '''
-            SELECT tag_name FROM photo_tag
-            WHERE photo_id = {}
-            ORDER BY tag_name ASC
-            '''.format(photo_id)
-        )
-
-        tags = []
-        if tag_data:
-            for tag in tag_data:
-                tags.append(list(tag.values())[0])
-
-        return tags
-
-    def add_tags_to_photo(self, photo_id, tag_list):
-        """
-        Adds tags to a photo.
-
-        First checking if the tag is already in the tag table, if not it adds it.
-
-        Then it adds the tag to photo_tag which links the photo and tag tables.
-        """
-
-        # Keep track of which tags have been added.
-        added_tags = []
-        for tag in tag_list:
-            if len(tag) > 0:
-                # Remove starting and trailing whitespace.
-                tag = tag.strip()
-                # Encode tag to a safe version.
-                tag = name_util.make_encoded(tag)
-                print(tag)
-
-                # Check if tag is in the tag table.
-                # Data will be None if the tag is not in the tag table.
-                data = self.db.get_row('tag', 'tag_name', tag)
-                print('in the db? ', data)
-
-                if data is None:
-                    # Add tag to the tag table.
-                    self.db.make_query(
-                        '''
-                        insert into tag (tag_name, user_id, photos)
-                        values ("{}", "{}", {})
-                        '''.format(
-                            tag,
-                            '28035310@N00',
-                            self.get_photo_count_by_tag(tag)
-                        )
-                    )
-
-                # UNIQUE constraints can cause problems here
-                # so catch any exceptions.
-                try:
-                    # Associate the tag with a photo.
-                    self.db.make_query(
-                        '''
-                        INSERT INTO photo_tag (photo_id, tag_name)
-                        VALUES ({}, "{}")
-                        '''.format(photo_id, tag)
-                    )
-
-                    # For checks later.
-                    added_tags.append(tag)
-                except Exception as e:
-                    print('Problem adding tag to photo_tag ', e)
-
-        photo_tags = self.get_photo_tag_list(photo_id)
-
-        # Check added tags are in photo_tags
-        for tag in added_tags:
-            print('tag check ', added_tags, photo_tags)
-            if tag not in photo_tags:
-                return False
-            else:
-                print('getting here?')
-                self.update_photo_count(tag)
-        return True
-
     def update_tag(self, new_tag, old_tag):
-        print(old_tag, new_tag)
         """
         Problem here when updating a tag to one that already exists
         """
@@ -425,7 +414,7 @@ class PhotoTag(object):
             photos = self.get_photos_by_tag(old_tag)
 
             for photo in photos:
-                print('photo data ', photo, photos)
+                # print('photo data ', photo, photos)
 
                 if photo:
 
@@ -543,10 +532,4 @@ class PhotoTag(object):
 
 
 if __name__ == "__main__":
-    t = Tag()
-    # print(t.get_photo_count_by_tag('test'))
-    # print(t.get_photos_by_tag('lindon'))
-
-    print(t.get_photo_tag_list(2858732369))
-
-    # t.remove_tag_name('br')
+    pass

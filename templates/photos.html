@@ -28,7 +28,7 @@ json_data['show_session'] %}
 
   <div class="col-3 text-center">
     <!-- <h3>{{key}}</h3> -->
-    <a id="photostream-page" href="/api/photos/{{ value['photo_id'] }}">
+    <a id="photostream-page" href="/photo/{{ value['photo_id'] }}">
       <img
         id="photo-page-image"
         class="img-fluid"
@@ -45,14 +45,14 @@ json_data['show_session'] %}
 
 <div class="row text-center">
   <div class="col">
-    <a href="/api/photos?offset={{ json_data.offset - 20 }}">
+    <a href="/photo/?offset={{ json_data.offset - 20 }}">
       <button type="button" class="btn btn-secondary btn-block btn-lg">
         Newer
       </button>
     </a>
   </div>
   <div class="col">
-    <a href="/api/photos?offset={{ json_data.offset + 20 }}">
+    <a href="/photo/?offset={{ json_data.offset + 20 }}">
       <button type="button" class="btn btn-secondary btn-block btn-lg">
         Older
       </button>

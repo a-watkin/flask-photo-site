@@ -30,7 +30,7 @@
     <!-- Next -->
     <div class="col-1 text-center nav-arrows">
         <!-- Can't use url_for here as the argument is unnamed. -->
-        <a href="/api/photos/{{ json_data['next'] }}"><i class="fas fa-angle-left fa-3x"></i></a>
+        <a href="/photo/{{ json_data['next'] }}"><i class="fas fa-angle-left fa-3x"></i></a>
     </div>
 
     <div class="col-10 text-center">
@@ -40,7 +40,7 @@
     <!-- Previous -->
     <div class="col-1 text-center nav-arrows">
         <!-- Can't use url_for here as the argument is unnamed. -->
-        <a href="/api/photos/{{ json_data['previous'] }}"><i class="fas fa-angle-right fa-3x"></i></a>
+        <a href="/photo/{{ json_data['previous'] }}"><i class="fas fa-angle-right fa-3x"></i></a>
     </div>
 </div>
 

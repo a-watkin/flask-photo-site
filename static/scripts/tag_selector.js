@@ -18,20 +18,17 @@ class TagSelector extends React.Component {
   }
 
   componentWillMount() {
-    // console.log("hello from componentWillMount");
-    // getting the album id from the URL
+    // Getting the album id from the URL.
     let currentUrl = window.location.href;
     let splitUrl = currentUrl.split("=");
     let photoId = splitUrl[1];
 
-    fetch(`/api/get/phototags?photo_id=${photoId}`, {
+    fetch(`/photo/tags/api/get/phototags?photo_id=${photoId}`, {
       credentials: "include"
     })
       .then(res => res.json())
       .then(
         result => {
-          // ok i am getting the data
-          // console.log(`result ${result}`, Object.keys(result), result.original);
           this.setState({
             isLoaded: true,
             original: result.original,
@@ -51,40 +48,26 @@ class TagSelector extends React.Component {
   }
 
   tagClick(tagName) {
-    // console.log("clicked", tagName);
     let tempTags = [...this.state.selectedTags];
-    // console.log(tempTags);
     if (tempTags.indexOf(tagName) === -1) {
       tempTags.push(tagName);
     } else {
-      // console.log("getting here on first try?");
       tempTags.splice(tempTags.indexOf(tagName), 1);
     }
-    // console.log(
-    //   "should be altering state here",
-    //   tempTags,
-    //   this.state.selectedTags
-    // );
-
     this.setState({
       selectedTags: tempTags
     });
-    // so for some reason it's just not updated yet
-    // when you try and get the state here?
-    // console.log("what", this.state.selectedTags);
   }
 
   backToPhoto() {
-    window.location.assign(`/api/photos/${this.state.photoId}`);
+    window.location.assign(`/photo/${this.state.photoId}`);
   }
 
   sendData() {
-    // console.log("clicked on remove tag");
     if (this.state.selectedTags.length < 1) {
-      console.log("do nothing if no tag has been selected");
       return false;
     }
-    fetch("/api/get/phototags", {
+    fetch("/photo/tags/api/get/phototags", {
       method: "POST",
       credentials: "include",
       headers: {
@@ -96,10 +79,8 @@ class TagSelector extends React.Component {
         selectedTags: this.state.selectedTags
       })
     }).then(() => {
-      // console.log("sent data");
-      // redirect after successful post
-      // console.log(`/api/photos/${this.state.photoId}`);
-      window.location.assign(`/api/photos/${this.state.photoId}`);
+      // Redirect after successful post.
+      window.location.assign(`/photo/${this.state.photoId}`);
     });
   }
 
@@ -120,13 +101,10 @@ class TagSelector extends React.Component {
       color: "white"
     };
 
-    // console.log("what is it here?", this.state.selectedTags);
-
     if (this.state.isLoaded) {
       const tagData = this.state.tags;
 
       const tag = tagData.map((tag, index) => {
-        // console.log(tag, index);
         const tagName = tag["tag_name"];
         const humanTag = tag["human_readable_tag"];
         return (
