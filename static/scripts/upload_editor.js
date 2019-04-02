@@ -248,7 +248,7 @@ class UploadEditor extends React.Component {
                 <hr />
                 <h5> Enter tags below </h5>{" "}
                 <p>
-                  You can enter multiple tags seperating them with commas.Tags
+                  You can enter multiple tags separating them with commas.Tags
                   may contain spaces, but a space itself cannot be a tag.{" "}
                 </p>{" "}
                 {allowTags === false ? warningArea() : null}{" "}
