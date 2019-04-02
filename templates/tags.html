@@ -6,20 +6,36 @@
   </div>
 </div>
 
-<hr />
-
 <div class="row">
   <div class="col text-center">
     {% for key, value in json_data.items() %}
-    <a
-      href="{{ url_for('photo_tag.get_tag_photos', tag_name=value['tag_name']) }}"
-    >
+
+    <!-- start len list check -->
+    {% if value|length > 0 %}
+
+    <hr />
+    <div class="row">
+      <div class="col">
+        <h1>{{ key }}</h1>
+      </div>
+    </div>
+
+    {% for x in value %}
+    <a href="{{ url_for('photo_tag.get_tag_photos', tag_name=x['tag_name']) }}">
       <button type="button" class="btn btn-outline-success btn-lg">
-        {{ value["human_readable_tag"] }}
+        {{ x["human_readable_tag"] }}
       </button>
     </a>
+
+    <!-- end inner for loop -->
+    {% endfor %}
+
+    <!-- end list len check -->
+    {% endif %}
+
+    <!-- end outer for loop -->
     {% endfor %}
   </div>
 </div>
-
+<br />
 {% endblock %}

@@ -8,47 +8,51 @@
 
 <div class="row">
   <div class="col text-center">
-    <table class="table">
-      <thead>
-        <tr>
-          <th class="text-left" scope="col">Tag name</th>
-          <th scope="col">Photos with the tag</th>
-          <th scope="col">Edit tag</th>
-        </tr>
-      </thead>
-      <tbody class="align-items-center">
-        {% for key, value in json_data.items() %}
-        <tr>
-          <td class="text-left">
-            <a
-              href="{{url_for('photo_tag.get_tag_photos', tag_name=value['tag_name'])}}"
-            >
-              <button type="button" class="btn btn-outline-success btn-lg">
-                {{ value["human_readable_tag"] }}
-              </button>
-            </a>
-          </td>
-          <td>
-            <h2>{{ value["photos"] }}</h2>
-          </td>
-          <td>
-            <a
-              href="{{ url_for('photo_tag.edit_tag', tag_name=value['tag_name']) }}"
-            >
-              <button id="edit-buttons" class="btn btn-warning btn-block">
-                Edit tag
-              </button>
-            </a>
-            <a
-              href="{{url_for('photo_tag.delete_tag', tag_name=value['tag_name'])}}"
-            >
-              <button class="btn btn-danger btn-block">Delete tag</button>
-            </a>
-          </td>
-        </tr>
-        {% endfor %}
-      </tbody>
-    </table>
+    {% for key, value in json_data.items() %}
+
+    <!-- start len list check -->
+    {% if value|length > 0 %}
+    <hr />
+    <div class="row">
+      <div class="col">
+        <h1>{{ key }}</h1>
+      </div>
+    </div>
+
+    {% for x in value %}
+    <!-- needs elements to be vertically centred -->
+    <div class="edit-tags-card row">
+      <div class="col my-auto">
+        <a
+          href="{{url_for('photo_tag.get_tag_photos', tag_name=x['tag_name'])}}"
+        >
+          <button type="button" class="btn btn-outline-success btn-lg">
+            {{ x["human_readable_tag"] }}
+          </button>
+        </a>
+      </div>
+
+      <div class="col text-right my-auto">
+        <h2>{{ x["photos"] }} Photos</h2>
+      </div>
+
+      <div class="col">
+        <a href="{{ url_for('photo_tag.edit_tag', tag_name=x['tag_name']) }}">
+          <button id="edit-buttons" class="btn btn-warning btn-block">
+            Edit tag
+          </button>
+        </a>
+        <a href="{{url_for('photo_tag.delete_tag', tag_name=x['tag_name'])}}">
+          <button class="btn btn-danger btn-block">Delete tag</button>
+        </a>
+      </div>
+    </div>
+
+    <!-- end inner for loop -->
+    {% endfor %}
+
+    <!-- end list len check -->
+    {% endif %} {% endfor %}
   </div>
 </div>
 <!-- end page content -->
