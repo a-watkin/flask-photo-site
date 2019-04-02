@@ -81,9 +81,11 @@ class UploadedPhotos(object):
 
         for photo in data:
             photo['tags'] = []
+            # Get the title if it already has one.
             if photo['photo_title']:
                 photo['photo_title'] = name_util.make_decoded(
                     photo['photo_title'])
+            # Get any tags the photo already has.
             for tag in t.get_photo_tags(photo['photo_id']):
                 for key, value in tag.items():
                     if key == 'human_readable_tag':
@@ -248,6 +250,7 @@ class UploadedPhotos(object):
                 '''.format(date_posted, photo_id)
             )
 
+            # Associate the photo with an album.
             self.db.make_query(
                 '''
                 INSERT INTO photo_album(photo_id, album_id)
