@@ -50,8 +50,9 @@ def make_encoded(a_str):
     forbidden = [";", "/", "?", ":", "@", "=", "&", '"', "'", "<", ">",
                  "#", "{", "}", "|", "\\", "/", "^", "~", "[", "]", "`", " "]
 
-    for char in a_str:
-        if char in forbidden:
-            return url_encode_tag(a_str)
+    if a_str is not None:
+        for char in a_str:
+            if char in forbidden:
+                return url_encode_tag(a_str)
 
     return a_str
