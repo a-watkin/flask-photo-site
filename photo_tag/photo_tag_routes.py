@@ -63,7 +63,6 @@ def get_tags():
 @photo_tag_blueprint.route('/edit/tags')
 @login_required
 def edit_tags():
-    print('edit tags called')
     pt = PhotoTag()
     tag_data = pt.get_all_tags()
     return render_template('edit_tags.html', json_data=tag_data), 200
@@ -162,6 +161,8 @@ def get_photo_tag_data():
 def add_uploaded_tags():
     """
     Gets tag data from React.
+
+    Updates tag data for a photo in upload on the fly.
 
     Used by upload_editor.js
     """
