@@ -22,7 +22,7 @@ def login():
         if user.check_for_username() and user.check_password():
             flash('Welcome back {}'.format(username))
             session['logged_in'] = True
-            return redirect(url_for('home'))
+            return redirect(url_for('photo.home'))
         else:
             status_code = 401
             flash('Wrong username and/or password', error)
@@ -34,7 +34,7 @@ def login():
 def logout():
     session.pop('logged_in', None)
     flash('You have been logged out')
-    return redirect(url_for('home'))
+    return redirect(url_for('photo.home'))
 
 
 @user_blueprint.route('/account', methods=['GET', 'POST'])
