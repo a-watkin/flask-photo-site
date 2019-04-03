@@ -121,9 +121,12 @@ class Database(object):
             return []
 
     def make_query(self, query_string):
-        with sqlite3.connect(self.db_name) as connection:
-            c = connection.cursor()
-            return [x for x in c.execute(query_string)]
+        try:
+            with sqlite3.connect(self.db_name) as connection:
+                c = connection.cursor()
+                return [x for x in c.execute(query_string)]
+        except Exception as e:
+            print('problem ', e)
 
     def delete_rows_where(self, table_name, name, where):
         with sqlite3.connect(self.db_name) as connection:
