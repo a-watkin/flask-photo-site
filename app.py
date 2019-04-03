@@ -16,8 +16,8 @@ app = Flask(__name__.split('.')[0])
 app.config.from_object('config.DevelopmentConfig')
 
 # Register blueprints.
-app.register_blueprint(photo_blueprint, url_prefix="/")
-app.register_blueprint(user_blueprint, url_prefix="/user")
+app.register_blueprint(photo_blueprint, url_prefix="/photo")
+app.register_blueprint(user_blueprint, url_prefix="/photo/user")
 app.register_blueprint(upload_blueprint, url_prefix="/upload")
 app.register_blueprint(album_blueprint, url_prefix="/album")
 app.register_blueprint(photo_tag_blueprint, url_prefix="/photo/tag")

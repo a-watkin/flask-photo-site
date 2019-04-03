@@ -1,8 +1,7 @@
-{% extends "template.html" %} {% block content %}
+{% extends "photo_site_template.html" %}
 
-<!-- <h1>{{json_data}}</h1> -->
-
-{% if json_data['album_data']['photos'] > 0 %}
+<!-- start block content -->
+{% block content %} {% if json_data['album_data']['photos'] > 0 %}
 
 <div class="row">
   <div id="problem-div" class="col">

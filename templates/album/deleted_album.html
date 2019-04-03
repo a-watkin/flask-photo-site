@@ -1,12 +1,13 @@
-{% extends "template.html" %} {% block content %}
+{% extends "photo_site_template.html" %}
+
+<!-- start block content -->
+{% block content %}
 
 <div class="row text-center">
   <div class="col">
     <h1>
       The album
       <span class="font-italic">
-        <!-- <h1>{{deleted_album}}</h1> -->
-
         {{ deleted_album["human_readable_title"] }}
       </span>
       has been removed.

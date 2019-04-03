@@ -1,8 +1,9 @@
-{% extends "template.html" %} {% block content %}
+{% extends "photo_site_template.html" %} 
+
+<!-- start block content -->
+{% block content %}
 
 <div class="row text-center">
-    <!-- <h1>{{json_data}}</h1> -->
-
     {% if session %}
     <div class="col">
         <a href="{{url_for('photo.edit_photo', photo_id=json_data['photo_id'])}}">
@@ -22,7 +23,6 @@
         </a>
     </div>
     {% endif %}
-
 </div>
 <!-- displays the photo -->
 <div id="photo-container" class="row align-items-center">

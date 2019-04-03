@@ -1,13 +1,15 @@
-{% extends "template.html" %}
+{% extends "photo_site_template.html" %}
+
+<!-- start block content -->
 {% block content %}
 
 <div class="row text-center">
-    <div class="col">
-        <h1>Uploaded photos</h1>
-    </div>
+  <div class="col">
+    <h1>Uploaded photos</h1>
+  </div>
 </div>
 
-<hr>
+<hr />
 
 <!-- <h2>{{json_data}}</h2> -->
 
@@ -15,6 +17,9 @@
 <div id="upload-editor"></div>
 
 <!-- React script -->
-<script type="text/babel" src="{{ url_for('static', filename='scripts/upload_editor.js') }}"></script>
+<script
+  type="text/babel"
+  src="{{ url_for('static', filename='scripts/upload_editor.js') }}"
+></script>
 
 {% endblock %}

@@ -1,67 +1,68 @@
-{% extends "template.html" %}
+{% extends "photo_site_template.html" %}
+
+<!-- start block content -->
 {% block content %}
 
 <div class="row text-center">
-    <div class="col">
-        <h1>Upload new photos</h1>
-    </div>
+  <div class="col">
+    <h1>Upload new photos</h1>
+  </div>
 </div>
-
 
 <div id="upload-message" hidden>
-    <hr>
+  <hr />
 
-    <div class="row text-center">
-
-        <div class="col">
-
-            <div class="alert alert-secondary" role="alert">
-                <h3>
-
-                    Uploading photos.
-                    <br>
-                    <br>
-                    Please leave this page open until you are redirected.
-
-                </h3>
-            </div>
-
-        </div>
+  <div class="row text-center">
+    <div class="col">
+      <div class="alert alert-secondary" role="alert">
+        <h3>
+          Uploading photos.
+          <br />
+          <br />
+          Please leave this page open until you are redirected.
+        </h3>
+      </div>
     </div>
+  </div>
 </div>
 
-
-<hr>
+<hr />
 
 <div class="row text-center">
-    <div class="col">
+  <div class="col">
+    <form method="post" enctype="multipart/form-data">
+      <h2 class="text-left">
+        Select photos to upload. You may select multiple files.
+      </h2>
 
-        <form method="post" enctype="multipart/form-data">
-            <h2 class="text-left">Select photos to upload. You may select multiple files.</h2>
+      <hr />
+      <input id="upload-info" type="file" name="file" multiple />
 
-            <hr>
-            <input id="upload-info" type="file" name="file" multiple>
+      <div class="row">
+        <div class="col">
+          <button
+            id="clear-input"
+            type="button"
+            class="btn btn-warning btn-block btn-lg upload-buttons"
+          >
+            Clear
+          </button>
+        </div>
 
-            <div class="row">
-                <div class="col">
-                    <button id="clear-input" type="button" class="btn btn-warning btn-block btn-lg upload-buttons">Clear</button>
+        <div class="col">
+          <!-- <input id="upload-button" type="submit" value="Upload"> -->
 
-                </div>
-
-                <div class="col">
-
-                    <!-- <input id="upload-button" type="submit" value="Upload"> -->
-
-                    <button id="upload-button" type="submit" class="btn btn-success btn-block btn-lg upload-buttons">Upload</button>
-
-                </div>
-
-
-            </div>
-        </form>
-
-    </div>
+          <button
+            id="upload-button"
+            type="submit"
+            class="btn btn-success btn-block btn-lg upload-buttons"
+          >
+            Upload
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
 </div>
-
 
 {% endblock %}

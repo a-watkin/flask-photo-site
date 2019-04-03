@@ -1,5 +1,7 @@
-{% extends "template.html" %} {% block content %} {% if session %} {% if
-json_data['show_session'] %}
+{% extends "photo_site_template.html" %}
+
+<!-- start block content -->
+{% block content %} {% if session %} {% if json_data['show_session'] %}
 
 <hr />
 
@@ -27,7 +29,6 @@ json_data['show_session'] %}
   {% for key, value in json_data.photos.items() %}
 
   <div class="col-3 text-center">
-    <!-- <h3>{{key}}</h3> -->
     <a id="photostream-page" href="/photo/{{ value['photo_id'] }}">
       <img
         id="photo-page-image"

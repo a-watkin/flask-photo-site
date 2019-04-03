@@ -1,4 +1,7 @@
-{% extends "template.html" %} {% block content %}
+{% extends "photo_site_template.html" %}
+
+<!-- start block content -->
+{% block content %}
 
 <div class="row text-center">
   <div class="col">
@@ -36,6 +39,7 @@
         <input autocomplete="off" id="tag-update" name="new_tag_name"
         type="text" class="form-control text-center" {% if
         json_data['human_readable_tags'][0] %} value="{{ json_data["human_readable_tags"]|join(", ")
+
 
         }}" {% else %} placeholder="Enter tags here..." {% endif %} />
       </div>
