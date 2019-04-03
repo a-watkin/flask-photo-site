@@ -6,7 +6,7 @@
       Are you sure you want to delete the tag:
       <a
         id="no-underline"
-        href="{{url_for('photo_tag.get_photo_tag_data', tag_name=data['tag_name'])}}"
+        href="{{url_for('photo_tag.get_tag_photos', tag_name=data['tag_name'])}}"
       >
         <button type="button" class="btn btn-outline-success btn-lg">
           {{ data["human_readable_name"] }}
