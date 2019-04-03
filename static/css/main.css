@@ -29,14 +29,6 @@ img {
   /* border: solid black 2px; */
 }
 
-.albums-card {
-  padding-left: 2rem;
-}
-
-.card {
-  margin-bottom: 2.2em;
-}
-
 #photo-info {
   margin-top: 2em;
 }
@@ -131,9 +123,6 @@ card:hover {
 .album-card {
   /* Add shadows to create the "card" effect */
   box-shadow: 0 4px 8px 0 rgba(0.4, 0.4, 0, 0.4);
-  transition: 0.3s;
-  padding: 1em;
-  /* margin-top: 2em; */
-  background: #ffffff;
-  margin: 2em;
+  margin: 1em;
+  padding-bottom: 1em;
 }
