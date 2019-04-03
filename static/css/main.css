@@ -1,24 +1,13 @@
-.container {
-  /* border: solid pink 2px; */
-}
-
 .col-3 {
   padding: 0%;
 }
 
 #photo-page-image {
-  /* border: solid white 5px; */
   padding: 0.5em;
   min-width: 100%;
 }
 
-#test {
-  color: red;
-  padding-top: 50px;
-  margin-bottom: auto;
-  border: solid black 2px;
-}
-
+/* Limit height of portrait photos. */
 img {
   max-height: 700px;
 }
@@ -26,7 +15,6 @@ img {
 #photo-container {
   margin-left: auto;
   margin-right: auto;
-  /* border: solid black 2px; */
 
   padding-top: 1%;
   padding-bottom: 1%;
@@ -34,14 +22,6 @@ img {
 
   max-height: 740px;
   min-height: 740px;
-}
-
-#albums-page-container {
-  /* border: black solid 2px; */
-  /* padding-left: 2rem; */
-
-  /* margin-left: auto;
-    margin-right: auto; */
 }
 
 #edit-album-buttons {
@@ -53,19 +33,8 @@ img {
   padding-left: 2rem;
 }
 
-.nav-arrows {
-  /* border: black solid 2px; */
-}
-
-/* .foo {
-    border: solid red 10px;
-    max-height: 640px;
-} */
-
 .card {
   margin-bottom: 2.2em;
-  /* min-width: 350px;
-    min-height: 500px; */
 }
 
 #photo-info {
@@ -84,23 +53,14 @@ img {
 /* edit albums */
 #edit-albums-container {
   max-width: 50px;
-  /* max-height: 4px; */
-  /* border: solid black 2px; */
 }
 
 #album-text {
   text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
 }
 
-/* on the edit albums views */
-/* #edit-albums-container {
-    border: solid black 5px;
-    margin-left: auto;
-    margin-right: auto;
-} */
-
 /* Selected album in Add photos to the album */
-/* centeres the album in the page */
+/* centres the album in the page */
 #selected-album,
 #problem-div {
   padding: auto;
@@ -128,7 +88,6 @@ card:hover {
 }
 
 /* file upload */
-
 #album-links {
   color: black;
 }
