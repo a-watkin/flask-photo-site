@@ -68,7 +68,7 @@ jQuery(document).ready(function($) {
     } else {
       $("#update-tag-button").prop("disabled", false);
       $("#warning-text").text(
-        "You can enter multiple tags, seperating them by commas."
+        "You can enter multiple tags, separating them by commas."
       );
     }
   });
