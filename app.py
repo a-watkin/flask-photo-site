@@ -12,8 +12,8 @@ from photo_tag.photo_tag_routes import photo_tag_blueprint
 app = Flask('app')
 app = Flask(__name__.split('.')[0])
 
-# app config
-app.config['SECRET_KEY'] = b'\xef\x03\xc8\x96\xb7\xf9\xf3^\x16\xcbz\xd7\x83K\xfa\xcf'
+# Apply config values.
+app.config.from_object('config.DevelopmentConfig')
 
 # Register blueprints.
 app.register_blueprint(photo_blueprint, url_prefix="/")
