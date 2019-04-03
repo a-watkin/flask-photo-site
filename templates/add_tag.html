@@ -25,7 +25,6 @@
     </div>
   </div>
 </div>
-
 <div class="row">
   <div class="col">
     <form
@@ -34,14 +33,11 @@
     >
       <div class="form-group">
         <label for="renaming-tag">Add additional tags below.</label>
-        <input
-          autocomplete="off"
-          id="tag-update"
-          name="new_tag_name"
-          type="text"
-          class="form-control text-center"
-          value="{{ tag_name }}"
-        />
+        <input autocomplete="off" id="tag-update" name="new_tag_name"
+        type="text" class="form-control text-center" {% if
+        json_data['human_readable_tags'][0] %} value="{{ json_data["human_readable_tags"]|join(", ")
+
+        }}" {% else %} placeholder="Enter tags here..." {% endif %} />
       </div>
       <hr />
       <div class="row">
