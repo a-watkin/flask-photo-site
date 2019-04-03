@@ -78,7 +78,7 @@ jQuery(document).ready(function($) {
     // console.log("logged out", e, value.trim());
     if (value.trim() === "You have been logged out.") {
       // console.log("Refresh page here!")
-      window.location.replace("/");
+      window.location.replace("/photo");
     }
   });
 });
