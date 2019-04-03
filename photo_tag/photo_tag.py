@@ -413,37 +413,10 @@ class PhotoTag(object):
             '''.format(photo_id)
         )
 
-    # def replace_tags(self, photo_id, tag_list):
-    #     """
-    #     Replaces all the tags associated with a specific photo with new tags.
-    #     """
-    #     # Get all the tags attached to the photo.
-    #     current_tags = self.db.make_query(
-    #         '''
-    #         SELECT * FROM photo_tag WHERE photo_id = {}
-    #         '''.format(photo_id)
-    #     )
-
-    #     # Remove the current tags.
-    #     self.db.make_query(
-    #         '''
-    #         DELETE FROM photo_tag WHERE photo_id = {}
-    #         '''.format(photo_id)
-    #     )
-
-    #     for tag in tag_list:
-    #         # Add the tags in the tag_list.
-    #         self.db.make_query(
-    #             '''
-    #             insert into photo_tag (photo_id, tag_name)
-    #             values ({}, "{}")
-    #             '''.format(photo_id, tag)
-    #         )
-
-    #         self.update_photo_count(tag)
-
     def get_tag_photos_in_range(self, tag_name, limit=20, offset=0):
-        # THIS ALSO SUCKS
+        """
+        Returns a dict of dicts with photo data within the limit and from the offset specified for the tag specified.
+        """
         tag_name = name_util.make_encoded(tag_name)
 
         # Get all photos associated with the tag name.
@@ -473,32 +446,16 @@ class PhotoTag(object):
             offset = offset - 20
             page = pages
 
-        q_data = None
-        with sqlite3.connect(self.db.db_name) as connection:
-            c = connection.cursor()
-
-            c.row_factory = sqlite3.Row
-
-            query_string = (
-                '''
-                SELECT photo_id, photo_title, views, date_taken, tag_name, large_square FROM photo
-                JOIN photo_tag USING(photo_id)
-                JOIN images USING(photo_id)
-                WHERE tag_name = "{}"
-                ORDER BY date_taken
-                DESC LIMIT {} OFFSET {}
-                '''
-            ).format(tag_name, limit, offset)
-
-            q_data = c.execute(query_string)
-
-        rtn_dict = {
-            'limit': limit,
-            'offset': offset,
-            'photos': []
-        }
-
-        data = [dict(ix) for ix in q_data]
+        data = self.db.get_query_as_list(
+            '''
+            SELECT photo_id, photo_title, views, date_taken, tag_name, large_square FROM photo
+            JOIN photo_tag USING(photo_id)
+            JOIN images USING(photo_id)
+            WHERE tag_name = "{}"
+            ORDER BY date_taken
+            DESC LIMIT {} OFFSET {}
+            '''.format(tag_name, limit, offset)
+        )
 
         # Decode the title.
         for photo in data:
