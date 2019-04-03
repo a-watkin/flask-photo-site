@@ -2,6 +2,7 @@
   padding: 0%;
 }
 
+/* photos page */
 #photo-page-image {
   padding: 0.5em;
   min-width: 100%;
@@ -22,15 +23,6 @@ img {
 
   max-height: 740px;
   min-height: 740px;
-}
-
-#edit-album-buttons {
-  max-width: 4rem;
-  /* border: solid black 2px; */
-}
-
-#photo-info {
-  margin-top: 2em;
 }
 
 .table > tbody > tr > td {
@@ -71,10 +63,6 @@ img {
   padding-top: 1em;
 }
 
-card:hover {
-  background-color: darkgrey;
-}
-
 #selected-photo {
   background-color: green;
 }
@@ -107,6 +95,11 @@ card:hover {
 
 #test {
   border: solid red 2px;
+}
+
+/* some space between bootstrap card */
+.card {
+  margin-bottom: 1em;
 }
 
 /* card for edit tags */
