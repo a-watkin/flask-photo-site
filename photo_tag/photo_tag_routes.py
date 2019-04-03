@@ -33,10 +33,10 @@ def get_tag_photos(tag_name=None):
             offset = tag_photos_data['tag_info']['number_of_photos']
             pass
 
-        return render_template('tag_photos.html', json_data=tag_photos_data)
+        return render_template('photo_tag/tag_photos.html', json_data=tag_photos_data)
 
     tag_photos_data = pt.get_tag_photos_in_range(tag_name)
-    return render_template('tag_photos.html', json_data=tag_photos_data)
+    return render_template('photo_tag/tag_photos.html', json_data=tag_photos_data)
 
 
 @photo_tag_blueprint.route('/delete/<string:tag_name>', methods=['GET', 'POST'])
@@ -45,19 +45,20 @@ def delete_tag(tag_name):
     if request.method == 'GET':
         pt = PhotoTag()
         tag_data = pt.get_tag(tag_name)
-        return render_template('delete_tag.html', data=tag_data), 200
+        return render_template('photo_tag/delete_tag.html', data=tag_data), 200
+
     if request.method == 'POST':
         pt = PhotoTag()
         deleted_tag = pt.get_tag(tag_name)
         if pt.delete_tag(tag_name):
-            return render_template('deleted_tag.html', data=deleted_tag), 200
+            return render_template('photo_tag/deleted_tag.html', data=deleted_tag), 200
 
 
 @photo_tag_blueprint.route('/')
 def get_tags():
     pt = PhotoTag()
     tag_data = pt.get_all_tags()
-    return render_template('tags.html', json_data=tag_data)
+    return render_template('photo_tag/tags.html', json_data=tag_data)
 
 
 @photo_tag_blueprint.route('/edit/tags')
@@ -65,7 +66,7 @@ def get_tags():
 def edit_tags():
     pt = PhotoTag()
     tag_data = pt.get_all_tags()
-    return render_template('edit_tags.html', json_data=tag_data), 200
+    return render_template('photo_tag/edit_tags.html', json_data=tag_data), 200
 
 
 @photo_tag_blueprint.route('/edit/<string:tag_name>', methods=['GET', 'POST'])
@@ -79,7 +80,7 @@ def edit_tag(tag_name):
     if request.method == 'GET':
         pt = PhotoTag()
         tag_data = pt.get_tag(tag_name)
-        return render_template('edit_tag.html', data=tag_data)
+        return render_template('photo_tag/edit_tag.html', data=tag_data)
 
     if request.method == 'POST':
         pt = PhotoTag()
@@ -89,11 +90,11 @@ def edit_tag(tag_name):
         update_response = pt.update_tag(new_tag_name, old_tag)
 
         if update_response:
-            return render_template('edit_tag.html', data=update_response)
+            return render_template('photo_tag/edit_tag.html', data=update_response)
 
         else:
             flash('There was a problem updating the tag, please contact support.')
-            return redirect(url_for('photo_tag.edit_tag', tag_name=new_tag_name))
+            return redirect(url_for('photo_tag/photo_tag.edit_tag', tag_name=new_tag_name))
 
 
 @photo_tag_blueprint.route('/add', methods=['GET', 'POST'])
@@ -108,7 +109,8 @@ def add_tag():
         # Get all tags belonging to the photo.
         photo_tags = pt.get_human_readable_photo_tag_list(args['photo_id'])
         photo_data['human_readable_tags'] = photo_tags
-        return render_template('add_tag.html', json_data=photo_data), 200
+        return render_template('photo_tag/add_tag.html', json_data=photo_data), 200
+
     if request.method == 'POST':
         photo_id = args['photo_id']
         # Get the new tags from the form.
@@ -134,7 +136,7 @@ def remove_tag():
         args = request.args.to_dict()
         p = Photo()
         photo_data = p.get_photo(args['photo_id'])
-        return render_template('remove_tags.html', json_data=photo_data), 200
+        return render_template('photo_tag/remove_tags.html', json_data=photo_data), 200
 
 
 @photo_tag_blueprint.route('/api/get/phototags', methods=['GET', 'POST'])
@@ -152,6 +154,7 @@ def get_photo_tag_data():
         p = Photo()
         photo_data = p.get_photo(args['photo_id'])
         return jsonify(photo_data)
+
     else:
         pt = PhotoTag()
         data = request.get_json()
