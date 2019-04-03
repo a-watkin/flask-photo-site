@@ -539,12 +539,10 @@ class PhotoTag(object):
         new_tag = name_util.make_encoded(new_tag)
         old_tag = name_util.make_encoded(old_tag)
 
-        # Get the photos that have the old_tag associated with them.
-        old_tag_photos = self.get_photos_by_tag(old_tag)
-
         # Add the new tag to the tag table.
         self.add_tag(new_tag)
 
+        # Update photo_tag to replace the old tag with the new tag.
         self.db.make_query(
             '''
             UPDATE photo_tag
