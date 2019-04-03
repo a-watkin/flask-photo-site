@@ -98,10 +98,18 @@ class Database(object):
         except Exception as e:
             print('Problem with query\n', query_string, e)
 
-    def make_query(self, query_string):
-        with sqlite3.connect(self.db_name) as connection:
-            c = connection.cursor()
-            return [x for x in c.execute(query_string)]
+    def get_s_query_as_list(self, query_string, data):
+        try:
+            q_data = None
+            with sqlite3.connect(self.db_name) as connection:
+                c = connection.cursor()
+                c.row_factory = sqlite3.Row
+                q_data = c.execute(query_string, data)
+
+            return [dict(ix) for ix in q_data]
+
+        except Exception as e:
+            print('Problem with query\n', query_string, e)
 
     def make_sanitized_query(self, query_string, data=None):
         try:
@@ -111,6 +119,11 @@ class Database(object):
         except Exception as e:
             print('make_sanitized_query ', e)
             return []
+
+    def make_query(self, query_string):
+        with sqlite3.connect(self.db_name) as connection:
+            c = connection.cursor()
+            return [x for x in c.execute(query_string)]
 
     def delete_rows_where(self, table_name, name, where):
         with sqlite3.connect(self.db_name) as connection:

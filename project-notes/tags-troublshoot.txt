@@ -1,8 +1,0 @@
-tags entered from uploaded files are either not displayed in the tags page or are displayed with their index instead of the tag name
-
-on photos the tags work fine it terms of being displayed and in making photos accessible
-
-tags entered from the photo page do not show up on the tag page
-
-tags added from react do show up in edit tags but those added in photo do not
-
