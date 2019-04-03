@@ -50,6 +50,7 @@ def make_encoded(a_str):
     forbidden = [";", "/", "?", ":", "@", "=", "&", '"', "'", "<", ">",
                  "#", "{", "}", "|", "\\", "/", "^", "~", "[", "]", "`", " "]
 
+    # Guard against being passed a None value which can cause problems.
     if a_str is not None:
         for char in a_str:
             if char in forbidden:

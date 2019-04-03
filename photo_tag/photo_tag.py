@@ -27,10 +27,13 @@ class PhotoTag(object):
 
     def __init__(self):
         self.db = Database()
+        self.user_id = '28035310@N00'
 
     def check_tags(self):
         """
         Removes tags in the tag table that are not in the photo_tag table.
+
+        This is only a good idea if you're not using the tags table for other purposes.
         """
         all_tags = self.db.get_query_as_list(
             '''
@@ -38,11 +41,13 @@ class PhotoTag(object):
             '''
         )
 
+        # All tags in the tags table as a list.
         all_tags = [x['tag_name'] for x in all_tags]
         all_photo_tags = self.get_all_photo_tags_as_list()
-
+        # Set difference of the above two sets.
+        # This should be empty if there are no problems with the counts.
         tags_not_in_photo_tags = set(all_tags) - set(all_photo_tags)
-
+        # Remove any problem counts.
         for tag in tags_not_in_photo_tags:
             self.remove_tag_name(tag)
 
@@ -56,11 +61,23 @@ class PhotoTag(object):
             '''.format(tag_name)
         )[0]['COUNT(photo_id)']
 
+    def get_human_readable_photo_tag_list(self, photo_id):
+        """
+        Accepts a photo_id and returns the tags associated with the photo in a human readable form.
+
+        Used to get data on the front end by add_tag in photo_tag_routes.
+        """
+        tags = self.get_photo_tag_list(photo_id)
+        rtn_list = []
+        for tag in tags:
+            rtn_list.append(name_util.make_decoded(tag))
+        return rtn_list
+
     def update_photo_count(self, tag_name=None):
-        # Too many things call this method.
-        print('being called', tag_name)
         """
         Updates the number of photos associated with tags in the tag table.
+
+        Encodes tag before checking.
         """
         # This is fast enough and usually what is used.
         if tag_name is not None:
@@ -74,15 +91,20 @@ class PhotoTag(object):
             )
 
         else:
+            # Check the entire tag table is no tag_name provided.
             # This is slow.
             for tag in self.get_all_photo_tags_as_list():
-                tag = name_util.make_encoded(tag_name)
+                tag = name_util.make_encoded(tag)
+                # Get the number of photos using the tag.
+                count = self.count_photos_by_tag_name(tag)
+
+                # Update the count.
                 self.db.make_query(
                     '''
                     UPDATE tag
                     SET photos = {}
                     WHERE tag_name = "{}"
-                    '''.format(self.count_photos_by_tag_name(tag), tag)
+                    '''.format(count, tag)
                 )
 
     def get_all_photo_tags_as_list(self):
@@ -141,20 +163,42 @@ class PhotoTag(object):
             query_string, data
         )
 
+    def add_tag(self, tag_name):
+        """
+        Adds a tag to the tag table.
+        """
+        query_string = '''
+            INSERT INTO tag(tag_name, user_id, photos)
+            VALUES(?,?,?)
+            '''
+
+        data = (
+            tag_name, self.user_id, 0
+        )
+
+        self.db.make_sanitized_query(
+            query_string, data
+        )
+
     def add_tags_to_photo(self, photo_id, tag_list):
-        # I don't like this method.
         """
         photo_id is an int id representing a photo
 
         tag_list is a list of string values.
 
-
         Adds tags to a photo.
 
-        First checking if the tag is already in the tag table, if not it adds it.
+        Used by React script upload_editor.js to add tags.
 
-        Then it adds the tag to photo_tag which links the photo and tag tables.
+        Also used by add_tag.html template.
+
+        First the tags on the photo are removed.
+        Then the new tags are added.
         """
+
+        # Remove old tags
+        self.remove_tags_from_photo(photo_id)
+
         # Keep track of which tags have been added.
         added_tags = []
         for tag in tag_list:
@@ -167,61 +211,56 @@ class PhotoTag(object):
                 # Check if tag is in the tag table.
                 # Data will be None if the tag is not in the tag table.
                 data = self.db.get_row('tag', 'tag_name', tag)
-
                 if data is None:
                     # Add tag to the tag table.
-                    self.db.make_query(
-                        '''
-                        insert into tag (tag_name, user_id, photos)
-                        values ("{}", "{}", {})
-                        '''.format(
-                            tag,
-                            '28035310@N00',
-                            0
-                        )
-                    )
+                    self.add_tag(tag)
 
-                # UNIQUE constraints can cause problems here
-                # so catch any exceptions.
-                try:
-                    # Associate the tag with the specified photo.
-                    self.db.make_query(
-                        '''
-                        INSERT INTO photo_tag (photo_id, tag_name)
-                        VALUES ({}, "{}")
-                        '''.format(photo_id, tag)
-                    )
-
-                except Exception as e:
-                    print('Problem adding tag to photo_tag ', e)
+                self.add_photo_tag(photo_id, tag)
+                added_tags.append(tag)
 
         # Confirming the tags have been added.
         photo_tags = self.get_photo_tag_list(photo_id)
         for tag in added_tags:
+            self.update_photo_count(tag)
             if tag not in photo_tags:
                 return False
-            else:
-                self.update_photo_count(tag)
 
         self.check_tags()
 
         return True
 
     def remove_tag_name(self, tag_name):
-        self.db.make_query(
-            '''
-            DELETE FROM tag WHERE tag_name = "{}"
-            '''.format(tag_name)
-        )
-
+        """
+        Removes the given tag from tag and photo_tag tables.
+        """
         self.db.make_query(
             '''
             DELETE FROM photo_tag WHERE tag_name = "{}"
             '''.format(tag_name)
         )
 
+        photo_tag_table = self.db.get_query_as_list(
+            '''
+            select * from photo_tag where tag_name = "{}"
+            '''.format(tag_name)
+        )
+
+        self.db.make_query(
+            '''
+            DELETE FROM tag WHERE tag_name = "{}"
+            '''.format(tag_name)
+        )
+
+        tag_table = self.db.get_query_as_list(
+            '''
+            select * from tag where tag_name = "{}"
+            '''.format(tag_name)
+        )
+
     def delete_tag(self, tag_name):
         """
+        This works with unencoded values
+
         THIS DOES NOT SEEM TO WORK.
 
         Deletes the specified tag from the database.
@@ -291,7 +330,6 @@ class PhotoTag(object):
         return tag_data
 
     def get_photos_by_tag(self, tag_name):
-        print('hello from get_photos_by_tag')
         """
         Get all the photos that are associated with a particular tag.
         """
@@ -324,7 +362,7 @@ class PhotoTag(object):
 
         Accepts a tag_name string.
 
-        Returns a dict with the tag_name and human readable version.
+        Returns a dict with the tag_name and human readable version from the tag table.
         """
         tag_data = self.db.make_query(
             '''
@@ -362,118 +400,47 @@ class PhotoTag(object):
             return True
         return False
 
-    def remove_tags_from_photo(self, photo_id, tag_list):
+    def remove_tags_from_photo(self, photo_id):
         """
-        do you need to encode the tag list?
-        """
-        for tag in tag_list:
-            # If the tag isn't present it fails silently.
-            resp = self.db.make_query(
-                '''
-                DELETE FROM photo_tag
-                WHERE photo_id = {}
-                AND tag_name = "{}"
-                '''.format(photo_id, tag)
-            )
+        Accepts a photo_id as an int. 
 
-            # check tag count here
-            if self.get_photo_count_by_tag(tag) <= 0:
-                # IS THIS ACTUALLY WORKING?
-                # Remove the tag if it has no photos associated with it.
-                self.delete_tag(tag)
-            else:
-                # Update the tag count.
-                self.update_photo_count(tag)
-
-    def replace_tags(self, photo_id, tag_list):
-        # this is what i want for add tags
+        Removes all tags associated with the photo from the photo_tag table.
         """
-        Replaces the tags associated with a specific photo with new tags.
-        """
-        # Get all the tags attached to the photo.
-        current_tags = self.db.make_query(
-            '''
-            SELECT * FROM photo_tag WHERE photo_id = {}
-            '''.format(photo_id)
-        )
-
-        # Remove the current tags.
         self.db.make_query(
             '''
-            DELETE FROM photo_tag WHERE photo_id = {}
+            DELETE FROM photo_tag
+            WHERE photo_id = {}
             '''.format(photo_id)
         )
 
-        for tag in tag_list:
-            # Add the tags in the tag_list.
-            self.db.make_query(
-                '''
-                insert into photo_tag (photo_id, tag_name)
-                values ({}, "{}")
-                '''.format(photo_id, tag)
-            )
+    # def replace_tags(self, photo_id, tag_list):
+    #     """
+    #     Replaces all the tags associated with a specific photo with new tags.
+    #     """
+    #     # Get all the tags attached to the photo.
+    #     current_tags = self.db.make_query(
+    #         '''
+    #         SELECT * FROM photo_tag WHERE photo_id = {}
+    #         '''.format(photo_id)
+    #     )
 
-            self.update_photo_count(tag)
+    #     # Remove the current tags.
+    #     self.db.make_query(
+    #         '''
+    #         DELETE FROM photo_tag WHERE photo_id = {}
+    #         '''.format(photo_id)
+    #     )
 
-    def update_tag(self, new_tag, old_tag):
-        # THIS NEEDS TO BE SIMPLIFIED
-        """
-        Problem here when updating a tag to one that already exists
-        """
-        print('hello from update_tag - passed values, ', new_tag, old_tag)
-        # Check if new tag is already in the tag table.
-        test = self.db.make_query(
-            '''
-            SELECT * FROM tag WHERE tag_name = "{}"
-            '''.format(new_tag)
-        )
+    #     for tag in tag_list:
+    #         # Add the tags in the tag_list.
+    #         self.db.make_query(
+    #             '''
+    #             insert into photo_tag (photo_id, tag_name)
+    #             values ({}, "{}")
+    #             '''.format(photo_id, tag)
+    #         )
 
-        if not test:
-            # if the tag doesn't exist already then update it
-            # existing tag to the new tag
-            self.db.make_query(
-                '''
-                UPDATE tag
-                SET tag_name = "{}"
-                WHERE tag_name = "{}"
-                '''.format(new_tag, old_tag)
-            )
-
-        try:
-            # Tag exists.
-            photos = self.get_photos_by_tag(old_tag)
-
-            for photo in photos:
-                # print('photo data ', photo, photos)
-
-                if photo:
-
-                    # if new tag exists or not you have to update photo_tag
-                    self.db.make_query(
-                        '''
-                        update photo_tag
-                        set tag_name = "{}"
-                        WHERE tag_name = "{}"
-                        '''.format(new_tag, old_tag)
-                    )
-
-            self.delete_tag(old_tag)
-        except Exception as e:
-            print('problem updating tag name, ', e)
-        finally:
-            # tag already exists on photo
-            self.delete_tag(old_tag)
-            return True
-
-        # update all photo_tag entries to the new tag
-
-        # update the photo count for the tag table
-        self.update_photo_count(new_tag)
-
-        if self.get_tag(new_tag) and not self.get_tag(old_tag):
-            return True
-        else:
-            return False
+    #         self.update_photo_count(tag)
 
     def get_tag_photos_in_range(self, tag_name, limit=20, offset=0):
         # THIS ALSO SUCKS
@@ -560,9 +527,47 @@ class PhotoTag(object):
 
         return rtn_dict
 
+    def update_tag(self, new_tag, old_tag):
+        """
+        Replaces the old_tag with the new_tag.
+
+        Updated all the photos using the tag in the photo_tag table.
+
+        It encodes the tags first.
+        """
+        # Encode the tags.
+        new_tag = name_util.make_encoded(new_tag)
+        old_tag = name_util.make_encoded(old_tag)
+
+        # Get the photos that have the old_tag associated with them.
+        old_tag_photos = self.get_photos_by_tag(old_tag)
+
+        # Remove the old_tag.
+        self.remove_tag_name(old_tag)
+
+        self.db.make_query(
+            '''
+            delete from tag where tag_name = "{}"
+            '''.format(old_tag)
+        )
+
+        # Add the new tag to the tag table.
+        self.add_tag(new_tag)
+
+        if len(old_tag_photos) > 0:
+            list_keys = list(old_tag_photos.keys())[1:]
+
+            for key in list_keys:
+                self.add_photo_tag(
+                    old_tag_photos[key]['photo_id'],
+                    new_tag
+                )
+
+        # Update the tag count for the new tag.
+        self.update_photo_count(new_tag)
+
+        return self.get_tag(new_tag)
+
 
 if __name__ == "__main__":
     pt = PhotoTag()
-    # pt.add_photo_tag(3363788969, 'ass')
-    # print(pt.get_tag('boots'))
-    print(pt.get_photo_tags(3363788969))

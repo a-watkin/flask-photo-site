@@ -8,7 +8,7 @@ from common import name_util
 from photo.photo import Photo
 from photo_tag.photo_tag import PhotoTag
 
-# /photo/tags
+# /photo/tag
 photo_tag_blueprint = Blueprint('photo_tag', __name__)
 
 
@@ -79,7 +79,7 @@ def edit_tag(tag_name):
     if request.method == 'GET':
         pt = PhotoTag()
         tag_data = pt.get_tag(tag_name)
-        return render_template('edit_tag.html', data=tag_data), 200
+        return render_template('edit_tag.html', data=tag_data)
 
     if request.method == 'POST':
         pt = PhotoTag()
@@ -89,22 +89,25 @@ def edit_tag(tag_name):
         update_response = pt.update_tag(new_tag_name, old_tag)
 
         if update_response:
-            return redirect(url_for('photo_tag.edit_tag', tag_name=new_tag_name))
+            return render_template('edit_tag.html', data=update_response)
 
         else:
             flash('There was a problem updating the tag, please contact support.')
-            return render_template('photo_tag.edit_tag.html', tag_name=old_tag)
+            return redirect(url_for('photo_tag.edit_tag', tag_name=new_tag_name))
 
 
 @photo_tag_blueprint.route('/add', methods=['GET', 'POST'])
 @login_required
 def add_tag():
-    print('hello from add_tag')
+    # This should still work but you would have to pass it the current tags mixed with the new ones.
     args = request.args.to_dict()
     if request.method == 'GET':
         p = Photo()
-        # pt = PhotoTag()
+        pt = PhotoTag()
         photo_data = p.get_photo(args['photo_id'])
+        # Get all tags belonging to the photo.
+        photo_tags = pt.get_human_readable_photo_tag_list(args['photo_id'])
+        photo_data['human_readable_tags'] = photo_tags
         return render_template('add_tag.html', json_data=photo_data), 200
     if request.method == 'POST':
         photo_id = args['photo_id']

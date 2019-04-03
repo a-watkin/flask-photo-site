@@ -37,10 +37,9 @@ class Database(object):
         return ','.join(['?' for x in list(range(num))])
 
     def insert_data(self, **kwargs):
-        print('\nHello from insert_data, the **kwargs values are ', kwargs)
         """
         Expects any number of named arguments but must include a table name.
-        
+
         Expects data in this format:
         db.insert_data(
         table='tag',
