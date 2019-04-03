@@ -1,5 +1,4 @@
-from flask import Blueprint, jsonify, request, render_template, redirect, url_for, flash, session
-
+from flask import Blueprint, request, render_template, redirect, url_for, flash, session
 
 from common.name_util import login_required
 from user.user import User
@@ -22,19 +21,20 @@ def login():
         if user.check_for_username() and user.check_password():
             flash('Welcome back {}'.format(username))
             session['logged_in'] = True
-            return redirect(url_for('photo.home'))
+            return redirect(url_for('photo.get_photos'))
+
         else:
             status_code = 401
             flash('Wrong username and/or password', error)
-    return render_template('user/login.html')
+    return render_template('photo_user/login.html')
 
 
 @user_blueprint.route('/logout')
 @login_required
 def logout():
-    session.pop('logged_in', None)
-    flash('You have been logged out')
-    return redirect(url_for('photo.home'))
+    session.clear()
+    flash('You have been logged out.')
+    return redirect(url_for('photo.get_photos'))
 
 
 @user_blueprint.route('/account', methods=['GET', 'POST'])
@@ -62,4 +62,4 @@ def account():
             user.insert_hashed_password(new_password)
             flash('Password changed.')
 
-    return render_template('user/account.html'), 200
+    return render_template('photo_user/account.html'), 200
