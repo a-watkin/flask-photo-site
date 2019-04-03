@@ -400,18 +400,31 @@ class PhotoTag(object):
             return True
         return False
 
-    def remove_tags_from_photo(self, photo_id):
+    def remove_tags_from_photo(self, photo_id, tag_list=None):
+        print('called with ', photo_id, tag_list)
         """
-        Accepts a photo_id as an int. 
+        Accepts a photo_id as an int and optional list of tag_names.
 
-        Removes all tags associated with the photo from the photo_tag table.
+        If a tag_list is given then only the specified tags are removed from the photo_tag table.
+
+        If no tag_name is not given all tags associated with the photo from the photo_tag table are removed.
         """
-        self.db.make_query(
-            '''
-            DELETE FROM photo_tag
-            WHERE photo_id = {}
-            '''.format(photo_id)
-        )
+        if tag_list is not None:
+            for tag in tag_list:
+                self.db.make_query(
+                    '''
+                    DELETE FROM photo_tag
+                    WHERE tag_name = "{}"
+                    AND photo_id = {}
+                    '''.format(name_util.make_encoded(tag), photo_id)
+                )
+        else:
+            self.db.make_query(
+                '''
+                DELETE FROM photo_tag
+                WHERE photo_id = {}
+                '''.format(photo_id)
+            )
 
     def get_tag_photos_in_range(self, tag_name, limit=20, offset=0):
         """
