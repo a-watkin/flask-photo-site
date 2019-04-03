@@ -86,14 +86,12 @@ class TagSelector extends React.Component {
 
   render() {
     let notSelected = {
-      // width: "18rem",
       margin: "0 auto",
       float: "none",
       marginBottom: "10px"
     };
 
     let selectedTag = {
-      // width: "18rem",
       margin: "0 auto",
       float: "none",
       marginBottom: "10px",
