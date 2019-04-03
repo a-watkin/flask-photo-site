@@ -168,7 +168,7 @@ def add_album_photos(album_id):
     """
     if request.method == 'GET':
         a = Album()
-        p = Photos()
+        p = Photo()
         album_data = a.get_album(album_id)
         photo_data = p.get_photos_in_range(20, 0)
         photo_data['album_data'] = album_data
