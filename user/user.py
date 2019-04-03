@@ -8,7 +8,7 @@ class User(object):
         self.password = password
         self.user_id = None
         # init database
-        self.db = Database('eigi-data.db')
+        self.db = Database()
 
     def __str__(self):
         return """
