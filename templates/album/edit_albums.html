@@ -7,115 +7,101 @@
 </div>
 
 <div class="row">
-  <div class="col text-center">
-    <table class="table">
-      <thead>
-        <tr>
-          <th class="text-left" scope="col">Album name</th>
-          <th scope="col">Edit album</th>
-        </tr>
-      </thead>
-      <tbody class="align-items-center">
-        {% for key, value in json_data.items() %}
+  {% for key, value in json_data.items() %}
 
-        <tr>
-          <td id="edit-albums-container" class="text-left">
-            <div class="card" style="max-width: 20rem;">
-              <a
-                href="{{url_for('album.get_album_photos', album_id=value['album_id'])}}"
-              >
-                <div class="card-body">
-                  <div class="row">
-                    <div class="col">
-                      <h5 class="card-title text-center">
-                        {{ value["human_readable_name"] }}
-                      </h5>
-                    </div>
-                  </div>
-                  <div class="row">
-                    <div class="col">
-                      <img class="card-img-top uploaded img-fluid" src={% if
-                      value['large_square'] %}
-                      {{ value["large_square"] }} {% else %}
-                      '/static/images/logo.jpg' {% endif %} alt="{{
-                        value["human_readable_name"]
-                      }}
-                      album">
-                    </div>
-                  </div>
-                  <p class="card-text">
-                    {{ value["human_readable_description"] }}
-                  </p>
-                  <div class="row text-center">
-                    <div class="col">
-                      <p>views: {{ value["views"] }}</p>
-                    </div>
-                    <div class="col">
-                      <p>photos: {{ value["photos"] }}</p>
-                    </div>
-                  </div>
-                </div>
-              </a>
+  <div class="col">
+    <!-- start card -->
+    <div class="album-card" style="max-width: 20rem;">
+      <a
+        href="{{url_for('album.get_album_photos', album_id=value['album_id'])}}"
+      >
+        <div class="card-body">
+          <div class="row">
+            <div class="col">
+              <h5 class="card-title text-center">
+                {{ value["human_readable_name"] }}
+              </h5>
             </div>
-          </td>
-
-          <td id="edit-album-buttons">
-            <!-- table buttons -->
-
-            <div class="row">
-              <div class="col">
-                <a
-                  href="{{url_for('album.add_album_photos', album_id=value['album_id'])}}"
-                >
-                  <button id="edit-buttons" class="btn btn-success btn-block">
-                    Add photos
-                  </button>
-                </a>
-              </div>
+          </div>
+          <div class="row">
+            <div class="col">
+              <img class="card-img-top uploaded img-fluid" src={% if
+              value['large_square'] %}
+              {{ value["large_square"] }} {% else %} '/static/images/logo.jpg'
+              {% endif %} alt="{{ value["human_readable_name"] }}
+              album">
             </div>
-
-            <div class="row">
-              <div class="col">
-                <a
-                  href="{{url_for('album.edit_album', album_id=value['album_id'])}}"
-                >
-                  <button id="edit-buttons" class="btn btn-warning btn-block">
-                    Edit album
-                  </button>
-                </a>
-              </div>
+          </div>
+          <p class="card-text">
+            {{ value["human_readable_description"] }}
+          </p>
+          <div class="row text-center">
+            <div class="col">
+              <p>views: {{ value["views"] }}</p>
             </div>
-
-            <div class="row">
-              <div class="col">
-                <a
-                  href="{{url_for('album.remove_album_photos', album_id=value['album_id'])}}"
-                >
-                  <button id="edit-buttons" class="btn btn-warning btn-block">
-                    Remove photos
-                  </button>
-                </a>
-              </div>
+            <div class="col">
+              <p>photos: {{ value["photos"] }}</p>
             </div>
+          </div>
+        </div>
+      </a>
 
-            <div class="row">
-              <div class="col">
-                <a
-                  href="{{url_for('album.delete_album', album_id=value['album_id'])}}"
-                >
-                  <button class="btn btn-danger btn-block">
-                    Delete album
-                  </button>
-                </a>
-              </div>
-            </div>
-          </td>
-        </tr>
+      <!-- buttons -->
+      <div class="col my-auto">
+        <div class="row">
+          <div class="col">
+            <a
+              href="{{url_for('album.add_album_photos', album_id=value['album_id'])}}"
+            >
+              <button id="edit-buttons" class="btn btn-success btn-block">
+                Add photos
+              </button>
+            </a>
+          </div>
+        </div>
 
-        {% endfor %}
-      </tbody>
-    </table>
+        <div class="row">
+          <div class="col">
+            <a
+              href="{{url_for('album.edit_album', album_id=value['album_id'])}}"
+            >
+              <button id="edit-buttons" class="btn btn-warning btn-block">
+                Edit album
+              </button>
+            </a>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col">
+            <a
+              href="{{url_for('album.remove_album_photos', album_id=value['album_id'])}}"
+            >
+              <button id="edit-buttons" class="btn btn-warning btn-block">
+                Remove photos
+              </button>
+            </a>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col">
+            <a
+              href="{{url_for('album.delete_album', album_id=value['album_id'])}}"
+            >
+              <button class="btn btn-danger btn-block">
+                Delete album
+              </button>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- end buttons -->
+    </div>
   </div>
+
+  {% endfor %}
 </div>
 
 {% endblock %}
