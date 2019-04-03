@@ -239,11 +239,11 @@ class PhotoTag(object):
             '''.format(tag_name)
         )
 
-        photo_tag_table = self.db.get_query_as_list(
-            '''
-            select * from photo_tag where tag_name = "{}"
-            '''.format(tag_name)
-        )
+        # photo_tag_table = self.db.get_query_as_list(
+        #     '''
+        #     select * from photo_tag where tag_name = "{}"
+        #     '''.format(tag_name)
+        # )
 
         self.db.make_query(
             '''
@@ -251,11 +251,11 @@ class PhotoTag(object):
             '''.format(tag_name)
         )
 
-        tag_table = self.db.get_query_as_list(
-            '''
-            select * from tag where tag_name = "{}"
-            '''.format(tag_name)
-        )
+        # tag_table = self.db.get_query_as_list(
+        #     '''
+        #     select * from tag where tag_name = "{}"
+        #     '''.format(tag_name)
+        # )
 
     def delete_tag(self, tag_name):
         """
@@ -542,26 +542,19 @@ class PhotoTag(object):
         # Get the photos that have the old_tag associated with them.
         old_tag_photos = self.get_photos_by_tag(old_tag)
 
-        # Remove the old_tag.
-        self.remove_tag_name(old_tag)
-
-        self.db.make_query(
-            '''
-            delete from tag where tag_name = "{}"
-            '''.format(old_tag)
-        )
-
         # Add the new tag to the tag table.
         self.add_tag(new_tag)
 
-        if len(old_tag_photos) > 0:
-            list_keys = list(old_tag_photos.keys())[1:]
+        self.db.make_query(
+            '''
+            UPDATE photo_tag
+            SET tag_name = "{}"
+            WHERE tag_name = "{}"
+            '''.format(new_tag, old_tag)
+        )
 
-            for key in list_keys:
-                self.add_photo_tag(
-                    old_tag_photos[key]['photo_id'],
-                    new_tag
-                )
+        # Remove the old_tag.
+        self.remove_tag_name(old_tag)
 
         # Update the tag count for the new tag.
         self.update_photo_count(new_tag)
