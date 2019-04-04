@@ -425,45 +425,4 @@ class Album(object):
 
 if __name__ == "__main__":
     a = Album()
-
-    # print(a.get_containing_album(1968247294))
-
-    print(a.get_albums_in_range(20, 0))
-
-    # print(a.get_album(3149315074))
-
-    # print(a.get_album_by_name("test 1"))
-
-    # print(a.get_album_cover('72157650725849398'))
-    # blah = a.get_albums()
-
-    # print(a.create_album('28035310@N00', 'test', 'a test of creating an album'))
-
-    # print(a.get_albums())
-
-    # a.get_album('1847925474')
-
-    # a.get_album_cover('1847925474')
-
-    # print()
-    # print(a.get_album_photos_in_range('72157701915517595'))
-    # print()
-    # print(a.get_album_photos('72157672063116008'))
-
-    # print(a.remove_photos_from_album('72157678080171871', ['44692598005']))
-
-    # print(a.update_album('72157678080171871',
-    #                      'new album name', 'some album description'))
-
-    # print(a.add_photos_to_album('72157677661532872',
-    #                             [
-    #                                 '31758038024', '45541535182', '31083915568'
-    #                             ]))
-
-    # print(blah.keys(), blah[0]['large_square'])
-
-    # print(a.delete_album(72157671546432768))
-
-    # print(a.get_album('72157664116903126'))
-
-    # print(a.get_containing_album(16748114355))
+    pass
