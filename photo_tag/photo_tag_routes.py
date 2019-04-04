@@ -23,15 +23,11 @@ def get_tag_photos(tag_name=None):
     if 'offset' in args.keys():
         offset = int(args['offset'])
 
-        if offset < 0:
+        if offset <= 0:
             offset = 0
 
         tag_photos_data = pt.get_tag_photos_in_range(
             args['tag_name'], 20, offset)
-
-        if offset >= tag_photos_data['tag_info']['number_of_photos']:
-            offset = tag_photos_data['tag_info']['number_of_photos']
-            pass
 
         return render_template('photo_tag/tag_photos.html', json_data=tag_photos_data)
 
