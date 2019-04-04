@@ -26,24 +26,38 @@
 
 <div id="albums-page-container" class="row mx-auto">
   {% for key, value in json_data.items() %}
-  <div class="col albums-card">
-    <div class="card" style="width: 18rem;">
+  <div class="col text-center">
+    <!-- start card -->
+    <div class="album-card">
       <a
-        href="{{url_for('album.get_album_photos', album_id=value['album_id']) }}"
+        href="{{url_for('album.get_album_photos', album_id=value['album_id'])}}"
       >
         <div class="card-body">
-          <h5 class="card-title text-center">
-            {{ value["human_readable_name"] }}
-          </h5>
-          <img class="card-img-top img-fluid" src={% if value['large_square'] %}
-          {{ value["large_square"] }} {% else %} '/static/images/logo.jpg' {%
-          endif %} alt="{{ value["human_readable_name"] }} album">
-          <p class="card-text">{{ value["human_readable_description"] }}</p>
           <div class="row">
-            <div class="col text-left">
+            <div class="col">
+              <h5 class="card-title text-center">
+                {{ value["human_readable_name"] }}
+              </h5>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col">
+              <img class="card-img-top uploaded img-fluid" src={% if
+              value['large_square'] %} {{ value["large_square"] }} {% else %}
+              '/static/images/logo.jpg' {% endif %} alt="{{
+                value["human_readable_name"]
+              }}
+              album">
+            </div>
+          </div>
+          <p class="card-text">
+            {{ value["human_readable_description"] }}
+          </p>
+          <div class="row text-center">
+            <div class="col">
               <p>views: {{ value["views"] }}</p>
             </div>
-            <div class="col text-right">
+            <div class="col">
               <p>photos: {{ value["photos"] }}</p>
             </div>
           </div>
@@ -53,4 +67,6 @@
   </div>
   {% endfor %}
 </div>
+
+<!-- end block content -->
 {% endblock %}

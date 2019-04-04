@@ -4,29 +4,27 @@
 {% block content %} {% if json_data['album_data']['photos'] > 0 %}
 
 <div class="row">
-  <div id="problem-div" class="col">
-    <div class="card" style="width: 18rem;">
-      <div class="card-body">
-        <h5 class="card-title text-center">
-          {{ json_data["album_data"]["human_readable_title"] }}
-        </h5>
-        <img class="card-img-top img-fluid" src={% if
-        json_data['album_data']['large_square'] %}
-        {{ json_data["album_data"]["large_square"] }} {% else %}
-        '/static/images/logo.jpg' {% endif %} alt="{{
-          json_data["album_data"]["human_readable_title"]
-        }}
-        album">
-        <p class="card-text">
-          {{ json_data["album_data"]["human_readable_description"] }}
-        </p>
-        <div class="row text-center">
-          <div class="col">
-            <p>views: {{ json_data["album_data"]["views"] }}</p>
-          </div>
-          <div class="col">
-            <p>photos: {{ json_data["album_data"]["photos"] }}</p>
-          </div>
+  <div id="single-album" class="col album-card">
+    <div class="card-body">
+      <h5 class="card-title text-center">
+        {{ json_data["album_data"]["human_readable_title"] }}
+      </h5>
+      <img class="card-img-top img-fluid" src={% if
+      json_data['album_data']['large_square'] %}
+      {{ json_data["album_data"]["large_square"] }} {% else %}
+      '/static/images/logo.jpg' {% endif %} alt="{{
+        json_data["album_data"]["human_readable_title"]
+      }}
+      album">
+      <p class="card-text">
+        {{ json_data["album_data"]["human_readable_description"] }}
+      </p>
+      <div class="row text-center">
+        <div class="col">
+          <p>views: {{ json_data["album_data"]["views"] }}</p>
+        </div>
+        <div class="col">
+          <p>photos: {{ json_data["album_data"]["photos"] }}</p>
         </div>
       </div>
     </div>
