@@ -116,6 +116,16 @@ img {
 .album-card {
   /* Add shadows to create the "card" effect */
   box-shadow: 0 4px 8px 0 rgba(0.4, 0.4, 0, 0.4);
-  margin: 1em;
   padding-bottom: 1em;
+  min-width: 18rem;
+  max-width: 18rem;
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 2em;
+}
+
+/* some spacing in album.html */
+#single-album {
+  margin-top: 2em;
+  margin-bottom: 1.2em;
 }
