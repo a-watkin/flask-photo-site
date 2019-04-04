@@ -13,7 +13,6 @@ except Exception as e:
     sys.path.append(os.getcwd())
     from common.database_interface import Database
     from common import name_util
-    from tag.tag import Tag
 
 
 class PhotoTag(object):
@@ -239,23 +238,11 @@ class PhotoTag(object):
             '''.format(tag_name)
         )
 
-        # photo_tag_table = self.db.get_query_as_list(
-        #     '''
-        #     select * from photo_tag where tag_name = "{}"
-        #     '''.format(tag_name)
-        # )
-
         self.db.make_query(
             '''
             DELETE FROM tag WHERE tag_name = "{}"
             '''.format(tag_name)
         )
-
-        # tag_table = self.db.get_query_as_list(
-        #     '''
-        #     select * from tag where tag_name = "{}"
-        #     '''.format(tag_name)
-        # )
 
     def delete_tag(self, tag_name):
         """
@@ -401,7 +388,6 @@ class PhotoTag(object):
         return False
 
     def remove_tags_from_photo(self, photo_id, tag_list=None):
-        print('called with ', photo_id, tag_list)
         """
         Accepts a photo_id as an int and optional list of tag_names.
 
@@ -439,25 +425,16 @@ class PhotoTag(object):
             offset = num_photos - (num_photos % 20)
 
         page = offset // limit
+
         pages = num_photos // limit
 
-        # Ensure the starting page is 1 instead of 0.
+        # Make the pages count start at 1.
         if num_photos == 20:
             page = 1
             pages = 1
-
-        elif num_photos > 20 and num_photos % 20 == 0:
-            page += 1
-
         else:
             page += 1
             pages += 1
-
-        # Guards against page being grater than the number of pages.
-        if page > pages:
-            # Prevents an empty set from being returned.
-            offset = offset - 20
-            page = pages
 
         data = self.db.get_query_as_list(
             '''
