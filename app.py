@@ -1,3 +1,5 @@
+import os
+
 from flask import Flask, render_template, request, session, flash, redirect, url_for
 
 
@@ -9,8 +11,12 @@ from album.album_routes import album_blueprint
 from photo_tag.photo_tag_routes import photo_tag_blueprint
 
 
+# Old way.
 # app = Flask('app')
 # app = Flask(__name__.split('.')[0])
+# app.secret_key = 'apples'
+
+# new way
 app = Flask(__name__)
 
 # Apply config values.
@@ -25,6 +31,7 @@ app.register_blueprint(album_blueprint, url_prefix="/photo/album")
 app.register_blueprint(photo_tag_blueprint, url_prefix="/photo/tag")
 
 
+# Old way.
 # if __name__ == '__main__':
 #     app.run(
 #         host='0.0.0.0',
