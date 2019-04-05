@@ -116,10 +116,8 @@ def add_tag():
         # Associate the tags with the photo.
         pt = PhotoTag()
         pt.add_tags_to_photo(photo_id, tag_data)
-        # Get photo to return to template.
-        p = Photo()
-        photo_data = p.get_photo(args['photo_id'])
-        return render_template('photo.html', json_data=photo_data), 200
+        # Redirect to get photo.
+        return redirect(url_for('photo.get_photo', photo_id=photo_id))
 
 
 @photo_tag_blueprint.route('/remove', methods=['GET', 'POST'])
