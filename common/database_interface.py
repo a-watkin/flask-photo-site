@@ -152,6 +152,22 @@ class Database(object):
             except Exception as e:
                 print('Problem ', e, x)
 
+    def get_column_names(self, table_name):
+        """
+        Get the column names for a table as a list.
+        """
+        columns = self.make_query(
+            '''
+            PRAGMA table_info( {} )
+            '''.format(table_name)
+        )
+
+        column_names = []
+        for x in columns:
+            column_names.append(str(x[1]).strip().replace(' ', '_'))
+
+        return column_names
+
 
 if __name__ == "__main__":
     pass
