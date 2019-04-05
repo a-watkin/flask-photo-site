@@ -5,14 +5,14 @@ import sqlite3
 
 try:
     from common.database_interface import Database
-    from common import name_util
+    from common import utils
     from tag.tag import Tag
 except Exception as e:
     import os
     import sys
     sys.path.append(os.getcwd())
     from common.database_interface import Database
-    from common import name_util
+    from common import utils
 
 
 class PhotoTag(object):
@@ -61,7 +61,7 @@ class PhotoTag(object):
         tags = self.get_photo_tag_list(photo_id)
         rtn_list = []
         for tag in tags:
-            rtn_list.append(name_util.make_decoded(tag))
+            rtn_list.append(utils.make_decoded(tag))
         return rtn_list
 
     def update_photo_count(self, tag_name=None):
@@ -72,7 +72,7 @@ class PhotoTag(object):
         """
         # This is fast enough and usually what is used.
         if tag_name is not None:
-            tag_name = name_util.make_encoded(tag_name)
+            tag_name = utils.make_encoded(tag_name)
             self.db.make_query(
                 '''
                 UPDATE tag
@@ -85,7 +85,7 @@ class PhotoTag(object):
             # Check the entire tag table is no tag_name provided.
             # This is slow.
             for tag in self.get_all_photo_tags_as_list():
-                tag = name_util.make_encoded(tag)
+                tag = utils.make_encoded(tag)
                 # Get the number of photos using the tag.
                 count = self.count_photos_by_tag_name(tag)
 
@@ -147,7 +147,7 @@ class PhotoTag(object):
 
         data = (
             photo_id,
-            name_util.make_encoded(tag_name)
+            utils.make_encoded(tag_name)
         )
 
         self.db.make_sanitized_query(
@@ -197,7 +197,7 @@ class PhotoTag(object):
                 # Remove starting and trailing whitespace.
                 tag = tag.strip()
                 # Encode tag to a safe version.
-                tag = name_util.make_encoded(tag)
+                tag = utils.make_encoded(tag)
 
                 # Check if tag is in the tag table.
                 # Data will be None if the tag is not in the tag table.
@@ -280,7 +280,7 @@ class PhotoTag(object):
         test_keys = list(rtn_dict.keys())
 
         for tag in tag_data:
-            tag['human_readable_tag'] = name_util.make_decoded(
+            tag['human_readable_tag'] = utils.make_decoded(
                 tag['tag_name'])
             # Test for and add starting letter to the correct dict key.
             if str(tag['tag_name'][0]).upper() in test_keys:
@@ -305,7 +305,7 @@ class PhotoTag(object):
 
         tag_data = self.db.get_query_as_list(query_string)
         for tag in tag_data:
-            tag['human_readable_tag'] = name_util.make_decoded(tag['tag_name'])
+            tag['human_readable_tag'] = utils.make_decoded(tag['tag_name'])
 
         return tag_data
 
@@ -330,7 +330,7 @@ class PhotoTag(object):
         count = 0
         for t in tag_data:
             rtn_dict[count] = t
-            rtn_dict[count]['human_readable_tag'] = name_util.make_decoded(
+            rtn_dict[count]['human_readable_tag'] = utils.make_decoded(
                 rtn_dict[count]['tag_name'])
             count += 1
 
@@ -352,7 +352,7 @@ class PhotoTag(object):
 
         if len(tag_data) > 0:
             tag_name = tag_data[0][0]
-            human_readable_tag = name_util.make_decoded(tag_data[0][0])
+            human_readable_tag = utils.make_decoded(tag_data[0][0])
 
             rtn_dict = {
                 'tag_name': tag_name,
@@ -395,7 +395,7 @@ class PhotoTag(object):
                     DELETE FROM photo_tag
                     WHERE tag_name = "{}"
                     AND photo_id = {}
-                    '''.format(name_util.make_encoded(tag), photo_id)
+                    '''.format(utils.make_encoded(tag), photo_id)
                 )
         else:
             self.db.make_query(
@@ -409,7 +409,7 @@ class PhotoTag(object):
         """
         Returns a dict of dicts with photo data within the limit and from the offset specified for the tag specified.
         """
-        tag_name = name_util.make_encoded(tag_name)
+        tag_name = utils.make_encoded(tag_name)
 
         # Get all photos associated with the tag name.
         num_photos = self.count_photos_by_tag_name(tag_name)
@@ -443,7 +443,7 @@ class PhotoTag(object):
         # Decode the title.
         for photo in data:
             if photo['photo_title'] is not None:
-                photo['photo_title'] = name_util.make_decoded(
+                photo['photo_title'] = utils.make_decoded(
                     photo['photo_title'])
 
         a_dict = {}
@@ -457,7 +457,7 @@ class PhotoTag(object):
         rtn_dict['limit'] = limit
         rtn_dict['offset'] = offset
         rtn_dict['tag_name'] = tag_name
-        rtn_dict['human_readable_name'] = name_util.make_decoded(tag_name)
+        rtn_dict['human_readable_name'] = utils.make_decoded(tag_name)
         rtn_dict['page'] = page
         rtn_dict['pages'] = pages
 
@@ -476,8 +476,8 @@ class PhotoTag(object):
         It encodes the tags first.
         """
         # Encode the tags.
-        new_tag = name_util.make_encoded(new_tag)
-        old_tag = name_util.make_encoded(old_tag)
+        new_tag = utils.make_encoded(new_tag)
+        old_tag = utils.make_encoded(old_tag)
 
         # Add the new tag to the tag table.
         self.add_tag(new_tag)

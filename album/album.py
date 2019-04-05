@@ -4,7 +4,7 @@ import uuid
 
 
 from common.database_interface import Database
-from common import name_util
+from common import utils
 
 
 class Album(object):
@@ -65,10 +65,10 @@ class Album(object):
             if len(album_cover_dict) > 0:
                 album['large_square'] = album_cover_dict[0]['large_square']
 
-            album['human_readable_name'] = name_util.make_decoded(
+            album['human_readable_name'] = utils.make_decoded(
                 album['title'])
 
-            album['human_readable_description'] = name_util.make_decoded(
+            album['human_readable_description'] = utils.make_decoded(
                 album['description'])
 
             rtn_dict[count] = album
@@ -93,10 +93,10 @@ class Album(object):
         album_data = self.db.get_query_as_list(query)
 
         if len(album_data) > 0:
-            album_data[0]['human_readable_title'] = name_util.make_decoded(
+            album_data[0]['human_readable_title'] = utils.make_decoded(
                 album_data[0]['title'])
 
-            album_data[0]['human_readable_description'] = name_util.make_decoded(
+            album_data[0]['human_readable_description'] = utils.make_decoded(
                 album_data[0]['description'])
 
         if len(album_data) > 0 and album_data[0]['photos'] > 0:
@@ -331,7 +331,7 @@ class Album(object):
     def create_album(self, user_id, title, description):
         created = datetime.datetime.now()
         # Get album id.
-        identifier = name_util.get_id()
+        identifier = utils.get_id()
 
         self.db.make_query(
             '''
@@ -393,10 +393,10 @@ class Album(object):
                 # Image preview for the album.
                 album['large_square'] = '/static/images/logo.jpg'
             # Adding human readable title.
-            album['human_readable_title'] = name_util.make_decoded(
+            album['human_readable_title'] = utils.make_decoded(
                 album['title'])
 
-            album['human_readable_description'] = name_util.make_decoded(
+            album['human_readable_description'] = utils.make_decoded(
                 album['description'])
 
         a_dict = {}

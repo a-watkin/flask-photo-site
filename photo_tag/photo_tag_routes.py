@@ -3,8 +3,8 @@ import json
 from flask import Blueprint, jsonify, request, render_template, redirect, url_for, flash, session
 
 
-from common.name_util import login_required
-from common import name_util
+from common.utils import login_required
+from common import utils
 from photo.photo import Photo
 from photo_tag.photo_tag import PhotoTag
 

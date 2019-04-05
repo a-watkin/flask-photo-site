@@ -1,6 +1,6 @@
 from flask import Blueprint, request, render_template, redirect, url_for, flash, session
 
-from common.name_util import login_required
+from common.utils import login_required
 from user.user import User
 
 user_blueprint = Blueprint('user', __name__)

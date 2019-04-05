@@ -6,8 +6,8 @@ import datetime
 from flask import Blueprint, jsonify, request, render_template, redirect, url_for, flash, session
 from werkzeug.utils import secure_filename
 
-from common import name_util
-from common.name_util import login_required
+from common import utils
+from common.utils import login_required
 from common.exif_util import ExifUtil
 from common.resize_photo import PhotoUtil
 
@@ -43,7 +43,7 @@ def upload_file():
         elif len(files) >= 1:
             created = datetime.datetime.now()
             for file in files:
-                photo_id = name_util.get_id()
+                photo_id = utils.get_id()
                 if allowed_file(file.filename):
                     filename = secure_filename(file.filename)
                     # where the file will be saved
@@ -165,7 +165,7 @@ def get_uploaded_photos():
 def update_title():
     d = request.get_json()
     title = d['title'].strip()
-    title = name_util.make_encoded(title)
+    title = utils.make_encoded(title)
 
     up = UploadedPhotos()
 

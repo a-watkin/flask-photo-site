@@ -5,7 +5,7 @@ import json
 import datetime
 
 from common.database_interface import Database
-from common import name_util
+from common import utils
 from common.exif_util import ExifUtil
 from photo_tag.photo_tag import PhotoTag
 
@@ -83,7 +83,7 @@ class UploadedPhotos(object):
             photo['tags'] = []
             # Get the title if it already has one.
             if photo['photo_title']:
-                photo['photo_title'] = name_util.make_decoded(
+                photo['photo_title'] = utils.make_decoded(
                     photo['photo_title'])
             # Get any tags the photo already has.
             for tag in t.get_photo_tags(photo['photo_id']):
@@ -227,7 +227,7 @@ class UploadedPhotos(object):
                 tags = t.get_photo_tags(photo['photo_id'])
                 for tag in tags:
                     if tag['tag_name']:
-                        tag_name = name_util.make_encoded(tag['tag_name'])
+                        tag_name = utils.make_encoded(tag['tag_name'])
                         t.update_photo_count(tag_name)
 
     def add_all_to_album(self, album_id):

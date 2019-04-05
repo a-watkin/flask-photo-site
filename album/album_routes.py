@@ -8,8 +8,8 @@ from album.album import Album
 from upload.uploaded_photos import UploadedPhotos
 from photo.photo import Photo
 
-from common.name_util import login_required
-from common import name_util
+from common.utils import login_required
+from common import utils
 
 
 album_blueprint = Blueprint('album', __name__)
@@ -94,8 +94,8 @@ def edit_album(album_id):
 
     if request.method == 'POST':
         a = Album()
-        album_name = name_util.make_encoded(request.form['name'])
-        album_description = name_util.make_encoded(request.form['description'])
+        album_name = utils.make_encoded(request.form['name'])
+        album_description = utils.make_encoded(request.form['description'])
         a.update_album(album_id, album_name, album_description)
         json_data = a.get_album(album_id)
         return render_template('album/edit_album.html', json_data=json_data), 200
