@@ -1,6 +1,6 @@
 import json
 
-from flask import Blueprint, jsonify, request, render_template, redirect, url_for, flash, session, jsonify
+from flask import Blueprint, jsonify, request, render_template, redirect, url_for, flash, session
 
 
 from common.name_util import login_required
