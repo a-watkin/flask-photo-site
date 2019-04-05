@@ -1,5 +1,12 @@
-from common.database_interface import Database
-from password_util import PasswordUtil
+try:
+    from common.database_interface import Database
+    from common.password_util import PasswordUtil
+except ImportError as e:
+    import os
+    import sys
+    sys.path.append(os.getcwd())
+    from common.database_interface import Database
+    from common.password_util import PasswordUtil
 
 
 class Admin(object):
@@ -9,8 +16,8 @@ class Admin(object):
     def make_account(self, username, password):
         self.db.make_query(
             '''
-            insert into user (user_id, username, hash_value)
-            values ("{}", "{}", "{}")
+            INSERT INTO user (user_id, username, hash_value)
+            VALUES ("{}", "{}", "{}")
             '''.format(
                 username,
                 username,
