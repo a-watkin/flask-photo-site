@@ -154,6 +154,8 @@ class PhotoTag(object):
             query_string, data
         )
 
+        self.update_photo_count(tag_name)
+
     def add_tag(self, tag_name):
         """
         Adds a tag to the tag table.
@@ -170,6 +172,8 @@ class PhotoTag(object):
         self.db.make_sanitized_query(
             query_string, data
         )
+
+        self.update_photo_count(tag_name)
 
     def add_tags_to_photo(self, photo_id, tag_list):
         """
@@ -212,7 +216,6 @@ class PhotoTag(object):
         # Confirming the tags have been added.
         photo_tags = self.get_photo_tag_list(photo_id)
         for tag in added_tags:
-            self.update_photo_count(tag)
             if tag not in photo_tags:
                 return False
 
@@ -377,6 +380,8 @@ class PhotoTag(object):
         self.count_photos_by_tag_name(tag_name)
 
         if len(data) > 0:
+            # Update the tag count for the tag.
+            self.update_photo_count(tag)
             return True
         return False
 
@@ -397,6 +402,10 @@ class PhotoTag(object):
                     AND photo_id = {}
                     '''.format(utils.make_encoded(tag), photo_id)
                 )
+
+                # Update the tag count for the tag.
+                self.update_photo_count(tag)
+
         else:
             self.db.make_query(
                 '''
