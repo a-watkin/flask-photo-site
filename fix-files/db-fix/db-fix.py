@@ -33,7 +33,7 @@ else:
     # print('got it, loading data...')
     data = unpickle_obj('pickled-photo-tag.pickle')
     # print(data)
-    # print('data laoded from pickle')
+    # print('data loaded from pickle')
 
 
 # drop photo_tag table from the database
