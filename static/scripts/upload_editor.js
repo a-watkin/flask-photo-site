@@ -52,9 +52,7 @@ class UploadEditor extends React.Component {
   }
 
   componentWillMount() {
-    console.log("called componentWillMount");
-
-    fetch("/upload/test", {
+    fetch("/photo/upload/test", {
       credentials: "include"
     })
       .then(res => res.json())
@@ -66,7 +64,7 @@ class UploadEditor extends React.Component {
         // Redirect if no files present.
         // This is really a niche thing it shouldn't ever happen.
         if (Object.keys(this.state.items).length < 1) {
-          window.location.assign(`/`);
+          window.location.assign(`/photo`);
         }
       })
       .catch(error => console.error(error));
@@ -77,7 +75,7 @@ class UploadEditor extends React.Component {
       photoId: photo_id
     });
 
-    fetch("/upload/discard/photo", {
+    fetch("/photo/upload/discard/photo", {
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json"
@@ -94,7 +92,7 @@ class UploadEditor extends React.Component {
         });
 
         if (Number(Object.keys(this.state.items).length) === 0) {
-          window.location.assign(`/`);
+          window.location.assign(`/photo`);
         }
       }
     });
@@ -103,7 +101,7 @@ class UploadEditor extends React.Component {
   updateTitle(e, photo_id, key) {
     const new_title = e.target.value;
 
-    fetch("/upload/api/uploaded/title", {
+    fetch("/photo/upload/api/uploaded/title", {
       method: "POST",
       credentials: "include",
       headers: {
@@ -164,7 +162,7 @@ class UploadEditor extends React.Component {
 
   addToPhotoStream() {
     if (this.state.allowButtons) {
-      fetch("/upload/photostream", {
+      fetch("/photo/upload/photostream", {
         method: "POST",
         credentials: "include",
         headers: {
@@ -175,17 +173,17 @@ class UploadEditor extends React.Component {
           photos: this.state.items
         })
       }).then(Response => {
-        window.location.assign(`/`);
+        window.location.assign(`/photo`);
       });
     }
   }
 
   addToNewAlbum() {
-    window.location.assign(`/album/create`);
+    window.location.assign(`/photo/album/create`);
   }
 
   addToExistingAlbum() {
-    window.location.assign(`/album/api/select/album`);
+    window.location.assign(`/photo/album/api/select/album`);
   }
 
   warningArea() {

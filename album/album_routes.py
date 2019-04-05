@@ -78,7 +78,7 @@ def create_album():
 
             album_data = a.get_album(album_id)
 
-            return redirect('album/edit/{}/photos'.format(album_id)), 302
+            return redirect('/photo/album/edit/{}/photos'.format(album_id)), 302
 
 
 @album_blueprint.route('/edit/<int:album_id>', methods=['GET', 'POST'])
@@ -149,12 +149,12 @@ def remove_album_photos(album_id):
         album_data = a.get_album(album_id)
         photo_data = a.get_album_photos_in_range(album_id)
         photo_data['album_data'] = album_data
-        return render_template('album/remove_album_photos.html', json_data=photo_data), 200
+        return render_template('/album/remove_album_photos.html', json_data=photo_data), 200
     if request.method == 'POST':
         data = request.get_json()
         a = Album()
         a.remove_photos_from_album(data['albumId'], data['photos'])
-        return redirect("album/{}".format(data['albumId']), code=302)
+        return redirect("/photo/album/{}".format(data['albumId']), code=302)
 
 
 @album_blueprint.route('/edit/<int:album_id>/photos', methods=['GET', 'POST'])
@@ -172,12 +172,12 @@ def add_album_photos(album_id):
         album_data = a.get_album(album_id)
         photo_data = p.get_photos_in_range(20, 0)
         photo_data['album_data'] = album_data
-        return render_template('album/add_album_photos.html', json_data=photo_data), 200
+        return render_template('/album/add_album_photos.html', json_data=photo_data), 200
     if request.method == 'POST':
         data = request.get_json()
         a = Album()
         a.add_photos_to_album(data['albumId'], data['photos'])
-        return redirect("/album/{}".format(data['albumId']), code=302)
+        return redirect("/photo/album/{}".format(data['albumId']), code=302)
 
 
 @album_blueprint.route('/create', methods=['GET', 'POST'])
@@ -214,7 +214,7 @@ def to_new_album():
             up = UploadedPhotos()
             up.add_all_to_album(album_id)
             album_data = a.get_album(album_id)
-            return redirect('album/{}'.format(album_id)), 302
+            return redirect('/photo/album/{}'.format(album_id)), 302
 
 
 # Gets album photos as JSON for React.
@@ -291,4 +291,4 @@ def get_albums_json():
         # Add all the uploaded photos to the album.
         up = UploadedPhotos()
         up.add_all_to_album(album_id)
-        return redirect("album/{}".format(album_id), code=302)
+        return redirect("/photo/album/{}".format(album_id), code=302)

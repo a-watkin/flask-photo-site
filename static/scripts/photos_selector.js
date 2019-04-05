@@ -20,9 +20,9 @@ class PhotoSelector extends React.Component {
     // Getting the album id from the URL.
     let currentUrl = window.location.href;
     let splitUrl = currentUrl.split("/");
-    const albumId = splitUrl[5];
+    const albumId = splitUrl[6];
 
-    fetch("/api/getphotos", {
+    fetch("/photo/api/getphotos", {
       credentials: "include"
     })
       .then(res => res.json())
@@ -45,7 +45,7 @@ class PhotoSelector extends React.Component {
   }
 
   getNextPhotos() {
-    fetch(`/api/getphotos?offset=${this.state.currentOffset + 20}`, {
+    fetch(`/photo/api/getphotos?offset=${this.state.currentOffset + 20}`, {
       credentials: "include"
     })
       .then(res => res.json())
@@ -71,7 +71,7 @@ class PhotoSelector extends React.Component {
       return false;
     }
 
-    fetch(`/api/getphotos?offset=${this.state.currentOffset - 20}`, {
+    fetch(`/photo/api/getphotos?offset=${this.state.currentOffset - 20}`, {
       credentials: "include"
     })
       .then(res => res.json())
@@ -93,7 +93,7 @@ class PhotoSelector extends React.Component {
   }
 
   sendData() {
-    fetch(`/album/edit/${this.state.albumId}/photos`, {
+    fetch(`/photo/album/edit/${this.state.albumId}/photos`, {
       method: "POST",
       credentials: "include",
       headers: {
@@ -107,7 +107,7 @@ class PhotoSelector extends React.Component {
     })
       .catch(error => console.error(error))
       .then(() => {
-        window.location.assign(`/album/${this.state.albumId}`);
+        window.location.assign(`/photo/album/${this.state.albumId}`);
       });
   }
 
@@ -215,7 +215,7 @@ class PhotoSelector extends React.Component {
 
           <div className="row">
             <div className="col text-left">
-              <a href="/album/edit/albums">
+              <a href="/photo/album/edit/albums">
                 <button className="btn btn-success btn-block btn-lg">
                   Return to edit albums
                 </button>

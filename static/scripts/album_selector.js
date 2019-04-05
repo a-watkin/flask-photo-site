@@ -20,7 +20,7 @@ class AlbumSelector extends React.Component {
     // Getting the album id from the URL.
     let currentUrl = window.location.href;
 
-    fetch("/album/api/getalbums", {
+    fetch("/photo/album/api/getalbums", {
       credentials: "include"
     })
       .then(res => res.json())
@@ -42,9 +42,12 @@ class AlbumSelector extends React.Component {
   }
 
   getNextAlbums() {
-    fetch(`/album/api/getalbums?offset=${this.state.currentOffset + 20}`, {
-      credentials: "include"
-    })
+    fetch(
+      `/photo/album/api/getalbums?offset=${this.state.currentOffset + 20}`,
+      {
+        credentials: "include"
+      }
+    )
       .then(res => res.json())
       .then(
         result => {
@@ -72,9 +75,12 @@ class AlbumSelector extends React.Component {
       return false;
     }
 
-    fetch(`/album/api/getalbums?offset=${this.state.currentOffset - 20}`, {
-      credentials: "include"
-    })
+    fetch(
+      `/photo/album/api/getalbums?offset=${this.state.currentOffset - 20}`,
+      {
+        credentials: "include"
+      }
+    )
       .then(res => res.json())
       .then(
         result => {
@@ -99,7 +105,7 @@ class AlbumSelector extends React.Component {
       return false;
     }
 
-    fetch("/album/api/getalbums", {
+    fetch("/photo/album/api/getalbums", {
       method: "POST",
       credentials: "include",
       headers: {
@@ -112,7 +118,7 @@ class AlbumSelector extends React.Component {
     })
       .catch(error => console.error(error))
       .then(() => {
-        window.location.assign(`/album/${this.state.selectedAlbum[0]}`);
+        window.location.assign(`/photo/album/${this.state.selectedAlbum[0]}`);
       });
   }
 
@@ -186,7 +192,7 @@ class AlbumSelector extends React.Component {
                   {" "}
                   <a
                     id="album-links"
-                    href={`/album/${albums[key]["album_id"]}`}
+                    href={`/photo/album/${albums[key]["album_id"]}`}
                   >
                     {albums[key]["human_readable_title"]}{" "}
                   </a>
@@ -242,7 +248,7 @@ class AlbumSelector extends React.Component {
           <hr />
           <div className="row">
             <div className="col text-left">
-              <a href="/upload/uploaded">
+              <a href="/photo/upload/uploaded">
                 <button className="btn btn-success btn-block btn-lg">
                   Return to uploaded photos{" "}
                 </button>{" "}

@@ -21,9 +21,9 @@ class SelectPhotos extends React.Component {
     // Getting the album id from the URL.
     let currentUrl = window.location.href;
     let splitUrl = currentUrl.split("/");
-    const albumId = splitUrl[5];
+    const albumId = splitUrl[6];
 
-    fetch(`/album/api/albumphotos?album_id=${albumId}`, {
+    fetch(`/photo/album/api/albumphotos?album_id=${albumId}`, {
       credentials: "include"
     })
       .then(res => res.json())
@@ -52,7 +52,8 @@ class SelectPhotos extends React.Component {
     // so to safe guard against coercion.
     let currentOffset = Number(this.state.currentOffset);
     fetch(
-      `/album/api/albumphotos?album_id=${albumId}&offset=${currentOffset + 20}`,
+      `/photo/album/api/albumphotos?album_id=${albumId}&offset=${currentOffset +
+        20}`,
       {
         credentials: "include"
       }
@@ -85,7 +86,7 @@ class SelectPhotos extends React.Component {
     }
 
     fetch(
-      `/album/api/albumphotos?album_id=${albumId}&offset=${this.state
+      `/photo/album/api/albumphotos?album_id=${albumId}&offset=${this.state
         .currentOffset - 20}`,
       {
         method: "GET",
@@ -114,7 +115,7 @@ class SelectPhotos extends React.Component {
   }
 
   sendData() {
-    fetch(`/album/edit/${this.state.albumId}/remove/photos`, {
+    fetch(`/photo/album/edit/${this.state.albumId}/remove/photos`, {
       method: "POST",
       credentials: "include",
       headers: {
@@ -129,7 +130,7 @@ class SelectPhotos extends React.Component {
       .catch(error => console.error(error))
       .then(() => {
         // Redirect after successful post.
-        window.location.assign(`/album/${this.state.albumId}`);
+        window.location.assign(`/photo/album/${this.state.albumId}`);
       });
   }
 
@@ -236,7 +237,7 @@ class SelectPhotos extends React.Component {
 
           <div className="row">
             <div className="col text-left">
-              <a href="/album/edit/albums">
+              <a href="/photo/album/edit/albums">
                 <button className="btn btn-success btn-block btn-lg">
                   Return to edit albums
                 </button>
