@@ -54,9 +54,11 @@ def account():
 
         if new_password != new_pass_confirm:
             flash('Your passwords do not match.')
+            return render_template('photo_user/account.html'), 200
 
         if not user.check_password():
             flash('Incorrect password.')
+            return render_template('photo_user/account.html'), 200
 
         if user.check_password() and user.password == old_pass:
             user.insert_hashed_password(new_password)
