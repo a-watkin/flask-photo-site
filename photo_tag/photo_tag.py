@@ -16,14 +16,6 @@ except Exception as e:
 
 
 class PhotoTag(object):
-    """
-    This is really too complicated.
-
-    Different parts of the system call it.
-
-    It's all interdependent and terrible overall.
-    """
-
     def __init__(self):
         self.db = Database()
         self.user_id = '28035310@N00'
@@ -272,6 +264,7 @@ class PhotoTag(object):
 
         Returns a dict ordered by the first char of the tag_name also provides human readable tag names and photo counts
         """
+
         # Tags as a list of dict values.
         tag_data = self.db.get_query_as_list(
             "SELECT tag_name, photos FROM tag ORDER BY tag_name"
