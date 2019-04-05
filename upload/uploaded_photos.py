@@ -4,7 +4,7 @@ import sqlite3
 import json
 import datetime
 
-from common.database_interface import Database
+from common.photo_db_interface import Database
 from common import utils
 from common.exif_util import ExifUtil
 from photo_tag.photo_tag import PhotoTag

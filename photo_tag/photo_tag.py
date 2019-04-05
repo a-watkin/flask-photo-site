@@ -4,14 +4,14 @@ import sqlite3
 
 
 try:
-    from common.database_interface import Database
+    from common.photo_db_interface import Database
     from common import utils
     from tag.tag import Tag
 except Exception as e:
     import os
     import sys
     sys.path.append(os.getcwd())
-    from common.database_interface import Database
+    from common.photo_db_interface import Database
     from common import utils
 
 

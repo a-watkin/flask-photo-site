@@ -1,4 +1,4 @@
-from common.database_interface import Database
+from common.photo_db_interface import Database
 from common.password_util import PasswordUtil
 
 

@@ -1,11 +1,11 @@
 try:
-    from common.database_interface import Database
+    from common.photo_db_interface import Database
     from common.password_util import PasswordUtil
 except ImportError as e:
     import os
     import sys
     sys.path.append(os.getcwd())
-    from common.database_interface import Database
+    from common.photo_db_interface import Database
     from common.password_util import PasswordUtil
 
 
