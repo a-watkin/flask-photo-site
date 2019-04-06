@@ -20,7 +20,7 @@ class UploadedPhotos(object):
     """
 
     def __init__(self):
-        self.db = Database('eigi-data.db')
+        self.db = Database()
         self.user_id = '28035310@N00'
 
     def save_photo(self, photo_id, date_uploaded, original, large_square, exif_data, date_taken):
