@@ -20,7 +20,7 @@ from photo_tag.photo_tag_routes import photo_tag_blueprint
 app = Flask(__name__)
 
 # Apply config values.
-app.config.from_object('config.DevelopmentConfig')
+app.config.from_object('config.ProductionConfig')
 
 
 # Register blueprints.
