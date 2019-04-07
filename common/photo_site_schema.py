@@ -68,7 +68,11 @@ def create_database(db_name):
 
     cursor.execute(
         '''
-        CREATE TABLE IF NOT EXISTS tag ( tag_name TEXT NOT NULL UNIQUE, user_id TEXT NOT NULL, photos INT, PRIMARY KEY (tag_name, user_id) FOREIGN KEY(user_id) REFERENCES user(user_id) ON DELETE CASCADE )
+        CREATE TABLE IF NOT EXISTS tag ( 
+            tag_name TEXT NOT NULL UNIQUE, 
+            user_id TEXT NOT NULL, photos INT, 
+            PRIMARY KEY (tag_name, user_id) 
+            FOREIGN KEY(user_id) REFERENCES user(user_id) ON DELETE CASCADE )
         '''
     )
 
