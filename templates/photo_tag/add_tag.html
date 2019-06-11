@@ -32,13 +32,14 @@
   <div class="col">
     <form
       method="POST"
-      action="{{ url_for('photo_tag.add_tag', photo_id=json_data['photo_id']) }}"
+      action="{{ url_for('tag.add_tag', photo_id=json_data['photo_id']) }}"
     >
       <div class="form-group">
         <label for="renaming-tag">Add additional tags below.</label>
         <input autocomplete="off" id="tag-update" name="new_tag_name"
         type="text" class="form-control text-center" {% if
         json_data['human_readable_tags'][0] %} value="{{ json_data["human_readable_tags"]|join(", ")
+
 
 
         }}" {% else %} placeholder="Enter tags here..." {% endif %} />

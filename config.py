@@ -7,10 +7,12 @@ class Config(object):
 
 
 class ProductionConfig(Config):
+    # gets values from Config overrides any that are set here
     pass
 
 
 class DevelopmentConfig(Config):
     # You have to set development before the app runs as an env variable
+    # export DEBUG=True
     # export FLASK_ENV=development
     SECRET_KEY = 'apples'

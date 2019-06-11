@@ -6,9 +6,7 @@
   <div class="col">
     <h1>
       Edit tag:
-      <a
-        href="{{url_for('photo_tag.get_tag_photos', tag_name=data['tag_name'])}}"
-      >
+      <a href="{{url_for('tag.get_tag_photos', tag_name=data['tag_name'])}}">
         <button type="button" class="btn btn-outline-success btn-lg">
           {{ data["human_readable_name"] }}
         </button>
@@ -44,7 +42,7 @@
 
       <div class="row">
         <div class="col text-left">
-          <a href="{{ url_for('photo_tag.edit_tags') }}">
+          <a href="{{ url_for('tag.edit_tags') }}">
             <button type="button" class="btn btn-success btn-block btn-lg">
               Back to edit tags
             </button>

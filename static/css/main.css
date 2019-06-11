@@ -1,3 +1,10 @@
+.navbar {
+  margin-bottom: 0.5em;
+}
+.container {
+  min-height: 80vh;
+}
+
 .col-3 {
   padding: 0%;
 }
@@ -14,6 +21,7 @@ img {
 }
 
 #photo-container {
+  /* border: black solid 2px; */
   margin-left: auto;
   margin-right: auto;
 
@@ -21,8 +29,35 @@ img {
   padding-bottom: 1%;
   vertical-align: baseline;
 
+  /* min-width: 100%; */
+
   max-height: 740px;
   min-height: 740px;
+}
+
+/* Photo */
+/* enables flex for all children of this element */
+/* Photo */
+/* enables flex for all children of this element */
+.flex-container {
+  display: flex;
+  flex-wrap: nowrap;
+  min-height: 76vh;
+  flex: 1;
+}
+
+/* flex-item */
+.flex-item {
+  /* This defines the ability for a flex item to grow if necessary. */
+  min-width: 10%;
+}
+
+#flex-image {
+  min-width: 80%;
+}
+
+#photo-info {
+  margin-top: 1em;
 }
 
 .table > tbody > tr > td {
@@ -93,7 +128,7 @@ img {
   margin-top: 1rem;
 }
 
-#test {
+.test {
   border: solid red 2px;
 }
 
@@ -128,4 +163,21 @@ img {
 #single-album {
   margin-top: 2em;
   margin-bottom: 1.2em;
+}
+
+footer {
+  margin-top: 3em;
+}
+
+#page-count {
+  margin-top: 1em;
+  margin-bottom: 1em;
+}
+
+.space-bottom {
+  margin-bottom: 2%;
+}
+
+.photo-page {
+  margin-bottom: 2%;
 }

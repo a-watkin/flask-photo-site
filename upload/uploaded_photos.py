@@ -4,7 +4,7 @@ import sqlite3
 import json
 import datetime
 
-from common.photo_db_interface import Database
+from common.database_interface import Database
 from common import utils
 from common.exif_util import ExifUtil
 from photo_tag.photo_tag import PhotoTag
@@ -21,7 +21,8 @@ class UploadedPhotos(object):
 
     def __init__(self):
         self.db = Database()
-        self.user_id = '28035310@N00'
+        # update with flickr user_id?
+        self.user_id = '9604217@N03'
 
     def save_photo(self, photo_id, date_uploaded, original, large_square, exif_data, date_taken):
         exif_id = str(int(uuid.uuid4()))[0:10]

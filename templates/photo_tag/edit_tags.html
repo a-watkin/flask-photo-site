@@ -11,7 +11,8 @@
 
 <div class="row">
   <div class="col text-center">
-    {% for key, value in json_data.items() %}
+    <!-- ensure items are in order -->
+    {% for key, value in json_data|dictsort %}
 
     <!-- start len list check -->
     {% if value|length > 0 %}
@@ -26,9 +27,7 @@
     <!-- needs elements to be vertically centred -->
     <div class="edit-tags-card row">
       <div class="col my-auto">
-        <a
-          href="{{url_for('photo_tag.get_tag_photos', tag_name=x['tag_name'])}}"
-        >
+        <a href="{{url_for('tag.get_tag_photos', tag_name=x['tag_name'])}}">
           <button type="button" class="btn btn-outline-success btn-lg">
             {{ x["human_readable_tag"] }}
           </button>
@@ -40,12 +39,12 @@
       </div>
 
       <div class="col">
-        <a href="{{ url_for('photo_tag.edit_tag', tag_name=x['tag_name']) }}">
+        <a href="{{ url_for('tag.edit_tag', tag_name=x['tag_name']) }}">
           <button id="edit-buttons" class="btn btn-warning btn-block">
             Edit tag
           </button>
         </a>
-        <a href="{{url_for('photo_tag.delete_tag', tag_name=x['tag_name'])}}">
+        <a href="{{url_for('tag.delete_tag', tag_name=x['tag_name'])}}">
           <button class="btn btn-danger btn-block">Delete tag</button>
         </a>
       </div>

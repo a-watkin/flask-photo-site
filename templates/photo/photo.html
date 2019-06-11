@@ -1,191 +1,196 @@
-{% extends "photo_site_template.html" %} 
+{% extends "photo_site_template.html" %}
 
 <!-- start block content -->
 {% block content %}
 
-<div class="row text-center">
+<div class="photo-page">
+  <div class="row text-center">
     {% if session %}
     <div class="col">
-        <a href="{{url_for('photo.edit_photo', photo_id=json_data['photo_id'])}}">
-            <button class="btn btn-warning btn-block btn-lg">Edit title</button></h1>
-        </a>
+      <a href="{{url_for('photo.edit_photo', photo_id=json_data['photo_id'])}}">
+        <button class="btn btn-warning btn-block btn-lg">Edit title</button>
+      </a>
     </div>
     {% endif %}
 
     <div class="col">
-        <h1 class="text-center">{{ json_data["title"] }}
+      <h1 class="text-center">{{ json_data["title"] }}</h1>
     </div>
 
     {% if session %}
     <div class="col">
-        <a href="{{url_for('photo.delete_photo', photo_id=json_data['photo_id'])}}">
-            <button class="btn btn-danger btn-block btn-lg">Delete photo</button>
-        </a>
+      <a
+        href="{{url_for('photo.delete_photo', photo_id=json_data['photo_id'])}}"
+      >
+        <button class="btn btn-danger btn-block btn-lg">Delete photo</button>
+      </a>
     </div>
     {% endif %}
-</div>
-<!-- displays the photo -->
-<div id="photo-container" class="row align-items-center">
+  </div>
 
-    <!-- Next -->
-    <div class="col-1 text-center nav-arrows">
-        <!-- Can't use url_for here as the argument is unnamed. -->
-        <a href="/photo/{{ json_data['next'] }}"><i class="fas fa-angle-left fa-3x"></i></a>
+  <!-- displays the photo -->
+  <!-- flex container -->
+
+  <div class="flex-container">
+    <div class="flex-item text-center flex-button my-auto">
+      <!-- Can't use url_for here as the argument is unnamed. -->
+      <a href="/photo/{{ json_data['next'] }}">
+        <i class="fas fa-angle-left fa-3x"> </i
+      ></a>
     </div>
 
-    <div class="col-10 text-center">
-        <img id="photo" class="img-fluid" src="{{json_data['original']}}" alt="" />
+    <div id="flex-image" class="flex-item text-center my-auto">
+      <img
+        id="image"
+        class="img-fluid"
+        src="{{ json_data['original'] }}"
+        alt=""
+      />
     </div>
 
-    <!-- Previous -->
-    <div class="col-1 text-center nav-arrows">
-        <!-- Can't use url_for here as the argument is unnamed. -->
-        <a href="/photo/{{ json_data['previous'] }}"><i class="fas fa-angle-right fa-3x"></i></a>
+    <div class="flex-item text-center flex-button my-auto">
+      <a href="/photo/{{ json_data['previous'] }}"
+        ><i class="fas fa-angle-right fa-3x"></i
+      ></a>
     </div>
-</div>
+  </div>
 
-<div id="photo-info" class="row">
+  <div id="photo-info" class="row">
     <div class="col-5">
-        {% if json_data['tags'] %}
+      {% if json_data['tags'] %}
 
-        <h2>Tags</h2>
-        {% for tag in json_data['tags'] %}
-        <!-- <h2>{{tag['human_readable_tag']}}</h2> -->
-        <a href="{{ url_for('photo_tag.get_tag_photos', tag_name=tag['tag_name']) }}">
-            <button type="button" class="btn btn-outline-success btn-lg">
-                {{tag['human_readable_tag']}}
+      <h2>Tags</h2>
+      {% for tag in json_data['tags'] %}
+      <a href="{{ url_for('tag.get_tag_photos', tag_name=tag['tag_name']) }}">
+        <button type="button" class="btn btn-outline-success btn-lg">
+          {{ tag["human_readable_tag"] }}
+        </button>
+      </a>
+      {% endfor %} {% endif %} {% if session %}
+      <hr />
+
+      <div class="row">
+        <div class="col text-center">
+          <a
+            href="{{ url_for( 'tag.add_tag', photo_id = json_data['photo_id'] ) }}"
+          >
+            <button class="btn btn-warning btn-block btn-lg">
+              Add a tag
             </button>
-        </a>
-        {% endfor %}
-
-        {% endif %}
-
-        {% if session %}
-        <hr>
-
-        <div class="row">
-            <div class="col text-center">
-                <a href="{{ url_for( 'photo_tag.add_tag', photo_id = json_data['photo_id'] ) }}">
-                    <button class="btn btn-warning btn-block btn-lg">
-                        Add a tag
-                    </button>
-                </a>
-            </div>
-
-            <div class="col text-center">
-                {% if json_data['tags'] %}
-                <a href="{{ url_for( 'photo_tag.remove_tag', photo_id = json_data['photo_id'] ) }}">
-                    <button class="btn btn-danger btn-block btn-lg">
-                        Remove a tag
-                    </button>
-                </a>
-                {% endif %}
-            </div>
+          </a>
         </div>
-        {% endif %}
 
+        <div class="col text-center">
+          {% if json_data['tags'] %}
+          <a
+            href="{{ url_for( 'tag.remove_tag', photo_id = json_data['photo_id'] ) }}"
+          >
+            <button class="btn btn-danger btn-block btn-lg">
+              Remove a tag
+            </button>
+          </a>
+          {% endif %}
+        </div>
+      </div>
+      {% endif %}
     </div>
 
-    <div class="col-2">
-        <p>Views: {{ json_data["views"] }}</p>
+    <div class="col-2 text-center">
+      <p>Views: {{ json_data["views"] }}</p>
     </div>
 
     {% if json_data['albums'] > 1 %}
 
     <div class="col">
-
-        {% for album in json_data['album_data'] %}
-
-        <div class="col d-flex justify-content-center"">
-    <!-- start card -->
-    <div class="album-card">
-        <a href="{{url_for('album.get_album_photos', album_id=album['album_id'])}}">
-            <div class="card-body">
-                <div class="row">
-                    <div class="col">
-                        <h5 class="card-title text-center">
-                            {{ album["human_readable_name"] }}
-                        </h5>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col">
-                        <img class="card-img-top uploaded img-fluid" src={% if
-                      album['large_square'] %} {{ album["large_square"] }} {% else %} '/static/images/logo.jpg' {% endif %}
-                            alt="{{
-                        album["human_readable_name"]
-                      }}
-                      album">
-                    </div>
-                </div>
-                <p class="card-text">
-                    {{ album["human_readable_description"] }}
-                </p>
-                <div class="row text-center">
-                    <div class="col">
-                        <p>views: {{ album["views"] }}</p>
-                    </div>
-                    <div class="col">
-                        <p>photos: {{ album["photos"] }}</p>
-                    </div>
-                </div>
+      {% for album in json_data['album_data'] %} <div class="col d-flex
+      justify-content-center"">
+      <!-- start card -->
+      <div class="album-card">
+        <a
+          href="{{url_for('album.get_album_photos', album_id=album['album_id'])}}"
+        >
+          <div class="card-body">
+            <div class="row">
+              <div class="col">
+                <h5 class="card-title text-center">
+                  {{ album["human_readable_title"] }}
+                </h5>
+              </div>
             </div>
+            <div class="row">
+              <div class="col">
+                <img class="card-img-top uploaded img-fluid" src={% if
+                album['large_square'] %} {{ album["large_square"] }} {% else %}
+                '/static/images/logo.jpg' {% endif %} alt="{{
+                  album["human_readable_name"]
+                }}
+                album">
+              </div>
+            </div>
+            <p class="card-text">
+              {{ album["human_readable_description"] }}
+            </p>
+            <div class="row text-center">
+              <div class="col">
+                <p>views: {{ album["views"] }}</p>
+              </div>
+              <div class="col">
+                <p>photos: {{ album["photos"] }}</p>
+              </div>
+            </div>
+          </div>
         </a>
-    </div>
+      </div>
     </div>
 
     {% endfor %}
-</div>
-{% else %}
+  </div>
+  {% else %} {% for album in json_data['album_data'] %}
 
-{% for album in json_data['album_data'] %}
-
-<div class="col d-flex justify-content-center">
+  <div class="col d-flex justify-content-center">
     <!-- start card -->
     <div class="album-card">
-        <a href="{{url_for('album.get_album_photos', album_id=album['album_id'])}}">
-            <div class="card-body">
-                <div class="row">
-                    <div class="col">
-                        <h5 class="card-title text-center">
-                            {{ album["human_readable_name"] }}
-                        </h5>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col">
-                        <img class="card-img-top uploaded img-fluid" src={% if
-                  album['large_square'] %} {{ album["large_square"] }} {% else %} '/static/images/logo.jpg' {% endif %}
-                            alt="{{
-                    album["human_readable_name"]
-                  }}
-                  album">
-                    </div>
-                </div>
-                <p class="card-text">
-                    {{ album["human_readable_description"] }}
-                </p>
-                <div class="row text-center">
-                    <div class="col">album
-                        <p>views: {{ album["views"] }}</p>
-                    </div>
-                    <div class="col">
-                        <p>photos: {{ album["photos"] }}</p>
-                    </div>
-                </div>
+      <a
+        href="{{url_for('album.get_album_photos', album_id=album['album_id'])}}"
+      >
+        <div class="card-body">
+          <div class="row">
+            <div class="col">
+              <h5 class="card-title text-center">
+                {{ album["human_readable_title"] }}
+              </h5>
             </div>
-        </a>
+          </div>
+          <div class="row">
+            <div class="col">
+              <img class="card-img-top uploaded img-fluid" src={% if
+              album['large_square'] %} {{ album["large_square"] }} {% else %}
+              '/static/images/logo.jpg' {% endif %} alt="{{
+                album["human_readable_name"]
+              }}
+              album">
+            </div>
+          </div>
+          <p class="card-text">
+            {{ album["human_readable_description"] }}
+          </p>
+          <div class="row text-center">
+            <div class="col">
+              album
+              <p>views: {{ album["views"] }}</p>
+            </div>
+            <div class="col">
+              <p>photos: {{ album["photos"] }}</p>
+            </div>
+          </div>
+        </div>
+      </a>
     </div>
+  </div>
+
+  {% endfor %} {% endif %}
+</div>
 </div>
 
-{% endfor %}
-
-{% endif %}
-
-
-
-</div>
-
-<hr>
-
+<!-- end page -->
 {% endblock %}

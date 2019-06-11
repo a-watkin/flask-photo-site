@@ -61,11 +61,32 @@
     <script src="https://unpkg.com/react@16/umd/react.production.min.js"></script>
     <script src="https://unpkg.com/react-dom@16/umd/react-dom.production.min.js"></script>
 
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script
+      async
+      src="https://www.googletagmanager.com/gtag/js?id=UA-133835333-2"
+    ></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+
+      gtag("config", "UA-133835333-2");
+    </script>
+
+    <!-- google meta tag for search console -->
+    <meta
+      name="google-site-verification"
+      content="xi8jqr9zPhhCUNTMMzUdCSZnRUitmdRbHPqB7ntm6KE"
+    />
+
     <title>Photography-by-Eigi</title>
   </head>
 
   <nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <a href="/photo">
+    <a href="/">
       <img
         class="img-fluid"
         src="{{ url_for('static', filename='favicon.ico') }}"
@@ -89,7 +110,7 @@
     <div class="collapse navbar-collapse text-center" id="navbarText">
       <ul class="navbar-nav nav-fill w-100">
         <li class="nav-item active">
-          <a class="nav-link" href="/photo"
+          <a class="nav-link" href="/"
             >Photos<span class="sr-only">(current)</span></a
           >
         </li>
@@ -109,14 +130,12 @@
         {% endif %}
 
         <li class="nav-item mx-auto">
-          <a class="nav-link" href="{{ url_for('photo_tag.get_tags') }}"
-            >Tags</a
-          >
+          <a class="nav-link" href="{{ url_for('tag.get_tags') }}">Tags</a>
         </li>
 
         {% if session %}
         <li class="nav-item mx-auto">
-          <a class="nav-link" href="{{ url_for('photo_tag.edit_tags') }}"
+          <a class="nav-link" href="{{ url_for('tag.edit_tags') }}"
             >Edit tags</a
           >
         </li>
@@ -126,10 +145,7 @@
             >Upload</a
           >
         </li>
-        {% endif %}
-
-        <!-- User account -->
-        {% if session %}
+        {% endif %} {% if session %}
         <li class="nav-item mx-auto">
           <a class="nav-link" href="{{ url_for('user.account') }}">Account</a>
         </li>

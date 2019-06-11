@@ -52,7 +52,7 @@ class UploadEditor extends React.Component {
   }
 
   componentWillMount() {
-    fetch("/photo/upload/test", {
+    fetch("/upload/api/uploaded", {
       credentials: "include"
     })
       .then(res => res.json())
@@ -64,7 +64,7 @@ class UploadEditor extends React.Component {
         // Redirect if no files present.
         // This is really a niche thing it shouldn't ever happen.
         if (Object.keys(this.state.items).length < 1) {
-          window.location.assign(`/photo`);
+          window.location.assign(`/`);
         }
       })
       .catch(error => console.error(error));
@@ -75,7 +75,7 @@ class UploadEditor extends React.Component {
       photoId: photo_id
     });
 
-    fetch("/photo/upload/discard/photo", {
+    fetch("/upload/discard/photo", {
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json"
@@ -92,7 +92,7 @@ class UploadEditor extends React.Component {
         });
 
         if (Number(Object.keys(this.state.items).length) === 0) {
-          window.location.assign(`/photo`);
+          window.location.assign(`/`);
         }
       }
     });
@@ -101,7 +101,7 @@ class UploadEditor extends React.Component {
   updateTitle(e, photo_id, key) {
     const new_title = e.target.value;
 
-    fetch("/photo/upload/api/uploaded/title", {
+    fetch("/upload/api/uploaded/title", {
       method: "POST",
       credentials: "include",
       headers: {
@@ -133,7 +133,7 @@ class UploadEditor extends React.Component {
           allowButtons: true
         });
 
-        fetch("/photo/tag/api/add/tags", {
+        fetch("/tag/api/add/tags", {
           method: "POST",
           credentials: "include",
           headers: {
@@ -162,7 +162,7 @@ class UploadEditor extends React.Component {
 
   addToPhotoStream() {
     if (this.state.allowButtons) {
-      fetch("/photo/upload/photostream", {
+      fetch("/upload/photostream", {
         method: "POST",
         credentials: "include",
         headers: {
@@ -173,7 +173,7 @@ class UploadEditor extends React.Component {
           photos: this.state.items
         })
       }).then(Response => {
-        window.location.assign(`/photo`);
+        window.location.assign(`/`);
       });
     }
   }

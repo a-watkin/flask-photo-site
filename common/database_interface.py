@@ -9,11 +9,10 @@ class Database(object):
     def __init__(self, db_name=None):
         self.db_name = db_name or 'eigi-data.db'
 
-    def make_db(cls, name):
-        from db_schema import create_database
-        create_database(name)
-        cls.db_name = name
-        if os.path.isfile(name):
+    def make_db(self):
+        from photo_site_schema import create_database
+        create_database(self.db_name)
+        if os.path.isfile(self.db_name):
             return True
         else:
             print('Database not created.')
@@ -112,6 +111,7 @@ class Database(object):
             print('Problem with query\n', query_string, e)
 
     def make_sanitized_query(self, query_string, data=None):
+        print(query_string, data)
         try:
             with sqlite3.connect(os.path.join(self.db_name)) as connection:
                 c = connection.cursor()
@@ -121,6 +121,7 @@ class Database(object):
             return []
 
     def make_query(self, query_string):
+        print('passed query ', query_string)
         try:
             with sqlite3.connect(self.db_name) as connection:
                 c = connection.cursor()
@@ -170,4 +171,5 @@ class Database(object):
 
 
 if __name__ == "__main__":
-    pass
+    db = Database()
+    db.make_db()

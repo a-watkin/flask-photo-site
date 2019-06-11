@@ -73,8 +73,7 @@ def create_album():
 
         else:
 
-            album_id = a.create_album(
-                '28035310@N00', album_title, album_description)
+            album_id = a.create_album(album_title, album_description)
 
             album_data = a.get_album(album_id)
 
@@ -207,8 +206,7 @@ def to_new_album():
             return render_template('album/create_album.html', data=new_album_data), 200
 
         else:
-            album_id = a.create_album(
-                '28035310@N00', album_title, album_description)
+            album_id = a.create_album(album_title, album_description)
 
             # Uses album_id to add all uploaded photos to the album.
             up = UploadedPhotos()
@@ -224,6 +222,7 @@ def get_album_photos_json():
     """
     Used to pass data to React.
     """
+    print('this need human readable values')
     args = request.args.to_dict()
     if request.method == 'GET':
         a = Album()

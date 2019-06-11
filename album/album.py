@@ -3,7 +3,7 @@ import datetime
 import uuid
 
 
-from common.photo_db_interface import Database
+from common.database_interface import Database
 from common import utils
 
 
@@ -11,6 +11,7 @@ class Album(object):
 
     def __init__(self):
         self.db = Database()
+        self.user_id = '9604217@N03'
 
     def count_photos_in_album(self, album_id):
         # Get count of photos in album.
@@ -282,8 +283,8 @@ class Album(object):
                 JOIN album ON(photo_album.album_id=album.album_id)
                 JOIN images ON(photo.photo_id=images.photo_id)
                 WHERE album.album_id='{}'
-                ORDER BY date_taken
-                DESC LIMIT {} OFFSET {}
+                ORDER BY date_taken ASC
+                LIMIT {} OFFSET {}
                 '''
             ).format(album_id, limit, offset)
 
@@ -297,21 +298,28 @@ class Album(object):
 
         data = [dict(ix) for ix in q_data]
 
-        a_dict = {}
-        count = 0
-        for d in data:
-            a_dict[count] = d
-            count += 1
+        for photo in data:
+            photo['human_readable_title'] = utils.make_decoded(
+                photo['photo_title'])
+
+        # a_dict = {}
+        # count = 0
+        # for d in data:
+        #     a_dict[count] = d
+        #     count += 1
 
         # Get data about the album.
         album_data = self.get_album(album_id)
-        rtn_dict = {'photos': a_dict}
+        # rtn_dict = {'photos': a_dict}
 
+        rtn_dict['photos'] = data
         rtn_dict['album_data'] = album_data
         rtn_dict['limit'] = limit
         rtn_dict['offset'] = offset
         rtn_dict['page'] = page
         rtn_dict['pages'] = pages
+
+        print('wtf does this look like?', rtn_dict)
 
         return rtn_dict
 
@@ -328,7 +336,7 @@ class Album(object):
         # Make sure album photos count is correct.
         self.update_album_photo_count(album_id)
 
-    def create_album(self, user_id, title, description):
+    def create_album(self, title, description):
         created = datetime.datetime.now()
         # Get album id.
         identifier = utils.get_id()
@@ -339,7 +347,7 @@ class Album(object):
             values ("{}", "{}", {}, "{}", "{}", {}, "{}", "{}")
             '''.format(
                 identifier,
-                '28035310@N00',
+                self.user_id,
                 0,
                 title,
                 description,

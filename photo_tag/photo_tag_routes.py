@@ -1,21 +1,23 @@
 import json
 
-from flask import Blueprint, jsonify, request, render_template, redirect, url_for, flash, session
+from flask import Blueprint, jsonify, request, render_template, redirect, url_for, flash
 
 
 from common.utils import login_required
-from common import utils
 from photo.photo import Photo
 from photo_tag.photo_tag import PhotoTag
 
 # /photo/tag
-photo_tag_blueprint = Blueprint('photo_tag', __name__)
+photo_tag_blueprint = Blueprint('tag', __name__)
 
-
-@photo_tag_blueprint.route('/<string:tag_name>', methods=['GET', 'POST'])
+# Removed post request here.
+@photo_tag_blueprint.route('/<string:tag_name>', methods=['GET'])
 def get_tag_photos(tag_name=None):
     args = request.args.to_dict()
     pt = PhotoTag()
+
+    # for testing
+    pt.check_for_orphaned_photo_tag()
 
     if tag_name is None:
         tag_name = args['tag_name']

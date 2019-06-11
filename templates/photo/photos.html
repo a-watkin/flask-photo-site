@@ -3,8 +3,6 @@
 <!-- start block content -->
 {% block content %} {% if session %} {% if json_data['show_session'] %}
 
-<hr />
-
 <div class="row">
   <div class="col">
     <h1>You have uploaded photos waiting to be published</h1>
@@ -23,8 +21,7 @@
 
 {% endif %} {% endif %}
 
-<hr />
-
+<!-- <h1>{{ json_data }}</h1> -->
 <div id="photos-page-container" class="row mx-auto">
   {% for key, value in json_data.photos.items() %}
 
@@ -42,32 +39,37 @@
   {% endfor %}
 </div>
 
-<hr />
+<div id="page-count" class="row">
+  <div class="col text-center">
+    <h3>Showing page {{ json_data["page"] }} of {{ json_data["pages"] }}</h3>
+  </div>
+</div>
 
 <div class="row text-center">
   <div class="col">
-    <a href="/photo/?offset={{ json_data.offset - 20 }}">
+    <a href="/?offset={{ json_data.offset - 20 }}">
       <button type="button" class="btn btn-secondary btn-block btn-lg">
         Newer
       </button>
     </a>
   </div>
   <div class="col">
-    <a href="/photo/?offset={{ json_data.offset + 20 }}">
+    {% if json_data['page'] == json_data["pages"] %}
+    <a href="/?offset={{ json_data.offset }}">
       <button type="button" class="btn btn-secondary btn-block btn-lg">
         Older
       </button>
     </a>
+    {% else %}
+
+    <a href="/?offset={{ json_data.offset + 20 }}">
+      <button type="button" class="btn btn-secondary btn-block btn-lg">
+        Older
+      </button>
+    </a>
+
+    {% endif %}
   </div>
 </div>
-
-<hr />
-
-<div class="row">
-  <div class="col text-center">
-    <h3>Showing page {{ json_data["page"] }} of {{ json_data["pages"] }}</h3>
-  </div>
-</div>
-<hr />
 
 {% endblock %}

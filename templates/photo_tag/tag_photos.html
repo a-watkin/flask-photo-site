@@ -31,7 +31,7 @@
 <hr />
 <div class="row">
   <div class="col text-center">
-    <a href="{{ url_for('photo_tag.get_tags') }}">
+    <a href="{{ url_for('tag.get_tags') }}">
       <button class="btn btn-primary btn-block btn-lg">
         Go to tags page
       </button>
@@ -39,7 +39,7 @@
   </div>
 
   <div class="col text-center">
-    <a href="{{ url_for('photo_tag.edit_tags') }}">
+    <a href="{{ url_for('tag.edit_tags') }}">
       <button class="btn btn-primary btn-block btn-lg">
         Go to edit tags
       </button>
@@ -48,21 +48,31 @@
 </div>
 {% endif %}
 
+<!-- <h1>{{ json_data }}</h1> -->
+
 <div id="photos-page-container" class="row mx-auto">
-  {% for key, value in json_data['photos'].items() %} {% if value['photo_id'] %}
+  {% for photo in json_data['photos'] %}
+
+  <!-- what is this for? -->
+  {% if photo['photo_id'] %}
 
   <div class="col-3 text-center">
-    <a id="photostream-page" href="/photo/{{ value['photo_id'] }}">
+    <a id="photostream-page" href="/photo/{{ photo['photo_id'] }}">
       <img
         id="photo-page-image"
         class="img-fluid"
-        src="{{ value['large_square'] }}"
+        src="{{ photo['large_square'] }}"
         alt="Responsive image"
       />
     </a>
+    <!-- <p>{{ photo["date_taken"] }}</p> -->
   </div>
 
-  {% endif %} {% endfor %}
+  <!-- end check -->
+  {% endif %}
+
+  <!-- end for loop -->
+  {% endfor %}
 </div>
 
 {% if json_data['tag_info']['number_of_photos'] > 0 %}
@@ -70,7 +80,7 @@
 <div class="row text-center">
   <div class="col">
     <a
-      href="/photo/tag/photos?tag_name={{ json_data['tag_name'] }}&offset={{
+      href="/tag/photos?tag_name={{ json_data['tag_name'] }}&offset={{
         json_data.offset - 20
       }}"
     >
@@ -81,7 +91,7 @@
   </div>
   <div class="col">
     <a
-      href="/photo/tag/photos?tag_name={{ json_data['tag_name'] }}&offset={{
+      href="/tag/photos?tag_name={{ json_data['tag_name'] }}&offset={{
         json_data.offset + 20
       }}"
     >

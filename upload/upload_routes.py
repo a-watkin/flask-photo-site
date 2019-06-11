@@ -152,7 +152,7 @@ def uploaded_photos_page():
     return render_template('upload/uploaded_photos.html'), 200
 
 
-@upload_blueprint.route('/api/uploaded/')
+@upload_blueprint.route('/api/uploaded')
 @login_required
 def get_uploaded_photos():
     up = UploadedPhotos()

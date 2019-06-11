@@ -1,23 +1,16 @@
-try:
-    from common.photo_db_interface import Database
-    from common.password_util import PasswordUtil
-except ImportError as e:
-    import os
-    import sys
-    sys.path.append(os.getcwd())
-    from common.photo_db_interface import Database
-    from common.password_util import PasswordUtil
+from database_interface import Database
+from password_util import PasswordUtil
 
 
 class Admin(object):
     def __init__(self):
-        self.db = Database()
+        self.db = Database('')
 
     def make_account(self, username, password):
         self.db.make_query(
             '''
-            INSERT INTO user (user_id, username, hash_value)
-            VALUES ("{}", "{}", "{}")
+            insert into user (user_id, username, hash_value)
+            values ("{}", "{}", "{}")
             '''.format(
                 username,
                 username,
@@ -25,6 +18,10 @@ class Admin(object):
         )
 
 
-if __name__ == "__main__":
+def main():
     a = Admin()
     a.make_account('', '')
+
+
+if __name__ == "__main__":
+    main()

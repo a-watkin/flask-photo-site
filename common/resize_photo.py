@@ -87,4 +87,4 @@ class PhotoUtil(object):
 
 if __name__ == "__main__":
     PhotoUtil.orientate_save(
-        '/home/a/projects/testicles/flask-photo-site/static/images/2018/12/', 'IMG_9810.JPG')
+        '/home/a/projects/test/flask-photo-site/static/images/2018/12/', 'IMG_9810.JPG')

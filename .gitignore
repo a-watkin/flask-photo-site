@@ -142,12 +142,7 @@ FLICKR_API_KEYS.py
 .db-journal
 
 # server env directory
-/photo
+/photoenv
 
 *.png
 *.jpg
-*.jpeg
-
-
-*.idea
-*.vscode

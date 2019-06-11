@@ -31,29 +31,34 @@
   </div>
 </div>
 
-<hr />
-
 <div class="row">
-  {% for key, value in json_data['photos'].items() %}
+  {% for photo in json_data['photos'] %}
+
   <div class="col-3">
     <a
       id="photostream-page"
-      href="{{ url_for('photo.get_photo', photo_id=value['photo_id']) }}"
+      href="{{ url_for('photo.get_photo', photo_id=photo['photo_id']) }}"
     >
       <img
         id="photo-page-image"
         class="img-fluid"
-        src="{{ value['large_square'] }}"
+        src="{{ photo['large_square'] }}"
         alt="Responsive image"
       />
+      <!-- <p class="text-center">{{ photo.date_taken }}</p> -->
     </a>
   </div>
   {% endfor %}
 </div>
 
-<hr />
+<div id="page-count" class="row">
+  <div class="col text-center">
+    <h3>Showing page {{ json_data["page"] }} of {{ json_data["pages"] }}</h3>
+  </div>
+</div>
+
 {% if json_data['album_data']['photos'] > 0 %}
-<div class="row text-center">
+<div class="row text-center space-bottom">
   <div class="col">
     <a
       href="/photo/album/photos?album_id={{
@@ -77,16 +82,8 @@
     </a>
   </div>
 </div>
-<hr />
+
 {% endif %}
-
-<div class="row">
-  <div class="col text-center">
-    <h3>Showing page {{ json_data["page"] }} of {{ json_data["pages"] }}</h3>
-  </div>
-</div>
-
-<hr />
 
 <!-- If there are no photos in the album -->
 {% else %}
@@ -96,7 +93,7 @@
     <h1>The album {{ json_data["album_data"]["human_readable_title"] }}</h1>
   </div>
 </div>
-<hr />
+
 <div class="row">
   <div class="col">
     <div class="alert alert-danger text-center" role="alert">
@@ -104,7 +101,7 @@
     </div>
   </div>
 </div>
-<hr />
+
 <div class="row text-center">
   <div id="selected-album" class="col">
     <a
@@ -139,8 +136,6 @@
   </div>
 </div>
 
-<hr />
-
 {% if session %}
 <div class="row text-center">
   <div class="col">
@@ -159,7 +154,7 @@
     </a>
   </div>
 </div>
-<hr />
+
 {% else %}
 
 <div class="row">
@@ -169,7 +164,5 @@
     </a>
   </div>
 </div>
-
-<hr />
 
 {% endif %} {% endif %} {% endblock %}

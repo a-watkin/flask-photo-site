@@ -11,7 +11,8 @@
 
 <div class="row">
   <div class="col text-center">
-    {% for key, value in json_data.items() %}
+    <!-- Ensures the dict is ordered alphabetically. -->
+    {% for key, value in json_data|dictsort %}
 
     <!-- start len list check -->
     {% if value|length > 0 %}
@@ -24,7 +25,7 @@
     </div>
 
     {% for x in value %}
-    <a href="{{ url_for('photo_tag.get_tag_photos', tag_name=x['tag_name']) }}">
+    <a href="{{ url_for('tag.get_tag_photos', tag_name=x['tag_name']) }}">
       <button type="button" class="btn btn-outline-success btn-lg">
         {{ x["human_readable_tag"] }}
       </button>

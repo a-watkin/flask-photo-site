@@ -8,7 +8,7 @@ SQLite3 was used as a database and I decided against an ORM because I wanted to 
 
 The database schema was dictated partly by how Flickr stores data as the data source was from the Flickr API.
 
-The basic functionality of Flickr has been implimented without the social aspects. This was at the request of the end user.
+The basic functionality of Flickr has been implemented without the social aspects. This was at the request of the end user.
 
 ## Features and further information
 

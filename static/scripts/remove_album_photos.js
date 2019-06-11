@@ -173,6 +173,8 @@ class SelectPhotos extends React.Component {
     let large_square = "";
     let photoClick = this.photoClick;
 
+    console.log(this.state.items);
+
     if (this.state.items) {
       large_square = this.state.items[0]["large_square"];
       const photos = this.state.items;
@@ -194,7 +196,7 @@ class SelectPhotos extends React.Component {
             >
               <div className="card-header">
                 <h5 className="card-title text-center">
-                  {photos[key]["photo_title"]}
+                  {photos[key]["human_readable_title"]}
                 </h5>
               </div>
 

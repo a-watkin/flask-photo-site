@@ -1,12 +1,12 @@
-from common.photo_db_interface import Database
+from common.database_interface import Database
 from common.password_util import PasswordUtil
 
 
 class User(object):
-    def __init__(self, username, password):
+    def __init__(self, username, password=None, user_id=None):
         self.username = username
+        self.user_id = '28035310@N00'
         self.password = password
-        self.user_id = None
         # init database
         self.db = Database()
 
@@ -38,7 +38,11 @@ class User(object):
         Returns the hashed password from the database for the given username.
         """
         db_resp = self.db.get_row('user', 'username', self.username)
-        return db_resp[2]
+
+        if len(db_resp) == 3:
+            return db_resp[2]
+        else:
+            return False
 
     def insert_hashed_password(self, password):
         """
@@ -49,15 +53,28 @@ class User(object):
         hashed_password = PasswordUtil.hash_password(password)
         self.db.make_query(
             '''
-            update user 
-            set hash_value = "{}"
-            where username = "{}"
+            UPDATE user 
+            SET hash_value = "{}"
+            WHERE username = "{}"
             '''.format(hashed_password, self.username)
         )
 
     def check_password(self):
         hashed_password = self.get_hashed_password(self.username)
         return PasswordUtil.check_hashed_password(self.password, hashed_password)
+
+    def insert_user(self):
+        """
+        Can only run once per user as is.
+        """
+        self.db.make_query(
+            '''
+            INSERT INTO user (username, user_id)
+            VALUES ("{}", "{}")
+            '''.format(self.username, self.user_id)
+        )
+
+        self.insert_hashed_password(self.password)
 
 
 if __name__ == '__main__':
