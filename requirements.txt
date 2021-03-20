@@ -8,7 +8,7 @@ Fabric3==1.14.post1
 Flask==1.0.2
 Flask-Uploads==0.2.1
 itsdangerous==1.1.0
-Jinja2==2.10
+Jinja2==2.11.3
 MarkupSafe==1.1.0
 paramiko==2.4.2
 passlib==1.7.1
